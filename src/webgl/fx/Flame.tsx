@@ -14,12 +14,13 @@ import { frame } from '@/state/frame';
 
 const FlameShader = {
   vertexShader: /* glsl */ `
+    uniform vec2 uScale;
     varying vec2 vUv;
     void main() {
       vUv = uv;
-      // Billboard to face camera
+      // Billboard to face camera while respecting scale
       vec4 mvPosition = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
-      mvPosition.xy += position.xy;
+      mvPosition.xy += position.xy * uScale;
       gl_Position = projectionMatrix * mvPosition;
     }
   `,
@@ -80,38 +81,28 @@ export function Flame({
     return {
       uTime: { value: 0 },
       uIntensity: { value: intensity },
+      uScale: { value: new THREE.Vector2(scale, scale * 1.8) },
       uColorCore: { value: new THREE.Color(colorCore) },
       uColorTip: { value: new THREE.Color(colorTip) },
     };
-  }, [colorCore, colorTip, intensity]);
+  }, [colorCore, colorTip, intensity, scale]);
 
   useFrame(() => {
     uniforms.uTime.value = frame.time;
     uniforms.uIntensity.value = intensity;
+    uniforms.uScale.value.set(scale, scale * 1.8);
   });
 
   return (
     <group position={position}>
       {/* Flame Billboard */}
-      <mesh ref={meshRef} scale={[scale, scale * 1.8, 1]}>
+      <mesh ref={meshRef}>
         <planeGeometry args={[1, 1]} />
         <shaderMaterial
           vertexShader={FlameShader.vertexShader}
           fragmentShader={FlameShader.fragmentShader}
           uniforms={uniforms}
           transparent
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Soft Halo Glow */}
-      <mesh scale={[scale * 2.2, scale * 2.2, 1]}>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial
-          color={colorTip}
-          transparent
-          opacity={0.15 * intensity}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />

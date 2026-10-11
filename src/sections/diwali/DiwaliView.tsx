@@ -13,7 +13,9 @@ import { Divider } from '@/ui/Divider'
 import { InvitationCard } from '@/ui/InvitationCard'
 import { TransitionLink } from '@/ui/TransitionLink'
 import { Footer } from '@/ui/Footer'
+import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
 import { DiwaliTitleCard } from './DiwaliTitleCard'
+import { diwaliCardOverlayRef } from '@/webgl/tracking/DiwaliCardProjector'
 
 const BULB_COUNT = 16
 
@@ -134,9 +136,7 @@ export function DiwaliView() {
         ref={d2Ref}
         data-scene="D2"
         aria-label="Diwali story"
-        className={`scene-section scene-d2 transition-colors duration-1000 ${
-          skyRevealed ? 'bg-[#14161F]' : 'bg-[#7E1347]/35'
-        }`}
+        className="scene-section scene-d2 bg-transparent"
       >
         <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
           <div className="site-container flex flex-col items-center gap-8 max-w-[900px]">
@@ -188,6 +188,42 @@ export function DiwaliView() {
         </div>
       </section>
 
+      {/* Zero-State Screen-Projected DOM Twin for 3D Gold Foil Card */}
+      <div
+        ref={(el) => {
+          diwaliCardOverlayRef.current = el
+        }}
+        aria-label="Official Diwali Invitation Card Details"
+        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-6 sm:p-8 rounded-xl bg-[#FBF6EE] text-[#4A102E] border-2 border-[#D4AF6A] shadow-2xl transition-opacity duration-300"
+      >
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <span className="font-bodoni italic text-[clamp(22px,2.6vw,34px)] font-medium text-[#7E1347] tracking-tight">
+            {site.diwali.invitation.heading}
+          </span>
+          <div className="w-full max-w-[200px]">
+            <Divider variant="sparkle" active />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-y-4 my-auto text-left">
+          {site.diwali.invitation.rows.map((row) => (
+            <div key={row.label} className="flex flex-col gap-0.5">
+              <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#7E1347]">
+                {row.label}
+              </span>
+              <span className="font-manrope text-[13px] sm:text-[15px] font-bold text-[#2A081C]">
+                <AnnouncingSoon value={row.value} />
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-[#D4AF6A]/30 font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#7E1347]">
+          <span>UNDERDOGS</span>
+          <span>NAGPUR</span>
+        </div>
+      </div>
+
       {/* D3 · The invitation (180vh, pinned) */}
       <section
         id="diwali-invitation"
@@ -198,11 +234,14 @@ export function DiwaliView() {
       >
         <div className="scene-sticky flex flex-col items-center justify-center py-20">
           <div className="site-container flex flex-col items-center">
-            <InvitationCard
-              variant="diwali"
-              heading={site.diwali.invitation.heading}
-              rows={site.diwali.invitation.rows}
-            />
+            {/* Fallback for reduced motion or T0 */}
+            {!motionEnabled && (
+              <InvitationCard
+                variant="diwali"
+                heading={site.diwali.invitation.heading}
+                rows={site.diwali.invitation.rows}
+              />
+            )}
           </div>
         </div>
       </section>
@@ -222,8 +261,8 @@ export function DiwaliView() {
             NOW SHOWING
           </h2>
 
-          {/* Cinema lightbox with gold frame and marquee bulbs */}
-          <figure className="relative border-2 border-[var(--dw-gold)] bg-[#14161F] p-5 sm:p-7 max-w-[460px] w-full">
+          {/* Cinema lightbox with gold frame and marquee bulbs (shown on mobile per Part 9 D4) */}
+          <figure className="md:hidden relative border-2 border-[var(--dw-gold)] bg-[#14161F] p-5 sm:p-7 max-w-[460px] w-full">
             {/* Marquee bulbs along top and bottom */}
             <div
               aria-hidden="true"

@@ -8,6 +8,7 @@ import { useStore } from '@/state/store';
 import { SkinId, createSkinMaterials, BadgeSkinMaterials } from './skins';
 import { DissolveUniforms } from './dissolve.glsl';
 import { BadgeBehaviours } from './behaviours';
+import { SparkleGlints } from './SparkleGlints';
 
 interface BadgeProps {
   position?: [number, number, number];
@@ -330,11 +331,30 @@ export function Badge({
       targetScale = 1.0;
     } else if (world === 'diwali') {
       // Diwali: floats at (0, 1.9, 0) per Part 9 The set
-      targetX = 0;
-      targetY = 1.9;
-      targetZ = 0;
-      targetYaw = 0;
-      targetScale = 1.0;
+      const d3 = frame.dampedProgress['D3'] ?? 0;
+      const d4 = frame.dampedProgress['D4'] ?? 0;
+      if (d4 > 0.05) {
+        // In D4: floats gracefully above the cinema lightbox frame
+        targetX = 0;
+        targetY = 3.1;
+        targetZ = -0.5;
+        targetYaw = 0;
+        targetScale = 0.7;
+      } else if (d3 > 0.1) {
+        // In D3: floats above the rising gold foil invitation card
+        targetX = 0;
+        targetY = 2.65;
+        targetZ = 0.2;
+        targetYaw = 0;
+        targetScale = 0.75;
+      } else {
+        // D1, D2, D5: floats centered at (0, 1.9, 0) per Part 9
+        targetX = 0;
+        targetY = 1.9;
+        targetZ = 0;
+        targetYaw = 0;
+        targetScale = 1.0;
+      }
     } else {
       // Home world (H1–H5 choreography)
       const p1 = frame.dampedProgress['H1'] ?? 0;
@@ -531,6 +551,9 @@ export function Badge({
     >
       {/* Active/Incoming Skin */}
       {renderSkinMeshGroup(currentMats, true)}
+
+      {/* Directional Sparkle Glints on Pavé Diamond Face for Jewelled Skin */}
+      <SparkleGlints active={currentSkin === 'jewelled'} />
 
       {/* Outgoing Skin during Dissolve Transition */}
       {isDissolving && outgoingMats && renderSkinMeshGroup(outgoingMats, false)}

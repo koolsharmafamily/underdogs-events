@@ -5,8 +5,15 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { DiyaField } from './DiyaField';
+import { PetalField } from './PetalField';
+import { DrapesSky } from './DrapesSky';
+import { Fireworks } from './Fireworks';
+import { DiwaliCard } from './DiwaliCard';
+import { DiwaliCardProjector } from '@/webgl/tracking/DiwaliCardProjector';
+import { CinemaLightbox } from './CinemaLightbox';
 
-// Preload finished Diwali GLB models
+// Preload Diwali assets
 useGLTF.preload('/models/curtain-open-diwali.glb');
 useGLTF.preload('/models/diwali-card.glb');
 useGLTF.preload('/models/diwali-diya-brass.glb');
@@ -16,38 +23,29 @@ useGLTF.preload('/models/diwali-marigold.glb');
 useGLTF.preload('/models/diwali-rose-petal.glb');
 
 export function DiwaliSet() {
-  const drapesGltf = useGLTF('/models/curtain-open-diwali.glb');
-  const cardGltf = useGLTF('/models/diwali-card.glb');
-  const diyaBrassGltf = useGLTF('/models/diwali-diya-brass.glb');
-  const diyaTerraGltf = useGLTF('/models/diwali-diya-terracotta.glb');
   const kandilGltf = useGLTF('/models/diwali-kandil.glb');
-  const marigoldGltf = useGLTF('/models/diwali-marigold.glb');
-  const petalGltf = useGLTF('/models/diwali-rose-petal.glb');
 
   const diyaLightRef = useRef<THREE.PointLight>(null);
-  const diyaGroupRef = useRef<THREE.Group>(null);
-  const petalsGroupRef = useRef<THREE.Group>(null);
+  const kandilGroupRef = useRef<THREE.Group>(null);
 
-  // Bobbing diyas and fluttering petals
   useFrame(() => {
     const t = frame.time;
-    // Diya bobbing at 0.15 Hz ±0.04m (Part 9)
-    if (diyaGroupRef.current) {
-      diyaGroupRef.current.position.y = Math.sin(t * 0.95) * 0.04;
-    }
-    // Subtle diya light breathing
+    // Diya light breathing near badge
     if (diyaLightRef.current) {
-      diyaLightRef.current.intensity = 2.4 + Math.sin(t * 4.2) * 0.15;
+      diyaLightRef.current.intensity = 2.4 + Math.sin(t * 3.8) * 0.25;
     }
-    // Petals slow tumble
-    if (petalsGroupRef.current) {
-      petalsGroupRef.current.rotation.y = t * 0.08;
+    // Subtle kandil lantern swaying (0.12 Hz)
+    if (kandilGroupRef.current) {
+      kandilGroupRef.current.rotation.z = Math.sin(t * 0.75) * 0.04;
     }
   });
 
   return (
     <group name="DiwaliSet">
-      {/* Lighting per Part 5.4: Directional gold (2.2), Pink fill (0.8), Diya point light */}
+      {/* Zero-State DOM tracking projector for 3D card */}
+      <DiwaliCardProjector />
+
+      {/* Lighting per Part 5.4: Directional gold (2.2), Pink fill (0.8), Diya point light (stays within 3 real lights budget) */}
       <ambientLight intensity={0.4} color="#350E22" />
       <directionalLight
         position={[-3, 6, 5]}
@@ -61,7 +59,7 @@ export function DiwaliSet() {
       />
       <pointLight
         ref={diyaLightRef}
-        position={[0, 1.6, 0.8]}
+        position={[0, 1.8, 0.6]}
         color="#FFA84A"
         intensity={2.4}
         distance={9}
@@ -74,7 +72,7 @@ export function DiwaliSet() {
         position={[0, 0, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
       >
-        <planeGeometry args={[30, 30]} />
+        <planeGeometry args={[32, 32]} />
         <meshStandardMaterial
           color="#160C14"
           roughness={0.35}
@@ -82,45 +80,27 @@ export function DiwaliSet() {
         />
       </mesh>
 
-      {/* Finished GLB: Rani-pink velvet drapes with gold borders */}
-      <group position={[0, 0, 0]} scale={[1, 1, 1]}>
-        <primitive object={drapesGltf.scene.clone()} />
-      </group>
+      {/* Velvet Drapes that lift in D2 & Haveli Sky Reveal */}
+      <DrapesSky />
 
-      {/* Finished GLB: Floating Diyas */}
-      <group ref={diyaGroupRef}>
-        <group position={[-1.6, 1.4, 0.6]} scale={[0.55, 0.55, 0.55]}>
-          <primitive object={diyaBrassGltf.scene.clone()} />
-        </group>
-        <group position={[1.6, 1.5, 0.4]} scale={[0.55, 0.55, 0.55]}>
-          <primitive object={diyaTerraGltf.scene.clone()} />
-        </group>
-        <group position={[-0.8, 1.8, -0.6]} scale={[0.45, 0.45, 0.45]}>
-          <primitive object={diyaBrassGltf.scene.clone()} />
-        </group>
-        <group position={[0.9, 1.7, -0.5]} scale={[0.45, 0.45, 0.45]}>
-          <primitive object={diyaTerraGltf.scene.clone()} />
-        </group>
-      </group>
+      {/* Floating Diyas with Procedural Teardrop Flames */}
+      <DiyaField count={36} />
 
-      {/* Finished GLB: Kandil hanging lantern */}
-      <group position={[2.2, 3.2, 0.2]} scale={[0.6, 0.6, 0.6]}>
+      {/* Falling Rose Petals (3 variants), Gold Dust & Floor Marigolds */}
+      <PetalField petalCount={380} dustCount={1800} />
+
+      {/* Paced Fireworks System for D2 story lines & D5 outro */}
+      <Fireworks particlesPerBurst={2400} />
+
+      {/* 3D Gold Foil Invitation Card rising on spiral */}
+      <DiwaliCard />
+
+      {/* D4 Cinema Lightbox with official teaser poster & marquee bulbs */}
+      <CinemaLightbox />
+
+      {/* Hanging Kandil Lantern */}
+      <group ref={kandilGroupRef} position={[2.4, 3.4, 0.2]} scale={[0.65, 0.65, 0.65]}>
         <primitive object={kandilGltf.scene.clone()} />
-      </group>
-
-      {/* Finished GLB: Marigold flowers on floor */}
-      <group position={[0, 0.05, 0.8]} scale={[0.7, 0.7, 0.7]}>
-        <primitive object={marigoldGltf.scene.clone()} />
-      </group>
-
-      {/* Finished GLB: Rose petals floating */}
-      <group ref={petalsGroupRef} position={[0, 1.2, 0.5]} scale={[0.6, 0.6, 0.6]}>
-        <primitive object={petalGltf.scene.clone()} />
-      </group>
-
-      {/* Finished GLB: Diwali Invitation Card at (0, 1.3, 1.2) */}
-      <group position={[0, 1.3, 1.2]} scale={[0.75, 0.75, 0.75]}>
-        <primitive object={cardGltf.scene.clone()} />
       </group>
     </group>
   );
