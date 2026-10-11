@@ -1,0 +1,519 @@
+@import "tailwindcss";
+
+:root {
+  /* Home: The Gate (Part 4.1) */
+  --void: #07090D;
+  --haze: #121722;
+  --ink: #10171F;
+  --magenta: #D73EBC;
+  --magenta-hot: #FF4FD8;
+  --magenta-tint: #F6BFF8;
+  --paper: #FCF9FC;
+  --steel: #8C93A3;
+  --chrome: #D9DCE3;
+
+  /* The Red Room (Part 4.1) */
+  --rr-void: #060101;
+  --rr-oxblood: #2A0403;
+  --rr-velvet: #510805;
+  --rr-velvet-lit: #7C0F0C;
+  --rr-blood: #95120E;
+  --rr-neon: #FF2A1F;
+  --rr-candle: #FFB36B;
+  --rr-gilt: #C8A15A;
+  --rr-bone: #EFD9CD;
+  --rr-ash: #A88C80;
+
+  /* Diwali (Part 4.1) */
+  --dw-night: #14161F;
+  --dw-rani: #C5287B;
+  --dw-rani-deep: #7E1347;
+  --dw-blush: #F7CFE0;
+  --dw-ivory: #FFF6EE;
+  --dw-gold: #C6A76A;
+  --dw-gold-deep: #AD7F42;
+  --dw-gold-bright: #F2D38B;
+  --dw-emerald: #157A4F;
+  --dw-maroon: #5B0E0B;
+  --dw-plum-ink: #2A0E1B;
+
+  /* Motion tokens (Part 6.3) */
+  --dur-micro: 260ms;
+  --dur-ui: 520ms;
+  --dur-text: 1000ms;
+  --dur-world: 1500ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.75, 0);
+
+  /* Default world aliases (Home) */
+  --world-bg: var(--void);
+  --world-surface: var(--haze);
+  --world-text: var(--paper);
+  --world-muted: var(--steel);
+  --world-accent: var(--magenta);
+}
+
+html[data-world="home"] {
+  --world-bg: var(--void);
+  --world-surface: var(--haze);
+  --world-text: var(--paper);
+  --world-muted: var(--steel);
+  --world-accent: var(--magenta);
+}
+
+html[data-world="redroom"] {
+  --world-bg: var(--rr-void);
+  --world-surface: var(--rr-oxblood);
+  --world-text: var(--rr-bone);
+  --world-muted: var(--rr-ash);
+  --world-accent: var(--rr-neon);
+}
+
+html[data-world="diwali"] {
+  --world-bg: var(--dw-night);
+  --world-surface: var(--dw-rani-deep);
+  --world-text: var(--dw-ivory);
+  --world-muted: var(--dw-blush);
+  --world-accent: var(--dw-gold-bright);
+}
+
+html {
+  background-color: var(--world-bg);
+  color: var(--world-text);
+  color-scheme: dark;
+  accent-color: var(--world-accent);
+  font-family: var(--font-manrope), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--world-bg);
+  color: var(--world-text);
+  min-height: 100svh;
+  overflow-x: hidden;
+  transition: background-color 500ms var(--ease-out), color 500ms var(--ease-out);
+}
+
+/* Custom cursor active state on fine pointer devices */
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button {
+  cursor: none;
+}
+
+/* Selection colour: the world's accent on its void (Part 4.4) */
+::selection {
+  background-color: var(--world-accent);
+  color: var(--void);
+}
+
+/* Focus ring: 2 px in the world's accent with a 3 px offset (Part 11) */
+:focus-visible {
+  outline: 2px solid var(--world-accent);
+  outline-offset: 3px;
+}
+
+/* Skip link (Part 11 & Part 12.3) */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 18px;
+  background-color: var(--world-bg);
+  color: var(--world-text);
+  border: 1px solid var(--world-accent);
+  font-family: var(--font-cinzel), serif;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  transform: translateY(-200%);
+  transition: transform 200ms var(--ease-out);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Font families (Part 4.2) */
+.font-unbounded {
+  font-family: var(--font-unbounded), sans-serif;
+}
+
+.font-cinzel {
+  font-family: var(--font-cinzel), serif;
+}
+
+.font-cinzel-decorative {
+  font-family: var(--font-cinzel-decorative), var(--font-cinzel), serif;
+}
+
+.font-cormorant {
+  font-family: var(--font-cormorant), serif;
+}
+
+.font-bodoni {
+  font-family: var(--font-bodoni), serif;
+}
+
+.font-devanagari {
+  font-family: var(--font-devanagari), serif;
+}
+
+.font-manrope {
+  font-family: var(--font-manrope), sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Type scale (Part 4.2) */
+.text-display-xl {
+  font-size: clamp(56px, 10vw, 184px);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+}
+
+.text-display-l {
+  font-size: clamp(36px, 6vw, 112px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.text-heading {
+  font-size: clamp(26px, 3.2vw, 56px);
+  line-height: 1.05;
+}
+
+.text-lead {
+  font-size: clamp(18px, 1.4vw, 22px);
+  line-height: 1.45;
+}
+
+.text-body {
+  font-size: clamp(15px, 1.05vw, 17px);
+  line-height: 1.6;
+}
+
+/* Typesetting rules (Part 4.2) */
+.balance-heading {
+  text-wrap: balance;
+}
+
+.pretty-copy {
+  text-wrap: pretty;
+}
+
+.measure-copy {
+  max-width: 58ch;
+}
+
+/* Grid & Containers (Part 4.3) */
+.site-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+.site-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .site-container {
+    padding-inline: clamp(20px, 4vw, 64px);
+  }
+  .site-grid {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .site-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+
+/* Pinned scenes and progress (Part 6.2 & Parts 7-9) */
+.scene-section {
+  position: relative;
+  width: 100%;
+}
+
+.scene-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.scene-sticky-desktop {
+  position: relative;
+  min-height: 100svh;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .scene-sticky-desktop {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+}
+
+/* Scene lengths (Desktop vs Mobile ×0.85 per Part 7) */
+.scene-h1 { height: calc(120svh * 0.85); }
+.scene-h2 { height: calc(220svh * 0.85); }
+.scene-h4 { height: calc(160svh * 0.85); }
+.scene-h5 { min-height: 100svh; }
+
+.scene-r1 { height: calc(160svh * 0.85); }
+.scene-r2 { height: calc(200svh * 0.85); }
+.scene-r3 { height: calc(160svh * 0.85); }
+.scene-r4 { height: calc(220svh * 0.85); }
+.scene-r6 { height: calc(120svh * 0.85); }
+
+.scene-d1 { height: calc(160svh * 0.85); }
+.scene-d2 { height: calc(260svh * 0.85); }
+.scene-d3 { height: calc(180svh * 0.85); }
+.scene-d5 { height: calc(120svh * 0.85); }
+
+@media (min-width: 1024px) {
+  .scene-h1 { height: 120svh; }
+  .scene-h2 { height: 220svh; }
+  .scene-h4 { height: 160svh; }
+  .scene-h5 { height: 140svh; }
+
+  .scene-r1 { height: 160svh; }
+  .scene-r2 { height: 200svh; }
+  .scene-r3 { height: 160svh; }
+  .scene-r4 { height: 220svh; }
+  .scene-r6 { height: 120svh; }
+
+  .scene-d1 { height: 160svh; }
+  .scene-d2 { height: 260svh; }
+  .scene-d3 { height: 180svh; }
+  .scene-d5 { height: 120svh; }
+}
+
+/* Announcing soon pulsing dot (Part 3 & Part 4.4: 6px dot is one of two allowed circular elements) */
+.announcing-dot {
+  border-radius: 9999px;
+  background-color: var(--world-accent);
+  animation: pulse-dot 2s var(--ease-in-out) infinite;
+}
+
+html[data-motion="off"] .announcing-dot {
+  animation: none;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+}
+
+/* Nav link text roll micro-interaction (Part 11: 320 ms) */
+.nav-roll-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-roll-inner {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  height: 1.3em;
+  line-height: 1.3;
+  overflow: hidden;
+}
+
+.nav-roll-line {
+  display: block;
+  transition: transform 320ms var(--ease-out);
+}
+
+.nav-roll-link:hover .nav-roll-line,
+.nav-roll-link:focus-visible .nav-roll-line {
+  transform: translateY(-100%);
+}
+
+html[data-motion="off"] .nav-roll-link:hover .nav-roll-line,
+html[data-motion="off"] .nav-roll-link:focus-visible .nav-roll-line {
+  transform: none;
+}
+
+/* Active page 1px underline in world's accent (Part 11) */
+.active-page-link::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 8px;
+  height: 1px;
+  background-color: var(--world-accent);
+}
+
+/* Scroll cue 12px travelling bright segment (Part 7 H1: 1.6s loop) */
+.scroll-cue-segment {
+  animation: scroll-cue-travel 1.6s var(--ease-in-out) infinite;
+}
+
+html[data-motion="off"] .scroll-cue-segment {
+  animation: none;
+  top: 24px;
+}
+
+@keyframes scroll-cue-travel {
+  0% {
+    transform: translateY(-14px);
+  }
+  100% {
+    transform: translateY(66px);
+  }
+}
+
+/* Marquee 1.5px outline item (Part 7 H3) */
+.marquee-outline-item {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--paper);
+}
+
+.marquee-outline-item:hover {
+  color: var(--magenta);
+  -webkit-text-stroke: 1.5px var(--magenta);
+}
+
+/* Red Room SVG blood drips (Part 8 R1) */
+.rr-blood-drip {
+  animation: drip-grow 2.5s var(--ease-out) forwards, drip-wobble 10s ease-in-out 2.5s infinite;
+}
+
+@keyframes drip-grow {
+  0% {
+    transform: scaleY(0.15);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes drip-wobble {
+  0%, 100% {
+    transform: scaleY(1) translateX(0);
+  }
+  50% {
+    transform: scaleY(1.05) translateX(0.5px);
+  }
+}
+
+/* Red Room subtle candle flicker on partner text: opacity ±4%, 0.3 Hz (Part 8 R5) */
+.candle-flicker-text {
+  animation: candle-text-flicker 3.3s ease-in-out infinite;
+}
+
+html[data-motion="off"] .candle-flicker-text {
+  animation: none;
+}
+
+@keyframes candle-text-flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: 0.96; }
+  55% { opacity: 0.93; }
+  75% { opacity: 0.98; }
+}
+
+/* Diwali title gold shimmer sweep (Part 6.4 & Part 9 D1: 1.4s once) */
+.diwali-gold-shimmer {
+  background-image: linear-gradient(
+    110deg,
+    var(--dw-ivory) 0%,
+    var(--dw-ivory) 38%,
+    var(--dw-gold-bright) 50%,
+    var(--dw-ivory) 62%,
+    var(--dw-ivory) 100%
+  );
+  background-size: 240% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: diwali-shimmer-sweep 1.4s var(--ease-out) 0.25s 1 forwards;
+}
+
+@keyframes diwali-shimmer-sweep {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+/* Diwali title card warm light leak & film burn (Part 9 D0: allowed per Part 15) */
+.warm-light-leak {
+  background: radial-gradient(
+    ellipse at left center,
+    rgba(239, 184, 138, 0.22) 0%,
+    rgba(197, 40, 123, 0.08) 45%,
+    transparent 75%
+  );
+}
+
+.film-burn-mask {
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(255, 111, 176, 0.65) 45%,
+    rgba(239, 184, 138, 0.85) 60%,
+    #0B0B0F 80%
+  );
+}
+
+/* Marquee bulb sequential light-up (Part 9 D4: 300ms total) */
+.marquee-bulb {
+  animation: bulb-ignite 300ms var(--ease-out) both;
+}
+
+@keyframes bulb-ignite {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Film grain layer (Part 4.4) */
+.film-grain-layer {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+
+.animate-film-grain {
+  animation: grain-shift 0.5s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -2%); }
+  80% { transform: translate(3%, 4%); }
+}
