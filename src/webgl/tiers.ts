@@ -1,5 +1,5 @@
 /**
- * Quality tiering configuration & detection (BRIEF.md Part 5.5 & Part 12.4).
+ * Quality tiering configuration & detection (BRIEF.md Part 5.5, Part 12.1 & Part 12.4).
  *
  * T3: Desktop high (Tier 3) -> DPR [1, 2], full composer, MSAA 4x, Reflector floor
  * T2: Laptop / tablet (Tier 2) -> DPR [1, 1.5], full composer, bloom 0.75 res, SMAA
@@ -53,11 +53,28 @@ export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   },
 };
 
+export function isExplicitT0Requested(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const w = window as unknown as { __FORCE_T0?: boolean };
+    if (w.__FORCE_T0) return true;
+    const params = new URLSearchParams(window.location.search);
+    const tierParam = params.get('tier')?.toUpperCase();
+    const webglParam = params.get('webgl');
+    return tierParam === 'T0' || webglParam === '0' || webglParam === 'false';
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Fast synchronous heuristic + async GPU detection fallback.
+ * Per Part 12.1: Never infer quality from screen width alone.
  */
 export function getInitialTier(): QualityTier {
   if (typeof window === 'undefined') return 'T3';
+
+  if (isExplicitT0Requested()) return 'T0';
 
   // Check WebGL 2 availability
   try {
@@ -68,9 +85,11 @@ export function getInitialTier(): QualityTier {
     return 'T0';
   }
 
-  // Mobile viewport heuristic
-  const isMobile = window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-  if (isMobile) return 'T1';
+  // Device / pointer heuristic (never screen width alone per Part 12.1)
+  const isMobileGPU =
+    /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ||
+    window.matchMedia('(pointer: coarse)').matches;
+  if (isMobileGPU) return 'T1';
 
   return 'T3';
 }

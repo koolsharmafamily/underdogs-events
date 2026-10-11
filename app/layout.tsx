@@ -12,9 +12,37 @@ import { Nav } from '@/ui/Nav'
 import { Cursor } from '@/ui/Cursor'
 import { FilmGrain } from '@/ui/FilmGrain'
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://underdogsnagpur.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: site.home.meta.title,
   description: site.home.meta.description,
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: site.home.meta.title,
+    description: site.home.meta.description,
+    url: '/',
+    siteName: site.brand.name,
+    locale: 'en_IN',
+    type: 'website',
+    images: [
+      {
+        url: '/media/og-home.png',
+        width: 1200,
+        height: 630,
+        alt: `${site.brand.name} — ${site.brand.line}`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: site.home.meta.title,
+    description: site.home.meta.description,
+    images: ['/media/og-home.png'],
+  },
 }
 
 export default function RootLayout({

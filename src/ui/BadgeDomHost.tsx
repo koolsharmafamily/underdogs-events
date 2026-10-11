@@ -20,13 +20,12 @@ export function BadgeDomHost({
   showSvgPreview,
   className = '',
 }: BadgeDomHostProps) {
-  const tier = useStore((s) => s.tier)
   const motionEnabled = useStore((s) => s.motionEnabled)
   const hoverDoor = useStore((s) => s.hoverDoor)
   const blinkTrigger = useStore((s) => s.blinkTrigger)
   const triggerBlink = useStore((s) => s.triggerBlink)
 
-  const isSvgVisible = showSvgPreview !== undefined ? showSvgPreview : tier === 'T0'
+  const isSvgVisible = Boolean(showSvgPreview)
 
   const [blinkL, setBlinkL] = useState(false)
   const [blinkR, setBlinkR] = useState(false)

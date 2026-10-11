@@ -26,6 +26,12 @@ export function startClock() {
     window.history.scrollRestoration = 'manual'
   }
 
+  // Ignore height-only mobile URL bar resizes in ScrollTrigger (Part 12.1)
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load',
+  })
+
   const lenis = new Lenis({
     lerp: 0.09,
     smoothWheel: true,
@@ -44,9 +50,63 @@ export function startClock() {
   lenis.on('scroll', ScrollTrigger.update)
 
   let isHidden = typeof document !== 'undefined' ? document.hidden : false
+  let lastWidth = typeof window !== 'undefined' ? window.innerWidth : 1440
+  let lastHeight = typeof window !== 'undefined' ? window.innerHeight : 900
+  let lastIsLandscape = lastWidth > lastHeight
+  let resizeTimer: number | null = null
 
   const onVisibilityChange = () => {
     isHidden = document.hidden
+  }
+
+  const onResize = () => {
+    if (typeof window === 'undefined') return
+    const w = window.innerWidth
+    const h = window.innerHeight
+    const dw = Math.abs(w - lastWidth)
+    const dh = Math.abs(h - lastHeight)
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
+    const isLandscape = w > h
+    const orientationChanged = isLandscape !== lastIsLandscape
+
+    // Part 12.1: Ignore height-only resizes under 120 px on touch devices (URL bar)
+    if (isTouch && !orientationChanged && dw < 2 && dh < 120) {
+      return
+    }
+
+    lastWidth = w
+    lastHeight = h
+    lastIsLandscape = isLandscape
+
+    if (resizeTimer !== null) {
+      window.clearTimeout(resizeTimer)
+    }
+
+    // Part 12.1: Debounce orientation changes by 250 ms and re-frame behind a quick fade
+    const debounceMs = orientationChanged ? 250 : 120
+    resizeTimer = window.setTimeout(() => {
+      const veil = document.querySelector<HTMLElement>('[data-transition-veil]')
+      if (orientationChanged && veil) {
+        gsap.to(veil, {
+          opacity: 1,
+          duration: 0.12,
+          ease: 'ease.out',
+          onComplete: () => {
+            lenis.resize()
+            ScrollTrigger.refresh()
+            frame.snapCamera = true
+            gsap.to(veil, {
+              opacity: 0,
+              duration: 0.18,
+              ease: 'ease.out',
+            })
+          },
+        })
+      } else {
+        lenis.resize()
+        ScrollTrigger.refresh()
+      }
+    }, debounceMs)
   }
 
   const onPointerMove = (e: PointerEvent) => {
@@ -60,6 +120,7 @@ export function startClock() {
   if (typeof window !== 'undefined') {
     document.addEventListener('visibilitychange', onVisibilityChange)
     window.addEventListener('pointermove', onPointerMove, { passive: true })
+    window.addEventListener('resize', onResize, { passive: true })
   }
 
   const tick = (time: number, deltaMs: number) => {
@@ -104,8 +165,12 @@ export function startClock() {
     stop: () => {
       gsap.ticker.remove(tick)
       if (typeof window !== 'undefined') {
+        if (resizeTimer !== null) {
+          window.clearTimeout(resizeTimer)
+        }
         document.removeEventListener('visibilitychange', onVisibilityChange)
         window.removeEventListener('pointermove', onPointerMove)
+        window.removeEventListener('resize', onResize)
       }
       lenis.destroy()
       if (activeLenis === lenis) {

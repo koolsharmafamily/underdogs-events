@@ -145,6 +145,21 @@ export function CameraRig() {
     curves.cam.getPoint(tProgress, targetPos.current);
     curves.look.getPoint(tProgress, targetLook.current);
 
+    // Part 12.1 Phones / Portrait re-framing:
+    // - No horizontal lens shift
+    // - Monument in the upper 55–60% of the screen, copy in the lower 40%
+    // - +8° vFOV + pull camera back slightly
+    if (isPortrait) {
+      if (world === 'home' && tProgress < 0.25) {
+        // Eliminate horizontal lens shift on Home H1 -> H2
+        const blend = THREE.MathUtils.clamp(tProgress / 0.2, 0, 1);
+        targetPos.current.x *= blend;
+        targetLook.current.x *= blend;
+      }
+      targetPos.current.z += 0.35;
+      targetLook.current.y -= 0.15;
+    }
+
     // Apply Part 10 Transition camera moves (driven one-way by frame.transition)
     if (motionEnabled) {
       if (tr.type === 'T1' && world === 'home' && tr.dollyProgress > 0) {
@@ -171,9 +186,17 @@ export function CameraRig() {
       }
     }
 
-    // Cursor parallax: ±0.2 X, ±0.12 Y (Part 13.3)
-    const parallaxX = motionEnabled ? frame.pointer.damped.x * 0.2 : 0;
-    const parallaxY = motionEnabled ? frame.pointer.damped.y * 0.12 : 0;
+    // Parallax: On portrait/phones, scroll-linked parallax of ±0.1 replaces cursor parallax (Part 12.1)
+    const parallaxX = !motionEnabled
+      ? 0
+      : isPortrait
+        ? 0
+        : frame.pointer.damped.x * 0.2;
+    const parallaxY = !motionEnabled
+      ? 0
+      : isPortrait
+        ? THREE.MathUtils.clamp((0.5 - tProgress) * 0.2, -0.1, 0.1)
+        : frame.pointer.damped.y * 0.12;
 
     // Idle drift: ~3.5 cm amplitude via simplex noise (Part 13.3)
     const t = frame.time;

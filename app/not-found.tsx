@@ -13,6 +13,7 @@ export default function NotFound() {
       >
         <BadgeDomHost
           skin="home"
+          showSvgPreview={true}
           sizeClass="w-[180px] h-[180px] sm:w-[240px] sm:h-[240px]"
           label="Underdogs Enamel Badge — click to blink"
         />

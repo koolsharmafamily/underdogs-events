@@ -1,11 +1,18 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useStore } from '@/state/store';
 import { Badge } from './badge/Badge';
-import { HomeStage } from './home/HomeStage';
-import { RedRoomSet } from './redroom/RedRoomSet';
-import { DiwaliSet } from './diwali/DiwaliSet';
+
+const HomeStage = lazy(() =>
+  import('./home/HomeStage').then((m) => ({ default: m.HomeStage }))
+);
+const RedRoomSet = lazy(() =>
+  import('./redroom/RedRoomSet').then((m) => ({ default: m.RedRoomSet }))
+);
+const DiwaliSet = lazy(() =>
+  import('./diwali/DiwaliSet').then((m) => ({ default: m.DiwaliSet }))
+);
 
 export function WorldDirector() {
   const world = useStore((s) => s.world);
@@ -22,11 +29,9 @@ export function WorldDirector() {
       )}
 
       {/* Protagonist Badge: persistent across worlds per Part 13.3 */}
-      <Badge
-        position={world === 'diwali' ? [0, 1.9, 0] : [0, 1.5, 0]}
-      />
+      <Badge position={world === 'diwali' ? [0, 1.9, 0] : [0, 1.5, 0]} />
 
-      {/* World sets rendered in Suspense per Part 13.3 */}
+      {/* World sets rendered in Suspense, lazy-loaded per Part 12.4 & 13.3 */}
       <Suspense fallback={null}>
         {world === 'home' && <HomeStage />}
         {world === 'redroom' && <RedRoomSet />}
