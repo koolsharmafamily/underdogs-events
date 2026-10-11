@@ -340,11 +340,20 @@ export function Badge({
 
     if (world === 'redroom') {
       // Red Room: floats in front of the mirror at (0, 2.0, 0.8) per Part 8 The set
-      targetX = 0;
-      targetY = 2.0;
-      targetZ = 0.8;
+      const r4 = frame.dampedProgress['R4'] ?? 0;
+      const r5 = frame.dampedProgress['R5'] ?? 0;
+      if (r4 > 0.1 && r5 < 0.1) {
+        targetX = 0;
+        targetY = 2.75;
+        targetZ = 0.4;
+        targetScale = 0.65;
+      } else {
+        targetX = 0;
+        targetY = 2.0;
+        targetZ = 0.8;
+        targetScale = 1.0;
+      }
       targetYaw = tr.type === 'T3' ? tr.badgeFlip : 0;
-      targetScale = 1.0;
     } else if (world === 'diwali') {
       // Diwali: floats at (0, 1.9, 0) per Part 9 The set
       const d3 = frame.dampedProgress['D3'] ?? 0;
@@ -380,29 +389,33 @@ export function Badge({
       const p5 = frame.dampedProgress['H5'] ?? 0;
 
       const isMobile = size.width < 768;
+      const effP4 = Math.max(p4, frame.progress['H4'] ?? 0);
+      const effP5 = Math.max(p5, frame.progress['H5'] ?? 0);
 
-      if (p5 > 0.05) {
-        // H5: Doors scene — badge floats at (0, 3.2, 0)
+      if (effP5 > 0.001 || effP4 > 0.80) {
+        // H5: Doors scene — badge floats above the two doors
         targetX = 0;
-        targetY = 3.2;
+        targetY = isMobile ? 2.75 : 3.2;
         targetZ = 0;
-        targetScale = 1.0;
+        targetScale = isMobile ? 0.44 : 1.0;
         targetYaw = hoverDoor === 'redroom' ? -0.174 : hoverDoor === 'diwali' ? 0.174 : 0;
-      } else if (p4 > 0.05) {
+      } else if (effP4 > 0.05) {
         targetX = 0;
         targetZ = 0;
-        targetScale = 1.0;
+        targetScale = isMobile ? 0.78 : 1.0;
+        const startY = isMobile ? 2.05 : 1.5;
+        const endY = isMobile ? 2.75 : 3.2;
         if (p4 < 0.65) {
-          targetY = 1.5;
+          targetY = startY;
         } else {
-          targetY = THREE.MathUtils.lerp(1.5, 3.2, (p4 - 0.65) / 0.35);
+          targetY = THREE.MathUtils.lerp(startY, endY, (p4 - 0.65) / 0.35);
         }
         targetYaw = 0;
       } else if (p3 > 0.05) {
         if (isMobile) {
-          targetScale = Math.max(0, 1.0 - p3 * 2);
+          targetScale = Math.max(0, 0.88 - p3 * 2);
           targetX = 0;
-          targetY = 1.5;
+          targetY = 1.85;
           targetZ = 0;
         } else {
           targetX = 1.2;
@@ -413,9 +426,9 @@ export function Badge({
         targetYaw = 0;
       } else if (p2 > 0.05) {
         targetX = 0;
-        targetY = 1.5;
+        targetY = isMobile ? 1.88 : 1.5;
         targetZ = 0;
-        targetScale = 1.0;
+        targetScale = isMobile ? 0.88 : 1.0;
 
         if (p2 < 0.34) {
           const sub = p2 / 0.34;
@@ -435,10 +448,10 @@ export function Badge({
         }
       } else {
         targetX = isMobile ? 0 : 0.85;
-        targetY = 1.5 + 0.2 * p1;
+        targetY = (isMobile ? 1.85 : 1.5) + (isMobile ? 0.05 : 0.2) * p1;
         targetZ = position[2];
         targetYaw = -0.4363 * p1;
-        targetScale = 1.0;
+        targetScale = isMobile ? 0.88 : 1.0;
         h2SpinDone.current = false;
       }
 

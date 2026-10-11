@@ -29,15 +29,20 @@ export function DoorProjector() {
 
     const width = typeof window !== 'undefined' ? window.innerWidth : 1440;
     const height = typeof window !== 'undefined' ? window.innerHeight : 900;
+    const isPortrait = width < height;
+    const doorX = isPortrait ? 0.50 : 1.2;
+    const halfW = isPortrait ? 0.32 : 0.5;
+    const doorBottomY = isPortrait ? 1.22 : 0.0;
+    const doorTopY = isPortrait ? 2.45 : 2.05;
 
-    // Door 1: Red Room centered at [-1.2, 1.2, 0] with width ~1.1, height ~2.4
+    // Door 1: Red Room centered at [-doorX, 1.2, 0]
     if (domTwinRefs.red) {
       if (!isVisible) {
         domTwinRefs.red.style.opacity = '0';
         domTwinRefs.red.style.pointerEvents = 'none';
       } else {
-        vTL.set(-1.2 - 0.5, 2.05, 0).project(camera);
-        vBR.set(-1.2 + 0.5, 0.0, 0).project(camera);
+        vTL.set(-doorX - halfW, doorTopY, 0).project(camera);
+        vBR.set(-doorX + halfW, doorBottomY, 0).project(camera);
 
         const x1 = (vTL.x * 0.5 + 0.5) * width;
         const y1 = (-vTL.y * 0.5 + 0.5) * height;
@@ -57,14 +62,14 @@ export function DoorProjector() {
       }
     }
 
-    // Door 2: Diwali centered at [+1.2, 1.2, 0] with width ~1.0, height ~2.05
+    // Door 2: Diwali centered at [+doorX, 1.2, 0]
     if (domTwinRefs.diwali) {
       if (!isVisible) {
         domTwinRefs.diwali.style.opacity = '0';
         domTwinRefs.diwali.style.pointerEvents = 'none';
       } else {
-        vTL.set(1.2 - 0.5, 2.05, 0).project(camera);
-        vBR.set(1.2 + 0.5, 0.0, 0).project(camera);
+        vTL.set(doorX - halfW, doorTopY, 0).project(camera);
+        vBR.set(doorX + halfW, doorBottomY, 0).project(camera);
 
         const x1 = (vTL.x * 0.5 + 0.5) * width;
         const y1 = (-vTL.y * 0.5 + 0.5) * height;

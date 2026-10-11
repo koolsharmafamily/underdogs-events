@@ -213,7 +213,7 @@ async function verifyPortraitMobile(browser) {
 
   await page.evaluate(() => {
     const h2 = document.querySelector('[data-scene="H2"]');
-    if (h2) window.scrollTo(0, h2.offsetTop + h2.offsetHeight * 0.45);
+    if (h2) window.scrollTo(0, h2.offsetTop + Math.max(0, h2.offsetHeight - window.innerHeight) * 0.82);
   });
   await page.waitForTimeout(700);
   await page.screenshot({
@@ -240,7 +240,7 @@ async function verifyPortraitMobile(browser) {
 
   await page.evaluate(() => {
     const r4 = document.querySelector('[data-scene="R4"]');
-    if (r4) window.scrollTo(0, r4.offsetTop + r4.offsetHeight * 0.65);
+    if (r4) window.scrollTo(0, r4.offsetTop + Math.max(0, r4.offsetHeight - window.innerHeight) * 0.88);
   });
   await page.waitForTimeout(800);
   await page.screenshot({
@@ -258,7 +258,7 @@ async function verifyPortraitMobile(browser) {
 
   await page.evaluate(() => {
     const d3 = document.querySelector('[data-scene="D3"]');
-    if (d3) window.scrollTo(0, d3.offsetTop + d3.offsetHeight * 0.55);
+    if (d3) window.scrollTo(0, d3.offsetTop + Math.max(0, d3.offsetHeight - window.innerHeight) * 0.88);
   });
   await page.waitForTimeout(800);
   await page.screenshot({
@@ -267,7 +267,7 @@ async function verifyPortraitMobile(browser) {
 
   await page.evaluate(() => {
     const d4 = document.querySelector('[data-scene="D4"]');
-    if (d4) window.scrollTo(0, d4.offsetTop + d4.offsetHeight * 0.5);
+    if (d4) window.scrollTo(0, d4.offsetTop);
   });
   await page.waitForTimeout(800);
   await page.screenshot({

@@ -167,7 +167,7 @@ export function HomeView() {
         aria-labelledby="home-about-label"
         className="scene-section scene-h2"
       >
-        <div className="scene-sticky flex flex-col justify-between py-24">
+        <div className="scene-sticky flex flex-col justify-between pt-20 pb-10 md:py-24">
           <div className="site-container flex items-center justify-between">
             <h2
               id="home-about-label"
@@ -183,7 +183,7 @@ export function HomeView() {
             </span>
           </div>
 
-          <div className="site-container site-grid my-auto items-center">
+          <div className="site-container site-grid mt-auto md:my-auto items-center pb-4 md:pb-0">
             <div className="col-span-4 md:col-span-5 lg:col-span-8">
               {!motionEnabled ? (
                 <div className="flex flex-col gap-6">
@@ -197,7 +197,7 @@ export function HomeView() {
                   ))}
                 </div>
               ) : (
-                <div className="relative min-h-[200px] sm:min-h-[260px] flex items-center">
+                <div className="relative min-h-[110px] sm:min-h-[260px] flex items-end md:items-center">
                   {site.home.about.statements.map((stmt, idx) => {
                     const isCurrent = idx === activeStatement
                     const isPast = idx < activeStatement
@@ -304,7 +304,7 @@ export function HomeView() {
         aria-labelledby="home-season-label"
         className="scene-section scene-h4"
       >
-        <div className="scene-sticky flex flex-col justify-between py-24">
+        <div className="scene-sticky flex flex-col justify-between pt-20 pb-10 md:py-24">
           <div className="site-container">
             <h2
               id="home-season-label"
@@ -314,7 +314,7 @@ export function HomeView() {
             </h2>
           </div>
 
-          <div className="site-container my-auto flex flex-col items-center text-center gap-6">
+          <div className="site-container mt-auto md:my-auto flex flex-col items-center text-center gap-6 pb-4 md:pb-0">
             <div className="flex flex-col items-center gap-2">
               {site.home.season.lines.map((line, idx) => {
                 const visible = idx < seasonStep
@@ -356,7 +356,7 @@ export function HomeView() {
         {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
         <DomTwins />
 
-        <div className="scene-sticky-desktop flex flex-col justify-between py-12 lg:py-16">
+        <div className="scene-sticky-desktop flex flex-col justify-between pt-24 pb-12 lg:py-16">
           <div className="site-container flex items-center justify-between">
             <h2
               id="home-worlds-label"
@@ -367,7 +367,7 @@ export function HomeView() {
           </div>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
-          <div className="w-full flex-1 pointer-events-none min-h-[30vh] lg:min-h-[44vh]" aria-hidden="true" />
+          <div className="w-full flex-1 pointer-events-none min-h-[38vh] lg:min-h-[44vh]" aria-hidden="true" />
 
           <div className="site-container site-grid relative z-30 items-end gap-y-8 pt-4 pb-8 lg:pb-12">
             {/* Door 1: The Red Room */}

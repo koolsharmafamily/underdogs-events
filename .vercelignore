@@ -1,0 +1,5 @@
+brand-source/
+GLBs/
+scripts/
+*.md
+!README.md

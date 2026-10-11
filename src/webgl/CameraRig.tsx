@@ -156,7 +156,8 @@ export function CameraRig() {
         targetPos.current.x *= blend;
         targetLook.current.x *= blend;
       }
-      targetPos.current.z += 0.35;
+      const h5Pullback = world === 'home' ? (frame.dampedProgress['H5'] ?? 0) * 0.65 : 0;
+      targetPos.current.z += 0.35 + h5Pullback;
       targetLook.current.y -= 0.15;
     }
 

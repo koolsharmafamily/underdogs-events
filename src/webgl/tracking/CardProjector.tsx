@@ -17,16 +17,10 @@ export const cardOverlayRef: {
 };
 
 export function CardProjector() {
-  const { camera } = useThree();
-
-  const vTL = new THREE.Vector3();
-  const vBR = new THREE.Vector3();
-
   useFrame(() => {
     const p4 = frame.dampedProgress['R4'] ?? 0;
     const p5 = frame.dampedProgress['R5'] ?? 0;
-    const isVisible = p4 > 0.55 && p5 < 0.25;
-    const isHeld = p4 > 0.78 && p5 < 0.05;
+    const isVisible = p4 > 0.35 && p5 < 0.25;
 
     const el = cardOverlayRef.current;
     if (!el) return;
@@ -41,10 +35,17 @@ export function CardProjector() {
     const height = typeof window !== 'undefined' ? window.innerHeight : 900;
     const isMobile = width < 768;
 
+    // Detect when R4 unpins and scrolls upward out of the viewport as R5 enters
+    const r4Section =
+      typeof document !== 'undefined'
+        ? document.querySelector<HTMLElement>('[data-scene="R4"]')
+        : null;
+    const r4Bottom = r4Section ? r4Section.getBoundingClientRect().bottom : height;
+    const overscroll = Math.max(0, height - r4Bottom);
+    const exitFade = 1 - THREE.MathUtils.clamp(overscroll / (height * 0.22), 0, 1);
+
     // Card in camera frame:
-    // When fully raised at p4 >= 0.8:
-    // Card faces camera, centered at eye level:
-    // fills 70% viewport height on desktop (85% width on mobile)
+    // Fills 70% viewport height on desktop (85% width on mobile)
     const cardAspect = 1.42; // Card aspect ratio (height / width)
     
     let targetCardHeight = height * 0.70;
@@ -52,23 +53,24 @@ export function CardProjector() {
 
     if (isMobile) {
       targetCardWidth = width * 0.85;
-      targetCardHeight = targetCardWidth * cardAspect;
+      targetCardHeight = Math.min(height * 0.68, targetCardWidth * cardAspect);
     }
 
-    // Interpolate card rise from 55% to 80% progress
-    const riseP = THREE.MathUtils.clamp((p4 - 0.55) / 0.25, 0, 1);
+    // Interpolate card rise from 35% to 60% progress
+    const riseP = THREE.MathUtils.clamp((p4 - 0.35) / 0.25, 0, 1);
     const easedRise = THREE.MathUtils.smoothstep(riseP, 0, 1);
 
     const startTop = height * 0.75;
     const endTop = (height - targetCardHeight) * 0.5;
 
-    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise);
+    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise) - overscroll;
     const currentLeft = (width - targetCardWidth) * 0.5;
 
-    // Fade in overlay text between 78% and 92%
-    const fadeP = THREE.MathUtils.clamp((p4 - 0.78) / 0.14, 0, 1);
+    // Fade in overlay text between 48% and 62% so card is 100% solid for the entire open stage
+    const fadeP = THREE.MathUtils.clamp((p4 - 0.48) / 0.14, 0, 1);
     const r5Fade = 1 - THREE.MathUtils.clamp(p5 / 0.2, 0, 1);
-    const finalOpacity = fadeP * r5Fade;
+    const finalOpacity = fadeP * r5Fade * exitFade;
+    const isHeld = p4 > 0.60 && p5 < 0.05 && exitFade > 0.5;
 
     el.style.transform = `translate3d(${Math.round(currentLeft)}px, ${Math.round(currentTop)}px, 0)`;
     el.style.width = `${Math.round(targetCardWidth)}px`;

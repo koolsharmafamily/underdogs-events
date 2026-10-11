@@ -3,7 +3,7 @@
 import React, { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { frame } from '@/state/frame';
 import { useStore } from '@/state/store';
 import { Beams } from './Beams';
@@ -13,6 +13,7 @@ useGLTF.preload('/models/door-redroom.glb');
 useGLTF.preload('/models/door-diwali.glb');
 
 export function HomeStage() {
+  const { size } = useThree();
   const hoverDoor = useStore((s) => s.hoverDoor);
   const loaderPopped = useStore((s) => s.loaderPopped);
 
@@ -160,32 +161,60 @@ export function HomeStage() {
     }
 
     // 4. Doors emerging out of darkness at end of H4 (Part 7 H4: end of scene)
+    const isPortrait = size.width < size.height;
+    const doorX = isPortrait ? 0.50 : 1.2;
+    const doorOpenY = isPortrait ? 1.22 : 0;
     let doorTargetY = -8.0;
-    const doorTargetScale = 0.85;
+    const doorTargetScale = isPortrait ? 0.36 : 0.85;
     let doorsVisible = false;
 
-    if (p5 > 0.01 || tr.type === 'T1' || tr.type === 'T2') {
-      doorTargetY = 0;
+    const effP4 = Math.max(p4, frame.progress['H4'] ?? 0);
+    const effP5 = Math.max(p5, frame.progress['H5'] ?? 0);
+
+    if (effP5 > 0.001 || effP4 > 0.80 || tr.type === 'T1' || tr.type === 'T2') {
+      doorTargetY = doorOpenY;
       doorsVisible = true;
-    } else if (p4 > 0.5) {
+    } else if (effP4 > 0.35) {
       doorsVisible = true;
-      const riseP = (p4 - 0.5) / 0.5;
-      doorTargetY = THREE.MathUtils.lerp(-8.0, 0, riseP);
+      const riseP = THREE.MathUtils.clamp((effP4 - 0.35) / 0.45, 0, 1);
+      doorTargetY = THREE.MathUtils.lerp(-8.0, doorOpenY, riseP);
     }
 
     if (redDoorRef.current) {
+      const wasHidden = !redDoorRef.current.visible;
       redDoorRef.current.visible = doorsVisible;
-      redDoorRef.current.position.y = frame.snapCamera
-        ? doorTargetY
-        : THREE.MathUtils.damp(redDoorRef.current.position.y, doorTargetY, 5, delta);
+      redDoorRef.current.position.x = -doorX;
+      redDoorRef.current.position.y =
+        frame.snapCamera || (wasHidden && effP4 > 0.8)
+          ? doorTargetY
+          : THREE.MathUtils.damp(redDoorRef.current.position.y, doorTargetY, 10, delta);
       redDoorRef.current.scale.setScalar(doorTargetScale);
     }
     if (diwaliDoorRef.current) {
+      const wasHidden = !diwaliDoorRef.current.visible;
       diwaliDoorRef.current.visible = doorsVisible;
-      diwaliDoorRef.current.position.y = frame.snapCamera
-        ? doorTargetY
-        : THREE.MathUtils.damp(diwaliDoorRef.current.position.y, doorTargetY, 5, delta);
+      diwaliDoorRef.current.position.x = doorX;
+      diwaliDoorRef.current.position.y =
+        frame.snapCamera || (wasHidden && effP4 > 0.8)
+          ? doorTargetY
+          : THREE.MathUtils.damp(diwaliDoorRef.current.position.y, doorTargetY, 10, delta);
       diwaliDoorRef.current.scale.setScalar(doorTargetScale);
+    }
+    if (redLeakLightRef.current) {
+      redLeakLightRef.current.position.x = -doorX;
+      redLeakLightRef.current.position.y = doorOpenY + 0.08;
+    }
+    if (diwaliLeakLightRef.current) {
+      diwaliLeakLightRef.current.position.x = doorX;
+      diwaliLeakLightRef.current.position.y = doorOpenY + 0.08;
+    }
+    if (redLeakMeshRef.current) {
+      redLeakMeshRef.current.position.x = -doorX;
+      redLeakMeshRef.current.position.y = doorOpenY + 0.01;
+    }
+    if (diwaliLeakMeshRef.current) {
+      diwaliLeakMeshRef.current.position.x = doorX;
+      diwaliLeakMeshRef.current.position.y = doorOpenY + 0.01;
     }
 
     // 5. Door Articulation on Hover / Focus (Part 7 H5) & Transitions T1 / T2 (Part 10)
