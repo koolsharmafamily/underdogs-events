@@ -14,6 +14,8 @@ export interface BadgeBehaviourState {
   dragRotationY: number;
   isDragging: boolean;
   manualBlinkTrigger: number;
+  choreoYaw?: number;
+  choreoPos?: THREE.Vector3;
 }
 
 export class BadgeBehaviours {
@@ -34,12 +36,21 @@ export class BadgeBehaviours {
     tongue: THREE.Group | null,
     state: BadgeBehaviourState
   ) {
-    const { time, dt, pointer, hoverDoor, dragVelocity, dragRotationY, isDragging, manualBlinkTrigger } = state;
+    const { time, dt, pointer, hoverDoor, dragVelocity, dragRotationY, isDragging, manualBlinkTrigger, choreoYaw, choreoPos } = state;
 
     // 1. Idle Float: y ±0.03m, rotation ±3° via low-frequency simplex noise at 0.12 Hz
     const floatY = this.noise2D(time * 0.12, 1) * 0.03;
     const floatRotX = this.noise2D(time * 0.1, 2) * THREE.MathUtils.degToRad(3);
     const floatRotZ = this.noise2D(time * 0.09, 3) * THREE.MathUtils.degToRad(2.5);
+
+    // Apply position: choreography position + idle float Y
+    if (choreoPos) {
+      root.position.x = choreoPos.x;
+      root.position.y = choreoPos.y + floatY;
+      root.position.z = choreoPos.z;
+    } else {
+      root.position.y += floatY;
+    }
 
     // 2. Idle Decay: after 3s without pointer movement, cursor influence fades over 1.2s
     const idleTime = time - pointer.lastMoveTime;
@@ -59,8 +70,8 @@ export class BadgeBehaviours {
       eyeShiftX = 0.02;
     }
 
-    // 5. Drag to Spin with inertia and spring return
-    const totalTargetRotY = tiltY + dragRotationY;
+    // 5. Drag to Spin with inertia and spring return + choreography yaw
+    const totalTargetRotY = (choreoYaw ?? 0) + tiltY + dragRotationY;
     root.rotation.x = THREE.MathUtils.damp(root.rotation.x, floatRotX + tiltX, 7, dt);
     root.rotation.y = THREE.MathUtils.damp(root.rotation.y, totalTargetRotY, 6, dt);
     root.rotation.z = THREE.MathUtils.damp(root.rotation.z, floatRotZ, 5, dt);

@@ -7,6 +7,7 @@ import { QualityProvider, useQuality } from './QualityProvider';
 import { CameraRig } from './CameraRig';
 import { WorldDirector } from './WorldDirector';
 import { Precompile } from './Precompile';
+import { DoorProjector } from './tracking/DoorProjector';
 import { PostFX } from './PostFX';
 import { setWebglAdvance } from '@/motion/clock';
 
@@ -64,6 +65,7 @@ function CanvasInner() {
       <Precompile />
       <CameraRig />
       <WorldDirector />
+      <DoorProjector />
       <PostFX />
     </Canvas>
   );

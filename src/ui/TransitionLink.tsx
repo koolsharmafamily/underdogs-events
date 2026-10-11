@@ -15,18 +15,22 @@ interface TransitionLinkProps
   children?: React.ReactNode
 }
 
-export function TransitionLink({
-  href,
-  transitionType,
-  rollText,
-  underline = false,
-  className = '',
-  onClick,
-  onMouseEnter,
-  onFocus,
-  children,
-  ...rest
-}: TransitionLinkProps) {
+export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLinkProps>(
+  function TransitionLink(
+    {
+      href,
+      transitionType,
+      rollText,
+      underline = false,
+      className = '',
+      onClick,
+      onMouseEnter,
+      onFocus,
+      children,
+      ...rest
+    },
+    ref
+  ) {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -63,6 +67,7 @@ export function TransitionLink({
 
   return (
     <Link
+      ref={ref}
       href={href}
       onClick={handleClick}
       onMouseEnter={(e) => {
@@ -88,4 +93,6 @@ export function TransitionLink({
       )}
     </Link>
   )
-}
+})
+
+TransitionLink.displayName = 'TransitionLink'

@@ -14,6 +14,7 @@ import { Divider } from '@/ui/Divider'
 import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
 import { TransitionLink } from '@/ui/TransitionLink'
 import { Footer } from '@/ui/Footer'
+import { DomTwins } from '@/webgl/tracking/DomTwins'
 
 export function HomeView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
@@ -39,6 +40,7 @@ export function HomeView() {
   useSceneProgress('H5', h5Ref)
 
   const [cueVisible, setCueVisible] = useState(true)
+  const [heroTextVisible, setHeroTextVisible] = useState(true)
   const [activeStatement, setActiveStatement] = useState(0)
   const [showAboutBody, setShowAboutBody] = useState(false)
   const [seasonStep, setSeasonStep] = useState(3)
@@ -46,6 +48,7 @@ export function HomeView() {
   useEffect(() => {
     if (!motionEnabled) {
       setCueVisible(true)
+      setHeroTextVisible(true)
       setActiveStatement(0)
       setShowAboutBody(true)
       setSeasonStep(3)
@@ -54,6 +57,13 @@ export function HomeView() {
 
     const onTick = () => {
       const p1 = frame.progress.H1 ?? 0
+      // Part 7 H1: hero text exits as a one-shot at 15%, returns when user scrolls back above 10% (hysteresis)
+      if (p1 > 0.15) {
+        setHeroTextVisible(false)
+      } else if (p1 < 0.10) {
+        setHeroTextVisible(true)
+      }
+
       if (p1 > 0.1) {
         setCueVisible(false)
       } else if (p1 < 0.08) {
@@ -118,8 +128,14 @@ export function HomeView() {
               />
             </div>
 
-            {/* Copy occupies columns 1–6, bottom-aligned at 72% viewport height on desktop */}
-            <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-4">
+            {/* Copy occupies columns 1–6, bottom-aligned at 72% viewport height on desktop (Part 7 H1) */}
+            <div
+              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-4 transition-all duration-700 ${
+                heroTextVisible || !motionEnabled
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 -translate-y-8 pointer-events-none'
+              }`}
+            >
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--steel)]">
                 {site.home.hero.label}
               </p>
@@ -334,7 +350,10 @@ export function HomeView() {
         aria-labelledby="home-worlds-label"
         className="scene-section scene-h5"
       >
-        <div className="scene-sticky-desktop flex flex-col justify-between py-20 lg:py-24">
+        {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
+        <DomTwins />
+
+        <div className="scene-sticky-desktop flex flex-col justify-between py-12 lg:py-16">
           <div className="site-container flex items-center justify-between">
             <h2
               id="home-worlds-label"
@@ -342,21 +361,16 @@ export function HomeView() {
             >
               {site.home.worlds.label}
             </h2>
-
-            <div className="hidden lg:block">
-              <BadgeDomHost
-                skin={hoverDoor ?? 'home'}
-                sizeClass="w-[110px] h-[110px]"
-                label="Underdogs Gate Host Badge"
-              />
-            </div>
           </div>
 
-          <div className="site-container site-grid my-auto items-stretch gap-y-12 pt-8">
+          {/* Spacer allowing full view of 3D doors rendered in WebGL */}
+          <div className="w-full flex-1 pointer-events-none min-h-[30vh] lg:min-h-[44vh]" aria-hidden="true" />
+
+          <div className="site-container site-grid items-end gap-y-8 pt-4 pb-8 lg:pb-12">
             {/* Door 1: The Red Room */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-between transition-opacity duration-500 ${
-                hoverDoor === 'diwali' ? 'opacity-60' : 'opacity-100'
+              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
+                hoverDoor === 'diwali' ? 'opacity-40' : 'opacity-100'
               }`}
             >
               <TransitionLink
@@ -367,29 +381,29 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor('redroom')}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-6 border border-[#FCF9FC]/20 bg-[#060101] p-6 sm:p-10 hover:border-[#FF2A1F] transition-colors duration-500"
+                className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
               >
-                {/* Arched Doorway Stage Representation */}
-                <div className="relative mx-auto flex h-[220px] sm:h-[260px] w-full max-w-[220px] items-end justify-center border-x border-t border-[#C8A15A]/45 bg-[#2A0403]/50 pt-6 overflow-hidden">
-                  <div
-                    aria-hidden="true"
-                    className="h-full w-full border border-[#7C0F0C] bg-[#510805] transition-transform duration-700 origin-left group-hover:[transform:perspective(700px)_rotateY(-10deg)] group-focus-visible:[transform:perspective(700px)_rotateY(-10deg)] flex items-center justify-center"
-                  >
-                    <span className="h-5 w-5 border border-[#C8A15A] inline-block" />
+                {!motionEnabled && (
+                  <div className="relative mx-auto flex h-[200px] w-full max-w-[200px] items-end justify-center border-x border-t border-[#C8A15A]/45 bg-[#2A0403]/50 pt-6 mb-3 overflow-hidden">
+                    <div
+                      aria-hidden="true"
+                      className="h-full w-full border border-[#7C0F0C] bg-[#510805] flex items-center justify-center"
+                    >
+                      <span className="h-5 w-5 border border-[#C8A15A] inline-block" />
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-x-0 bottom-0 h-1.5 bg-[#FF2A1F]"
+                    />
                   </div>
-                  {/* Floor light leak */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1.5 bg-[#FF2A1F] opacity-75 group-hover:opacity-100 transition-opacity"
-                  />
-                </div>
+                )}
 
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
                     {site.home.worlds.one.kicker}
                   </span>
-                  <span className="font-unbounded text-heading font-extrabold uppercase text-[#FCF9FC]">
+                  <span className="font-unbounded text-heading sm:text-display-m font-extrabold uppercase text-[#FCF9FC] tracking-[-0.02em] leading-[1.05]">
                     {site.home.worlds.one.name}
                   </span>
                   <span className="font-manrope text-body text-[#FCF9FC]/80">
@@ -412,8 +426,8 @@ export function HomeView() {
 
             {/* Door 2: Diwali */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-between transition-opacity duration-500 ${
-                hoverDoor === 'redroom' ? 'opacity-60' : 'opacity-100'
+              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
+                hoverDoor === 'redroom' ? 'opacity-40' : 'opacity-100'
               }`}
             >
               <TransitionLink
@@ -424,34 +438,34 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor('diwali')}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-6 border border-[#FCF9FC]/20 bg-[#14161F] p-6 sm:p-10 hover:border-[#F2D38B] transition-colors duration-500"
+                className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#F2D38B]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2D38B] transition-all duration-300"
               >
-                {/* Haveli Double Doorway Stage Representation */}
-                <div className="relative mx-auto flex h-[220px] sm:h-[260px] w-full max-w-[220px] items-end justify-center border-x border-t border-[#C6A76A]/55 bg-[#7E1347]/40 pt-6 overflow-hidden">
-                  <div
-                    aria-hidden="true"
-                    className="grid h-full w-full grid-cols-2 border border-[#C6A76A]/60 bg-[#7E1347]"
-                  >
-                    <div className="border-r border-[#C6A76A]/45 transition-transform duration-700 origin-left group-hover:[transform:perspective(700px)_rotateY(-10deg)] group-focus-visible:[transform:perspective(700px)_rotateY(-10deg)] flex items-center justify-end pr-2">
-                      <span className="h-3 w-3 border border-[#F2D38B]" />
+                {!motionEnabled && (
+                  <div className="relative mx-auto flex h-[200px] w-full max-w-[200px] items-end justify-center border-x border-t border-[#C6A76A]/55 bg-[#7E1347]/40 pt-6 mb-3 overflow-hidden">
+                    <div
+                      aria-hidden="true"
+                      className="grid h-full w-full grid-cols-2 border border-[#C6A76A]/60 bg-[#7E1347]"
+                    >
+                      <div className="border-r border-[#C6A76A]/45 flex items-center justify-end pr-2">
+                        <span className="h-3 w-3 border border-[#F2D38B]" />
+                      </div>
+                      <div className="flex items-center justify-start pl-2">
+                        <span className="h-3 w-3 border border-[#F2D38B]" />
+                      </div>
                     </div>
-                    <div className="transition-transform duration-700 origin-right group-hover:[transform:perspective(700px)_rotateY(10deg)] group-focus-visible:[transform:perspective(700px)_rotateY(10deg)] flex items-center justify-start pl-2">
-                      <span className="h-3 w-3 border border-[#F2D38B]" />
-                    </div>
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-x-0 bottom-0 h-1.5 bg-[#F2D38B]"
+                    />
                   </div>
-                  {/* Floor light leak */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute inset-x-0 bottom-0 h-1.5 bg-[#F2D38B] opacity-75 group-hover:opacity-100 transition-opacity"
-                  />
-                </div>
+                )}
 
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#F2D38B]">
                     {site.home.worlds.two.kicker}
                   </span>
-                  <span className="font-bodoni italic text-heading font-medium text-[#FFF6EE]">
+                  <span className="font-bodoni italic text-heading sm:text-display-m font-medium text-[#FFF6EE] leading-[1.05]">
                     {site.home.worlds.two.name}
                   </span>
                   <span

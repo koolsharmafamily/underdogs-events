@@ -17,12 +17,16 @@ export function BadgeDomHost({
   skin,
   sizeClass = 'w-[240px] h-[240px] sm:w-[340px] sm:h-[340px] lg:w-[420px] lg:h-[420px]',
   label = 'Underdogs emblem — activate to blink',
-  showSvgPreview = true,
+  showSvgPreview,
   className = '',
 }: BadgeDomHostProps) {
+  const tier = useStore((s) => s.tier)
   const motionEnabled = useStore((s) => s.motionEnabled)
   const hoverDoor = useStore((s) => s.hoverDoor)
   const blinkTrigger = useStore((s) => s.blinkTrigger)
+  const triggerBlink = useStore((s) => s.triggerBlink)
+
+  const isSvgVisible = showSvgPreview !== undefined ? showSvgPreview : tier === 'T0'
 
   const [blinkL, setBlinkL] = useState(false)
   const [blinkR, setBlinkR] = useState(false)
@@ -79,7 +83,10 @@ export function BadgeDomHost({
   return (
     <button
       type="button"
-      onClick={performBlink}
+      onClick={() => {
+        performBlink()
+        triggerBlink()
+      }}
       onMouseEnter={performWag}
       aria-label={label}
       className={`group relative inline-flex items-center justify-center bg-transparent p-2 transition-transform duration-500 ${sizeClass} ${className}`}
@@ -89,7 +96,7 @@ export function BadgeDomHost({
           : undefined,
       }}
     >
-      {showSvgPreview && (
+      {isSvgVisible && (
         <UnderdogsBadgeSvg
           skin={skin}
           size="100%"

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
+import { useStore } from '@/state/store';
 import { createSkinMaterials } from './badge/skins';
 
 /**
@@ -52,11 +53,13 @@ export function Precompile() {
           if (!cancelled) {
             scene.remove(dummyGroup);
             geom.dispose();
+            useStore.getState().setPrecompiled(true);
           }
         })
         .catch(() => {
           scene.remove(dummyGroup);
           geom.dispose();
+          useStore.getState().setPrecompiled(true);
         });
     }
 

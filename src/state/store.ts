@@ -17,10 +17,16 @@ export interface AppStore {
   menuOpen: boolean
   hintsSeen: Record<string, boolean>
   blinkTrigger: number
+  loadingProgress: number
+  isPrecompiled: boolean
+  loaderPopped: boolean
 
   setWorld: (world: WorldId) => void
   setPhase: (phase: LoaderPhase) => void
   setTier: (tier: QualityTier) => void
+  setLoadingProgress: (progress: number) => void
+  setPrecompiled: (precompiled: boolean) => void
+  setLoaderPopped: (popped: boolean) => void
   setMotionEnabled: (enabled: boolean, persist?: boolean) => void
   toggleMotion: () => void
   setPrefersReducedMotion: (reduced: boolean) => void
@@ -51,6 +57,9 @@ export const useStore = create<AppStore>((set, get) => ({
   menuOpen: false,
   hintsSeen: {},
   blinkTrigger: 0,
+  loadingProgress: 0,
+  isPrecompiled: false,
+  loaderPopped: false,
 
   setWorld: (world) => {
     set({ world })
@@ -60,6 +69,12 @@ export const useStore = create<AppStore>((set, get) => ({
   setPhase: (phase) => set({ phase }),
 
   setTier: (tier) => set({ tier }),
+
+  setLoadingProgress: (loadingProgress) => set({ loadingProgress }),
+
+  setPrecompiled: (isPrecompiled) => set({ isPrecompiled }),
+
+  setLoaderPopped: (loaderPopped) => set({ loaderPopped }),
 
   setMotionEnabled: (enabled, persist = true) => {
     set({ motionEnabled: enabled })

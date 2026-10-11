@@ -41,6 +41,8 @@ interface UnderdogsBadgeSvgProps {
   blinkingRight?: boolean
   tongueAngle?: number
   ringProgress?: number // 0..1 for loader clockwise trace
+  eyesProgress?: number // 0..1 for eyes draw in
+  tongueProgress?: number // 0..1 for tongue draw in
 }
 
 export function UnderdogsBadgeSvg({
@@ -51,6 +53,8 @@ export function UnderdogsBadgeSvg({
   blinkingRight = false,
   tongueAngle = 0,
   ringProgress,
+  eyesProgress,
+  tongueProgress,
 }: UnderdogsBadgeSvgProps) {
   const palette =
     skin === 'redroom'
@@ -154,7 +158,10 @@ export function UnderdogsBadgeSvg({
         fillRule="evenodd"
         style={{
           transformOrigin: '385.2px 360.6px',
-          transform: blinkingLeft ? 'scaleY(0.08)' : 'scaleY(1)',
+          transform: `scale(${eyesProgress !== undefined ? eyesProgress : 1}) ${
+            blinkingLeft ? 'scaleY(0.08)' : 'scaleY(1)'
+          }`,
+          opacity: eyesProgress !== undefined && eyesProgress < 0.05 ? 0 : 1,
           transition: 'transform 90ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
@@ -167,7 +174,10 @@ export function UnderdogsBadgeSvg({
         fillRule="evenodd"
         style={{
           transformOrigin: '553.5px 360.5px',
-          transform: blinkingRight ? 'scaleY(0.08)' : 'scaleY(1)',
+          transform: `scale(${eyesProgress !== undefined ? eyesProgress : 1}) ${
+            blinkingRight ? 'scaleY(0.08)' : 'scaleY(1)'
+          }`,
+          opacity: eyesProgress !== undefined && eyesProgress < 0.05 ? 0 : 1,
           transition: 'transform 90ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
@@ -180,7 +190,8 @@ export function UnderdogsBadgeSvg({
         fillRule="evenodd"
         style={{
           transformOrigin: '472px 498.1px',
-          transform: `rotate(${tongueAngle}deg)`,
+          transform: `scale(${tongueProgress !== undefined ? tongueProgress : 1}) rotate(${tongueAngle}deg)`,
+          opacity: tongueProgress !== undefined && tongueProgress < 0.05 ? 0 : 1,
           transition: 'transform 160ms cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
