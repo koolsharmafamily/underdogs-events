@@ -4,12 +4,14 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { determineTransitionType, runRouteTransition } from '@/motion/transitions'
+import { preloadRouteWorld } from '@/webgl/preload'
 import type { TransitionType } from '@/state/frame'
 
 interface TransitionLinkProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
   href: '/' | '/the-red-room' | '/diwali'
   transitionType?: TransitionType
+  origin?: 'door' | 'gate' | 'nav'
   rollText?: string
   underline?: boolean
   children?: React.ReactNode
@@ -20,6 +22,7 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
     {
       href,
       transitionType,
+      origin,
       rollText,
       underline = false,
       className = '',
@@ -31,68 +34,78 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
     },
     ref
   ) {
-  const router = useRouter()
-  const pathname = usePathname()
+    const router = useRouter()
+    const pathname = usePathname()
 
-  const handlePrefetch = () => {
-    router.prefetch(href)
-  }
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    onClick?.(e)
-    if (e.defaultPrevented) return
-
-    // Modifier-clicks and middle-clicks behave natively (Part 13.6)
-    if (
-      e.button !== 0 ||
-      e.metaKey ||
-      e.ctrlKey ||
-      e.shiftKey ||
-      e.altKey
-    ) {
-      return
+    const handlePrefetch = () => {
+      router.prefetch(href)
+      preloadRouteWorld(href)
     }
 
-    e.preventDefault()
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      onClick?.(e)
+      if (e.defaultPrevented) return
 
-    if (pathname === href) return
+      // Modifier-clicks and middle-clicks behave natively (Part 13.6)
+      if (
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      ) {
+        return
+      }
 
-    router.prefetch(href)
-    const type = transitionType ?? determineTransitionType(pathname, href)
+      e.preventDefault()
 
-    runRouteTransition(type, () => {
-      router.push(href)
-    })
-  }
+      if (pathname === href) return
 
-  return (
-    <Link
-      ref={ref}
-      href={href}
-      onClick={handleClick}
-      onMouseEnter={(e) => {
-        handlePrefetch()
-        onMouseEnter?.(e)
-      }}
-      onFocus={(e) => {
-        handlePrefetch()
-        onFocus?.(e)
-      }}
-      className={`${rollText ? 'nav-roll-link' : ''} ${underline ? 'draw-underline' : ''} ${className}`}
-      {...rest}
-    >
-      {rollText ? (
-        <span className="nav-roll-inner">
-          <span className="nav-roll-line">{rollText}</span>
-          <span className="nav-roll-line" aria-hidden="true">
-            {rollText}
+      handlePrefetch()
+      const type = transitionType ?? determineTransitionType(pathname, href)
+
+      runRouteTransition(
+        type,
+        () => {
+          router.push(href)
+        },
+        {
+          fromPath: pathname,
+          toPath: href,
+          origin,
+        }
+      )
+    }
+
+    return (
+      <Link
+        ref={ref}
+        href={href}
+        onClick={handleClick}
+        onMouseEnter={(e) => {
+          handlePrefetch()
+          onMouseEnter?.(e)
+        }}
+        onFocus={(e) => {
+          handlePrefetch()
+          onFocus?.(e)
+        }}
+        className={`${rollText ? 'nav-roll-link' : ''} ${underline ? 'draw-underline' : ''} ${className}`}
+        {...rest}
+      >
+        {rollText ? (
+          <span className="nav-roll-inner">
+            <span className="nav-roll-line">{rollText}</span>
+            <span className="nav-roll-line" aria-hidden="true">
+              {rollText}
+            </span>
           </span>
-        </span>
-      ) : (
-        children
-      )}
-    </Link>
-  )
-})
+        ) : (
+          children
+        )}
+      </Link>
+    )
+  }
+)
 
 TransitionLink.displayName = 'TransitionLink'

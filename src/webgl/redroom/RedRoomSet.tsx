@@ -56,18 +56,20 @@ export function RedRoomSet() {
     const p3 = frame.dampedProgress['R3'] ?? 0;
     const p4 = frame.dampedProgress['R4'] ?? 0;
 
-    // 1. Curtains parting over 1.4s on entry (Part 8 R0)
+    // 1. Curtains parting over 1.4s on entry (Part 8 R0) + closing/parting during T1/T3 (Part 10)
     entryCurtainTimer.current += delta;
     const curtainNorm = Math.min(1.0, entryCurtainTimer.current / 1.4);
-    const curtainEased = THREE.MathUtils.smoothstep(curtainNorm, 0, 1);
+    const entryOpen = THREE.MathUtils.smoothstep(curtainNorm, 0, 1);
+    const trClose = frame.transition.curtainClose;
+    const openFactor = Math.min(entryOpen, 1.0 - trClose);
 
     if (curtainLeftRef.current) {
-      curtainLeftRef.current.position.x = THREE.MathUtils.lerp(0.0, -2.8, curtainEased);
-      curtainLeftRef.current.scale.x = THREE.MathUtils.lerp(1.0, 0.45, curtainEased);
+      curtainLeftRef.current.position.x = THREE.MathUtils.lerp(0.0, -2.8, openFactor);
+      curtainLeftRef.current.scale.x = THREE.MathUtils.lerp(1.0, 0.45, openFactor);
     }
     if (curtainRightRef.current) {
-      curtainRightRef.current.position.x = THREE.MathUtils.lerp(0.0, 2.8, curtainEased);
-      curtainRightRef.current.scale.x = THREE.MathUtils.lerp(1.0, 0.45, curtainEased);
+      curtainRightRef.current.position.x = THREE.MathUtils.lerp(0.0, 2.8, openFactor);
+      curtainRightRef.current.scale.x = THREE.MathUtils.lerp(1.0, 0.45, openFactor);
     }
 
     // 2. Chandelier swaying +/- 1.5° (0.026 rad) at 0.12 Hz (Part 8 The set)

@@ -12,9 +12,6 @@ export function useSceneProgress(id: string, ref: RefObject<HTMLElement | null>)
     const el = ref.current
     if (!el) return
 
-    frame.progress[id] = 0
-    frame.dampedProgress[id] = 0
-
     const st = ScrollTrigger.create({
       trigger: el,
       start: 'top top',
@@ -22,10 +19,18 @@ export function useSceneProgress(id: string, ref: RefObject<HTMLElement | null>)
       onUpdate: (self) => {
         frame.progress[id] = self.progress
       },
+      onRefresh: (self) => {
+        frame.progress[id] = self.progress
+      },
     })
+
+    frame.progress[id] = st.progress
+    frame.dampedProgress[id] = st.progress
 
     return () => {
       st.kill()
+      delete frame.progress[id]
+      delete frame.dampedProgress[id]
     }
   }, [id, ref])
 }

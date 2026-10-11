@@ -94,6 +94,7 @@ export function Menu() {
       <nav aria-label="Mobile pages" className="my-auto flex flex-col gap-6 py-8">
         <TransitionLink
           href="/"
+          origin="nav"
           onClick={() => setMenuOpen(false)}
           aria-current={pathname === '/' ? 'page' : undefined}
           className={`font-unbounded text-4xl font-extrabold uppercase tracking-tight ${
@@ -107,6 +108,7 @@ export function Menu() {
 
         <TransitionLink
           href="/the-red-room"
+          origin="nav"
           onClick={() => setMenuOpen(false)}
           aria-current={pathname === '/the-red-room' ? 'page' : undefined}
           className={`font-cinzel-decorative text-4xl font-bold uppercase tracking-tight ${
@@ -120,6 +122,7 @@ export function Menu() {
 
         <TransitionLink
           href="/diwali"
+          origin="nav"
           onClick={() => setMenuOpen(false)}
           aria-current={pathname === '/diwali' ? 'page' : undefined}
           className={`font-bodoni italic text-4xl font-medium tracking-tight ${

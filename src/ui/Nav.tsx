@@ -26,6 +26,7 @@ export function Nav() {
           <TransitionLink
             href="/"
             transitionType="T4"
+            origin="nav"
             aria-label={`${site.brand.name} — ${site.redRoom.outro.back.label}`}
             className="pointer-events-auto inline-flex min-h-[44px] min-w-[44px] items-center gap-3 text-[var(--world-text)]"
           >
@@ -42,6 +43,7 @@ export function Nav() {
           >
             <TransitionLink
               href="/the-red-room"
+              origin="nav"
               rollText={site.home.worlds.one.name}
               aria-current={isRedRoom ? 'page' : undefined}
               className={`min-h-[44px] inline-flex items-center px-1 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--world-text)] ${
@@ -53,6 +55,7 @@ export function Nav() {
             </span>
             <TransitionLink
               href="/diwali"
+              origin="nav"
               rollText={site.home.worlds.two.name}
               aria-current={isDiwali ? 'page' : undefined}
               className={`min-h-[44px] inline-flex items-center px-1 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--world-text)] ${

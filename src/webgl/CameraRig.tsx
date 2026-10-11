@@ -64,6 +64,7 @@ const DIWALI_LOOK_POINTS = [
 export function CameraRig() {
   const { camera, size } = useThree();
   const world = useStore((s) => s.world);
+  const motionEnabled = useStore((s) => s.motionEnabled);
 
   // Curves
   const homeCurves = useMemo(() => ({
@@ -84,15 +85,23 @@ export function CameraRig() {
   const noise2D = useMemo(() => createNoise2D(), []);
 
   // Reusable vectors for zero allocation per frame (Part 5.1 & Part 13.4)
-  const currentPos = useRef(new THREE.Vector3());
-  const currentLook = useRef(new THREE.Vector3());
+  const currentPos = useRef(new THREE.Vector3(-0.6, 1.5, 6.5));
+  const currentLook = useRef(new THREE.Vector3(0.3, 1.5, 0.0));
   const targetPos = useRef(new THREE.Vector3());
   const targetLook = useRef(new THREE.Vector3());
 
   // Frame priority -40 per Part 13.3 (Director -50 -> CameraRig -40 -> Badge -30 -> Sets -20)
   useFrame((_, delta) => {
     const isPortrait = size.width < size.height;
-    const baseFov = 34 + (isPortrait ? 8 : 0);
+    const tr = frame.transition;
+
+    // T1 FOV +6° during doorway push (Part 10 T1: 0.25–1.05 s)
+    let fovBoost = 0;
+    if (motionEnabled && tr.type === 'T1' && world === 'home') {
+      fovBoost = 6 * Math.sin(tr.dollyProgress * Math.PI);
+    }
+
+    const baseFov = 34 + (isPortrait ? 8 : 0) + fovBoost;
 
     if (camera instanceof THREE.PerspectiveCamera) {
       if (Math.abs(camera.fov - baseFov) > 0.01) {
@@ -136,26 +145,57 @@ export function CameraRig() {
     curves.cam.getPoint(tProgress, targetPos.current);
     curves.look.getPoint(tProgress, targetLook.current);
 
+    // Apply Part 10 Transition camera moves (driven one-way by frame.transition)
+    if (motionEnabled) {
+      if (tr.type === 'T1' && world === 'home' && tr.dollyProgress > 0) {
+        // Part 10 T1 (0.25–1.05 s): Camera pushes through left doorway (dolly 3.2 m)
+        const dp = tr.dollyProgress;
+        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, -1.2, dp);
+        targetPos.current.y = THREE.MathUtils.lerp(targetPos.current.y, 1.5, dp);
+        targetPos.current.z -= 3.2 * dp;
+        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, -1.2, dp);
+        targetLook.current.y = THREE.MathUtils.lerp(targetLook.current.y, 1.5, dp);
+        targetLook.current.z = THREE.MathUtils.lerp(targetLook.current.z, -1.5, dp);
+      } else if (tr.type === 'T2' && world === 'home' && tr.dollyProgress > 0) {
+        // Part 10 T2 (0.25–1.00 s): Camera pushes into right Diwali doorway
+        const dp = tr.dollyProgress;
+        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, 1.2, dp);
+        targetPos.current.y = THREE.MathUtils.lerp(targetPos.current.y, 1.5, dp);
+        targetPos.current.z -= 3.0 * dp;
+        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, 1.2, dp);
+        targetLook.current.y = THREE.MathUtils.lerp(targetLook.current.y, 1.5, dp);
+        targetLook.current.z = THREE.MathUtils.lerp(targetLook.current.z, -1.5, dp);
+      } else if (tr.type === 'T4' && tr.phase === 'exit' && tr.dollyProgress > 0) {
+        // Part 10 T4 (0.00–0.60 s): Camera pulls back fast while world fades to darkest colour
+        targetPos.current.z += 3.6 * tr.dollyProgress;
+      }
+    }
+
     // Cursor parallax: ±0.2 X, ±0.12 Y (Part 13.3)
-    const parallaxX = frame.pointer.damped.x * 0.2;
-    const parallaxY = frame.pointer.damped.y * 0.12;
+    const parallaxX = motionEnabled ? frame.pointer.damped.x * 0.2 : 0;
+    const parallaxY = motionEnabled ? frame.pointer.damped.y * 0.12 : 0;
 
     // Idle drift: ~3.5 cm amplitude via simplex noise (Part 13.3)
     const t = frame.time;
-    const driftX = noise2D(t * 0.12, 10) * 0.035;
-    const driftY = noise2D(t * 0.12, 20) * 0.025;
+    const driftX = motionEnabled ? noise2D(t * 0.12, 10) * 0.035 : 0;
+    const driftY = motionEnabled ? noise2D(t * 0.12, 20) * 0.025 : 0;
 
     targetPos.current.x += parallaxX + driftX;
     targetPos.current.y += parallaxY + driftY;
 
-    // Smoothly damp camera transform with lambda = 6
-    currentPos.current.x = THREE.MathUtils.damp(currentPos.current.x, targetPos.current.x, 6, delta);
-    currentPos.current.y = THREE.MathUtils.damp(currentPos.current.y, targetPos.current.y, 6, delta);
-    currentPos.current.z = THREE.MathUtils.damp(currentPos.current.z, targetPos.current.z, 6, delta);
+    if (frame.snapCamera) {
+      currentPos.current.copy(targetPos.current);
+      currentLook.current.copy(targetLook.current);
+    } else {
+      // Smoothly damp camera transform with lambda = 6
+      currentPos.current.x = THREE.MathUtils.damp(currentPos.current.x, targetPos.current.x, 6, delta);
+      currentPos.current.y = THREE.MathUtils.damp(currentPos.current.y, targetPos.current.y, 6, delta);
+      currentPos.current.z = THREE.MathUtils.damp(currentPos.current.z, targetPos.current.z, 6, delta);
 
-    currentLook.current.x = THREE.MathUtils.damp(currentLook.current.x, targetLook.current.x, 6, delta);
-    currentLook.current.y = THREE.MathUtils.damp(currentLook.current.y, targetLook.current.y, 6, delta);
-    currentLook.current.z = THREE.MathUtils.damp(currentLook.current.z, targetLook.current.z, 6, delta);
+      currentLook.current.x = THREE.MathUtils.damp(currentLook.current.x, targetLook.current.x, 6, delta);
+      currentLook.current.y = THREE.MathUtils.damp(currentLook.current.y, targetLook.current.y, 6, delta);
+      currentLook.current.z = THREE.MathUtils.damp(currentLook.current.z, targetLook.current.z, 6, delta);
+    }
 
     camera.position.copy(currentPos.current);
     camera.lookAt(currentLook.current);

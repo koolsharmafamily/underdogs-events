@@ -7,7 +7,7 @@ import { site } from '@/content/site'
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
 import { useSceneProgress } from '@/motion/useSceneProgress'
-import { runFadeCutJump } from '@/motion/transitions'
+import { runFadeCutJump, useEnterTransition } from '@/motion/transitions'
 import { BadgeDomHost } from '@/ui/BadgeDomHost'
 import { Divider } from '@/ui/Divider'
 import { InvitationCard } from '@/ui/InvitationCard'
@@ -27,10 +27,13 @@ const DRIPS = [
 export function RedRoomView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
   const setWorld = useStore((s) => s.setWorld)
-  const [entryDone, setEntryDone] = useState(false)
+  const lastNavigationOrigin = useStore((s) => s.lastNavigationOrigin)
+  const [entryDone, setEntryDone] = useState(lastNavigationOrigin !== 'direct')
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
   const [dressStep, setDressStep] = useState(4)
   const [cardStage, setCardStage] = useState<'sealed' | 'opening' | 'open'>('open')
+
+  useEnterTransition('redroom')
 
   useEffect(() => {
     setWorld('redroom')
@@ -51,9 +54,9 @@ export function RedRoomView() {
   useSceneProgress('R5', r5Ref)
   useSceneProgress('R6', r6Ref)
 
-  // R0 Direct visit entry curtain reveal
+  // R0 Direct visit entry curtain reveal (Part 8 R0: skipped when arriving through T1/T3)
   useEffect(() => {
-    if (!motionEnabled) {
+    if (!motionEnabled || lastNavigationOrigin !== 'direct') {
       setEntryDone(true)
       return
     }
@@ -61,7 +64,7 @@ export function RedRoomView() {
       setEntryDone(true)
     }, 850)
     return () => window.clearTimeout(timer)
-  }, [motionEnabled])
+  }, [motionEnabled, lastNavigationOrigin])
 
   useEffect(() => {
     if (!motionEnabled) {
@@ -495,6 +498,7 @@ export function RedRoomView() {
               <TransitionLink
                 href={site.redRoom.outro.back.href}
                 transitionType="T4"
+                origin="gate"
                 className="inline-flex min-h-[48px] items-center gap-3 px-4 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--rr-ash)] hover:text-[var(--rr-bone)] transition-colors"
               >
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">

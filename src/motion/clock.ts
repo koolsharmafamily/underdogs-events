@@ -86,10 +86,11 @@ export function startClock() {
     frame.pointer.damped.y = damp(frame.pointer.damped.y, targetPy, 8, dt)
 
     // Update damped progress for all active scenes (lambda = 4 per Part 6.2)
+    const snap = frame.snapCamera
     for (const key in frame.progress) {
       const raw = frame.progress[key] ?? 0
       const prev = frame.dampedProgress[key] ?? raw
-      frame.dampedProgress[key] = damp(prev, raw, 4, dt)
+      frame.dampedProgress[key] = snap ? raw : damp(prev, raw, 4, dt)
     }
 
     webglAdvance(time)

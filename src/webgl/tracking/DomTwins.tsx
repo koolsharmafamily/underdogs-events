@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/state/store';
 import { TransitionLink } from '@/ui/TransitionLink';
+import { preloadWorldAssets } from '@/webgl/preload';
 import { domTwinRefs } from './DoorProjector';
 
 /**
@@ -13,7 +14,7 @@ import { domTwinRefs } from './DoorProjector';
  * - On hover or focus:
  *   - Active door opens 10° (spring.door), light spill grows x2.5
  *   - Other door dims 40%
- *   - Target route preloads via router.prefetch()
+ *   - Target route preloads via router.prefetch() and preloadWorldAssets()
  *   - Cursor changes to world cursor
  *   - Protagonist badge looks at door
  * - Keyboard operability: Tab focus, Enter trigger.
@@ -25,11 +26,13 @@ export function DomTwins() {
   const handleEnterRed = () => {
     setHoverDoor('redroom');
     router.prefetch('/the-red-room');
+    preloadWorldAssets('redroom');
   };
 
   const handleEnterDiwali = () => {
     setHoverDoor('diwali');
     router.prefetch('/diwali');
+    preloadWorldAssets('diwali');
   };
 
   const handleLeave = () => {
@@ -48,6 +51,7 @@ export function DomTwins() {
         }}
         href="/the-red-room"
         transitionType="T1"
+        origin="door"
         aria-label="Enter World One: The Red Room, Halloween, Saturday 24 October 2026"
         onMouseEnter={handleEnterRed}
         onMouseLeave={handleLeave}
@@ -65,6 +69,7 @@ export function DomTwins() {
         }}
         href="/diwali"
         transitionType="T2"
+        origin="door"
         aria-label="Enter World Two: Diwali, Saturday 7 November 2026"
         onMouseEnter={handleEnterDiwali}
         onMouseLeave={handleLeave}

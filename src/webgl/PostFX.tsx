@@ -1,14 +1,31 @@
 'use client';
 
-import React from 'react';
-import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing';
+import React, { useMemo } from 'react';
+import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
+import {
+  EffectComposer,
+  Bloom,
+  ChromaticAberration,
+  Vignette,
+  ToneMapping,
+} from '@react-three/postprocessing';
 import { ToneMappingMode } from 'postprocessing';
 import { useQuality } from './QualityProvider';
+import { frame } from '@/state/frame';
 import { useStore } from '@/state/store';
 
 export function PostFX() {
   const { settings } = useQuality();
   const world = useStore((s) => s.world);
+
+  // Persistent chromatic aberration vector updated in useFrame (0 in steady state, up to 0.0015 during T1)
+  const chromOffset = useMemo(() => new THREE.Vector2(0, 0), []);
+
+  useFrame(() => {
+    const ca = frame.transition.chromAb;
+    chromOffset.set(ca, ca * 0.5);
+  });
 
   // Skip composer on tier 1 and tier 0 per Part 5.5
   if (!settings.hasComposer) {
@@ -27,6 +44,11 @@ export function PostFX() {
         luminanceThreshold={bloomThreshold}
         luminanceSmoothing={0.3}
         mipmapBlur
+      />
+      <ChromaticAberration
+        offset={chromOffset}
+        radialModulation={false}
+        modulationOffset={0}
       />
       <Vignette
         eskil={false}

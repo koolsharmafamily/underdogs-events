@@ -31,19 +31,23 @@ export function Badge({
   const tongueRef = useRef<THREE.Group>(null);
 
   const world = useStore((s) => s.world);
+  const targetSkinOverride = useStore((s) => s.targetSkinOverride);
+  const motionEnabled = useStore((s) => s.motionEnabled);
   const hoverDoor = useStore((s) => s.hoverDoor);
   const blinkTrigger = useStore((s) => s.blinkTrigger);
   const triggerBlink = useStore((s) => s.triggerBlink);
   const loaderPopped = useStore((s) => s.loaderPopped);
 
-  // Target skin based on world
-  const targetSkin: SkinId =
+  // Target skin based on transition override (Part 10) or active world
+  const worldSkin: SkinId =
     world === 'redroom' ? 'neon' : world === 'diwali' ? 'jewelled' : 'enamel';
+  const targetSkin: SkinId = targetSkinOverride ?? worldSkin;
 
   const [currentSkin, setCurrentSkin] = useState<SkinId>(targetSkin);
   const [outgoingSkin, setOutgoingSkin] = useState<SkinId | null>(null);
   const [isDissolving, setIsDissolving] = useState(false);
   const dissolveProgress = useRef(-0.1);
+  const dissolveDuration = useRef(1.2);
 
   // Pop scale spring state for H0 handoff (Part 7 H0: scale spring 0.96 -> 1, one overshoot)
   const popTimerRef = useRef(0);
@@ -91,13 +95,24 @@ export function Badge({
     [outgoingSkin, outgoingUniforms]
   );
 
-  // Trigger dissolve transition when target skin changes (1.2s duration per Part 5.2 & Part 14)
+  // Trigger dissolve transition when target skin changes (Part 5.2 & Part 10)
   useEffect(() => {
-    if (targetSkin !== currentSkin && !isDissolving) {
+    if (targetSkin !== currentSkin) {
+      if (!motionEnabled) {
+        // Part 10 Reduced Motion: instant skin swap
+        setIsDissolving(false);
+        setOutgoingSkin(null);
+        setCurrentSkin(targetSkin);
+        dissolveProgress.current = -0.1;
+        return;
+      }
+
       setOutgoingSkin(currentSkin);
       setCurrentSkin(targetSkin);
       setIsDissolving(true);
       dissolveProgress.current = -0.1;
+      // In T1, dissolve starts at 0.25s and completes by 2.0s (1.75s span across -0.1..1.1)
+      dissolveDuration.current = frame.transition.type === 'T1' ? 1.65 : 1.2;
 
       const edge = edgeColors[targetSkin];
       outgoingUniforms.uEdgeColor.value.copy(edge.color);
@@ -105,7 +120,7 @@ export function Badge({
       incomingUniforms.uEdgeColor.value.copy(edge.color);
       incomingUniforms.uEdgeIntensity.value = edge.intensity;
     }
-  }, [targetSkin, currentSkin, isDissolving, edgeColors, outgoingUniforms, incomingUniforms]);
+  }, [targetSkin, currentSkin, motionEnabled, edgeColors, outgoingUniforms, incomingUniforms]);
 
   // Drag-to-spin state
   const dragRef = useRef({
@@ -269,19 +284,21 @@ export function Badge({
 
   const behaviours = useMemo(() => new BadgeBehaviours(), []);
 
-  // Home Choreography state refs (reversible per Part 6.2)
+  // Choreography state refs (reversible per Part 6.2)
   const choreoPos = useRef(new THREE.Vector3(position[0], position[1], position[2]));
   const choreoYaw = useRef(0);
   const choreoScale = useRef(scale);
   const h2SpinDone = useRef(false);
 
-  // Frame tick: update dissolve, inertia, choreography, and behaviours
+  // Frame priority -30 per Part 13.3
   useFrame((_, delta) => {
     if (!rootRef.current) return;
 
-    // 1. Advance dissolve progress (1.2s total from -0.1 to 1.1)
+    const tr = frame.transition;
+
+    // 1. Advance dissolve progress (-0.1 to 1.1)
     if (isDissolving) {
-      dissolveProgress.current += delta / 1.2;
+      dissolveProgress.current += (delta * 1.2) / dissolveDuration.current;
       outgoingUniforms.uDissolve.value = dissolveProgress.current;
       incomingUniforms.uDissolve.value = dissolveProgress.current;
 
@@ -297,7 +314,6 @@ export function Badge({
     if (!drag.isDragging) {
       drag.rotationY += drag.velocity * delta;
       drag.velocity = THREE.MathUtils.damp(drag.velocity, 0, 2.4, delta);
-      // Spring back to face camera
       drag.rotationY = THREE.MathUtils.damp(drag.rotationY, 0, 4.0, delta);
     }
 
@@ -315,7 +331,7 @@ export function Badge({
       }
     }
 
-    // 4. Compute choreographed targets for Home scenes (H1–H5)
+    // 4. Compute choreographed targets for scenes & transitions
     let targetX = position[0];
     let targetY = position[1];
     let targetZ = position[2];
@@ -327,33 +343,33 @@ export function Badge({
       targetX = 0;
       targetY = 2.0;
       targetZ = 0.8;
-      targetYaw = 0;
+      targetYaw = tr.type === 'T3' ? tr.badgeFlip : 0;
       targetScale = 1.0;
     } else if (world === 'diwali') {
       // Diwali: floats at (0, 1.9, 0) per Part 9 The set
       const d3 = frame.dampedProgress['D3'] ?? 0;
       const d4 = frame.dampedProgress['D4'] ?? 0;
       if (d4 > 0.05) {
-        // In D4: floats gracefully above the cinema lightbox frame
         targetX = 0;
         targetY = 3.1;
         targetZ = -0.5;
         targetYaw = 0;
         targetScale = 0.7;
       } else if (d3 > 0.1) {
-        // In D3: floats above the rising gold foil invitation card
         targetX = 0;
         targetY = 2.65;
         targetZ = 0.2;
         targetYaw = 0;
         targetScale = 0.75;
       } else {
-        // D1, D2, D5: floats centered at (0, 1.9, 0) per Part 9
         targetX = 0;
         targetY = 1.9;
         targetZ = 0;
         targetYaw = 0;
         targetScale = 1.0;
+      }
+      if (tr.type === 'T3') {
+        targetYaw += tr.badgeFlip;
       }
     } else {
       // Home world (H1–H5 choreography)
@@ -373,7 +389,6 @@ export function Badge({
         targetScale = 1.0;
         targetYaw = hoverDoor === 'redroom' ? -0.174 : hoverDoor === 'diwali' ? 0.174 : 0;
       } else if (p4 > 0.05) {
-        // H4: This season — returns to centre, then rises to 3.2 near end
         targetX = 0;
         targetZ = 0;
         targetScale = 1.0;
@@ -384,7 +399,6 @@ export function Badge({
         }
         targetYaw = 0;
       } else if (p3 > 0.05) {
-        // H3: Nights we've thrown — parks at top-right at 0.55 scale (desktop) or fades out (mobile)
         if (isMobile) {
           targetScale = Math.max(0, 1.0 - p3 * 2);
           targetX = 0;
@@ -398,24 +412,20 @@ export function Badge({
         }
         targetYaw = 0;
       } else if (p2 > 0.05) {
-        // H2: Who we are — three statements choreography
         targetX = 0;
         targetY = 1.5;
         targetZ = 0;
         targetScale = 1.0;
 
         if (p2 < 0.34) {
-          // Statement 1: turns edge-on (yaw 90° = 1.57 rad)
           const sub = p2 / 0.34;
           targetYaw = THREE.MathUtils.lerp(-0.4363, Math.PI / 2, sub);
           h2SpinDone.current = false;
         } else if (p2 < 0.67) {
-          // Statement 2: continues to 180° showing engraved back "GATE TO RAGE · NAGPUR"
           const sub = (p2 - 0.34) / 0.33;
           targetYaw = THREE.MathUtils.lerp(Math.PI / 2, Math.PI, sub);
           h2SpinDone.current = false;
         } else {
-          // Statement 3: spins back to face camera (Math.PI -> Math.PI * 2) with spring settle & blink
           const sub = Math.min(1, (p2 - 0.67) / 0.33);
           targetYaw = THREE.MathUtils.lerp(Math.PI, Math.PI * 2, sub);
           if (sub >= 0.95 && !h2SpinDone.current) {
@@ -424,7 +434,6 @@ export function Badge({
           }
         }
       } else {
-        // H1: Hero — sits on right third on desktop (x = 0.85), yaws 0 -> -25° and rises 0.2 across scroll
         targetX = isMobile ? 0 : 0.85;
         targetY = 1.5 + 0.2 * p1;
         targetZ = position[2];
@@ -432,14 +441,32 @@ export function Badge({
         targetScale = 1.0;
         h2SpinDone.current = false;
       }
+
+      // Part 10 T1 / T2: Badge held top-centre in frame as camera pushes through doorway
+      if (tr.type === 'T1' && tr.dollyProgress > 0) {
+        targetX = THREE.MathUtils.lerp(targetX, -0.95, tr.dollyProgress);
+        targetY = THREE.MathUtils.lerp(targetY, 2.05, tr.dollyProgress);
+        targetZ = THREE.MathUtils.lerp(targetZ, -0.6, tr.dollyProgress);
+      } else if (tr.type === 'T2' && tr.dollyProgress > 0) {
+        targetX = THREE.MathUtils.lerp(targetX, 0.95, tr.dollyProgress);
+        targetY = THREE.MathUtils.lerp(targetY, 2.05, tr.dollyProgress);
+        targetZ = THREE.MathUtils.lerp(targetZ, -0.6, tr.dollyProgress);
+      }
     }
 
-    // Smooth exponential damping toward targets (lambda = 5)
-    choreoPos.current.x = THREE.MathUtils.damp(choreoPos.current.x, targetX, 5, delta);
-    choreoPos.current.y = THREE.MathUtils.damp(choreoPos.current.y, targetY, 5, delta);
-    choreoPos.current.z = THREE.MathUtils.damp(choreoPos.current.z, targetZ, 5, delta);
-    choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, targetYaw, 5, delta);
-    choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 5, delta);
+    if (frame.snapCamera) {
+      choreoPos.current.set(targetX, targetY, targetZ);
+      choreoYaw.current = targetYaw;
+      choreoScale.current = targetScale;
+      frame.snapCamera = false;
+    } else {
+      // Smooth exponential damping toward targets (lambda = 5)
+      choreoPos.current.x = THREE.MathUtils.damp(choreoPos.current.x, targetX, 5, delta);
+      choreoPos.current.y = THREE.MathUtils.damp(choreoPos.current.y, targetY, 5, delta);
+      choreoPos.current.z = THREE.MathUtils.damp(choreoPos.current.z, targetZ, 5, delta);
+      choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, targetYaw, 5, delta);
+      choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 5, delta);
+    }
 
     rootRef.current.scale.setScalar(choreoScale.current * popScale);
 
@@ -466,7 +493,7 @@ export function Badge({
         choreoPos: choreoPos.current,
       }
     );
-  });
+  }, -30);
 
   // Pointer drag listeners for drag-to-spin
   const handlePointerDown = (e: any) => {

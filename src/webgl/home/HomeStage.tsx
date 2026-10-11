@@ -13,7 +13,6 @@ useGLTF.preload('/models/door-redroom.glb');
 useGLTF.preload('/models/door-diwali.glb');
 
 export function HomeStage() {
-  const world = useStore((s) => s.world);
   const hoverDoor = useStore((s) => s.hoverDoor);
   const loaderPopped = useStore((s) => s.loaderPopped);
 
@@ -23,7 +22,7 @@ export function HomeStage() {
   const redDoorRef = useRef<THREE.Group>(null);
   const diwaliDoorRef = useRef<THREE.Group>(null);
 
-  // Hinge groups for physical door articulation (Part 7 H5)
+  // Hinge groups for physical door articulation (Part 7 H5 & Part 10 T1/T2)
   const redHingeRef = useRef<THREE.Group>(null);
   const diwaliLeftHingeRef = useRef<THREE.Group>(null);
   const diwaliRightHingeRef = useRef<THREE.Group>(null);
@@ -112,11 +111,10 @@ export function HomeStage() {
 
   useFrame((_, delta) => {
     const t = frame.time;
-    const p1 = frame.dampedProgress['H1'] ?? 0;
     const p2 = frame.dampedProgress['H2'] ?? 0;
-    const p3 = frame.dampedProgress['H3'] ?? 0;
     const p4 = frame.dampedProgress['H4'] ?? 0;
     const p5 = frame.dampedProgress['H5'] ?? 0;
+    const tr = frame.transition;
 
     // 1. Magenta Rim Light Rise over 900 ms on loader handoff (Part 7 H0)
     if (loaderPopped) {
@@ -149,10 +147,12 @@ export function HomeStage() {
 
     // 3. H4 Split Rim Light: Left Red (#FF2A1F), Right Pink-Gold (#FFC46B to #FF6FB0)
     if (splitLeftLightRef.current && splitRightLightRef.current) {
-      if (p4 > 0.05) {
-        const splitAmt = Math.min(1, p4 * 1.5);
-        splitLeftLightRef.current.intensity = splitAmt * 2.2;
-        splitRightLightRef.current.intensity = splitAmt * 2.2;
+      if (p4 > 0.05 || tr.type === 'T1' || tr.type === 'T2') {
+        const splitAmt = Math.min(1, Math.max(p4 * 1.5, tr.doorProgress));
+        const t1Flood = tr.type === 'T1' ? tr.doorProgress * 6.0 : 0;
+        const t2Flood = tr.type === 'T2' ? tr.doorProgress * 6.0 : 0;
+        splitLeftLightRef.current.intensity = splitAmt * 2.2 + t1Flood;
+        splitRightLightRef.current.intensity = splitAmt * 2.2 + t2Flood;
       } else {
         splitLeftLightRef.current.intensity = 0;
         splitRightLightRef.current.intensity = 0;
@@ -161,10 +161,10 @@ export function HomeStage() {
 
     // 4. Doors emerging out of darkness at end of H4 (Part 7 H4: end of scene)
     let doorTargetY = -8.0;
-    let doorTargetScale = 0.85;
+    const doorTargetScale = 0.85;
     let doorsVisible = false;
 
-    if (p5 > 0.01) {
+    if (p5 > 0.01 || tr.type === 'T1' || tr.type === 'T2') {
       doorTargetY = 0;
       doorsVisible = true;
     } else if (p4 > 0.5) {
@@ -175,22 +175,40 @@ export function HomeStage() {
 
     if (redDoorRef.current) {
       redDoorRef.current.visible = doorsVisible;
-      redDoorRef.current.position.y = THREE.MathUtils.damp(redDoorRef.current.position.y, doorTargetY, 5, delta);
+      redDoorRef.current.position.y = frame.snapCamera
+        ? doorTargetY
+        : THREE.MathUtils.damp(redDoorRef.current.position.y, doorTargetY, 5, delta);
       redDoorRef.current.scale.setScalar(doorTargetScale);
     }
     if (diwaliDoorRef.current) {
       diwaliDoorRef.current.visible = doorsVisible;
-      diwaliDoorRef.current.position.y = THREE.MathUtils.damp(diwaliDoorRef.current.position.y, doorTargetY, 5, delta);
+      diwaliDoorRef.current.position.y = frame.snapCamera
+        ? doorTargetY
+        : THREE.MathUtils.damp(diwaliDoorRef.current.position.y, doorTargetY, 5, delta);
       diwaliDoorRef.current.scale.setScalar(doorTargetScale);
     }
 
-    // 5. Door Articulation on Hover / Focus (Part 7 H5)
-    // 10° = 0.1745 rad; spring.door (f = 1.6 Hz, zeta = 0.6)
-    const targetRedAngle = hoverDoor === 'redroom' ? -0.1745 : 0;
-    const targetDiwaliAngle = hoverDoor === 'diwali' ? 0.1745 : 0;
+    // 5. Door Articulation on Hover / Focus (Part 7 H5) & Transitions T1 / T2 (Part 10)
+    // Hover: 10° = 0.1745 rad
+    // T1 (0.00–0.55 s): Red door swings open 0 -> 75° (-1.309 rad)
+    // T2 (0.00–0.55 s): Both Diwali door leaves open 0 -> 70° (1.2217 rad) + bells sway
+    let targetRedAngle = hoverDoor === 'redroom' ? -0.1745 : 0;
+    let targetDiwaliAngle = hoverDoor === 'diwali' ? 0.1745 : 0;
 
-    redAngle.current = THREE.MathUtils.damp(redAngle.current, targetRedAngle, 6, delta);
-    diwaliAngle.current = THREE.MathUtils.damp(diwaliAngle.current, targetDiwaliAngle, 6, delta);
+    if (tr.type === 'T1' && tr.doorProgress > 0) {
+      targetRedAngle = THREE.MathUtils.lerp(-0.1745, -1.309, tr.doorProgress);
+      redAngle.current = targetRedAngle;
+    } else {
+      redAngle.current = THREE.MathUtils.damp(redAngle.current, targetRedAngle, 6, delta);
+    }
+
+    if (tr.type === 'T2' && tr.doorProgress > 0) {
+      const bellSway = Math.sin(t * 26) * 0.018 * Math.sin(tr.doorProgress * Math.PI);
+      targetDiwaliAngle = THREE.MathUtils.lerp(0.1745, 1.2217, tr.doorProgress) + bellSway;
+      diwaliAngle.current = targetDiwaliAngle;
+    } else {
+      diwaliAngle.current = THREE.MathUtils.damp(diwaliAngle.current, targetDiwaliAngle, 6, delta);
+    }
 
     if (redHingeRef.current) {
       redHingeRef.current.rotation.y = redAngle.current;
@@ -202,31 +220,53 @@ export function HomeStage() {
       diwaliRightHingeRef.current.rotation.y = diwaliAngle.current;
     }
 
-    // 6. Light Leaks breathing at 0.2 Hz (0.2 * 2pi ≈ 1.256 rad/s) + 2.5x spill on hover
+    // 6. Light Leaks breathing at 0.2 Hz + 2.5x spill on hover + flood on T1/T2
     const leakBreathe = 1 + Math.sin(t * 1.256) * 0.2;
-    const redSpill = hoverDoor === 'redroom' ? 2.5 : 1.0;
-    const diwaliSpill = hoverDoor === 'diwali' ? 2.5 : 1.0;
+    const redSpill =
+      tr.type === 'T1'
+        ? 2.5 + tr.doorProgress * 4.5
+        : hoverDoor === 'redroom'
+          ? 2.5
+          : 1.0;
+    const diwaliSpill =
+      tr.type === 'T2'
+        ? 2.5 + tr.doorProgress * 5.0
+        : hoverDoor === 'diwali'
+          ? 2.5
+          : 1.0;
 
-    // Dim other door by 40% (scale to 0.6) per Part 7 H5
-    const redDim = hoverDoor === 'diwali' ? 0.6 : 1.0;
-    const diwaliDim = hoverDoor === 'redroom' ? 0.6 : 1.0;
+    // Dim other door by 40% on hover, or 85% during transition
+    const redDim =
+      tr.type === 'T2'
+        ? 1.0 - tr.doorProgress * 0.85
+        : hoverDoor === 'diwali'
+          ? 0.6
+          : 1.0;
+    const diwaliDim =
+      tr.type === 'T1'
+        ? 1.0 - tr.doorProgress * 0.85
+        : hoverDoor === 'redroom'
+          ? 0.6
+          : 1.0;
+
+    const doorsActive = p4 > 0.6 || p5 > 0.01 || tr.type === 'T1' || tr.type === 'T2';
 
     if (redLeakLightRef.current) {
-      redLeakLightRef.current.intensity = (p4 > 0.6 || p5 > 0.01) ? 1.5 * leakBreathe * redSpill * redDim : 0;
+      redLeakLightRef.current.intensity = doorsActive ? 1.5 * leakBreathe * redSpill * redDim : 0;
     }
     if (diwaliLeakLightRef.current) {
-      diwaliLeakLightRef.current.intensity = (p4 > 0.6 || p5 > 0.01) ? 1.5 * leakBreathe * diwaliSpill * diwaliDim : 0;
+      diwaliLeakLightRef.current.intensity = doorsActive ? 1.5 * leakBreathe * diwaliSpill * diwaliDim : 0;
     }
 
     if (redLeakMeshRef.current) {
       redLeakMeshRef.current.scale.set(1.1 * redSpill, 0.4 * redSpill, 1);
       const mat = redLeakMeshRef.current.material as THREE.MeshBasicMaterial;
-      if (mat) mat.opacity = (p4 > 0.6 || p5 > 0.01) ? 0.45 * leakBreathe * redSpill * redDim : 0;
+      if (mat) mat.opacity = doorsActive ? Math.min(1, 0.45 * leakBreathe * redSpill * redDim) : 0;
     }
     if (diwaliLeakMeshRef.current) {
       diwaliLeakMeshRef.current.scale.set(1.1 * diwaliSpill, 0.4 * diwaliSpill, 1);
       const mat = diwaliLeakMeshRef.current.material as THREE.MeshBasicMaterial;
-      if (mat) mat.opacity = (p4 > 0.6 || p5 > 0.01) ? 0.45 * leakBreathe * diwaliSpill * diwaliDim : 0;
+      if (mat) mat.opacity = doorsActive ? Math.min(1, 0.45 * leakBreathe * diwaliSpill * diwaliDim) : 0;
     }
   });
 
@@ -285,14 +325,14 @@ export function HomeStage() {
         position={[-1.2, 0.08, 0.1]}
         intensity={0}
         color="#FF2A1F"
-        distance={2.5}
+        distance={3.5}
       />
       <pointLight
         ref={diwaliLeakLightRef}
         position={[1.2, 0.08, 0.1]}
         intensity={0}
         color="#F2D38B"
-        distance={2.5}
+        distance={3.5}
       />
 
       {/* Stage Floor: Glossy dark floor (Part 5.4) */}

@@ -6,6 +6,7 @@ import { site } from '@/content/site'
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
 import { useSceneProgress } from '@/motion/useSceneProgress'
+import { useEnterTransition } from '@/motion/transitions'
 import { getLenis } from '@/motion/clock'
 import { BadgeDomHost } from '@/ui/BadgeDomHost'
 import { ScrollCue } from '@/ui/ScrollCue'
@@ -21,6 +22,8 @@ export function HomeView() {
   const hoverDoor = useStore((s) => s.hoverDoor)
   const setHoverDoor = useStore((s) => s.setHoverDoor)
   const setWorld = useStore((s) => s.setWorld)
+
+  useEnterTransition('home')
 
   useEffect(() => {
     setWorld('home')
@@ -366,7 +369,7 @@ export function HomeView() {
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
           <div className="w-full flex-1 pointer-events-none min-h-[30vh] lg:min-h-[44vh]" aria-hidden="true" />
 
-          <div className="site-container site-grid items-end gap-y-8 pt-4 pb-8 lg:pb-12">
+          <div className="site-container site-grid relative z-30 items-end gap-y-8 pt-4 pb-8 lg:pb-12">
             {/* Door 1: The Red Room */}
             <div
               className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
@@ -376,6 +379,7 @@ export function HomeView() {
               <TransitionLink
                 href={site.home.worlds.one.href}
                 transitionType="T1"
+                origin="door"
                 aria-label={`Enter ${site.home.worlds.one.kicker}: ${site.home.worlds.one.name}, ${site.home.worlds.one.occasion}, Saturday 24 October 2026`}
                 onMouseEnter={() => setHoverDoor('redroom')}
                 onMouseLeave={() => setHoverDoor(null)}
@@ -433,6 +437,7 @@ export function HomeView() {
               <TransitionLink
                 href={site.home.worlds.two.href}
                 transitionType="T2"
+                origin="door"
                 aria-label={`Enter ${site.home.worlds.two.kicker}: ${site.home.worlds.two.name}, ${site.home.worlds.two.occasion}, Saturday 7 November 2026`}
                 onMouseEnter={() => setHoverDoor('diwali')}
                 onMouseLeave={() => setHoverDoor(null)}

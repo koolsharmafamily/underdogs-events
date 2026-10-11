@@ -7,7 +7,7 @@ import { site } from '@/content/site'
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
 import { useSceneProgress } from '@/motion/useSceneProgress'
-import { runFadeCutJump } from '@/motion/transitions'
+import { runFadeCutJump, useEnterTransition } from '@/motion/transitions'
 import { BadgeDomHost } from '@/ui/BadgeDomHost'
 import { Divider } from '@/ui/Divider'
 import { InvitationCard } from '@/ui/InvitationCard'
@@ -24,6 +24,8 @@ export function DiwaliView() {
   const setWorld = useStore((s) => s.setWorld)
   const [activeStoryLine, setActiveStoryLine] = useState(0)
   const [skyRevealed, setSkyRevealed] = useState(false)
+
+  useEnterTransition('diwali')
 
   useEffect(() => {
     setWorld('diwali')
@@ -352,6 +354,7 @@ export function DiwaliView() {
               <TransitionLink
                 href={site.diwali.outro.back.href}
                 transitionType="T4"
+                origin="gate"
                 className="inline-flex min-h-[48px] items-center gap-3 px-4 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--dw-ivory)]/80 hover:text-[var(--dw-gold-bright)] transition-colors"
               >
                 <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">

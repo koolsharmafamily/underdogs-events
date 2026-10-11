@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { site } from '@/content/site'
+import { getSavedRouteScroll } from '@/motion/transitions'
 import { useStore } from '@/state/store'
 import { Divider } from '@/ui/Divider'
 
@@ -15,10 +16,11 @@ const DIWALI_CARD_SEEN_KEY = 'underdogs-diwali-titlecard-seen'
  * - 1.0 s: "THIS YEAR," / "DIFFERENT." (Cinzel 400 at display-l, ivory, two-line reveal) + sparkle divider.
  * - 2.4 s: Film burn reveals the velvet scene by 3.2 s.
  * - Skipping: any input skips straight to the burn.
- * - Replays: on a repeat visit within the session, play a 1.6 s short version.
+ * - Replays / T3: on a repeat visit within the session or arriving via T3 (Part 10 T3), play the 1.6 s short version.
  */
 export function DiwaliTitleCard() {
   const motionEnabled = useStore((s) => s.motionEnabled)
+  const lastNavigationOrigin = useStore((s) => s.lastNavigationOrigin)
   const [done, setDone] = useState(false)
   const [step, setStep] = useState<0 | 1 | 2 | 3>(0)
   const [weave, setWeave] = useState({ x: 0, y: 0, opacity: 0.96 })
@@ -35,7 +37,11 @@ export function DiwaliTitleCard() {
   }, [])
 
   useEffect(() => {
-    if (!motionEnabled) {
+    // Skip title card on reduced motion or when restoring a scrolled position via T5 (browser back/forward)
+    if (
+      !motionEnabled ||
+      (lastNavigationOrigin === 'T5' && getSavedRouteScroll('/diwali') > 100)
+    ) {
       setDone(true)
       return
     }
@@ -48,7 +54,9 @@ export function DiwaliTitleCard() {
       // Ignore storage access errors
     }
 
-    const scale = isRepeat ? 0.5 : 1.0
+    // Part 10 T3: "or the short 1.6 s title card"
+    const isShort = isRepeat || lastNavigationOrigin === 'T3'
+    const scale = isShort ? 0.5 : 1.0
 
     const t1 = window.setTimeout(() => setStep(1), 250 * scale)
     const t2 = window.setTimeout(() => setStep(2), 950 * scale)
@@ -81,7 +89,7 @@ export function DiwaliTitleCard() {
       window.removeEventListener('keydown', onInputSkip)
       window.removeEventListener('wheel', onInputSkip)
     }
-  }, [motionEnabled, triggerBurn])
+  }, [motionEnabled, lastNavigationOrigin, triggerBurn])
 
   if (done) return null
 

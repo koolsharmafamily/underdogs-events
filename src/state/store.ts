@@ -4,6 +4,8 @@ import type { TransitionType } from './frame'
 
 export type QualityTier = 'T3' | 'T2' | 'T1' | 'T0'
 export type LoaderPhase = 'loading' | 'ready' | 'complete'
+export type SkinOverride = 'enamel' | 'neon' | 'jewelled' | null
+export type NavigationOrigin = 'direct' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5'
 
 export interface AppStore {
   world: WorldId
@@ -14,6 +16,10 @@ export interface AppStore {
   hoverDoor: 'redroom' | 'diwali' | null
   transitionType: TransitionType
   isTransitioning: boolean
+  targetSkinOverride: SkinOverride
+  lastNavigationOrigin: NavigationOrigin
+  lastHomeOrigin: 'door' | 'nav'
+  t4ScrollTarget: 'H5' | 'top'
   menuOpen: boolean
   hintsSeen: Record<string, boolean>
   blinkTrigger: number
@@ -32,6 +38,10 @@ export interface AppStore {
   setPrefersReducedMotion: (reduced: boolean) => void
   setHoverDoor: (door: 'redroom' | 'diwali' | null) => void
   setTransition: (type: TransitionType, active: boolean) => void
+  setTargetSkinOverride: (skin: SkinOverride) => void
+  setLastNavigationOrigin: (origin: NavigationOrigin) => void
+  setLastHomeOrigin: (origin: 'door' | 'nav') => void
+  setT4ScrollTarget: (target: 'H5' | 'top') => void
   setMenuOpen: (open: boolean) => void
   markHintSeen: (id: string) => void
   triggerBlink: () => void
@@ -54,6 +64,10 @@ export const useStore = create<AppStore>((set, get) => ({
   hoverDoor: null,
   transitionType: 'none',
   isTransitioning: false,
+  targetSkinOverride: null,
+  lastNavigationOrigin: 'direct',
+  lastHomeOrigin: 'nav',
+  t4ScrollTarget: 'top',
   menuOpen: false,
   hintsSeen: {},
   blinkTrigger: 0,
@@ -117,6 +131,14 @@ export const useStore = create<AppStore>((set, get) => ({
 
   setTransition: (transitionType, isTransitioning) =>
     set({ transitionType, isTransitioning }),
+
+  setTargetSkinOverride: (targetSkinOverride) => set({ targetSkinOverride }),
+
+  setLastNavigationOrigin: (lastNavigationOrigin) => set({ lastNavigationOrigin }),
+
+  setLastHomeOrigin: (lastHomeOrigin) => set({ lastHomeOrigin }),
+
+  setT4ScrollTarget: (t4ScrollTarget) => set({ t4ScrollTarget }),
 
   setMenuOpen: (menuOpen) => set({ menuOpen }),
 
