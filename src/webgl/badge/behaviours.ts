@@ -106,16 +106,26 @@ export class BadgeBehaviours {
       }
 
       if (eyeL) {
-        eyeL.scale.y = scaleY;
-        eyeL.position.x = -0.13 + eyeShiftX;
+        const baseScaleY = (eyeL.userData.baseScaleY ??= eyeL.scale.y);
+        const baseX = (eyeL.userData.baseX ??= eyeL.position.x);
+        eyeL.scale.y = baseScaleY * scaleY;
+        eyeL.position.x = baseX + eyeShiftX;
       }
       if (eyeR) {
-        eyeR.scale.y = this.isWink ? 1.0 : scaleY;
-        eyeR.position.x = 0.13 + eyeShiftX;
+        const baseScaleY = (eyeR.userData.baseScaleY ??= eyeR.scale.y);
+        const baseX = (eyeR.userData.baseX ??= eyeR.position.x);
+        eyeR.scale.y = this.isWink ? baseScaleY : baseScaleY * scaleY;
+        eyeR.position.x = baseX + eyeShiftX;
       }
     } else {
-      if (eyeL) eyeL.position.x = -0.13 + eyeShiftX;
-      if (eyeR) eyeR.position.x = 0.13 + eyeShiftX;
+      if (eyeL) {
+        const baseX = (eyeL.userData.baseX ??= eyeL.position.x);
+        eyeL.position.x = baseX + eyeShiftX;
+      }
+      if (eyeR) {
+        const baseX = (eyeR.userData.baseX ??= eyeR.position.x);
+        eyeR.position.x = baseX + eyeShiftX;
+      }
     }
 
     // 7. Tongue Wag: every ~9s or hover, swings ±12° around pivot for ~1.2s

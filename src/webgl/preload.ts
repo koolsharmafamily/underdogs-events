@@ -11,6 +11,7 @@ export function preloadWorldAssets(world: WorldId) {
   preloadedWorlds.add(world)
 
   if (world === 'redroom') {
+    useGLTF.preload('/models/badge-neon.glb')
     useGLTF.preload('/models/curtain-open.glb')
     useGLTF.preload('/models/redroom-mirror.glb')
     useGLTF.preload('/models/redroom-chandelier.glb')
@@ -19,6 +20,7 @@ export function preloadWorldAssets(world: WorldId) {
     useGLTF.preload('/models/redroom-invitation.glb')
     useTexture.preload('/media/red-room-poster.webp')
   } else if (world === 'diwali') {
+    useGLTF.preload('/models/badge-jewelled.glb')
     useGLTF.preload('/models/curtain-open-diwali.glb')
     useGLTF.preload('/models/diwali-diya-brass.glb')
     useGLTF.preload('/models/diwali-diya-terracotta.glb')
@@ -27,6 +29,7 @@ export function preloadWorldAssets(world: WorldId) {
     useGLTF.preload('/models/diwali-card.glb')
     useTexture.preload('/media/diwali-teaser.webp')
   } else if (world === 'home') {
+    useGLTF.preload('/models/badge-enamel.glb')
     useGLTF.preload('/models/door-redroom.glb')
     useGLTF.preload('/models/door-diwali.glb')
   }

@@ -67,20 +67,48 @@ export function createSkinMaterials(
         roughness: 0.25,
         metalness: 0.1,
       }),
+      extras: {
+        drips: new THREE.MeshPhysicalMaterial({
+          color: '#6B0A08',
+          roughness: 0.1,
+          clearcoat: 1.0,
+        }),
+        tubes: new THREE.MeshPhysicalMaterial({
+          color: '#3A0504',
+          emissive: new THREE.Color('#FF2A1F'),
+          emissiveIntensity: 4.8,
+          roughness: 0.2,
+        }),
+      },
     };
   } else if (skinId === 'jewelled') {
+    const goldMat = new THREE.MeshPhysicalMaterial({
+      color: '#F5BD47',
+      metalness: 0.95,
+      roughness: 0.12,
+      clearcoat: 0.8,
+    });
+    const emeraldMat = new THREE.MeshPhysicalMaterial({
+      color: '#157A4F',
+      transmission: 0.8,
+      roughness: 0.05,
+      ior: 1.57,
+      thickness: 0.2,
+    });
+    const pinkGemMat = new THREE.MeshPhysicalMaterial({
+      color: '#E0218A',
+      transmission: 0.75,
+      roughness: 0.08,
+      ior: 1.6,
+      thickness: 0.2,
+    });
     mats = {
-      body: new THREE.MeshPhysicalMaterial({
-        color: '#F5BD47',
-        metalness: 0.95,
-        roughness: 0.12,
-        clearcoat: 0.8,
-      }),
+      body: goldMat,
       ring: new THREE.MeshPhysicalMaterial({
-        color: '#F5BD47',
-        metalness: 0.95,
-        roughness: 0.12,
-        clearcoat: 0.8,
+        color: '#C5287B',
+        roughness: 0.2,
+        clearcoat: 1.0,
+        metalness: 0.1,
       }),
       face: new THREE.MeshPhysicalMaterial({
         color: '#1A1820',
@@ -90,9 +118,9 @@ export function createSkinMaterials(
         clearcoatRoughness: 0.1,
       }),
       letters: new THREE.MeshPhysicalMaterial({
-        color: '#F5BD47',
-        roughness: 0.15,
-        metalness: 0.9,
+        color: '#FFF6EE',
+        roughness: 0.35,
+        clearcoat: 0.6,
       }),
       eyes: new THREE.MeshPhysicalMaterial({
         color: '#FFFFFF',
@@ -117,9 +145,14 @@ export function createSkinMaterials(
         metalness: 0.9,
         roughness: 0.22,
       }),
+      extras: {
+        gold: goldMat,
+        emerald: emeraldMat,
+        pink: pinkGemMat,
+      },
     };
   } else {
-    // Enamel (Home)
+    // Enamel (Home) — Gloss black lacquer body/ring, polished nickel chrome rim and back, white enamel face lettering
     mats = {
       body: new THREE.MeshPhysicalMaterial({
         color: '#D9DCE3',
@@ -127,7 +160,7 @@ export function createSkinMaterials(
         roughness: 0.12,
       }),
       ring: new THREE.MeshPhysicalMaterial({
-        color: '#D73EBC',
+        color: '#0B0E14', // Gloss black lacquer / deep enamel (inappropriate pink removed)
         roughness: 0.18,
         clearcoat: 1.0,
         clearcoatRoughness: 0.05,
@@ -167,7 +200,22 @@ export function createSkinMaterials(
 
   // Inject dissolve shader logic if uniforms provided
   if (dissolveUniforms) {
-    const list = [mats.body, mats.ring, mats.face, mats.letters, mats.eyes, mats.tongue, mats.back];
+    const list: (THREE.MeshPhysicalMaterial | THREE.MeshStandardMaterial)[] = [
+      mats.body,
+      mats.ring,
+      mats.face,
+      mats.letters,
+      mats.eyes,
+      mats.tongue,
+      mats.back,
+    ];
+    if (mats.extras) {
+      Object.values(mats.extras).forEach((m) => {
+        if (m instanceof THREE.MeshPhysicalMaterial || m instanceof THREE.MeshStandardMaterial) {
+          list.push(m);
+        }
+      });
+    }
     list.forEach((m, idx) => {
       injectDissolve(m, dissolveUniforms, `${skinId}_${idx}`);
     });

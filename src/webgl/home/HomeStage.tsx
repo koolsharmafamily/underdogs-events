@@ -312,23 +312,23 @@ export function HomeStage() {
         color="#FFFFFF"
       />
 
-      {/* Rim magenta spot behind badge (rising over 900 ms on loader handoff) */}
+      {/* Rim chrome specular spot behind badge (rising over 900 ms on loader handoff) */}
       <spotLight
         ref={magentaSpotRef}
         position={[0, 4, -3]}
         target-position={[0, 1.5, 0]}
         intensity={0}
-        color="#FF4FD8"
+        color="#D9DCE3"
         angle={0.8}
         penumbra={0.6}
       />
 
-      {/* H2 Statement 1: Magenta Light Streak sliding along chrome rim */}
+      {/* H2 Statement 1: Chrome Light Streak sliding along chrome rim */}
       <pointLight
         ref={streakLightRef}
         position={[0, 1.5, 0.1]}
         intensity={0}
-        color="#FF4FD8"
+        color="#D9DCE3"
         distance={2.5}
       />
 

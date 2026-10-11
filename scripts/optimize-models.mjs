@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 
-const srcDir = path.resolve(process.cwd(), 'brand-source/3d');
+const srcDir = path.resolve(process.cwd(), 'GLBs');
 const destDir = path.resolve(process.cwd(), 'public/models');
 
 if (!fs.existsSync(destDir)) {
@@ -55,8 +55,9 @@ for (const file of files) {
 
   console.log(`\nOptimizing ${file}...`);
   try {
+    const extraFlags = file.startsWith('badge-') ? ' --join false --flatten false' : '';
     execSync(
-      `npx @gltf-transform/cli optimize "${inPath}" "${outPath}" --compress meshopt --texture-compress webp --texture-size 1024`,
+      `npx @gltf-transform/cli optimize "${inPath}" "${outPath}" --compress meshopt --texture-compress webp --texture-size 1024${extraFlags}`,
       { stdio: 'pipe' }
     );
   } catch {
@@ -82,7 +83,7 @@ function sumWorldBytes(predicate) {
 }
 
 const homeBytes = sumWorldBytes(
-  (f) => f.startsWith('badge-') || f.startsWith('door-')
+  (f) => f === 'badge-enamel.glb' || f.startsWith('door-')
 );
 const redroomBytes = sumWorldBytes(
   (f) => f.startsWith('redroom-') || f === 'curtain-open.glb' || f === 'badge-neon.glb'

@@ -76,7 +76,7 @@ export function UnderdogsBadgeSvg({
             features: '#F2D38B',
           }
         : {
-            ring: '#D73EBC',
+            ring: '#0B0E14',
             ringStroke: '#D9DCE3',
             innerRing: '#FCF9FC',
             face: '#10171F',
@@ -111,7 +111,7 @@ export function UnderdogsBadgeSvg({
             cy="447.95"
             r="440"
             fill="none"
-            stroke={palette.ring}
+            stroke={skin === 'home' ? palette.ringStroke : palette.ring}
             strokeWidth="14"
             strokeDasharray={circumference}
             strokeDashoffset={circumference * (1 - Math.max(0, Math.min(1, ringProgress)))}
@@ -125,7 +125,7 @@ export function UnderdogsBadgeSvg({
           r="446.65"
           fill={palette.ring}
           stroke={palette.ringStroke}
-          strokeWidth={skin === 'home' ? 0 : 12}
+          strokeWidth={14}
         />
       )}
 

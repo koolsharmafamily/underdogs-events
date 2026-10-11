@@ -102,7 +102,7 @@ export function BadgeDomHost({
           blinkingLeft={blinkL}
           blinkingRight={blinkR}
           tongueAngle={tongueAngle}
-          className="drop-shadow-[0_0_48px_rgba(215,62,188,0.18)]"
+          className="drop-shadow-[0_0_48px_rgba(255,255,255,0.08)]"
         />
       )}
     </button>
