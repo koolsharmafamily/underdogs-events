@@ -6,6 +6,8 @@ import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
 
+import { Beams } from './Beams';
+
 // Finished GLB models in public/models/
 useGLTF.preload('/models/door-redroom.glb');
 useGLTF.preload('/models/door-diwali.glb');
@@ -32,6 +34,9 @@ export function HomeStage() {
 
   return (
     <group name="HomeStage">
+      {/* Volumetric beam cones per Part 5.4 */}
+      <Beams />
+
       {/* Lighting per Part 5.4: Key directional white (1.2), rim magenta spot (#FF4FD8) */}
       <ambientLight intensity={0.4} color="#0B0E14" />
       <directionalLight

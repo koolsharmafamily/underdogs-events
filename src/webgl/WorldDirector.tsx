@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { useStore } from '@/state/store';
-import { BadgePlaceholder } from './badge/BadgePlaceholder';
+import { Badge } from './badge/Badge';
 import { HomeStage } from './home/HomeStage';
 import { RedRoomSet } from './redroom/RedRoomSet';
 import { DiwaliSet } from './diwali/DiwaliSet';
@@ -22,8 +22,7 @@ export function WorldDirector() {
       )}
 
       {/* Protagonist Badge: persistent across worlds per Part 13.3 */}
-      <BadgePlaceholder
-        skin={world === 'home' ? 'enamel' : world === 'redroom' ? 'neon' : 'jewelled'}
+      <Badge
         position={world === 'diwali' ? [0, 1.9, 0] : [0, 1.5, 0]}
       />
 
