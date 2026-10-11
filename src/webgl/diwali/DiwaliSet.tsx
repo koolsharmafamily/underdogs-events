@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -27,6 +27,8 @@ export function DiwaliSet() {
 
   const diyaLightRef = useRef<THREE.PointLight>(null);
   const kandilGroupRef = useRef<THREE.Group>(null);
+
+  const kandilClone = useMemo(() => kandilGltf.scene.clone(true), [kandilGltf.scene]);
 
   useFrame(() => {
     const t = frame.time;
@@ -83,14 +85,14 @@ export function DiwaliSet() {
       {/* Velvet Drapes that lift in D2 & Haveli Sky Reveal */}
       <DrapesSky />
 
-      {/* Floating Diyas with Procedural Teardrop Flames */}
-      <DiyaField count={36} />
+      {/* Floating Diyas with Procedural Teardrop Flames - 10 balanced instances */}
+      <DiyaField count={10} />
 
       {/* Falling Rose Petals (3 variants), Gold Dust & Floor Marigolds */}
-      <PetalField petalCount={380} dustCount={1800} />
+      <PetalField petalCount={120} dustCount={400} />
 
       {/* Paced Fireworks System for D2 story lines & D5 outro */}
-      <Fireworks particlesPerBurst={2400} />
+      <Fireworks particlesPerBurst={300} />
 
       {/* 3D Gold Foil Invitation Card rising on spiral */}
       <DiwaliCard />
@@ -100,7 +102,7 @@ export function DiwaliSet() {
 
       {/* Hanging Kandil Lantern */}
       <group ref={kandilGroupRef} position={[2.4, 3.4, 0.2]} scale={[0.65, 0.65, 0.65]}>
-        <primitive object={kandilGltf.scene.clone()} />
+        <primitive object={kandilClone} />
       </group>
     </group>
   );

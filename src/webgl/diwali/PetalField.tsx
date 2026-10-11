@@ -11,7 +11,7 @@ interface PetalFieldProps {
   dustCount?: number;
 }
 
-export function PetalField({ petalCount = 400, dustCount = 1800 }: PetalFieldProps) {
+export function PetalField({ petalCount = 120, dustCount = 400 }: PetalFieldProps) {
   const petalGltf = useGLTF('/models/diwali-rose-petal.glb');
   const marigoldGltf = useGLTF('/models/diwali-marigold.glb');
 
@@ -118,10 +118,11 @@ export function PetalField({ petalCount = 400, dustCount = 1800 }: PetalFieldPro
         pos: positions[i],
         scale: 0.45 + (i % 3) * 0.08,
         rotY: i * 1.1,
+        scene: marigoldGltf.scene.clone(true),
       });
     }
     return arr;
-  }, []);
+  }, [marigoldGltf.scene]);
 
   useFrame((_, delta) => {
     const t = frame.time;
@@ -213,7 +214,7 @@ export function PetalField({ petalCount = 400, dustCount = 1800 }: PetalFieldPro
           scale={[m.scale, m.scale, m.scale]}
           rotation={[0, m.rotY, 0]}
         >
-          <primitive object={marigoldGltf.scene.clone()} />
+          <primitive object={m.scene} />
         </group>
       ))}
     </group>

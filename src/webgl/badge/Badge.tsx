@@ -354,7 +354,11 @@ export function Badge({
     // 4. Multi-section choreography per Part 7 H0-H5, Part 8 R0-R4, Part 9 D0-D4
     const isMobile = size.width < 768;
     const isTablet = size.width >= 768 && size.width < 1024;
-    const scrollP = frame.scroll;
+    const docH =
+      typeof document !== 'undefined'
+        ? Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+        : 1;
+    const scrollP = Math.min(1, Math.max(0, frame.scroll / docH));
 
     if (world === 'home') {
       const h0Scale = isMobile ? 0.92 : isTablet ? 1.05 : 1.22;

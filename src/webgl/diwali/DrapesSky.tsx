@@ -83,6 +83,8 @@ export function DrapesSky() {
   const haveli1Ref = useRef<THREE.Mesh>(null);
   const haveli2Ref = useRef<THREE.Mesh>(null);
 
+  const clonedDrapes = useMemo(() => drapesGltf.scene.clone(true), [drapesGltf.scene]);
+
   // Haveli textures
   const [tex1, tex2] = useMemo(() => {
     if (typeof document === 'undefined') return [null, null];
@@ -184,7 +186,7 @@ export function DrapesSky() {
 
       {/* Back Velvet Drapes that lift on D2 */}
       <group ref={backDrapeRef} position={[0, 0, -3.2]}>
-        <primitive object={drapesGltf.scene.clone()} />
+        <primitive object={clonedDrapes} />
       </group>
     </group>
   );

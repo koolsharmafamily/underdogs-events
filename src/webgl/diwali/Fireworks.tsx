@@ -16,8 +16,9 @@ interface FireworkBurst {
   colors: Float32Array;
 }
 
-export function Fireworks({ particlesPerBurst = 3000 }: { particlesPerBurst?: number }) {
+export function Fireworks({ particlesPerBurst = 300 }: { particlesPerBurst?: number }) {
   const lightRef = useRef<THREE.PointLight>(null);
+  const hadActiveRef = useRef(false);
 
   // Bursts state
   const BURST_COLORS = useMemo(
@@ -177,6 +178,24 @@ export function Fireworks({ particlesPerBurst = 3000 }: { particlesPerBurst?: nu
     } else if (p5 < 0.05) {
       outroTriggeredRef.current = false;
     }
+
+    // Check if any bursts are active or need parking
+    let anyActive = false;
+    for (let b = 0; b < maxBursts; b++) {
+      if (burstPool[b].active) {
+        anyActive = true;
+        break;
+      }
+    }
+
+    if (!anyActive && !hadActiveRef.current) {
+      if (lightRef.current && lightRef.current.intensity > 0) {
+        lightRef.current.intensity = 0;
+      }
+      return;
+    }
+
+    hadActiveRef.current = anyActive;
 
     // Update active particle positions
     const posAttr = geometry.attributes.position;

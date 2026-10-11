@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -10,6 +10,8 @@ export function DiwaliCard() {
   const cardGltf = useGLTF('/models/diwali-card.glb');
   const groupRef = useRef<THREE.Group>(null);
   const cardNodeRef = useRef<THREE.Group>(null);
+
+  const clonedCard = useMemo(() => cardGltf.scene.clone(true), [cardGltf.scene]);
 
   useFrame(() => {
     const p3 = frame.dampedProgress['D3'] ?? 0;
@@ -66,7 +68,7 @@ export function DiwaliCard() {
   return (
     <group ref={groupRef} name="DiwaliCardHolder">
       <group ref={cardNodeRef} position={[0, -1.8, 0.2]} scale={[0.2, 0.2, 0.2]}>
-        <primitive object={cardGltf.scene.clone()} />
+        <primitive object={clonedCard} />
       </group>
     </group>
   );

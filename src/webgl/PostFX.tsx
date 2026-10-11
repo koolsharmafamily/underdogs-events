@@ -38,7 +38,7 @@ export function PostFX() {
   const vignetteDarkness = world === 'redroom' ? 0.65 : world === 'diwali' ? 0.35 : 0.45;
 
   return (
-    <EffectComposer multisampling={settings.tier === 'T3' ? 4 : 0}>
+    <EffectComposer multisampling={0}>
       <Bloom
         intensity={bloomIntensity}
         luminanceThreshold={bloomThreshold}

@@ -21,7 +21,7 @@ export interface TierSettings {
 export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   T3: {
     tier: 'T3',
-    dpr: [1, 2],
+    dpr: [1, 1.5],
     hasComposer: true,
     hasReflector: true,
     shadows: true,
@@ -29,7 +29,7 @@ export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   },
   T2: {
     tier: 'T2',
-    dpr: [1, 1.5],
+    dpr: [1, 1.25],
     hasComposer: true,
     hasReflector: false,
     shadows: false,
@@ -37,7 +37,7 @@ export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   },
   T1: {
     tier: 'T1',
-    dpr: [1, 1.25],
+    dpr: [1, 1.0],
     hasComposer: false,
     hasReflector: false,
     shadows: false,

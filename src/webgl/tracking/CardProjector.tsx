@@ -26,8 +26,10 @@ export function CardProjector() {
     if (!el) return;
 
     if (!isVisible) {
-      el.style.opacity = '0';
-      el.style.pointerEvents = 'none';
+      if (el.style.opacity !== '0') {
+        el.style.opacity = '0';
+        el.style.pointerEvents = 'none';
+      }
       return;
     }
 
@@ -36,13 +38,8 @@ export function CardProjector() {
     const isMobile = width < 768;
 
     // Detect when R4 unpins and scrolls upward out of the viewport as R5 enters
-    const r4Section =
-      typeof document !== 'undefined'
-        ? document.querySelector<HTMLElement>('[data-scene="R4"]')
-        : null;
-    const r4Bottom = r4Section ? r4Section.getBoundingClientRect().bottom : height;
-    const overscroll = Math.max(0, height - r4Bottom);
-    const exitFade = 1 - THREE.MathUtils.clamp(overscroll / (height * 0.22), 0, 1);
+    const exitFade = p5 > 0 ? 1 - THREE.MathUtils.clamp(p5 / 0.22, 0, 1) : 1;
+    const exitShiftY = p5 > 0 ? -p5 * height * 0.8 : 0;
 
     // Card in camera frame:
     // Fills 70% viewport height on desktop (85% width on mobile)
@@ -63,7 +60,7 @@ export function CardProjector() {
     const startTop = height * 0.75;
     const endTop = (height - targetCardHeight) * 0.5;
 
-    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise) - overscroll;
+    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise) + exitShiftY;
     const currentLeft = (width - targetCardWidth) * 0.5;
 
     // Fade in overlay text between 48% and 62% so card is 100% solid for the entire open stage

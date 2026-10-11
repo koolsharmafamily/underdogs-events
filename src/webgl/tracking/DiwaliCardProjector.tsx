@@ -25,8 +25,10 @@ export function DiwaliCardProjector() {
     const isVisible = p3 > 0.28 && p4 < 0.25;
 
     if (!isVisible) {
-      el.style.opacity = '0';
-      el.style.pointerEvents = 'none';
+      if (el.style.opacity !== '0') {
+        el.style.opacity = '0';
+        el.style.pointerEvents = 'none';
+      }
       return;
     }
 
@@ -35,13 +37,8 @@ export function DiwaliCardProjector() {
     const isMobile = width < 768;
 
     // Detect when D3 unpins and scrolls upward out of the viewport as D4 enters
-    const d3Section =
-      typeof document !== 'undefined'
-        ? document.querySelector<HTMLElement>('[data-scene="D3"]')
-        : null;
-    const d3Bottom = d3Section ? d3Section.getBoundingClientRect().bottom : height;
-    const overscroll = Math.max(0, height - d3Bottom);
-    const exitFade = 1 - THREE.MathUtils.clamp(overscroll / (height * 0.22), 0, 1);
+    const exitFade = p4 > 0 ? 1 - THREE.MathUtils.clamp(p4 / 0.22, 0, 1) : 1;
+    const exitShiftY = p4 > 0 ? -p4 * height * 0.8 : 0;
 
     // Card in camera frame:
     // Fills 70% viewport height on desktop (85% width on mobile) per Part 9 D3
@@ -61,7 +58,7 @@ export function DiwaliCardProjector() {
     const startTop = height * 0.8;
     const endTop = (height - targetCardHeight) * 0.5;
 
-    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise) - overscroll;
+    const currentTop = THREE.MathUtils.lerp(startTop, endTop, easedRise) + exitShiftY;
     const currentLeft = (width - targetCardWidth) * 0.5;
 
     // Fade in text overlay between 42% and 56% so card is 100% solid for the second half of D3
