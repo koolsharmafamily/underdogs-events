@@ -25,10 +25,16 @@ const DRIPS = [
 
 export function RedRoomView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
+  const setWorld = useStore((s) => s.setWorld)
   const [entryDone, setEntryDone] = useState(false)
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
   const [dressStep, setDressStep] = useState(4)
   const [cardStage, setCardStage] = useState<'sealed' | 'opening' | 'open'>('open')
+
+  useEffect(() => {
+    setWorld('redroom')
+    document.documentElement.setAttribute('data-world', 'redroom')
+  }, [setWorld])
 
   const r1Ref = useRef<HTMLElement>(null)
   const r2Ref = useRef<HTMLElement>(null)

@@ -19,6 +19,12 @@ export function HomeView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
   const hoverDoor = useStore((s) => s.hoverDoor)
   const setHoverDoor = useStore((s) => s.setHoverDoor)
+  const setWorld = useStore((s) => s.setWorld)
+
+  useEffect(() => {
+    setWorld('home')
+    document.documentElement.setAttribute('data-world', 'home')
+  }, [setWorld])
 
   const h1Ref = useRef<HTMLElement>(null)
   const h2Ref = useRef<HTMLElement>(null)

@@ -92,7 +92,9 @@ async function run() {
   await fs.mkdir(screenshotsDir, { recursive: true })
   await fs.mkdir(videosDir, { recursive: true })
 
-  const browser = await chromium.launch()
+  const browser = await chromium.launch({
+    args: ['--enable-webgl', '--ignore-gpu-blocklist', '--use-gl=angle', '--enable-gpu-rasterization'],
+  })
   const metrics = {
     desktop: {},
     mobile: {},

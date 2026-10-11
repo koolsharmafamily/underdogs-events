@@ -19,8 +19,14 @@ const BULB_COUNT = 16
 
 export function DiwaliView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
+  const setWorld = useStore((s) => s.setWorld)
   const [activeStoryLine, setActiveStoryLine] = useState(0)
   const [skyRevealed, setSkyRevealed] = useState(false)
+
+  useEffect(() => {
+    setWorld('diwali')
+    document.documentElement.setAttribute('data-world', 'diwali')
+  }, [setWorld])
 
   const d1Ref = useRef<HTMLElement>(null)
   const d2Ref = useRef<HTMLElement>(null)

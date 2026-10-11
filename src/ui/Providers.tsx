@@ -1,11 +1,17 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+import dynamic from 'next/dynamic'
 import { usePathname } from 'next/navigation'
 import { startClock, getLenis } from '@/motion/clock'
 import { registerTransitionVeil } from '@/motion/transitions'
 import { useStore } from '@/state/store'
 import type { WorldId } from '@/theme/tokens'
+
+const Experience = dynamic(
+  () => import('@/webgl/Experience').then((mod) => mod.Experience),
+  { ssr: false }
+)
 
 function pathnameToWorld(pathname: string): WorldId {
   if (pathname.startsWith('/the-red-room')) return 'redroom'
@@ -56,6 +62,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <>
+      <Experience />
       {children}
       <div
         ref={veilRef}
