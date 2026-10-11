@@ -321,7 +321,22 @@ export function Badge({
     let targetYaw = rotation[1];
     let targetScale = scale;
 
-    if (world === 'home') {
+    if (world === 'redroom') {
+      // Red Room: floats in front of the mirror at (0, 2.0, 0.8) per Part 8 The set
+      targetX = 0;
+      targetY = 2.0;
+      targetZ = 0.8;
+      targetYaw = 0;
+      targetScale = 1.0;
+    } else if (world === 'diwali') {
+      // Diwali: floats at (0, 1.9, 0) per Part 9 The set
+      targetX = 0;
+      targetY = 1.9;
+      targetZ = 0;
+      targetYaw = 0;
+      targetScale = 1.0;
+    } else {
+      // Home world (H1–H5 choreography)
       const p1 = frame.dampedProgress['H1'] ?? 0;
       const p2 = frame.dampedProgress['H2'] ?? 0;
       const p3 = frame.dampedProgress['H3'] ?? 0;

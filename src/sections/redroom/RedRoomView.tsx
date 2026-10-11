@@ -13,6 +13,7 @@ import { Divider } from '@/ui/Divider'
 import { InvitationCard } from '@/ui/InvitationCard'
 import { TransitionLink } from '@/ui/TransitionLink'
 import { Footer } from '@/ui/Footer'
+import { cardOverlayRef } from '@/webgl/tracking/CardProjector'
 
 const DRIPS = [
   { x: '11%', height: 28, delay: 0.1 },
@@ -313,6 +314,47 @@ export function RedRoomView() {
         </div>
       </section>
 
+      {/* Screen-projected DOM Twin for 3D Invitation Card (Part 8 R4 & Part 14) */}
+      <div
+        ref={(el) => {
+          cardOverlayRef.current = el
+        }}
+        aria-label="Official Red Room Invitation Card Details"
+        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-6 sm:p-8 rounded-xl bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-300"
+      >
+        <div className="flex flex-col items-center text-center gap-1.5">
+          <span className="font-cinzel-decorative text-[clamp(20px,2.4vw,32px)] font-black uppercase text-[#4A0808] tracking-[0.06em]">
+            THE RED ROOM
+          </span>
+          <div className="w-full max-w-[200px]">
+            <Divider variant="diamond" active />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-y-4 my-auto text-left">
+          {site.redRoom.invitation.rows.map((row) => (
+            <div key={row.label} className="flex flex-col gap-0.5">
+              <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#8B1414]">
+                {row.label}
+              </span>
+              <span className="font-manrope text-[13px] sm:text-[15px] font-bold text-[#350505]">
+                {row.value}
+              </span>
+              {'sub' in row && Boolean((row as any).sub) && (
+                <span className="font-manrope text-[11px] text-[#550A0A]/80">
+                  {(row as any).sub}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#4A0808]">
+          <span>UNDERDOGS</span>
+          <span>NAGPUR</span>
+        </div>
+      </div>
+
       {/* R4 · The invitation (220vh, pinned) */}
       <section
         id="redroom-invitation"
@@ -326,28 +368,23 @@ export function RedRoomView() {
             <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--rr-ash)]">
               <span>
                 {cardStage === 'sealed'
-                  ? 'Seal intact — scroll to break the wax seal'
+                  ? 'Scroll to break the wax seal'
                   : cardStage === 'opening'
                     ? 'Envelope opening'
                     : 'Official Invitation'}
               </span>
             </div>
 
-            <div
-              className={`w-full transition-transform duration-700 ${
-                cardStage === 'sealed'
-                  ? 'scale-95'
-                  : cardStage === 'opening'
-                    ? 'scale-[0.98]'
-                    : 'scale-100'
-              }`}
-            >
-              <InvitationCard
-                variant="redroom"
-                heading={site.redRoom.invitation.heading}
-                rows={site.redRoom.invitation.rows}
-              />
-            </div>
+            {/* Static fallback for reduced motion or T0 */}
+            {!motionEnabled && (
+              <div className="w-full">
+                <InvitationCard
+                  variant="redroom"
+                  heading={site.redRoom.invitation.heading}
+                  rows={site.redRoom.invitation.rows}
+                />
+              </div>
+            )}
           </div>
         </div>
       </section>

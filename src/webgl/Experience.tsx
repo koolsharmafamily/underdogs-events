@@ -8,6 +8,7 @@ import { CameraRig } from './CameraRig';
 import { WorldDirector } from './WorldDirector';
 import { Precompile } from './Precompile';
 import { DoorProjector } from './tracking/DoorProjector';
+import { CardProjector } from './tracking/CardProjector';
 import { PostFX } from './PostFX';
 import { setWebglAdvance } from '@/motion/clock';
 
@@ -66,6 +67,7 @@ function CanvasInner() {
       <CameraRig />
       <WorldDirector />
       <DoorProjector />
+      <CardProjector />
       <PostFX />
     </Canvas>
   );
