@@ -96,14 +96,6 @@ body {
   transition: background-color 500ms var(--ease-out), color 500ms var(--ease-out);
 }
 
-/* Custom cursor active state on fine pointer devices */
-html.has-custom-cursor,
-html.has-custom-cursor body,
-html.has-custom-cursor *,
-html.has-custom-cursor a,
-html.has-custom-cursor button {
-  cursor: none !important;
-}
 
 /* Selection colour: the world's accent on its void (Part 4.4) */
 ::selection {
