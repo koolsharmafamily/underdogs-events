@@ -23,7 +23,6 @@ const LOADER_SEEN_KEY = 'underdogs-loader-seen'
  */
 export function DomLoader() {
   const pathname = usePathname()
-  const isHome = pathname === '/'
   const phase = useStore((s) => s.phase)
   const setPhase = useStore((s) => s.setPhase)
   const setLoaderPopped = useStore((s) => s.setLoaderPopped)
@@ -31,7 +30,7 @@ export function DomLoader() {
   const motionEnabled = useStore((s) => s.motionEnabled)
 
   const [progress, setProgress] = useState(0)
-  const [visible, setVisible] = useState(isHome)
+  const [visible, setVisible] = useState(true)
   const [statusText, setStatusText] = useState<'Loading' | 'Ready'>('Loading')
   const [showEnterAnyway, setShowEnterAnyway] = useState(false)
 
@@ -43,13 +42,6 @@ export function DomLoader() {
   const finishHandoffRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
-    if (!isHome) {
-      setPhase('complete')
-      setLoaderPopped(true)
-      setVisible(false)
-      return
-    }
-
     registerMotionEases()
 
     let isRepeat = false
@@ -58,6 +50,13 @@ export function DomLoader() {
       window.sessionStorage.setItem(LOADER_SEEN_KEY, '1')
     } catch {
       // Ignore storage access errors
+    }
+
+    if (typeof window !== 'undefined' && window.location.search.includes('skipLoader=1')) {
+      setVisible(false)
+      setPhase('complete')
+      setLoaderPopped(true)
+      return
     }
 
     const minDuration = !motionEnabled ? 0.3 : isRepeat ? 0.6 : 0.95
@@ -78,6 +77,11 @@ export function DomLoader() {
     } else {
       fontsDone = true
     }
+
+    // Safety font timeout so headless / offline environments don't stall
+    const checkFonts = window.setTimeout(() => {
+      fontsDone = true
+    }, 450)
 
     // 3D chunk check
     const checkChunk = window.setTimeout(() => {
@@ -182,6 +186,7 @@ export function DomLoader() {
 
     return () => {
       gsap.ticker.remove(updateProgress)
+      window.clearTimeout(checkFonts)
       window.clearTimeout(checkChunk)
       window.clearTimeout(checkGlb)
       window.clearTimeout(fallbackTimer)
@@ -202,75 +207,32 @@ export function DomLoader() {
         <div
           ref={containerRef}
           aria-hidden="true"
-          className="fixed inset-0 z-50 flex flex-col justify-between bg-[#07090D] text-[#FCF9FC] p-6 sm:p-12 select-none"
+          className="fixed inset-0 z-[100] flex items-center justify-center select-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 50%, #170915 0%, #09060B 65%, #050406 100%)',
+          }}
         >
-          {/* Badge aligned to exact 3D Hero position within 2 px */}
-          <div className="absolute inset-0 flex items-center pointer-events-none">
-            <div className="site-container site-grid w-full h-full items-center">
-              <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-7 order-1 lg:order-2 flex flex-col items-center justify-center pt-16 lg:pt-0">
-                <div className="relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[440px] lg:h-[440px] flex items-center justify-center">
-                  {/* Instantly rendered PINK enamel still badge with gentle CSS breathing */}
-                  <div className="badge-breathe w-full h-full flex items-center justify-center relative">
-                    <picture className="w-full h-full flex items-center justify-center">
-                      <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
-                      <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
-                      <img
-                        src="/media/badge-enamel-still.webp"
-                        alt="Underdogs Enamel Badge"
-                        width={1024}
-                        height={1024}
-                        fetchPriority="high"
-                        decoding="async"
-                        className="w-full h-full object-contain pointer-events-none drop-shadow-[0_12px_40px_rgba(173,12,128,0.25)] select-none"
-                      />
-                    </picture>
-                  </div>
-
-                  {/* Thin magenta ring tracing REAL loading progress */}
-                  <svg
-                    viewBox="0 0 100 100"
-                    className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none"
-                  >
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="48.5"
-                      fill="none"
-                      stroke="rgba(215, 62, 188, 0.15)"
-                      strokeWidth="1.2"
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="48.5"
-                      fill="none"
-                      stroke="#D73EBC"
-                      strokeWidth="1.4"
-                      strokeDasharray={2 * Math.PI * 48.5}
-                      strokeDashoffset={2 * Math.PI * 48.5 * (1 - progress / 100)}
-                      strokeLinecap="round"
-                      className="transition-all duration-150 ease-out"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
+          {/* Centered PINK enamel badge with gentle breathing */}
+          <div className="badge-breathe relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-none">
+            <picture className="w-full h-full flex items-center justify-center">
+              <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
+              <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
+              <img
+                src="/media/badge-enamel-still.webp"
+                alt="Underdogs Enamel Badge"
+                width={1024}
+                height={1024}
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_50px_rgba(215,62,188,0.28)] select-none"
+              />
+            </picture>
           </div>
 
-          <div className="flex items-center justify-between pointer-events-none">
-            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--steel)]">
-              {site.brand.name}
-            </span>
-          </div>
-
-          <div className="flex items-end justify-between relative z-10">
-            {/* Bottom-left: mono counter 000 → 100 */}
-            <span className="font-mono text-[13px] tracking-[0.08em] tabular-nums text-[#FCF9FC]">
-              {String(progress).padStart(3, '0')}
-            </span>
-
-            {/* 8-second fallback button per Part 7 H0 */}
-            {showEnterAnyway && (
+          {/* 8-second fallback button per Part 7 H0 if slow connection */}
+          {showEnterAnyway && (
+            <div className="absolute bottom-8 left-0 right-0 flex justify-center z-10">
               <button
                 type="button"
                 onClick={() => {
@@ -282,13 +244,8 @@ export function DomLoader() {
               >
                 Enter anyway →
               </button>
-            )}
-
-            {/* Bottom-right: "GATE TO RAGE" in Cinzel caps */}
-            <span className="font-cinzel text-[13px] uppercase tracking-[0.28em] text-[#FCF9FC]">
-              {site.brand.line}
-            </span>
-          </div>
+            </div>
+          )}
         </div>
       )}
     </>

@@ -23,15 +23,6 @@ let pendingEnterFallbackTimer: number | null = null
 
 const SCROLL_STORAGE_PREFIX = 'underdogs-scroll:'
 
-const CRIMSON_CURTAIN_L =
-  'repeating-linear-gradient(90deg, #100102 0%, #2E0306 4.5%, #4A060A 9%, #160103 13.5%, #090001 18%)'
-const CRIMSON_CURTAIN_R =
-  'repeating-linear-gradient(90deg, #090001 0%, #160103 4.5%, #4A060A 9%, #2E0306 13.5%, #100102 18%)'
-
-const RANI_CURTAIN_L =
-  'repeating-linear-gradient(90deg, #1A0310 0%, #4E0A2B 4.5%, #7E1347 9%, #2D0619 13.5%, #12020B 18%)'
-const RANI_CURTAIN_R =
-  'repeating-linear-gradient(90deg, #12020B 0%, #2D0619 4.5%, #7E1347 9%, #4E0A2B 13.5%, #1A0310 18%)'
 
 export function registerTransitionStage(refs: TransitionStageRefs | null) {
   stageRefs = refs
@@ -97,36 +88,6 @@ export function getSavedRouteScroll(pathname: string): number {
   }
 }
 
-function setCurtainPalette(palette: 'redroom' | 'diwali') {
-  if (!stageRefs?.leftCurtainEl || !stageRefs?.rightCurtainEl) return
-  if (palette === 'diwali') {
-    stageRefs.leftCurtainEl.style.background = RANI_CURTAIN_L
-    stageRefs.rightCurtainEl.style.background = RANI_CURTAIN_R
-    stageRefs.leftCurtainEl.style.borderRight = '3px solid rgba(242, 211, 139, 0.75)'
-    stageRefs.rightCurtainEl.style.borderLeft = '3px solid rgba(242, 211, 139, 0.75)'
-  } else {
-    stageRefs.leftCurtainEl.style.background = CRIMSON_CURTAIN_L
-    stageRefs.rightCurtainEl.style.background = CRIMSON_CURTAIN_R
-    stageRefs.leftCurtainEl.style.borderRight = '2px solid rgba(200, 161, 90, 0.55)'
-    stageRefs.rightCurtainEl.style.borderLeft = '2px solid rgba(200, 161, 90, 0.55)'
-  }
-}
-
-function syncCurtainDom(closeNorm: number) {
-  if (!stageRefs?.leftCurtainEl || !stageRefs?.rightCurtainEl || !stageRefs?.curtainWrapEl) return
-  if (closeNorm <= 0.001) {
-    stageRefs.curtainWrapEl.style.opacity = '0'
-    stageRefs.leftCurtainEl.style.transform = 'translate3d(-102%, 0, 0) scaleX(0.45)'
-    stageRefs.rightCurtainEl.style.transform = 'translate3d(102%, 0, 0) scaleX(0.45)'
-    return
-  }
-  stageRefs.curtainWrapEl.style.opacity = '1'
-  const xPct = (1 - closeNorm) * 102
-  const foldScale = 0.45 + 0.55 * closeNorm
-  stageRefs.leftCurtainEl.style.transform = `translate3d(${-xPct}%, 0, 0) scaleX(${foldScale})`
-  stageRefs.rightCurtainEl.style.transform = `translate3d(${xPct}%, 0, 0) scaleX(${foldScale})`
-}
-
 function resetStageComplete() {
   const store = useStore.getState()
   const lenis = getLenis()
@@ -153,8 +114,6 @@ function resetStageComplete() {
     gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
   }
   if (stageRefs?.veilEl) gsap.set(stageRefs.veilEl, { opacity: 0 })
-  if (stageRefs?.washEl) gsap.set(stageRefs.washEl, { opacity: 0 })
-  syncCurtainDom(0)
 
   const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
   if (mainEl) {
@@ -317,7 +276,7 @@ export function runRouteTransition(
   }
   pendingEnterCallback = null
 
-  // Stop Lenis during exit to prevent visible scroll jump (Part B Item 7)
+  // Stop Lenis during exit to prevent visible scroll jump
   const lenis = getLenis()
   if (lenis) {
     lenis.stop()
@@ -345,19 +304,17 @@ export function runRouteTransition(
     return
   }
 
-  const { stageEl, veilEl, washEl } = stageRefs
+  const { stageEl, veilEl } = stageRefs
   if (stageEl) gsap.set(stageEl, { pointerEvents: 'auto' })
   gsap.set(veilEl, { opacity: 0 })
-  if (washEl) gsap.set(washEl, { opacity: 0 })
-  syncCurtainDom(0)
 
   const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
 
-  // Helper to await destination mount at cover point (max wait 1.2 s per Part 13.6)
+  // Helper to await destination mount at cover point
   const triggerCoverAndWaitForMount = (enterFn: () => void) => {
     frame.transition.phase = 'covered'
 
-    // Scroll to top or restored position with { immediate: true } while covered per Part B Item 7
+    // Scroll to top or restored position with { immediate: true } while covered
     const targetScroll =
       toWorld === 'home'
         ? (store.t4ScrollTarget === 'H5' ? getSavedRouteScroll('/') : 0)
@@ -367,6 +324,8 @@ export function runRouteTransition(
     } else if (typeof window !== 'undefined') {
       window.scrollTo({ top: targetScroll, behavior: 'instant' as ScrollBehavior })
     }
+
+    frame.snapCamera = true
 
     pendingEnterCallback = () => {
       if (lenis) lenis.start()
@@ -384,561 +343,73 @@ export function runRouteTransition(
             resetStageComplete()
           }
         }
-      }, 1200)
+      }, 1600)
     }
-    console.log('[Transition Debug] triggerCoverAndWaitForMount called, setting pendingEnterCallback and invoking onCover()...');
     onCover()
   }
 
-  // ---------------------------------------------------------------------------
-  // REDUCED MOTION / MOTION TOGGLE OFF (Part 10: 300 ms crossfade, instant skin)
-  // ---------------------------------------------------------------------------
-  if (!motionEnabled) {
-    frame.transition.duration = 0.3
-    frame.transition.coverTime = 0.15
-    gsap.set(veilEl, {
-      backgroundColor:
-        toWorld === 'redroom' ? '#060101' : toWorld === 'diwali' ? '#0B0B0F' : '#07090D',
-    })
+  // Classy minimalistic transition with centered pink badge on luxury dark background
+  const outDur = motionEnabled ? 0.32 : 0.16
+  const inDur = motionEnabled ? 0.40 : 0.16
 
-    const exitTl = gsap.timeline({
-      onComplete: () => {
-        store.setTargetSkinOverride(destSkin)
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          const enterTl = gsap.timeline({ onComplete: resetStageComplete })
-          enterTl.to(veilEl, { opacity: 0, duration: 0.15, ease: 'none' }, 0)
-          activeTimeline = enterTl
-        })
-      },
-    })
-    exitTl.to(veilEl, { opacity: 1, duration: 0.15, ease: 'none' }, 0)
-    activeTimeline = exitTl
-    return
-  }
+  frame.transition.duration = outDur + inDur
+  frame.transition.coverTime = outDur
 
-  // ---------------------------------------------------------------------------
-  // T1 · Home → The Red Room (1.60 s total, cover at 0.90 s)
-  // ---------------------------------------------------------------------------
-  if (type === 'T1') {
-    frame.transition.duration = 1.6
-    frame.transition.coverTime = 0.9
-    setCurtainPalette('redroom')
-    gsap.set(veilEl, { backgroundColor: '#060101', opacity: 0 })
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 1.6
-        syncCurtainDom(frame.transition.curtainClose)
-      },
-      onComplete: () => {
-        syncCurtainDom(1)
-        gsap.set(veilEl, { opacity: 1 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          // Behind closed curtains, drop solid veil and part the curtains (0.90 -> 1.60 s = 0.70 s)
-          gsap.set(veilEl, { opacity: 0 })
-          const enterTl = gsap.timeline({
-            onUpdate: function () {
-              const enterTime = this.time()
-              frame.transition.elapsed = 0.9 + enterTime
-              frame.transition.t = Math.min(1, (0.9 + enterTime) / 1.6)
-              syncCurtainDom(frame.transition.curtainClose)
-            },
-            onComplete: resetStageComplete,
-          })
-          enterTl.to(
-            frame.transition,
-            {
-              curtainClose: 0,
-              dollyProgress: 0,
-              doorProgress: 0,
-              duration: 0.7,
-              ease: 'ease.inOut',
-            },
-            0
-          )
-          activeTimeline = enterTl
-        })
-      },
-    })
-
-    // 0.00–0.45 s: Red door swings open 0 -> 75° (ease.inOut), red light floods out
-    exitTl.to(
-      frame.transition,
-      {
-        doorProgress: 1,
-        duration: 0.45,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-
-    // 0.15 s: Badge begins its dissolve from Enamel to Neon (ember edge)
-    exitTl.call(
-      () => {
-        store.setTargetSkinOverride('neon')
-      },
-      [],
-      0.15
-    )
-
-    // 0.15–0.70 s: Camera pushes through doorway (dolly, FOV +6°, chromAb)
-    exitTl.to(
-      frame.transition,
-      {
-        dollyProgress: 1,
-        duration: 0.55,
-        ease: 'ease.inOut',
-      },
-      0.15
-    )
-    exitTl.to(
-      frame.transition,
-      {
-        chromAb: 0.0015,
-        duration: 0.28,
-        ease: 'ease.in',
-      },
-      0.15
-    )
-    exitTl.to(
-      frame.transition,
-      {
-        chromAb: 0,
-        duration: 0.27,
-        ease: 'ease.out',
-      },
-      0.43
-    )
-
-    // 0.55–0.75 s: Home DOM fades out
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.2,
-          ease: 'ease.inOut',
-        },
-        0.55
-      )
-    }
-
-    // 0.55–0.90 s: Red velvet curtains sweep in from both sides and close
-    exitTl.to(
-      frame.transition,
-      {
-        curtainClose: 1,
-        duration: 0.35,
-        ease: 'ease.inOut',
-      },
-      0.55
-    )
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T2 · Home → Diwali (0.85 s total, cover at 0.65 s, then D0 title card)
-  // ---------------------------------------------------------------------------
-  if (type === 'T2') {
-    frame.transition.duration = 0.85
-    frame.transition.coverTime = 0.65
-    gsap.set(veilEl, { backgroundColor: '#0B0B0F', opacity: 0 })
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 0.85
-      },
-      onComplete: () => {
-        gsap.set(veilEl, { opacity: 1 })
-        if (washEl) gsap.set(washEl, { opacity: 0 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          // Hand off directly to D0 title card (#0B0B0F)
-          const enterTl = gsap.timeline({ onComplete: resetStageComplete })
-          enterTl.to(
-            veilEl,
-            {
-              opacity: 0,
-              duration: 0.2,
-              ease: 'ease.out',
-            },
-            0
-          )
-          enterTl.to(
-            frame.transition,
-            {
-              dollyProgress: 0,
-              doorProgress: 0,
-              exposureWash: 0,
-              duration: 0.2,
-              ease: 'ease.out',
-            },
-            0
-          )
-          activeTimeline = enterTl
-        })
-      },
-    })
-
-    // 0.00–0.35 s: Both Diwali door leaves open 0 -> 70° (ease.inOut), warm gold light floods out
-    exitTl.to(
-      frame.transition,
-      {
-        doorProgress: 1,
-        duration: 0.35,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-
-    // 0.15 s: Badge begins dissolve from Enamel to Jewelled (gold-spark edge)
-    exitTl.call(
-      () => {
-        store.setTargetSkinOverride('jewelled')
-      },
-      [],
-      0.15
-    )
-
-    // 0.15–0.58 s: Camera pushes in; exposure ramps
-    exitTl.to(
-      frame.transition,
-      {
-        dollyProgress: 1,
-        exposureWash: 1,
-        duration: 0.43,
-        ease: 'ease.inOut',
-      },
-      0.15
-    )
-    if (washEl) {
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0.96,
-          duration: 0.43,
-          ease: 'ease.in',
-        },
-        0.15
-      )
-    }
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.25,
-          ease: 'ease.in',
-        },
-        0.3
-      )
-    }
-
-    // 0.50–0.65 s: Wash cuts to #0B0B0F black, like a film cut
-    exitTl.to(
-      veilEl,
-      {
-        opacity: 1,
-        duration: 0.15,
-        ease: 'ease.inOut',
-      },
-      0.5
-    )
-    if (washEl) {
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0,
-          duration: 0.12,
-          ease: 'ease.out',
-        },
-        0.53
-      )
-    }
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T3 · World ↔ World (1.10 s total, cover at 0.55 s)
-  // ---------------------------------------------------------------------------
-  if (type === 'T3') {
-    frame.transition.duration = 1.1
-    frame.transition.coverTime = 0.55
-    const isLeavingDiwali = fromWorld === 'diwali'
-    setCurtainPalette(isLeavingDiwali ? 'diwali' : 'redroom')
-    gsap.set(veilEl, {
-      backgroundColor: toWorld === 'diwali' ? '#0B0B0F' : '#060101',
-      opacity: 0,
-    })
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 1.1
-        syncCurtainDom(frame.transition.curtainClose)
-      },
-      onComplete: () => {
-        syncCurtainDom(1)
-        gsap.set(veilEl, { opacity: 1 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          // Continue badge 180° flip from -PI to 0 so front face settles toward camera
-          frame.transition.badgeFlip = -Math.PI
-
-          if (toWorld === 'redroom') {
-            // Target is Red Room: part the curtains over 0.55 s
-            setCurtainPalette('redroom')
-            gsap.set(veilEl, { opacity: 0 })
-            const enterTl = gsap.timeline({
-              onUpdate: function () {
-                const enterTime = this.time()
-                frame.transition.elapsed = 0.55 + enterTime
-                frame.transition.t = Math.min(1, (0.55 + enterTime) / 1.1)
-                syncCurtainDom(frame.transition.curtainClose)
-              },
-              onComplete: resetStageComplete,
-            })
-            enterTl.to(
-              frame.transition,
-              {
-                curtainClose: 0,
-                duration: 0.55,
-                ease: 'ease.inOut',
-              },
-              0
-            )
-            enterTl.to(
-              frame.transition,
-              {
-                badgeFlip: 0,
-                duration: 0.55,
-                ease: 'ease.out',
-              },
-              0
-            )
-            activeTimeline = enterTl
-          } else {
-            // Target is Diwali: open into the short title card
-            syncCurtainDom(0)
-            const enterTl = gsap.timeline({
-              onUpdate: function () {
-                const enterTime = this.time()
-                frame.transition.elapsed = 0.55 + enterTime
-                frame.transition.t = Math.min(1, (0.55 + enterTime) / 1.1)
-              },
-              onComplete: resetStageComplete,
-            })
-            enterTl.to(
-              veilEl,
-              {
-                opacity: 0,
-                duration: 0.25,
-                ease: 'ease.out',
-              },
-              0
-            )
-            enterTl.to(
-              frame.transition,
-              {
-                curtainClose: 0,
-                badgeFlip: 0,
-                duration: 0.55,
-                ease: 'ease.out',
-              },
-              0
-            )
-            activeTimeline = enterTl
-          }
-        })
-      },
-    })
-
-    // 0.00–0.55 s: Current world closes through curtains/drapes
-    exitTl.to(
-      frame.transition,
-      {
-        curtainClose: 1,
-        badgeFlip: Math.PI,
-        duration: 0.55,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-
-    // If leaving Diwali, add the brief gold flash as drapes close (Part 10 T3)
-    if (isLeavingDiwali && washEl) {
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0.65,
-          duration: 0.22,
-          ease: 'ease.out',
-        },
-        0.05
-      )
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0,
-          duration: 0.25,
-          ease: 'ease.inOut',
-        },
-        0.27
-      )
-    }
-
-    // At edge-on (0.25 s, ~90°), trigger badge skin dissolve
-    exitTl.call(
-      () => {
-        store.setTargetSkinOverride(destSkin)
-      },
-      [],
-      0.25
-    )
-
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.3,
-          ease: 'ease.inOut',
-        },
-        0.15
-      )
-    }
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T4 · World → Home ("Back to the gate", or nav badge; 0.80 s total, cover at 0.40 s)
-  // ---------------------------------------------------------------------------
-  if (type === 'T4') {
-    frame.transition.duration = 0.8
-    frame.transition.coverTime = 0.4
-    const darkestColor = fromWorld === 'redroom' ? '#060101' : '#0B0B0F'
-    gsap.set(veilEl, { backgroundColor: darkestColor, opacity: 0 })
-
-    // Re-skin to Enamel with magenta edge
-    store.setTargetSkinOverride('enamel')
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 0.8
-      },
-      onComplete: () => {
-        gsap.set(veilEl, { opacity: 1 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          const enterTl = gsap.timeline({
-            onUpdate: function () {
-              const enterTime = this.time()
-              frame.transition.elapsed = 0.4 + enterTime
-              frame.transition.t = Math.min(1, (0.4 + enterTime) / 0.8)
-            },
-            onComplete: resetStageComplete,
-          })
-          enterTl.to(
-            veilEl,
-            {
-              opacity: 0,
-              duration: 0.4,
-              ease: 'ease.out',
-            },
-            0
-          )
-          enterTl.to(
-            frame.transition,
-            {
-              dollyProgress: 0,
-              duration: 0.4,
-              ease: 'ease.out',
-            },
-            0
-          )
-          activeTimeline = enterTl
-        })
-      },
-    })
-
-    // 0.00–0.40 s: World fades to darkest colour while camera pulls back fast
-    exitTl.to(
-      frame.transition,
-      {
-        dollyProgress: 1,
-        duration: 0.4,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-    exitTl.to(
-      veilEl,
-      {
-        opacity: 1,
-        duration: 0.4,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.3,
-          ease: 'ease.in',
-        },
-        0
-      )
-    }
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T5 · Browser Back and Forward (Part 10 T5: T3/T4 equivalent or 400 ms fade)
-  // ---------------------------------------------------------------------------
-  frame.transition.duration = 0.4
-  frame.transition.coverTime = 0.2
-  store.setTargetSkinOverride(destSkin)
-  gsap.set(veilEl, {
-    backgroundColor:
-      toWorld === 'redroom' ? '#060101' : toWorld === 'diwali' ? '#0B0B0F' : '#07090D',
-    opacity: 0.95,
-  })
-
-  const t5Tl = gsap.timeline({
+  const exitTl = gsap.timeline({
     onUpdate: function () {
       const time = this.time()
       frame.transition.elapsed = time
-      frame.transition.t = time / 0.4
+      frame.transition.t = time / (outDur + inDur)
     },
-    onComplete: resetStageComplete,
+    onComplete: () => {
+      store.setTargetSkinOverride(destSkin)
+      triggerCoverAndWaitForMount(() => {
+        frame.transition.phase = 'enter'
+        const enterTl = gsap.timeline({
+          onUpdate: function () {
+            const enterTime = this.time()
+            frame.transition.elapsed = outDur + enterTime
+            frame.transition.t = Math.min(1, (outDur + enterTime) / (outDur + inDur))
+          },
+          onComplete: resetStageComplete,
+        })
+        enterTl.to(
+          veilEl,
+          {
+            opacity: 0,
+            duration: inDur,
+            ease: 'power2.out',
+          },
+          0
+        )
+        activeTimeline = enterTl
+      })
+    },
   })
-  t5Tl.to(
+
+  // Fade out main content
+  if (mainEl) {
+    exitTl.to(
+      mainEl,
+      {
+        opacity: 0,
+        duration: outDur * 0.75,
+        ease: 'power1.out',
+      },
+      0
+    )
+  }
+
+  // Smoothly fade in the centered pink badge veil
+  exitTl.to(
     veilEl,
     {
-      opacity: 0,
-      duration: 0.4,
-      ease: 'ease.out',
+      opacity: 1,
+      duration: outDur,
+      ease: 'power2.inOut',
     },
     0
   )
-  activeTimeline = t5Tl
+
+  activeTimeline = exitTl
 }

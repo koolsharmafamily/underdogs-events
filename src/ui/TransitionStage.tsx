@@ -12,19 +12,15 @@ import { registerTransitionStage } from '@/motion/transitions'
 export function TransitionStage() {
   const stageRef = useRef<HTMLDivElement>(null)
   const veilRef = useRef<HTMLDivElement>(null)
-  const washRef = useRef<HTMLDivElement>(null)
-  const curtainWrapRef = useRef<HTMLDivElement>(null)
-  const leftCurtainRef = useRef<HTMLDivElement>(null)
-  const rightCurtainRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     registerTransitionStage({
       stageEl: stageRef.current,
       veilEl: veilRef.current,
-      washEl: washRef.current,
-      curtainWrapEl: curtainWrapRef.current,
-      leftCurtainEl: leftCurtainRef.current,
-      rightCurtainEl: rightCurtainRef.current,
+      washEl: null,
+      curtainWrapEl: null,
+      leftCurtainEl: null,
+      rightCurtainEl: null,
     })
 
     return () => {
@@ -36,53 +32,32 @@ export function TransitionStage() {
     <div
       ref={stageRef}
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-40 overflow-hidden"
+      className="pointer-events-none fixed inset-0 z-[100] overflow-hidden"
     >
-      {/* Solid dark / film-cut veil */}
+      {/* Classy minimalistic veil with centered pink badge */}
       <div
         ref={veilRef}
-        className="pointer-events-none absolute inset-0 bg-[#060101] opacity-0"
-      />
-
-      {/* Warm white-gold exposure wash (T2 & T3 Diwali flash) */}
-      <div
-        ref={washRef}
-        className="pointer-events-none absolute inset-0 opacity-0"
+        className="pointer-events-none absolute inset-0 opacity-0 flex items-center justify-center select-none"
         style={{
           background:
-            'radial-gradient(circle at 58% 50%, #FFFDF5 0%, #FFE494 48%, #D4AF6A 100%)',
+            'radial-gradient(ellipse at 50% 50%, #170915 0%, #09060B 65%, #050406 100%)',
         }}
-      />
-
-      {/* Pleated Velvet Curtains (T1 & T3) */}
-      <div
-        ref={curtainWrapRef}
-        data-theme="redroom"
-        className="pointer-events-none absolute inset-0 opacity-0"
       >
-        {/* Left Velvet Curtain Panel (52% width for seamless overlap at centre) */}
-        <div
-          ref={leftCurtainRef}
-          className="pointer-events-none transition-curtain-left absolute inset-y-0 left-0 w-[52%] origin-left"
-          style={{
-            transform: 'translate3d(-102%, 0, 0)',
-            background:
-              'repeating-linear-gradient(90deg, #100102 0%, #2E0306 4.5%, #4A060A 9%, #160103 13.5%, #090001 18%)',
-            borderRight: '2px solid rgba(200, 161, 90, 0.55)',
-          }}
-        />
-
-        {/* Right Velvet Curtain Panel */}
-        <div
-          ref={rightCurtainRef}
-          className="pointer-events-none transition-curtain-right absolute inset-y-0 right-0 w-[52%] origin-right"
-          style={{
-            transform: 'translate3d(102%, 0, 0)',
-            background:
-              'repeating-linear-gradient(90deg, #090001 0%, #160103 4.5%, #4A060A 9%, #2E0306 13.5%, #100102 18%)',
-            borderLeft: '2px solid rgba(200, 161, 90, 0.55)',
-          }}
-        />
+        <div className="badge-breathe relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-none">
+          <picture className="w-full h-full flex items-center justify-center">
+            <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
+            <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
+            <img
+              src="/media/badge-enamel-still.webp"
+              alt="Underdogs Enamel Badge"
+              width={1024}
+              height={1024}
+              fetchPriority="high"
+              decoding="async"
+              className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_50px_rgba(215,62,188,0.28)] select-none"
+            />
+          </picture>
+        </div>
       </div>
     </div>
   )
