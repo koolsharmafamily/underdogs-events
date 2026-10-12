@@ -9,6 +9,7 @@ export type NavigationOrigin = 'direct' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5'
 
 export interface AppStore {
   world: WorldId
+  previousWorld: WorldId | null
   phase: LoaderPhase
   tier: QualityTier
   motionEnabled: boolean
@@ -55,8 +56,17 @@ function syncDocumentDataset(world: WorldId, motionEnabled: boolean) {
   document.documentElement.dataset.motion = motionEnabled ? 'on' : 'off'
 }
 
+function getInitialWorld(): WorldId {
+  if (typeof window === 'undefined') return 'home'
+  const path = window.location.pathname
+  if (path.startsWith('/the-red-room')) return 'redroom'
+  if (path.startsWith('/diwali')) return 'diwali'
+  return 'home'
+}
+
 export const useStore = create<AppStore>((set, get) => ({
-  world: 'home',
+  world: getInitialWorld(),
+  previousWorld: null,
   phase: 'loading',
   tier: 'T3',
   motionEnabled: true,
@@ -76,7 +86,12 @@ export const useStore = create<AppStore>((set, get) => ({
   loaderPopped: false,
 
   setWorld: (world) => {
-    set({ world })
+    const cur = get().world
+    const isTr = get().isTransitioning
+    set({
+      world,
+      previousWorld: cur !== world && isTr ? cur : get().previousWorld,
+    })
     syncDocumentDataset(world, get().motionEnabled)
   },
 
@@ -130,7 +145,11 @@ export const useStore = create<AppStore>((set, get) => ({
   setHoverDoor: (hoverDoor) => set({ hoverDoor }),
 
   setTransition: (transitionType, isTransitioning) =>
-    set({ transitionType, isTransitioning }),
+    set((state) => ({
+      transitionType,
+      isTransitioning,
+      previousWorld: isTransitioning ? state.previousWorld : null,
+    })),
 
   setTargetSkinOverride: (targetSkinOverride) => set({ targetSkinOverride }),
 

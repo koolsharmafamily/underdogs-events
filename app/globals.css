@@ -273,39 +273,45 @@ html.has-custom-cursor button {
   }
 }
 
-/* Scene lengths (Desktop vs Mobile ×0.85 per Part 7) */
-.scene-h1 { height: calc(120svh * 0.85); }
-.scene-h2 { height: calc(220svh * 0.85); }
-.scene-h4 { height: calc(160svh * 0.85); }
-.scene-h5 { min-height: 100svh; }
+/* Scene lengths (Desktop vh vs Mobile ×0.85) */
+.scene-h1 { height: calc(90svh * 0.85); }
+.scene-h2 { height: calc(150svh * 0.85); }
+.scene-h3 { min-height: calc(90svh * 0.85); }
+.scene-h4 { height: calc(110svh * 0.85); }
+.scene-h5 { min-height: calc(100svh * 0.85); }
 
-.scene-r1 { height: calc(160svh * 0.85); }
-.scene-r2 { height: calc(200svh * 0.85); }
-.scene-r3 { height: calc(160svh * 0.85); }
-.scene-r4 { height: calc(220svh * 0.85); }
-.scene-r6 { height: calc(120svh * 0.85); }
+.scene-r1 { height: calc(110svh * 0.85); }
+.scene-r2 { height: calc(140svh * 0.85); }
+.scene-r3 { height: calc(110svh * 0.85); }
+.scene-r4 { height: calc(150svh * 0.85); }
+.scene-r5 { min-height: calc(80svh * 0.85); }
+.scene-r6 { height: calc(90svh * 0.85); }
 
-.scene-d1 { height: calc(160svh * 0.85); }
-.scene-d2 { height: calc(260svh * 0.85); }
-.scene-d3 { height: calc(180svh * 0.85); }
-.scene-d5 { height: calc(120svh * 0.85); }
+.scene-d1 { height: calc(110svh * 0.85); }
+.scene-d2 { height: calc(180svh * 0.85); }
+.scene-d3 { height: calc(130svh * 0.85); }
+.scene-d4 { min-height: calc(80svh * 0.85); }
+.scene-d5 { height: calc(90svh * 0.85); }
 
 @media (min-width: 1024px) {
-  .scene-h1 { height: 120svh; }
-  .scene-h2 { height: 220svh; }
-  .scene-h4 { height: 160svh; }
-  .scene-h5 { height: 140svh; }
+  .scene-h1 { height: 90svh; }
+  .scene-h2 { height: 150svh; }
+  .scene-h3 { min-height: 90svh; }
+  .scene-h4 { height: 110svh; }
+  .scene-h5 { height: 100svh; }
 
-  .scene-r1 { height: 160svh; }
-  .scene-r2 { height: 200svh; }
-  .scene-r3 { height: 160svh; }
-  .scene-r4 { height: 220svh; }
-  .scene-r6 { height: 120svh; }
+  .scene-r1 { height: 110svh; }
+  .scene-r2 { height: 140svh; }
+  .scene-r3 { height: 110svh; }
+  .scene-r4 { height: 150svh; }
+  .scene-r5 { min-height: 80svh; }
+  .scene-r6 { height: 90svh; }
 
-  .scene-d1 { height: 160svh; }
-  .scene-d2 { height: 260svh; }
-  .scene-d3 { height: 180svh; }
-  .scene-d5 { height: 120svh; }
+  .scene-d1 { height: 110svh; }
+  .scene-d2 { height: 180svh; }
+  .scene-d3 { height: 130svh; }
+  .scene-d4 { min-height: 80svh; }
+  .scene-d5 { height: 90svh; }
 }
 
 /* Announcing soon pulsing dot (Part 3 & Part 4.4: 6px dot is one of two allowed circular elements) */
@@ -518,4 +524,18 @@ html[data-motion="off"] .candle-flicker-text {
   40% { transform: translate(2%, -4%); }
   60% { transform: translate(-4%, -2%); }
   80% { transform: translate(3%, 4%); }
+}
+
+/* Still badge gentle breathing during H0 load (scale 1 -> 1.02, 2.4s ease-in-out loop) */
+@keyframes badge-breathe {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+.badge-breathe {
+  animation: badge-breathe 2.4s ease-in-out infinite alternate;
 }

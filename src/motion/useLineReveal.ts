@@ -42,16 +42,16 @@ export function useLineReveal(
       if (triggerOnMount) {
         gsap.to(split.lines, {
           yPercent: 0,
-          duration: 0.95,
-          stagger: 0.08,
+          duration: 0.65,
+          stagger: 0.05,
           delay,
           ease: 'ease.out',
         })
       } else {
         gsap.to(split.lines, {
           yPercent: 0,
-          duration: 0.95,
-          stagger: 0.08,
+          duration: 0.65,
+          stagger: 0.05,
           delay,
           ease: 'ease.out',
           scrollTrigger: {
@@ -101,8 +101,8 @@ export function useWordBlurReveal(
           {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.55,
-            stagger: 0.04,
+            duration: 0.5,
+            stagger: 0.025,
             ease: 'ease.out',
             overwrite: true,
           }

@@ -1,0 +1,10118 @@
+{
+  "badge-enamel.glb": {
+    "sizeKB": 1379.8,
+    "worldBox": {
+      "min": [
+        -0.5,
+        -0.5,
+        -0.06
+      ],
+      "max": [
+        0.5,
+        0.5,
+        0.0781
+      ],
+      "size": [
+        1,
+        1,
+        0.1381
+      ]
+    },
+    "totalTriangles": 22130,
+    "totalSubMeshes": 10,
+    "materials": [
+      "Nickel_Chrome",
+      "Enamel_Magenta",
+      "Enamel_White",
+      "Enamel_Black"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Badge",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Body",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.5,
+          -0.5,
+          -0.06
+        ],
+        "bboxMax": [
+          0.5,
+          0.5,
+          0.06
+        ]
+      },
+      {
+        "name": "Back",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.462,
+          -0.462,
+          -0.06
+        ],
+        "bboxMax": [
+          0.462,
+          0.462,
+          -0.058
+        ]
+      },
+      {
+        "name": "Ring",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4736,
+          -0.4736,
+          0.05
+        ],
+        "bboxMax": [
+          0.4736,
+          0.4736,
+          0.054
+        ]
+      },
+      {
+        "name": "Letters_Top",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4038,
+          0.156,
+          0.05
+        ],
+        "bboxMax": [
+          0.404,
+          0.4522,
+          0.064
+        ]
+      },
+      {
+        "name": "Letters_Bottom",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4037,
+          -0.4526,
+          0.05
+        ],
+        "bboxMax": [
+          0.4037,
+          -0.1562,
+          0.064
+        ]
+      },
+      {
+        "name": "Inner_Line",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3093,
+          -0.3093,
+          0.047
+        ],
+        "bboxMax": [
+          0.3093,
+          0.3093,
+          0.0585
+        ]
+      },
+      {
+        "name": "Face",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2933,
+          -0.2933,
+          0.0495
+        ],
+        "bboxMax": [
+          0.2933,
+          0.2933,
+          0.069
+        ]
+      },
+      {
+        "name": "Eye_L",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "localPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "bboxMin": [
+          -0.1527,
+          0.0389,
+          0.0605
+        ],
+        "bboxMax": [
+          -0.0356,
+          0.1566,
+          0.0781
+        ]
+      },
+      {
+        "name": "Eye_R",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "localPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "bboxMin": [
+          0.0354,
+          0.0391,
+          0.0605
+        ],
+        "bboxMax": [
+          0.153,
+          0.1567,
+          0.0781
+        ]
+      },
+      {
+        "name": "Tongue",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "localPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "bboxMin": [
+          -0.1072,
+          -0.1935,
+          0.0611
+        ],
+        "bboxMax": [
+          0.1132,
+          -0.0561,
+          0.0774
+        ]
+      }
+    ]
+  },
+  "badge-jewelled.glb": {
+    "sizeKB": 2175.6,
+    "worldBox": {
+      "min": [
+        -0.5,
+        -0.5,
+        -0.06
+      ],
+      "max": [
+        0.5,
+        0.5,
+        0.0791
+      ],
+      "size": [
+        1,
+        1,
+        0.1391
+      ]
+    },
+    "totalTriangles": 52572,
+    "totalSubMeshes": 25,
+    "materials": [
+      "Zari_Gold",
+      "Rani_Pink_Enamel",
+      "Ivory_Enamel",
+      "Black_Velvet",
+      "Diamond",
+      "Pink_Jewel",
+      "Emerald"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Badge",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Body",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.5,
+          -0.5,
+          -0.06
+        ],
+        "bboxMax": [
+          0.5,
+          0.5,
+          0.06
+        ]
+      },
+      {
+        "name": "Back",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.462,
+          -0.462,
+          -0.06
+        ],
+        "bboxMax": [
+          0.462,
+          0.462,
+          -0.058
+        ]
+      },
+      {
+        "name": "Ring",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4736,
+          -0.4736,
+          0.05
+        ],
+        "bboxMax": [
+          0.4736,
+          0.4736,
+          0.054
+        ]
+      },
+      {
+        "name": "Letters_Top",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4038,
+          0.156,
+          0.05
+        ],
+        "bboxMax": [
+          0.404,
+          0.4522,
+          0.064
+        ]
+      },
+      {
+        "name": "Letters_Bottom",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4037,
+          -0.4526,
+          0.05
+        ],
+        "bboxMax": [
+          0.4037,
+          -0.1562,
+          0.064
+        ]
+      },
+      {
+        "name": "Inner_Line",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3093,
+          -0.3093,
+          0.047
+        ],
+        "bboxMax": [
+          0.3093,
+          0.3093,
+          0.0585
+        ]
+      },
+      {
+        "name": "Face",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2933,
+          -0.2933,
+          0.0495
+        ],
+        "bboxMax": [
+          0.2933,
+          0.2933,
+          0.069
+        ]
+      },
+      {
+        "name": "Eye_L",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "localPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "bboxMin": [
+          -0.1527,
+          0.0389,
+          0.0605
+        ],
+        "bboxMax": [
+          -0.0356,
+          0.1566,
+          0.0781
+        ]
+      },
+      {
+        "name": "Pave_Eye_L",
+        "parent": "Eye_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1455,
+          0.048,
+          0.0682
+        ],
+        "bboxMax": [
+          -0.0442,
+          0.1443,
+          0.0788
+        ]
+      },
+      {
+        "name": "Eye_R",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "localPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "bboxMin": [
+          0.0354,
+          0.0391,
+          0.0605
+        ],
+        "bboxMax": [
+          0.153,
+          0.1567,
+          0.0781
+        ]
+      },
+      {
+        "name": "Pave_Eye_R",
+        "parent": "Eye_R",
+        "isMesh": true,
+        "worldPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.0427,
+          0.0484,
+          0.0683
+        ],
+        "bboxMax": [
+          0.1437,
+          0.1448,
+          0.0788
+        ]
+      },
+      {
+        "name": "Tongue",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "localPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "bboxMin": [
+          -0.1072,
+          -0.1935,
+          0.0611
+        ],
+        "bboxMax": [
+          0.1132,
+          -0.0561,
+          0.0774
+        ]
+      },
+      {
+        "name": "Pave_Tongue",
+        "parent": "Tongue",
+        "isMesh": true,
+        "worldPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1044,
+          -0.1912,
+          0.0688
+        ],
+        "bboxMax": [
+          0.109,
+          -0.0592,
+          0.0791
+        ]
+      },
+      {
+        "name": "Zari_Rim",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.49,
+          -0.49,
+          0.0536
+        ],
+        "bboxMax": [
+          0.49,
+          0.49,
+          0.0681
+        ]
+      },
+      {
+        "name": "Zari_Beads",
+        "parent": "Zari_Rim",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4785,
+          -0.4785,
+          0.0535
+        ],
+        "bboxMax": [
+          0.4785,
+          0.4785,
+          0.0615
+        ]
+      },
+      {
+        "name": "Paisley_L",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          -0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          -0.405,
+          0,
+          0.054
+        ],
+        "bboxMin": [
+          -0.4473,
+          -0.0789,
+          0.0537
+        ],
+        "bboxMax": [
+          -0.3627,
+          0.0789,
+          0.0567
+        ]
+      },
+      {
+        "name": "Paisley_L_Pink",
+        "parent": "Paisley_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4502,
+          -0.0072,
+          0.054
+        ],
+        "bboxMax": [
+          -0.3598,
+          0.0072,
+          0.0595
+        ]
+      },
+      {
+        "name": "Paisley_L_Emerald",
+        "parent": "Paisley_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.41,
+          -0.0868,
+          0.054
+        ],
+        "bboxMax": [
+          -0.4,
+          0.0868,
+          0.058
+        ]
+      },
+      {
+        "name": "Paisley_R",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          0.405,
+          0,
+          0.054
+        ],
+        "bboxMin": [
+          0.363,
+          -0.0786,
+          0.0537
+        ],
+        "bboxMax": [
+          0.447,
+          0.0786,
+          0.0567
+        ]
+      },
+      {
+        "name": "Paisley_R_Pink",
+        "parent": "Paisley_R",
+        "isMesh": true,
+        "worldPos": [
+          0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.3598,
+          -0.0072,
+          0.054
+        ],
+        "bboxMax": [
+          0.4502,
+          0.0072,
+          0.0595
+        ]
+      },
+      {
+        "name": "Paisley_R_Emerald",
+        "parent": "Paisley_R",
+        "isMesh": true,
+        "worldPos": [
+          0.405,
+          0,
+          0.054
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.4,
+          -0.0868,
+          0.054
+        ],
+        "bboxMax": [
+          0.41,
+          0.0868,
+          0.058
+        ]
+      },
+      {
+        "name": "Gems_Emerald",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3378,
+          -0.3378,
+          0.054
+        ],
+        "bboxMax": [
+          0.3378,
+          0.3378,
+          0.059
+        ]
+      },
+      {
+        "name": "Gems_Emerald_GoldBeads",
+        "parent": "Gems_Emerald",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3348,
+          -0.3348,
+          0.0527
+        ],
+        "bboxMax": [
+          0.3348,
+          0.3348,
+          0.0597
+        ]
+      },
+      {
+        "name": "Gems_Pink",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4895,
+          -0.4895,
+          0.064
+        ],
+        "bboxMax": [
+          0.4895,
+          0.4895,
+          0.0692
+        ]
+      },
+      {
+        "name": "Gems_Pink_Bezels",
+        "parent": "Gems_Pink",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4912,
+          -0.4912,
+          0.0633
+        ],
+        "bboxMax": [
+          0.4912,
+          0.4912,
+          0.0657
+        ]
+      }
+    ]
+  },
+  "badge-neon.glb": {
+    "sizeKB": 1995.9,
+    "worldBox": {
+      "min": [
+        -0.5,
+        -0.5616,
+        -0.06
+      ],
+      "max": [
+        0.5,
+        0.5,
+        0.0866
+      ],
+      "size": [
+        1,
+        1.0616,
+        0.1466
+      ]
+    },
+    "totalTriangles": 47594,
+    "totalSubMeshes": 15,
+    "materials": [
+      "Black_Lacquer",
+      "Smoked_Black_Glass",
+      "Neon_Glyph_Fill",
+      "Black_Glass",
+      "Neon_Glass_Red",
+      "Blood_Gloss"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Badge",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Body",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.5,
+          -0.5,
+          -0.06
+        ],
+        "bboxMax": [
+          0.5,
+          0.5,
+          0.06
+        ]
+      },
+      {
+        "name": "Back",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.462,
+          -0.462,
+          -0.06
+        ],
+        "bboxMax": [
+          0.462,
+          0.462,
+          -0.058
+        ]
+      },
+      {
+        "name": "Ring",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4736,
+          -0.4736,
+          0.05
+        ],
+        "bboxMax": [
+          0.4736,
+          0.4736,
+          0.054
+        ]
+      },
+      {
+        "name": "Letters_Top",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4038,
+          0.156,
+          0.05
+        ],
+        "bboxMax": [
+          0.404,
+          0.4522,
+          0.064
+        ]
+      },
+      {
+        "name": "Letters_Bottom",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4037,
+          -0.4526,
+          0.05
+        ],
+        "bboxMax": [
+          0.4037,
+          -0.1562,
+          0.064
+        ]
+      },
+      {
+        "name": "Inner_Line",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3093,
+          -0.3093,
+          0.047
+        ],
+        "bboxMax": [
+          0.3093,
+          0.3093,
+          0.0585
+        ]
+      },
+      {
+        "name": "Face",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2933,
+          -0.2933,
+          0.0495
+        ],
+        "bboxMax": [
+          0.2933,
+          0.2933,
+          0.069
+        ]
+      },
+      {
+        "name": "Eye_L",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "localPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "bboxMin": [
+          -0.1527,
+          0.0389,
+          0.0605
+        ],
+        "bboxMax": [
+          -0.0356,
+          0.1566,
+          0.0781
+        ]
+      },
+      {
+        "name": "Neon_Eye_L",
+        "parent": "Eye_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.0942,
+          0.0977,
+          0.0658
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1514,
+          0.0403,
+          0.07
+        ],
+        "bboxMax": [
+          -0.037,
+          0.1552,
+          0.0862
+        ]
+      },
+      {
+        "name": "Eye_R",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "localPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "bboxMin": [
+          0.0354,
+          0.0391,
+          0.0605
+        ],
+        "bboxMax": [
+          0.153,
+          0.1567,
+          0.0781
+        ]
+      },
+      {
+        "name": "Neon_Eye_R",
+        "parent": "Eye_R",
+        "isMesh": true,
+        "worldPos": [
+          0.0942,
+          0.0979,
+          0.0658
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.0369,
+          0.0405,
+          0.07
+        ],
+        "bboxMax": [
+          0.1515,
+          0.1552,
+          0.0862
+        ]
+      },
+      {
+        "name": "Tongue",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "localPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "bboxMin": [
+          -0.1072,
+          -0.1935,
+          0.0611
+        ],
+        "bboxMax": [
+          0.1132,
+          -0.0561,
+          0.0774
+        ]
+      },
+      {
+        "name": "Neon_Tongue",
+        "parent": "Tongue",
+        "isMesh": true,
+        "worldPos": [
+          0.003,
+          -0.0561,
+          0.0684
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1092,
+          -0.1952,
+          0.0706
+        ],
+        "bboxMax": [
+          0.1152,
+          -0.0541,
+          0.0866
+        ]
+      },
+      {
+        "name": "Neon_Tubes",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4855,
+          -0.4855,
+          0.056
+        ],
+        "bboxMax": [
+          0.4855,
+          0.4855,
+          0.0742
+        ]
+      },
+      {
+        "name": "Drips",
+        "parent": "Badge",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3707,
+          -0.5616,
+          -0.0181
+        ],
+        "bboxMax": [
+          0.3706,
+          -0.2633,
+          0.0634
+        ]
+      }
+    ]
+  },
+  "curtain-open-diwali.glb": {
+    "sizeKB": 3262,
+    "worldBox": {
+      "min": [
+        -3.3558,
+        0,
+        -0.5429
+      ],
+      "max": [
+        3.3558,
+        4.65,
+        0.5158
+      ],
+      "size": [
+        6.7116,
+        4.65,
+        1.0587
+      ]
+    },
+    "totalTriangles": 122524,
+    "totalSubMeshes": 39,
+    "materials": [
+      "velvet",
+      "sequin",
+      "trim_gold",
+      "tassel_silk"
+    ],
+    "nodeDetails": [
+      {
+        "name": "VelvetCurtain_static",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "panel_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2,
+          0,
+          -0.3921
+        ],
+        "bboxMax": [
+          -2.5542,
+          4.5,
+          0.417
+        ]
+      },
+      {
+        "name": "sequins_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2029,
+          0.0424,
+          -0.3037
+        ],
+        "bboxMax": [
+          -2.553,
+          4.4036,
+          0.3684
+        ]
+      },
+      {
+        "name": "panel_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.5542,
+          0,
+          -0.4071
+        ],
+        "bboxMax": [
+          3.2,
+          4.5,
+          0.4118
+        ]
+      },
+      {
+        "name": "sequins_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.5595,
+          0.0425,
+          -0.331
+        ],
+        "bboxMax": [
+          3.2031,
+          4.4008,
+          0.3472
+        ]
+      },
+      {
+        "name": "back_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2,
+          0,
+          -0.5429
+        ],
+        "bboxMax": [
+          0.03,
+          4.5,
+          -0.3524
+        ]
+      },
+      {
+        "name": "back_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.03,
+          0,
+          -0.5367
+        ],
+        "bboxMax": [
+          3.2,
+          4.5,
+          -0.3547
+        ]
+      },
+      {
+        "name": "valance",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          4.05,
+          0.42
+        ],
+        "localPos": [
+          0,
+          4.05,
+          0.42
+        ],
+        "bboxMin": [
+          -3.3,
+          3.89,
+          0.4146
+        ],
+        "bboxMax": [
+          3.3,
+          4.65,
+          0.5062
+        ]
+      },
+      {
+        "name": "tieback_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "tieback_L_cord",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9061,
+          1.655,
+          0.3218
+        ],
+        "bboxMax": [
+          -2.8936,
+          1.83,
+          0.3342
+        ]
+      },
+      {
+        "name": "tieback_L_head",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9499,
+          1.5175,
+          0.278
+        ],
+        "bboxMax": [
+          -2.8499,
+          1.655,
+          0.378
+        ]
+      },
+      {
+        "name": "tieback_L_ring",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9461,
+          1.51,
+          0.2817
+        ],
+        "bboxMax": [
+          -2.8536,
+          1.525,
+          0.3743
+        ]
+      },
+      {
+        "name": "tieback_L_skirt",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9774,
+          1.2425,
+          0.2505
+        ],
+        "bboxMax": [
+          -2.8224,
+          1.5175,
+          0.4055
+        ]
+      },
+      {
+        "name": "tieback_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "tieback_R_cord",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8936,
+          1.655,
+          0.3338
+        ],
+        "bboxMax": [
+          2.9061,
+          1.83,
+          0.3462
+        ]
+      },
+      {
+        "name": "tieback_R_head",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8499,
+          1.5175,
+          0.29
+        ],
+        "bboxMax": [
+          2.9499,
+          1.655,
+          0.39
+        ]
+      },
+      {
+        "name": "tieback_R_ring",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8536,
+          1.51,
+          0.2937
+        ],
+        "bboxMax": [
+          2.9461,
+          1.525,
+          0.3863
+        ]
+      },
+      {
+        "name": "tieback_R_skirt",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8224,
+          1.2425,
+          0.2625
+        ],
+        "bboxMax": [
+          2.9774,
+          1.5175,
+          0.4175
+        ]
+      },
+      {
+        "name": "valance_tassel_0",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_0_cord",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3045,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -3.2955,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_0_head",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.336,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -3.264,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_0_ring",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3333,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -3.2667,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_0_skirt",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3558,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -3.2442,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_1",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_1_cord",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.9845,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -1.9755,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_1_head",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.016,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -1.944,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_1_ring",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.0133,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -1.9467,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_1_skirt",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.0358,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -1.9242,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_2",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_2_cord",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6645,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -0.6555,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_2_head",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.696,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -0.624,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_2_ring",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6933,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -0.6267,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_2_skirt",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.7158,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -0.6042,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_3",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_3_cord",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6555,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          0.6645,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_3_head",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.624,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          0.696,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_3_ring",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6267,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          0.6933,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_3_skirt",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6042,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          0.7158,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_4",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_4_cord",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9755,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          1.9845,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_4_head",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.944,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          2.016,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_4_ring",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9467,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          2.0133,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_4_skirt",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9242,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          2.0358,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_5",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_5_cord",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2955,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          3.3045,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_5_head",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.264,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          3.336,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_5_ring",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2667,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          3.3333,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_5_skirt",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2442,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          3.3558,
+          3.845,
+          0.5158
+        ]
+      }
+    ]
+  },
+  "curtain-open.glb": {
+    "sizeKB": 1885.9,
+    "worldBox": {
+      "min": [
+        -3.3558,
+        -0.155,
+        -0.4124
+      ],
+      "max": [
+        3.3558,
+        4.65,
+        0.5158
+      ],
+      "size": [
+        6.7116,
+        4.805,
+        0.9282
+      ]
+    },
+    "totalTriangles": 71356,
+    "totalSubMeshes": 38,
+    "materials": [
+      "velvet",
+      "trim_gold",
+      "trim_gold_0",
+      "tassel_bullion"
+    ],
+    "nodeDetails": [
+      {
+        "name": "VelvetCurtain_static",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "panel_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2,
+          0,
+          -0.3965
+        ],
+        "bboxMax": [
+          -2.5542,
+          4.5,
+          0.4134
+        ]
+      },
+      {
+        "name": "fringe_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2032,
+          -0.1549,
+          -0.3133
+        ],
+        "bboxMax": [
+          -2.5099,
+          4.4025,
+          0.3478
+        ]
+      },
+      {
+        "name": "panel_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.5542,
+          0,
+          -0.4124
+        ],
+        "bboxMax": [
+          3.2,
+          4.5,
+          0.4063
+        ]
+      },
+      {
+        "name": "fringe_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.5096,
+          -0.155,
+          -0.3361
+        ],
+        "bboxMax": [
+          3.2032,
+          4.4025,
+          0.3347
+        ]
+      },
+      {
+        "name": "valance",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          4.05,
+          0.42
+        ],
+        "localPos": [
+          0,
+          4.05,
+          0.42
+        ],
+        "bboxMin": [
+          -3.3,
+          3.89,
+          0.4146
+        ],
+        "bboxMax": [
+          3.3,
+          4.65,
+          0.5062
+        ]
+      },
+      {
+        "name": "valance_fringe",
+        "parent": "VelvetCurtain_static",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.2988,
+          3.7602,
+          0.4207
+        ],
+        "bboxMax": [
+          3.2988,
+          4.0479,
+          0.4809
+        ]
+      },
+      {
+        "name": "tieback_L",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "tieback_L_cord",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9056,
+          1.669,
+          0.3223
+        ],
+        "bboxMax": [
+          -2.8941,
+          1.83,
+          0.3337
+        ]
+      },
+      {
+        "name": "tieback_L_head",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9459,
+          1.5425,
+          0.282
+        ],
+        "bboxMax": [
+          -2.8539,
+          1.669,
+          0.374
+        ]
+      },
+      {
+        "name": "tieback_L_ring",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9424,
+          1.5356,
+          0.2854
+        ],
+        "bboxMax": [
+          -2.8573,
+          1.5494,
+          0.3706
+        ]
+      },
+      {
+        "name": "tieback_L_skirt",
+        "parent": "tieback_L",
+        "isMesh": true,
+        "worldPos": [
+          -2.8999,
+          1.83,
+          0.328
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.9712,
+          1.2895,
+          0.2567
+        ],
+        "bboxMax": [
+          -2.8286,
+          1.5425,
+          0.3993
+        ]
+      },
+      {
+        "name": "tieback_R",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "tieback_R_cord",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8941,
+          1.669,
+          0.3343
+        ],
+        "bboxMax": [
+          2.9056,
+          1.83,
+          0.3457
+        ]
+      },
+      {
+        "name": "tieback_R_head",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8539,
+          1.5425,
+          0.294
+        ],
+        "bboxMax": [
+          2.9459,
+          1.669,
+          0.386
+        ]
+      },
+      {
+        "name": "tieback_R_ring",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8573,
+          1.5356,
+          0.2974
+        ],
+        "bboxMax": [
+          2.9424,
+          1.5494,
+          0.3826
+        ]
+      },
+      {
+        "name": "tieback_R_skirt",
+        "parent": "tieback_R",
+        "isMesh": true,
+        "worldPos": [
+          2.8999,
+          1.83,
+          0.34
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          2.8286,
+          1.2895,
+          0.2687
+        ],
+        "bboxMax": [
+          2.9712,
+          1.5425,
+          0.4113
+        ]
+      },
+      {
+        "name": "valance_tassel_0",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_0_cord",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3045,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -3.2955,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_0_head",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.336,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -3.264,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_0_ring",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3333,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -3.2667,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_0_skirt",
+        "parent": "valance_tassel_0",
+        "isMesh": true,
+        "worldPos": [
+          -3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -3.3558,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -3.2442,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_1",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_1_cord",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.9845,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -1.9755,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_1_head",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.016,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -1.944,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_1_ring",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.0133,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -1.9467,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_1_skirt",
+        "parent": "valance_tassel_1",
+        "isMesh": true,
+        "worldPos": [
+          -1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -2.0358,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -1.9242,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_2",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_2_cord",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6645,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          -0.6555,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_2_head",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.696,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          -0.624,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_2_ring",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6933,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          -0.6267,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_2_skirt",
+        "parent": "valance_tassel_2",
+        "isMesh": true,
+        "worldPos": [
+          -0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.7158,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          -0.6042,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_3",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_3_cord",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6555,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          0.6645,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_3_head",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.624,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          0.696,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_3_ring",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6267,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          0.6933,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_3_skirt",
+        "parent": "valance_tassel_3",
+        "isMesh": true,
+        "worldPos": [
+          0.66,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.6042,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          0.7158,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_4",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_4_cord",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9755,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          1.9845,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_4_head",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.944,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          2.016,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_4_ring",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9467,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          2.0133,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_4_skirt",
+        "parent": "valance_tassel_4",
+        "isMesh": true,
+        "worldPos": [
+          1.98,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          1.9242,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          2.0358,
+          3.845,
+          0.5158
+        ]
+      },
+      {
+        "name": "valance_tassel_5",
+        "parent": "VelvetCurtain_static",
+        "isMesh": false,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "valance_tassel_5_cord",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2955,
+          3.944,
+          0.4555
+        ],
+        "bboxMax": [
+          3.3045,
+          4.07,
+          0.4645
+        ]
+      },
+      {
+        "name": "valance_tassel_5_head",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.264,
+          3.845,
+          0.424
+        ],
+        "bboxMax": [
+          3.336,
+          3.944,
+          0.496
+        ]
+      },
+      {
+        "name": "valance_tassel_5_ring",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2667,
+          3.8396,
+          0.4267
+        ],
+        "bboxMax": [
+          3.3333,
+          3.8504,
+          0.4933
+        ]
+      },
+      {
+        "name": "valance_tassel_5_skirt",
+        "parent": "valance_tassel_5",
+        "isMesh": true,
+        "worldPos": [
+          3.3,
+          4.07,
+          0.46
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          3.2442,
+          3.647,
+          0.4042
+        ],
+        "bboxMax": [
+          3.3558,
+          3.845,
+          0.5158
+        ]
+      }
+    ]
+  },
+  "diwali-card.glb": {
+    "sizeKB": 80.7,
+    "worldBox": {
+      "min": [
+        -0.12,
+        -0.0825,
+        -0.0015
+      ],
+      "max": [
+        0.12,
+        0.0825,
+        0.0026
+      ],
+      "size": [
+        0.24,
+        0.165,
+        0.0041
+      ]
+    },
+    "totalTriangles": 830,
+    "totalSubMeshes": 3,
+    "materials": [
+      "Card_Ivory",
+      "Panel_Rani",
+      "Gold_Foil"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Card",
+        "parent": "ROOT",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.12,
+          -0.0825,
+          -0.0015
+        ],
+        "bboxMax": [
+          0.12,
+          0.0825,
+          0.0015
+        ]
+      },
+      {
+        "name": "Panel",
+        "parent": "Card",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0.0017
+        ],
+        "localPos": [
+          0,
+          0,
+          0.0017
+        ],
+        "bboxMin": [
+          -0.108,
+          -0.0705,
+          0.0017
+        ],
+        "bboxMax": [
+          0.108,
+          0.0705,
+          0.0017
+        ]
+      },
+      {
+        "name": "Foil",
+        "parent": "Card",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.104,
+          -0.0665,
+          0.0018
+        ],
+        "bboxMax": [
+          0.104,
+          0.0665,
+          0.0026
+        ]
+      }
+    ]
+  },
+  "diwali-diya-brass.glb": {
+    "sizeKB": 40.4,
+    "worldBox": {
+      "min": [
+        -0.0447,
+        0,
+        -0.052
+      ],
+      "max": [
+        0.0447,
+        0.0638,
+        0.0671
+      ],
+      "size": [
+        0.0894,
+        0.0638,
+        0.1191
+      ]
+    },
+    "totalTriangles": 1092,
+    "totalSubMeshes": 3,
+    "materials": [
+      "Brass_Engraved",
+      "Oil_Brass",
+      "Cotton_Wick_Brass"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Diya",
+        "parent": "ROOT",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0447,
+          0,
+          -0.052
+        ],
+        "bboxMax": [
+          0.0447,
+          0.058,
+          0.0643
+        ]
+      },
+      {
+        "name": "Oil",
+        "parent": "Diya",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0353,
+          0.041,
+          -0.041
+        ],
+        "bboxMax": [
+          0.0353,
+          0.0464,
+          0.0487
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Diya",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0024,
+          0.0406,
+          0.0345
+        ],
+        "bboxMax": [
+          0.0024,
+          0.0638,
+          0.0671
+        ]
+      },
+      {
+        "name": "Flame_Anchor",
+        "parent": "Diya",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0.062,
+          0.066
+        ],
+        "localPos": [
+          0,
+          0.062,
+          0.066
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      }
+    ]
+  },
+  "diwali-diya-terracotta.glb": {
+    "sizeKB": 75.3,
+    "worldBox": {
+      "min": [
+        -0.0447,
+        0,
+        -0.052
+      ],
+      "max": [
+        0.0447,
+        0.0638,
+        0.0671
+      ],
+      "size": [
+        0.0894,
+        0.0638,
+        0.1191
+      ]
+    },
+    "totalTriangles": 1092,
+    "totalSubMeshes": 3,
+    "materials": [
+      "Terracotta_Painted",
+      "Oil_Terracotta",
+      "Cotton_Wick_Terracotta"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Diya",
+        "parent": "ROOT",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0447,
+          0,
+          -0.052
+        ],
+        "bboxMax": [
+          0.0447,
+          0.058,
+          0.0643
+        ]
+      },
+      {
+        "name": "Oil",
+        "parent": "Diya",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0353,
+          0.041,
+          -0.041
+        ],
+        "bboxMax": [
+          0.0353,
+          0.0464,
+          0.0487
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Diya",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0024,
+          0.0406,
+          0.0345
+        ],
+        "bboxMax": [
+          0.0024,
+          0.0638,
+          0.0671
+        ]
+      },
+      {
+        "name": "Flame_Anchor",
+        "parent": "Diya",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0.062,
+          0.066
+        ],
+        "localPos": [
+          0,
+          0.062,
+          0.066
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      }
+    ]
+  },
+  "diwali-kandil.glb": {
+    "sizeKB": 328.8,
+    "worldBox": {
+      "min": [
+        -0.0903,
+        -0.165,
+        -0.0411
+      ],
+      "max": [
+        0.0903,
+        0.2161,
+        0.0411
+      ],
+      "size": [
+        0.1805,
+        0.3811,
+        0.0821
+      ]
+    },
+    "totalTriangles": 3326,
+    "totalSubMeshes": 4,
+    "materials": [
+      "Paper_Rani",
+      "Gold_Foil",
+      "Tassel_Rani"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Kandil",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Kandil_Body",
+        "parent": "Kandil",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0865,
+          -0.0999,
+          -0.039
+        ],
+        "bboxMax": [
+          0.0865,
+          0.0999,
+          0.039
+        ]
+      },
+      {
+        "name": "Kandil_Trim",
+        "parent": "Kandil",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0871,
+          -0.1302,
+          -0.0411
+        ],
+        "bboxMax": [
+          0.0871,
+          0.2161,
+          0.0411
+        ]
+      },
+      {
+        "name": "Kandil_Tassels",
+        "parent": "Kandil",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0903,
+          -0.165,
+          -0.0075
+        ],
+        "bboxMax": [
+          0.0903,
+          -0.073,
+          0.0075
+        ]
+      },
+      {
+        "name": "Light_Anchor",
+        "parent": "Kandil",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      }
+    ]
+  },
+  "diwali-marigold.glb": {
+    "sizeKB": 137.6,
+    "worldBox": {
+      "min": [
+        -0.0705,
+        -0.0361,
+        -0.0366
+      ],
+      "max": [
+        0.0706,
+        0.036,
+        0.0359
+      ],
+      "size": [
+        0.1411,
+        0.072,
+        0.0725
+      ]
+    },
+    "totalTriangles": 2104,
+    "totalSubMeshes": 2,
+    "materials": [
+      "Marigold_Orange_Mat",
+      "Marigold_Yellow_Mat"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Marigold",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Marigold_Orange",
+        "parent": "Marigold",
+        "isMesh": true,
+        "worldPos": [
+          -0.035,
+          0,
+          0
+        ],
+        "localPos": [
+          -0.035,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0705,
+          -0.0361,
+          -0.0366
+        ],
+        "bboxMax": [
+          0.0006,
+          0.036,
+          0.0359
+        ]
+      },
+      {
+        "name": "Marigold_Yellow",
+        "parent": "Marigold",
+        "isMesh": true,
+        "worldPos": [
+          0.035,
+          0,
+          0
+        ],
+        "localPos": [
+          0.035,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0005,
+          -0.0361,
+          -0.0366
+        ],
+        "bboxMax": [
+          0.0706,
+          0.036,
+          0.0359
+        ]
+      }
+    ]
+  },
+  "diwali-rose-petal.glb": {
+    "sizeKB": 5,
+    "worldBox": {
+      "min": [
+        -0.0439,
+        -0.0175,
+        -0.0136
+      ],
+      "max": [
+        0.0439,
+        0.0175,
+        0.0036
+      ],
+      "size": [
+        0.0878,
+        0.035,
+        0.0171
+      ]
+    },
+    "totalTriangles": 288,
+    "totalSubMeshes": 3,
+    "materials": [
+      "Petal_Rani_Mat",
+      "Petal_Blush_Mat",
+      "Petal_Ivory_Mat"
+    ],
+    "nodeDetails": [
+      {
+        "name": "RosePetals",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Petal_Rani",
+        "parent": "RosePetals",
+        "isMesh": true,
+        "worldPos": [
+          -0.03,
+          0,
+          0
+        ],
+        "localPos": [
+          -0.03,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0439,
+          -0.0175,
+          -0.0136
+        ],
+        "bboxMax": [
+          -0.0161,
+          0.0175,
+          0.0036
+        ]
+      },
+      {
+        "name": "Petal_Blush",
+        "parent": "RosePetals",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0139,
+          -0.0175,
+          -0.0136
+        ],
+        "bboxMax": [
+          0.0139,
+          0.0175,
+          0.0036
+        ]
+      },
+      {
+        "name": "Petal_Ivory",
+        "parent": "RosePetals",
+        "isMesh": true,
+        "worldPos": [
+          0.03,
+          0,
+          0
+        ],
+        "localPos": [
+          0.03,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.0161,
+          -0.0175,
+          -0.0136
+        ],
+        "bboxMax": [
+          0.0439,
+          0.0175,
+          0.0036
+        ]
+      }
+    ]
+  },
+  "door-diwali.glb": {
+    "sizeKB": 1103.7,
+    "worldBox": {
+      "min": [
+        -1.17,
+        -0.004,
+        -0.22
+      ],
+      "max": [
+        1.17,
+        3.501,
+        0.476
+      ],
+      "size": [
+        2.34,
+        3.505,
+        0.696
+      ]
+    },
+    "totalTriangles": 26070,
+    "totalSubMeshes": 70,
+    "materials": [
+      "carved_ivory_stone",
+      "gold_leaf",
+      "rosewood_lacquer",
+      "brass",
+      "rani_pink_glass",
+      "toran_cord",
+      "marigold",
+      "pink_rose",
+      "mango_leaf",
+      "terracotta",
+      "wick",
+      "light_leak_gold"
+    ],
+    "nodeDetails": [
+      {
+        "name": "DoorDW_Root",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame_Body",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.15,
+          0,
+          -0.2
+        ],
+        "bboxMax": [
+          1.15,
+          3.5,
+          0.2
+        ]
+      },
+      {
+        "name": "Pilaster_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -1.08,
+          1.55,
+          0.221
+        ],
+        "localPos": [
+          -1.08,
+          1.55,
+          0.221
+        ],
+        "bboxMin": [
+          -1.14,
+          0.05,
+          0.201
+        ],
+        "bboxMax": [
+          -1.02,
+          3.05,
+          0.241
+        ]
+      },
+      {
+        "name": "Pilaster_Base_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -1.08,
+          0.06,
+          0.231
+        ],
+        "localPos": [
+          -1.08,
+          0.06,
+          0.231
+        ],
+        "bboxMin": [
+          -1.16,
+          0,
+          0.201
+        ],
+        "bboxMax": [
+          -1,
+          0.12,
+          0.261
+        ]
+      },
+      {
+        "name": "Pilaster_Capital_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -1.08,
+          3.03,
+          0.229
+        ],
+        "localPos": [
+          -1.08,
+          3.03,
+          0.229
+        ],
+        "bboxMin": [
+          -1.16,
+          3.0125,
+          0.2015
+        ],
+        "bboxMax": [
+          -1,
+          3.0475,
+          0.2565
+        ]
+      },
+      {
+        "name": "Pilaster_Band_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -1.08,
+          0.13,
+          0.229
+        ],
+        "localPos": [
+          -1.08,
+          0.13,
+          0.229
+        ],
+        "bboxMin": [
+          -1.16,
+          0.124,
+          0.2015
+        ],
+        "bboxMax": [
+          -1,
+          0.136,
+          0.2565
+        ]
+      },
+      {
+        "name": "Alfiz_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.99,
+          1.625,
+          0.203
+        ],
+        "localPos": [
+          -0.99,
+          1.625,
+          0.203
+        ],
+        "bboxMin": [
+          -0.996,
+          0.2,
+          0.2
+        ],
+        "bboxMax": [
+          -0.984,
+          3.05,
+          0.206
+        ]
+      },
+      {
+        "name": "Spandrel_Rosette_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.7,
+          2.74,
+          0.2
+        ],
+        "localPos": [
+          -0.7,
+          2.74,
+          0.2
+        ],
+        "bboxMin": [
+          -0.765,
+          2.675,
+          0.2
+        ],
+        "bboxMax": [
+          -0.635,
+          2.805,
+          0.212
+        ]
+      },
+      {
+        "name": "Bell_Bracket_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.9,
+          2.735,
+          0.23
+        ],
+        "localPos": [
+          -0.9,
+          2.735,
+          0.23
+        ],
+        "bboxMin": [
+          -0.915,
+          2.72,
+          0.2
+        ],
+        "bboxMax": [
+          -0.885,
+          2.75,
+          0.26
+        ]
+      },
+      {
+        "name": "Canopy_Bracket_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.75,
+          3.1,
+          0.26
+        ],
+        "localPos": [
+          -0.75,
+          3.1,
+          0.26
+        ],
+        "bboxMin": [
+          -0.775,
+          3.06,
+          0.2
+        ],
+        "bboxMax": [
+          -0.725,
+          3.14,
+          0.32
+        ]
+      },
+      {
+        "name": "Pilaster_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          1.08,
+          1.55,
+          0.221
+        ],
+        "localPos": [
+          1.08,
+          1.55,
+          0.221
+        ],
+        "bboxMin": [
+          1.02,
+          0.05,
+          0.201
+        ],
+        "bboxMax": [
+          1.14,
+          3.05,
+          0.241
+        ]
+      },
+      {
+        "name": "Pilaster_Base_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          1.08,
+          0.06,
+          0.231
+        ],
+        "localPos": [
+          1.08,
+          0.06,
+          0.231
+        ],
+        "bboxMin": [
+          1,
+          0,
+          0.201
+        ],
+        "bboxMax": [
+          1.16,
+          0.12,
+          0.261
+        ]
+      },
+      {
+        "name": "Pilaster_Capital_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          1.08,
+          3.03,
+          0.229
+        ],
+        "localPos": [
+          1.08,
+          3.03,
+          0.229
+        ],
+        "bboxMin": [
+          1,
+          3.0125,
+          0.2015
+        ],
+        "bboxMax": [
+          1.16,
+          3.0475,
+          0.2565
+        ]
+      },
+      {
+        "name": "Pilaster_Band_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          1.08,
+          0.13,
+          0.229
+        ],
+        "localPos": [
+          1.08,
+          0.13,
+          0.229
+        ],
+        "bboxMin": [
+          1,
+          0.124,
+          0.2015
+        ],
+        "bboxMax": [
+          1.16,
+          0.136,
+          0.2565
+        ]
+      },
+      {
+        "name": "Alfiz_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.99,
+          1.625,
+          0.203
+        ],
+        "localPos": [
+          0.99,
+          1.625,
+          0.203
+        ],
+        "bboxMin": [
+          0.984,
+          0.2,
+          0.2
+        ],
+        "bboxMax": [
+          0.996,
+          3.05,
+          0.206
+        ]
+      },
+      {
+        "name": "Spandrel_Rosette_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.7,
+          2.74,
+          0.2
+        ],
+        "localPos": [
+          0.7,
+          2.74,
+          0.2
+        ],
+        "bboxMin": [
+          0.635,
+          2.675,
+          0.2
+        ],
+        "bboxMax": [
+          0.765,
+          2.805,
+          0.212
+        ]
+      },
+      {
+        "name": "Bell_Bracket_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.9,
+          2.735,
+          0.23
+        ],
+        "localPos": [
+          0.9,
+          2.735,
+          0.23
+        ],
+        "bboxMin": [
+          0.885,
+          2.72,
+          0.2
+        ],
+        "bboxMax": [
+          0.915,
+          2.75,
+          0.26
+        ]
+      },
+      {
+        "name": "Canopy_Bracket_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.75,
+          3.1,
+          0.26
+        ],
+        "localPos": [
+          0.75,
+          3.1,
+          0.26
+        ],
+        "bboxMin": [
+          0.725,
+          3.06,
+          0.2
+        ],
+        "bboxMax": [
+          0.775,
+          3.14,
+          0.32
+        ]
+      },
+      {
+        "name": "Alfiz_Top",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.05,
+          0.203
+        ],
+        "localPos": [
+          0,
+          3.05,
+          0.203
+        ],
+        "bboxMin": [
+          -0.996,
+          3.044,
+          0.2
+        ],
+        "bboxMax": [
+          0.996,
+          3.056,
+          0.206
+        ]
+      },
+      {
+        "name": "Chhajja",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.16,
+          0.27
+        ],
+        "localPos": [
+          0,
+          3.16,
+          0.27
+        ],
+        "bboxMin": [
+          -0.85,
+          3.1306,
+          0.1882
+        ],
+        "bboxMax": [
+          0.85,
+          3.1894,
+          0.3518
+        ]
+      },
+      {
+        "name": "Chhajja_Edge",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.145,
+          0.35
+        ],
+        "localPos": [
+          0,
+          3.145,
+          0.35
+        ],
+        "bboxMin": [
+          -0.85,
+          3.139,
+          0.344
+        ],
+        "bboxMax": [
+          0.85,
+          3.151,
+          0.356
+        ]
+      },
+      {
+        "name": "Bangaldar_Hood",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.18,
+          0.2
+        ],
+        "localPos": [
+          0,
+          3.18,
+          0.2
+        ],
+        "bboxMin": [
+          -0.7,
+          3.18,
+          0.03
+        ],
+        "bboxMax": [
+          0.7,
+          3.35,
+          0.37
+        ]
+      },
+      {
+        "name": "Hood_Ridge",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.35,
+          0.2
+        ],
+        "localPos": [
+          0,
+          3.35,
+          0.2
+        ],
+        "bboxMin": [
+          -0.71,
+          3.343,
+          0.193
+        ],
+        "bboxMax": [
+          0.71,
+          3.357,
+          0.207
+        ]
+      },
+      {
+        "name": "Finial_0",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.55,
+          3.355,
+          0.2
+        ],
+        "localPos": [
+          -0.55,
+          3.355,
+          0.2
+        ],
+        "bboxMin": [
+          -0.584,
+          3.355,
+          0.166
+        ],
+        "bboxMax": [
+          -0.516,
+          3.465,
+          0.234
+        ]
+      },
+      {
+        "name": "Finial_1",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.355,
+          0.2
+        ],
+        "localPos": [
+          0,
+          3.355,
+          0.2
+        ],
+        "bboxMin": [
+          -0.034,
+          3.355,
+          0.166
+        ],
+        "bboxMax": [
+          0.034,
+          3.465,
+          0.234
+        ]
+      },
+      {
+        "name": "Finial_2",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.55,
+          3.355,
+          0.2
+        ],
+        "localPos": [
+          0.55,
+          3.355,
+          0.2
+        ],
+        "bboxMin": [
+          0.516,
+          3.355,
+          0.166
+        ],
+        "bboxMax": [
+          0.584,
+          3.465,
+          0.234
+        ]
+      },
+      {
+        "name": "Cornice",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.471,
+          0
+        ],
+        "localPos": [
+          0,
+          3.471,
+          0
+        ],
+        "bboxMin": [
+          -1.17,
+          3.441,
+          -0.22
+        ],
+        "bboxMax": [
+          1.17,
+          3.501,
+          0.22
+        ]
+      },
+      {
+        "name": "Arch",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Arch_Moulding",
+        "parent": "Arch",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.864,
+          -0.004,
+          0.201
+        ],
+        "bboxMax": [
+          0.864,
+          2.9712,
+          0.234
+        ]
+      },
+      {
+        "name": "Inlay_Inner",
+        "parent": "Arch",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.8791,
+          0,
+          0.2295
+        ],
+        "bboxMax": [
+          0.8791,
+          2.9409,
+          0.2385
+        ]
+      },
+      {
+        "name": "Inlay_Outer",
+        "parent": "Arch",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.9511,
+          0,
+          0.1955
+        ],
+        "bboxMax": [
+          0.9511,
+          3.0215,
+          0.2045
+        ]
+      },
+      {
+        "name": "Leaf_L",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Leaf_Body_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.794,
+          0.006,
+          -0.12
+        ],
+        "bboxMax": [
+          -0.004,
+          2.893,
+          -0.0499
+        ]
+      },
+      {
+        "name": "Panel_Lower_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.703,
+          0.147,
+          -0.05
+        ],
+        "bboxMax": [
+          -0.097,
+          0.753,
+          -0.0339
+        ]
+      },
+      {
+        "name": "Panel_Upper_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.703,
+          0.897,
+          -0.05
+        ],
+        "bboxMax": [
+          -0.097,
+          1.853,
+          -0.0339
+        ]
+      },
+      {
+        "name": "Lotus_Petals_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.492,
+          0.358,
+          -0.053
+        ],
+        "bboxMax": [
+          -0.308,
+          2.392,
+          -0.039
+        ]
+      },
+      {
+        "name": "Lotus_Centres_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.418,
+          0.432,
+          -0.047
+        ],
+        "bboxMax": [
+          -0.382,
+          2.318,
+          -0.029
+        ]
+      },
+      {
+        "name": "Studs_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.761,
+          0.0595,
+          -0.05
+        ],
+        "bboxMax": [
+          -0.039,
+          1.9505,
+          -0.0389
+        ]
+      },
+      {
+        "name": "Glass_Inlays",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6208,
+          0.2062,
+          -0.05
+        ],
+        "bboxMax": [
+          -0.1792,
+          2.5038,
+          -0.042
+        ]
+      },
+      {
+        "name": "Handle_Plate_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.08,
+          1.16,
+          -0.0499
+        ],
+        "localPos": [
+          0.72,
+          1.16,
+          0.035
+        ],
+        "bboxMin": [
+          -0.116,
+          1.124,
+          -0.0499
+        ],
+        "bboxMax": [
+          -0.044,
+          1.196,
+          -0.0419
+        ]
+      },
+      {
+        "name": "Ring_Handle_L",
+        "parent": "Leaf_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.08,
+          1.115,
+          -0.0379
+        ],
+        "localPos": [
+          0.72,
+          1.115,
+          0.047
+        ],
+        "bboxMin": [
+          -0.1315,
+          1.0631,
+          -0.0496
+        ],
+        "bboxMax": [
+          -0.0285,
+          1.1669,
+          -0.0263
+        ]
+      },
+      {
+        "name": "Leaf_R",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Leaf_Body_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.004,
+          0.006,
+          -0.12
+        ],
+        "bboxMax": [
+          0.794,
+          2.893,
+          -0.0499
+        ]
+      },
+      {
+        "name": "Panel_Lower_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.097,
+          0.147,
+          -0.05
+        ],
+        "bboxMax": [
+          0.703,
+          0.753,
+          -0.0339
+        ]
+      },
+      {
+        "name": "Panel_Upper_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.097,
+          0.897,
+          -0.05
+        ],
+        "bboxMax": [
+          0.703,
+          1.853,
+          -0.0339
+        ]
+      },
+      {
+        "name": "Lotus_Petals_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.308,
+          0.358,
+          -0.053
+        ],
+        "bboxMax": [
+          0.492,
+          2.392,
+          -0.039
+        ]
+      },
+      {
+        "name": "Lotus_Centres_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.382,
+          0.432,
+          -0.047
+        ],
+        "bboxMax": [
+          0.418,
+          2.318,
+          -0.029
+        ]
+      },
+      {
+        "name": "Studs_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.039,
+          0.0595,
+          -0.05
+        ],
+        "bboxMax": [
+          0.761,
+          1.9505,
+          -0.0389
+        ]
+      },
+      {
+        "name": "Glass_Inlays_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.8,
+          0,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1792,
+          0.2062,
+          -0.05
+        ],
+        "bboxMax": [
+          0.6208,
+          2.5038,
+          -0.042
+        ]
+      },
+      {
+        "name": "Handle_Plate_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.08,
+          1.16,
+          -0.0499
+        ],
+        "localPos": [
+          -0.72,
+          1.16,
+          0.035
+        ],
+        "bboxMin": [
+          0.044,
+          1.124,
+          -0.0499
+        ],
+        "bboxMax": [
+          0.116,
+          1.196,
+          -0.0419
+        ]
+      },
+      {
+        "name": "Ring_Handle_R",
+        "parent": "Leaf_R",
+        "isMesh": true,
+        "worldPos": [
+          0.08,
+          1.115,
+          -0.0379
+        ],
+        "localPos": [
+          -0.72,
+          1.115,
+          0.047
+        ],
+        "bboxMin": [
+          0.0285,
+          1.0631,
+          -0.0496
+        ],
+        "bboxMax": [
+          0.1315,
+          1.1669,
+          -0.0263
+        ]
+      },
+      {
+        "name": "Toran",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Toran_Cord",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.0507,
+          2.8865,
+          0.258
+        ],
+        "bboxMax": [
+          1.0507,
+          3.0034,
+          0.2725
+        ]
+      },
+      {
+        "name": "Strand_Cord",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          -0.63,
+          2.8196,
+          0.2622
+        ],
+        "localPos": [
+          -0.63,
+          2.8196,
+          0.2622
+        ],
+        "bboxMin": [
+          -0.632,
+          2.7096,
+          0.2602
+        ],
+        "bboxMax": [
+          -0.628,
+          2.9296,
+          0.2642
+        ]
+      },
+      {
+        "name": "Strand_Cord",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          2.78,
+          0.2645
+        ],
+        "localPos": [
+          0,
+          2.78,
+          0.2645
+        ],
+        "bboxMin": [
+          -0.002,
+          2.67,
+          0.2625
+        ],
+        "bboxMax": [
+          0.002,
+          2.89,
+          0.2665
+        ]
+      },
+      {
+        "name": "Strand_Cord",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0.63,
+          2.8196,
+          0.2622
+        ],
+        "localPos": [
+          0.63,
+          2.8196,
+          0.2622
+        ],
+        "bboxMin": [
+          0.628,
+          2.7096,
+          0.2602
+        ],
+        "bboxMax": [
+          0.632,
+          2.9296,
+          0.2642
+        ]
+      },
+      {
+        "name": "Marigolds",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.078,
+          2.6568,
+          0.2344
+        ],
+        "bboxMax": [
+          1.078,
+          3.0252,
+          0.2961
+        ]
+      },
+      {
+        "name": "Roses",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.9845,
+          2.7125,
+          0.2398
+        ],
+        "bboxMax": [
+          0.9845,
+          3.0039,
+          0.2918
+        ]
+      },
+      {
+        "name": "Mango_Leaves",
+        "parent": "Toran",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -1.0411,
+          2.57,
+          0.2485
+        ],
+        "bboxMax": [
+          1.0411,
+          2.9792,
+          0.2725
+        ]
+      },
+      {
+        "name": "Bell_L",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.9,
+          2.72,
+          0.262
+        ],
+        "localPos": [
+          -0.9,
+          2.72,
+          0.262
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Hook",
+        "parent": "Bell_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.9004,
+          2.712,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.008,
+          0
+        ],
+        "bboxMin": [
+          -0.9151,
+          2.6973,
+          0.259
+        ],
+        "bboxMax": [
+          -0.8857,
+          2.7267,
+          0.265
+        ]
+      },
+      {
+        "name": "Chain",
+        "parent": "Bell_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.9044,
+          2.6351,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.085,
+          0
+        ],
+        "bboxMin": [
+          -0.9101,
+          2.5676,
+          0.2595
+        ],
+        "bboxMax": [
+          -0.8987,
+          2.7026,
+          0.2645
+        ]
+      },
+      {
+        "name": "Bell_Body",
+        "parent": "Bell_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.9,
+          2.72,
+          0.262
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.9605,
+          2.4559,
+          0.215
+        ],
+        "bboxMax": [
+          -0.8609,
+          2.5726,
+          0.309
+        ]
+      },
+      {
+        "name": "Clapper",
+        "parent": "Bell_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.9141,
+          2.4484,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.272,
+          0
+        ],
+        "bboxMin": [
+          -0.9236,
+          2.4389,
+          0.2534
+        ],
+        "bboxMax": [
+          -0.9047,
+          2.4578,
+          0.2706
+        ]
+      },
+      {
+        "name": "Bell_R",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.9,
+          2.72,
+          0.262
+        ],
+        "localPos": [
+          0.9,
+          2.72,
+          0.262
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Hook",
+        "parent": "Bell_R",
+        "isMesh": true,
+        "worldPos": [
+          0.9004,
+          2.712,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.008,
+          0
+        ],
+        "bboxMin": [
+          0.8857,
+          2.6973,
+          0.259
+        ],
+        "bboxMax": [
+          0.9151,
+          2.7267,
+          0.265
+        ]
+      },
+      {
+        "name": "Chain",
+        "parent": "Bell_R",
+        "isMesh": true,
+        "worldPos": [
+          0.9044,
+          2.6351,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.085,
+          0
+        ],
+        "bboxMin": [
+          0.8987,
+          2.5676,
+          0.2595
+        ],
+        "bboxMax": [
+          0.9101,
+          2.7026,
+          0.2645
+        ]
+      },
+      {
+        "name": "Bell_Body",
+        "parent": "Bell_R",
+        "isMesh": true,
+        "worldPos": [
+          0.9,
+          2.72,
+          0.262
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.8609,
+          2.4559,
+          0.215
+        ],
+        "bboxMax": [
+          0.9605,
+          2.5726,
+          0.309
+        ]
+      },
+      {
+        "name": "Clapper",
+        "parent": "Bell_R",
+        "isMesh": true,
+        "worldPos": [
+          0.9141,
+          2.4484,
+          0.262
+        ],
+        "localPos": [
+          0,
+          -0.272,
+          0
+        ],
+        "bboxMin": [
+          0.9047,
+          2.4389,
+          0.2534
+        ],
+        "bboxMax": [
+          0.9236,
+          2.4578,
+          0.2706
+        ]
+      },
+      {
+        "name": "Diya_L",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.62,
+          0,
+          0.42
+        ],
+        "localPos": [
+          -0.62,
+          0,
+          0.42
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Diya_Bowl",
+        "parent": "Diya_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.62,
+          0,
+          0.42
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.676,
+          0,
+          0.364
+        ],
+        "bboxMax": [
+          -0.564,
+          0.035,
+          0.476
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Diya_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.62,
+          0.028,
+          0.42
+        ],
+        "localPos": [
+          0,
+          0.028,
+          0
+        ],
+        "bboxMin": [
+          -0.6226,
+          0.014,
+          0.417
+        ],
+        "bboxMax": [
+          -0.6174,
+          0.042,
+          0.423
+        ]
+      },
+      {
+        "name": "Flame_Anchor_L",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.62,
+          0.042,
+          0.42
+        ],
+        "localPos": [
+          -0.62,
+          0.042,
+          0.42
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Diya_R",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.62,
+          0,
+          0.42
+        ],
+        "localPos": [
+          0.62,
+          0,
+          0.42
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Diya_Bowl",
+        "parent": "Diya_R",
+        "isMesh": true,
+        "worldPos": [
+          0.62,
+          0,
+          0.42
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.564,
+          0,
+          0.364
+        ],
+        "bboxMax": [
+          0.676,
+          0.035,
+          0.476
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Diya_R",
+        "isMesh": true,
+        "worldPos": [
+          0.62,
+          0.028,
+          0.42
+        ],
+        "localPos": [
+          0,
+          0.028,
+          0
+        ],
+        "bboxMin": [
+          0.6174,
+          0.014,
+          0.417
+        ],
+        "bboxMax": [
+          0.6226,
+          0.042,
+          0.423
+        ]
+      },
+      {
+        "name": "Flame_Anchor_R",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.62,
+          0.042,
+          0.42
+        ],
+        "localPos": [
+          0.62,
+          0.042,
+          0.42
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Light_Leak",
+        "parent": "DoorDW_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Leak_Seam",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.446,
+          -0.128
+        ],
+        "localPos": [
+          0,
+          1.446,
+          -0.128
+        ],
+        "bboxMin": [
+          -0.01,
+          0.006,
+          -0.128
+        ],
+        "bboxMax": [
+          0.01,
+          2.886,
+          -0.128
+        ]
+      },
+      {
+        "name": "Leak_Floor",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.002,
+          -0.085
+        ],
+        "localPos": [
+          0,
+          0.002,
+          -0.085
+        ],
+        "bboxMin": [
+          -0.8,
+          0.002,
+          -0.155
+        ],
+        "bboxMax": [
+          0.8,
+          0.002,
+          -0.015
+        ]
+      },
+      {
+        "name": "Leak_Under",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.0035,
+          -0.047
+        ],
+        "localPos": [
+          0,
+          0.0035,
+          -0.047
+        ],
+        "bboxMin": [
+          -0.8,
+          0.001,
+          -0.047
+        ],
+        "bboxMax": [
+          0.8,
+          0.006,
+          -0.047
+        ]
+      },
+      {
+        "name": "Leak_Gap",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          -0.198
+        ],
+        "localPos": [
+          0,
+          0,
+          -0.198
+        ],
+        "bboxMin": [
+          -0.8,
+          0,
+          -0.198
+        ],
+        "bboxMax": [
+          0.8,
+          2.9,
+          -0.198
+        ]
+      }
+    ]
+  },
+  "door-redroom.glb": {
+    "sizeKB": 1508.4,
+    "worldBox": {
+      "min": [
+        -0.92,
+        -0.006,
+        -0.17
+      ],
+      "max": [
+        0.92,
+        3.201,
+        0.365
+      ],
+      "size": [
+        1.84,
+        3.207,
+        0.535
+      ]
+    },
+    "totalTriangles": 16050,
+    "totalSubMeshes": 43,
+    "materials": [
+      "black_lacquer",
+      "tarnished_gilt",
+      "blood_velvet",
+      "brass",
+      "red_wax",
+      "wick",
+      "light_leak_red"
+    ],
+    "nodeDetails": [
+      {
+        "name": "DoorRR_Root",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame_Body",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.9,
+          0,
+          -0.15
+        ],
+        "bboxMax": [
+          0.9,
+          3.2,
+          0.15
+        ]
+      },
+      {
+        "name": "Gilt_Arch_Moulding",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.726,
+          -0.006,
+          0.151
+        ],
+        "bboxMax": [
+          0.726,
+          2.876,
+          0.195
+        ]
+      },
+      {
+        "name": "Gilt_Arch_Bead",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.7706,
+          0,
+          0.147
+        ],
+        "bboxMax": [
+          0.7706,
+          2.9195,
+          0.169
+        ]
+      },
+      {
+        "name": "Gilt_Border",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.879,
+          -0.004,
+          0.151
+        ],
+        "bboxMax": [
+          0.879,
+          3.139,
+          0.179
+        ]
+      },
+      {
+        "name": "Plinth_L",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          -0.775,
+          0.17,
+          0
+        ],
+        "localPos": [
+          -0.775,
+          0.17,
+          0
+        ],
+        "bboxMin": [
+          -0.9025,
+          0,
+          -0.165
+        ],
+        "bboxMax": [
+          -0.6475,
+          0.34,
+          0.165
+        ]
+      },
+      {
+        "name": "Plinth_R",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0.775,
+          0.17,
+          0
+        ],
+        "localPos": [
+          0.775,
+          0.17,
+          0
+        ],
+        "bboxMin": [
+          0.6475,
+          0,
+          -0.165
+        ],
+        "bboxMax": [
+          0.9025,
+          0.34,
+          0.165
+        ]
+      },
+      {
+        "name": "Gilt_Cornice",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.171,
+          0
+        ],
+        "localPos": [
+          0,
+          3.171,
+          0
+        ],
+        "bboxMin": [
+          -0.92,
+          3.141,
+          -0.17
+        ],
+        "bboxMax": [
+          0.92,
+          3.201,
+          0.17
+        ]
+      },
+      {
+        "name": "Crown_Scroll",
+        "parent": "Frame",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          2.985,
+          0.152
+        ],
+        "localPos": [
+          0,
+          2.985,
+          0.152
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Cartouche",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          2.985,
+          0.152
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.076,
+          2.889,
+          0.153
+        ],
+        "bboxMax": [
+          0.076,
+          3.081,
+          0.189
+        ]
+      },
+      {
+        "name": "Cartouche_Field",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          2.985,
+          0.1895
+        ],
+        "localPos": [
+          0,
+          0,
+          0.0375
+        ],
+        "bboxMin": [
+          -0.045,
+          2.923,
+          0.1895
+        ],
+        "bboxMax": [
+          0.045,
+          3.047,
+          0.1895
+        ]
+      },
+      {
+        "name": "C_Scroll_L",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          -0.125,
+          2.98,
+          0.164
+        ],
+        "localPos": [
+          -0.125,
+          -0.005,
+          0.012
+        ],
+        "bboxMin": [
+          -0.2057,
+          2.9,
+          0.1535
+        ],
+        "bboxMax": [
+          -0.0445,
+          3.0608,
+          0.1745
+        ]
+      },
+      {
+        "name": "Curl_L",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          -0.205,
+          2.915,
+          0.162
+        ],
+        "localPos": [
+          -0.205,
+          -0.07,
+          0.01
+        ],
+        "bboxMin": [
+          -0.2497,
+          2.8704,
+          0.154
+        ],
+        "bboxMax": [
+          -0.1604,
+          2.9597,
+          0.17
+        ]
+      },
+      {
+        "name": "C_Scroll_R",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          0.125,
+          2.98,
+          0.164
+        ],
+        "localPos": [
+          0.125,
+          -0.005,
+          0.012
+        ],
+        "bboxMin": [
+          0.0445,
+          2.9,
+          0.1535
+        ],
+        "bboxMax": [
+          0.2057,
+          3.0608,
+          0.1745
+        ]
+      },
+      {
+        "name": "Curl_R",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          0.205,
+          2.915,
+          0.162
+        ],
+        "localPos": [
+          0.205,
+          -0.07,
+          0.01
+        ],
+        "bboxMin": [
+          0.1604,
+          2.8704,
+          0.154
+        ],
+        "bboxMax": [
+          0.2497,
+          2.9597,
+          0.17
+        ]
+      },
+      {
+        "name": "Shell",
+        "parent": "Crown_Scroll",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          3.07,
+          0.164
+        ],
+        "localPos": [
+          0,
+          0.085,
+          0.012
+        ],
+        "bboxMin": [
+          -0.085,
+          3.07,
+          0.153
+        ],
+        "bboxMax": [
+          0.085,
+          3.155,
+          0.175
+        ]
+      },
+      {
+        "name": "Leaf",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "localPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Leaf_Body",
+        "parent": "Leaf",
+        "isMesh": true,
+        "worldPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.643,
+          0.008,
+          -0.13
+        ],
+        "bboxMax": [
+          0.643,
+          2.791,
+          -0.08
+        ]
+      },
+      {
+        "name": "Velvet_Tufted",
+        "parent": "Leaf",
+        "isMesh": true,
+        "worldPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.61,
+          0.048,
+          -0.08
+        ],
+        "bboxMax": [
+          0.61,
+          2.758,
+          -0.025
+        ]
+      },
+      {
+        "name": "Brass_Edge_Trim",
+        "parent": "Leaf",
+        "isMesh": true,
+        "worldPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.643,
+          0.008,
+          -0.079
+        ],
+        "bboxMax": [
+          0.643,
+          2.791,
+          -0.067
+        ]
+      },
+      {
+        "name": "Brass_Kick_Trim",
+        "parent": "Leaf",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.028,
+          -0.073
+        ],
+        "localPos": [
+          0.65,
+          0.028,
+          0.032
+        ],
+        "bboxMin": [
+          -0.615,
+          0.008,
+          -0.079
+        ],
+        "bboxMax": [
+          0.615,
+          0.048,
+          -0.067
+        ]
+      },
+      {
+        "name": "Tuft_Buttons",
+        "parent": "Leaf",
+        "isMesh": true,
+        "worldPos": [
+          -0.65,
+          0,
+          -0.105
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.513,
+          0.18,
+          -0.0407
+        ],
+        "bboxMax": [
+          0.513,
+          2.636,
+          -0.0153
+        ]
+      },
+      {
+        "name": "Knocker",
+        "parent": "Leaf",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          1.47,
+          -0.02
+        ],
+        "localPos": [
+          0.65,
+          1.47,
+          0.085
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Medallion",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.47,
+          -0.02
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.075,
+          1.395,
+          -0.02
+        ],
+        "bboxMax": [
+          0.075,
+          1.545,
+          0
+        ]
+      },
+      {
+        "name": "Medallion_Face",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.47,
+          0.0015
+        ],
+        "localPos": [
+          0,
+          0,
+          0.0215
+        ],
+        "bboxMin": [
+          -0.06,
+          1.41,
+          -0.0005
+        ],
+        "bboxMax": [
+          0.06,
+          1.53,
+          0.0035
+        ]
+      },
+      {
+        "name": "Medallion_Rim",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.47,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0.02
+        ],
+        "bboxMin": [
+          -0.071,
+          1.399,
+          -0.005
+        ],
+        "bboxMax": [
+          0.071,
+          1.541,
+          0.005
+        ]
+      },
+      {
+        "name": "Eye_X",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          -0.022,
+          1.486,
+          0.005
+        ],
+        "localPos": [
+          -0.022,
+          0.016,
+          0.025
+        ],
+        "bboxMin": [
+          -0.0379,
+          1.4701,
+          0.002
+        ],
+        "bboxMax": [
+          -0.0061,
+          1.5019,
+          0.008
+        ]
+      },
+      {
+        "name": "Eye_X",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          -0.022,
+          1.486,
+          0.005
+        ],
+        "localPos": [
+          -0.022,
+          0.016,
+          0.025
+        ],
+        "bboxMin": [
+          -0.0379,
+          1.4701,
+          0.002
+        ],
+        "bboxMax": [
+          -0.0061,
+          1.5019,
+          0.008
+        ]
+      },
+      {
+        "name": "Eye_X",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0.022,
+          1.486,
+          0.005
+        ],
+        "localPos": [
+          0.022,
+          0.016,
+          0.025
+        ],
+        "bboxMin": [
+          0.0061,
+          1.4701,
+          0.002
+        ],
+        "bboxMax": [
+          0.0379,
+          1.5019,
+          0.008
+        ]
+      },
+      {
+        "name": "Eye_X",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0.022,
+          1.486,
+          0.005
+        ],
+        "localPos": [
+          0.022,
+          0.016,
+          0.025
+        ],
+        "bboxMin": [
+          0.0061,
+          1.4701,
+          0.002
+        ],
+        "bboxMax": [
+          0.0379,
+          1.5019,
+          0.008
+        ]
+      },
+      {
+        "name": "Tongue_Bar",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.456,
+          0.005
+        ],
+        "localPos": [
+          0,
+          -0.014,
+          0.025
+        ],
+        "bboxMin": [
+          -0.025,
+          1.4515,
+          0.002
+        ],
+        "bboxMax": [
+          0.025,
+          1.4605,
+          0.008
+        ]
+      },
+      {
+        "name": "Tongue_U",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0.004,
+          1.4515,
+          0.005
+        ],
+        "localPos": [
+          0.004,
+          -0.0185,
+          0.025
+        ],
+        "bboxMin": [
+          -0.0112,
+          1.4363,
+          0.0008
+        ],
+        "bboxMax": [
+          0.0192,
+          1.4515,
+          0.0092
+        ]
+      },
+      {
+        "name": "Knocker_Ring",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.345,
+          0.01
+        ],
+        "localPos": [
+          0,
+          -0.125,
+          0.03
+        ],
+        "bboxMin": [
+          -0.074,
+          1.2705,
+          -0.0078
+        ],
+        "bboxMax": [
+          0.074,
+          1.4195,
+          0.0278
+        ]
+      },
+      {
+        "name": "Ring_Pin",
+        "parent": "Knocker",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          1.41,
+          0.01
+        ],
+        "localPos": [
+          0,
+          -0.06,
+          0.03
+        ],
+        "bboxMin": [
+          -0.015,
+          1.402,
+          0.002
+        ],
+        "bboxMax": [
+          0.015,
+          1.418,
+          0.018
+        ]
+      },
+      {
+        "name": "Sconce_L",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          -0.81,
+          1.9,
+          0.15
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Backplate",
+        "parent": "Sconce_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.858,
+          1.852,
+          0.15
+        ],
+        "bboxMax": [
+          -0.762,
+          1.948,
+          0.172
+        ]
+      },
+      {
+        "name": "Arm",
+        "parent": "Sconce_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.818,
+          1.802,
+          0.1573
+        ],
+        "bboxMax": [
+          -0.802,
+          1.9021,
+          0.328
+        ]
+      },
+      {
+        "name": "Drip_Pan",
+        "parent": "Sconce_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.81,
+          1.9,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0,
+          0.17
+        ],
+        "bboxMin": [
+          -0.855,
+          1.9,
+          0.275
+        ],
+        "bboxMax": [
+          -0.765,
+          1.945,
+          0.365
+        ]
+      },
+      {
+        "name": "Candle",
+        "parent": "Sconce_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.81,
+          2.065,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0.165,
+          0.17
+        ],
+        "bboxMin": [
+          -0.827,
+          1.945,
+          0.303
+        ],
+        "bboxMax": [
+          -0.793,
+          2.185,
+          0.337
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Sconce_L",
+        "isMesh": true,
+        "worldPos": [
+          -0.81,
+          2.192,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0.292,
+          0.17
+        ],
+        "bboxMin": [
+          -0.8113,
+          2.185,
+          0.3185
+        ],
+        "bboxMax": [
+          -0.8087,
+          2.199,
+          0.3215
+        ]
+      },
+      {
+        "name": "Flame_Anchor_L",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          -0.81,
+          2.199,
+          0.32
+        ],
+        "localPos": [
+          -0.81,
+          2.199,
+          0.32
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Sconce_R",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          0.81,
+          1.9,
+          0.15
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Backplate",
+        "parent": "Sconce_R",
+        "isMesh": true,
+        "worldPos": [
+          0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.762,
+          1.852,
+          0.15
+        ],
+        "bboxMax": [
+          0.858,
+          1.948,
+          0.172
+        ]
+      },
+      {
+        "name": "Arm",
+        "parent": "Sconce_R",
+        "isMesh": true,
+        "worldPos": [
+          0.81,
+          1.9,
+          0.15
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.802,
+          1.802,
+          0.1573
+        ],
+        "bboxMax": [
+          0.818,
+          1.9021,
+          0.328
+        ]
+      },
+      {
+        "name": "Drip_Pan",
+        "parent": "Sconce_R",
+        "isMesh": true,
+        "worldPos": [
+          0.81,
+          1.9,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0,
+          0.17
+        ],
+        "bboxMin": [
+          0.765,
+          1.9,
+          0.275
+        ],
+        "bboxMax": [
+          0.855,
+          1.945,
+          0.365
+        ]
+      },
+      {
+        "name": "Candle",
+        "parent": "Sconce_R",
+        "isMesh": true,
+        "worldPos": [
+          0.81,
+          2.065,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0.165,
+          0.17
+        ],
+        "bboxMin": [
+          0.793,
+          1.945,
+          0.303
+        ],
+        "bboxMax": [
+          0.827,
+          2.185,
+          0.337
+        ]
+      },
+      {
+        "name": "Wick",
+        "parent": "Sconce_R",
+        "isMesh": true,
+        "worldPos": [
+          0.81,
+          2.192,
+          0.32
+        ],
+        "localPos": [
+          0,
+          0.292,
+          0.17
+        ],
+        "bboxMin": [
+          0.8087,
+          2.185,
+          0.3185
+        ],
+        "bboxMax": [
+          0.8113,
+          2.199,
+          0.3215
+        ]
+      },
+      {
+        "name": "Flame_Anchor_R",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          0.81,
+          2.199,
+          0.32
+        ],
+        "localPos": [
+          0.81,
+          2.199,
+          0.32
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Light_Leak",
+        "parent": "DoorRR_Root",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Leak_Gap",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          -0.147
+        ],
+        "localPos": [
+          0,
+          0,
+          -0.147
+        ],
+        "bboxMin": [
+          -0.65,
+          0,
+          -0.147
+        ],
+        "bboxMax": [
+          0.65,
+          2.8,
+          -0.147
+        ]
+      },
+      {
+        "name": "Leak_Floor",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.002,
+          -0.105
+        ],
+        "localPos": [
+          0,
+          0.002,
+          -0.105
+        ],
+        "bboxMin": [
+          -0.64,
+          0.002,
+          -0.155
+        ],
+        "bboxMax": [
+          0.64,
+          0.002,
+          -0.055
+        ]
+      },
+      {
+        "name": "Leak_Under",
+        "parent": "Light_Leak",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.0045,
+          -0.078
+        ],
+        "localPos": [
+          0,
+          0.0045,
+          -0.078
+        ],
+        "bboxMin": [
+          -0.645,
+          0.001,
+          -0.078
+        ],
+        "bboxMax": [
+          0.645,
+          0.008,
+          -0.078
+        ]
+      }
+    ]
+  },
+  "redroom-candelabra.glb": {
+    "sizeKB": 2003.8,
+    "worldBox": {
+      "min": [
+        -0.1891,
+        0,
+        -0.1893
+      ],
+      "max": [
+        0.1891,
+        1.115,
+        0.1893
+      ],
+      "size": [
+        0.3782,
+        1.115,
+        0.3787
+      ]
+    },
+    "totalTriangles": 21288,
+    "totalSubMeshes": 12,
+    "materials": [
+      "Bronze_Aged",
+      "Gilt",
+      "Wax_Red",
+      "Wick"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Candelabra",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candelabra_Bronze",
+        "parent": "Candelabra",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1704,
+          0,
+          -0.1704
+        ],
+        "bboxMax": [
+          0.1704,
+          0.85,
+          0.1704
+        ]
+      },
+      {
+        "name": "Candelabra_Gilt",
+        "parent": "Candelabra",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1891,
+          0.007,
+          -0.1893
+        ],
+        "bboxMax": [
+          0.1891,
+          0.755,
+          0.1893
+        ]
+      },
+      {
+        "name": "Candle_1",
+        "parent": "Candelabra",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0.849,
+          0
+        ],
+        "localPos": [
+          0,
+          0.849,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_1_Wax",
+        "parent": "Candle_1",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.849,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0317,
+          0.849,
+          -0.0298
+        ],
+        "bboxMax": [
+          0.0283,
+          1.1138,
+          0.0291
+        ]
+      },
+      {
+        "name": "Candle_1_Wick",
+        "parent": "Candle_1",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.849,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0013,
+          1.101,
+          -0.0015
+        ],
+        "bboxMax": [
+          0.0013,
+          1.115,
+          0.0015
+        ]
+      },
+      {
+        "name": "Flame_Anchor_1",
+        "parent": "Candle_1",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          1.115,
+          0
+        ],
+        "localPos": [
+          0,
+          0.266,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_2",
+        "parent": "Candelabra",
+        "isMesh": false,
+        "worldPos": [
+          0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          0.1344,
+          0.709,
+          0.1344
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_2_Wax",
+        "parent": "Candle_2",
+        "isMesh": true,
+        "worldPos": [
+          0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1077,
+          0.709,
+          0.1119
+        ],
+        "bboxMax": [
+          0.1548,
+          0.8921,
+          0.158
+        ]
+      },
+      {
+        "name": "Candle_2_Wick",
+        "parent": "Candle_2",
+        "isMesh": true,
+        "worldPos": [
+          0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1331,
+          0.881,
+          0.1329
+        ],
+        "bboxMax": [
+          0.1356,
+          0.895,
+          0.1359
+        ]
+      },
+      {
+        "name": "Flame_Anchor_2",
+        "parent": "Candle_2",
+        "isMesh": false,
+        "worldPos": [
+          0.1344,
+          0.895,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0.186,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_3",
+        "parent": "Candelabra",
+        "isMesh": false,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          -0.1344,
+          0.709,
+          0.1344
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_3_Wax",
+        "parent": "Candle_3",
+        "isMesh": true,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1594,
+          0.709,
+          0.1088
+        ],
+        "bboxMax": [
+          -0.1139,
+          0.9325,
+          0.1599
+        ]
+      },
+      {
+        "name": "Candle_3_Wick",
+        "parent": "Candle_3",
+        "isMesh": true,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1356,
+          0.921,
+          0.1329
+        ],
+        "bboxMax": [
+          -0.1331,
+          0.935,
+          0.1359
+        ]
+      },
+      {
+        "name": "Flame_Anchor_3",
+        "parent": "Candle_3",
+        "isMesh": false,
+        "worldPos": [
+          -0.1344,
+          0.935,
+          0.1344
+        ],
+        "localPos": [
+          0,
+          0.226,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_4",
+        "parent": "Candelabra",
+        "isMesh": false,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          -0.1344,
+          0.709,
+          -0.1344
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_4_Wax",
+        "parent": "Candle_4",
+        "isMesh": true,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1593,
+          0.709,
+          -0.1585
+        ],
+        "bboxMax": [
+          -0.1139,
+          0.9126,
+          -0.1081
+        ]
+      },
+      {
+        "name": "Candle_4_Wick",
+        "parent": "Candle_4",
+        "isMesh": true,
+        "worldPos": [
+          -0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1356,
+          0.901,
+          -0.1359
+        ],
+        "bboxMax": [
+          -0.1331,
+          0.915,
+          -0.1329
+        ]
+      },
+      {
+        "name": "Flame_Anchor_4",
+        "parent": "Candle_4",
+        "isMesh": false,
+        "worldPos": [
+          -0.1344,
+          0.915,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0.206,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_5",
+        "parent": "Candelabra",
+        "isMesh": false,
+        "worldPos": [
+          0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          0.1344,
+          0.709,
+          -0.1344
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_5_Wax",
+        "parent": "Candle_5",
+        "isMesh": true,
+        "worldPos": [
+          0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1081,
+          0.709,
+          -0.1607
+        ],
+        "bboxMax": [
+          0.1548,
+          0.9529,
+          -0.1096
+        ]
+      },
+      {
+        "name": "Candle_5_Wick",
+        "parent": "Candle_5",
+        "isMesh": true,
+        "worldPos": [
+          0.1344,
+          0.709,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1331,
+          0.941,
+          -0.1359
+        ],
+        "bboxMax": [
+          0.1356,
+          0.955,
+          -0.1329
+        ]
+      },
+      {
+        "name": "Flame_Anchor_5",
+        "parent": "Candle_5",
+        "isMesh": false,
+        "worldPos": [
+          0.1344,
+          0.955,
+          -0.1344
+        ],
+        "localPos": [
+          0,
+          0.246,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      }
+    ]
+  },
+  "redroom-candle.glb": {
+    "sizeKB": 192.8,
+    "worldBox": {
+      "min": [
+        -0.1459,
+        0,
+        -0.0376
+      ],
+      "max": [
+        0.1431,
+        0.306,
+        0.037
+      ],
+      "size": [
+        0.289,
+        0.306,
+        0.0745
+      ]
+    },
+    "totalTriangles": 2016,
+    "totalSubMeshes": 6,
+    "materials": [
+      "Wax_Red",
+      "Wick"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Candles",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_A",
+        "parent": "Candles",
+        "isMesh": false,
+        "worldPos": [
+          -0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          -0.11,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_A_Wax",
+        "parent": "Candle_A",
+        "isMesh": true,
+        "worldPos": [
+          -0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1459,
+          0,
+          -0.0376
+        ],
+        "bboxMax": [
+          -0.0728,
+          0.306,
+          0.03
+        ]
+      },
+      {
+        "name": "Candle_A_Wick",
+        "parent": "Candle_A",
+        "isMesh": true,
+        "worldPos": [
+          -0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1113,
+          0.292,
+          -0.0015
+        ],
+        "bboxMax": [
+          -0.1087,
+          0.306,
+          0.0015
+        ]
+      },
+      {
+        "name": "Flame_Anchor_A",
+        "parent": "Candle_A",
+        "isMesh": false,
+        "worldPos": [
+          -0.11,
+          0.306,
+          0
+        ],
+        "localPos": [
+          0,
+          0.306,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_B",
+        "parent": "Candles",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_B_Wax",
+        "parent": "Candle_B",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0377,
+          0,
+          -0.0349
+        ],
+        "bboxMax": [
+          0.0325,
+          0.2059,
+          0.037
+        ]
+      },
+      {
+        "name": "Candle_B_Wick",
+        "parent": "Candle_B",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0013,
+          0.192,
+          -0.0015
+        ],
+        "bboxMax": [
+          0.0013,
+          0.206,
+          0.0015
+        ]
+      },
+      {
+        "name": "Flame_Anchor_B",
+        "parent": "Candle_B",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0.206,
+          0
+        ],
+        "localPos": [
+          0,
+          0.206,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_C",
+        "parent": "Candles",
+        "isMesh": false,
+        "worldPos": [
+          0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          0.11,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_C_Wax",
+        "parent": "Candle_C",
+        "isMesh": true,
+        "worldPos": [
+          0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.0761,
+          0,
+          -0.0358
+        ],
+        "bboxMax": [
+          0.1431,
+          0.1264,
+          0.0366
+        ]
+      },
+      {
+        "name": "Candle_C_Wick",
+        "parent": "Candle_C",
+        "isMesh": true,
+        "worldPos": [
+          0.11,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.1087,
+          0.112,
+          -0.0015
+        ],
+        "bboxMax": [
+          0.1113,
+          0.126,
+          0.0015
+        ]
+      },
+      {
+        "name": "Flame_Anchor_C",
+        "parent": "Candle_C",
+        "isMesh": false,
+        "worldPos": [
+          0.11,
+          0.126,
+          0
+        ],
+        "localPos": [
+          0,
+          0.126,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      }
+    ]
+  },
+  "redroom-chandelier.glb": {
+    "sizeKB": 2331.2,
+    "worldBox": {
+      "min": [
+        -0.534,
+        -2.234,
+        -0.534
+      ],
+      "max": [
+        0.534,
+        0.023,
+        0.5344
+      ],
+      "size": [
+        1.068,
+        2.257,
+        1.0684
+      ]
+    },
+    "totalTriangles": 24810,
+    "totalSubMeshes": 21,
+    "materials": [
+      "Wax_Red",
+      "Wick",
+      "Gold_Tarnished",
+      "Crystal"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Chandelier",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_1",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          0.5,
+          -1.701,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_1_Wax",
+        "parent": "Candle_1",
+        "isMesh": true,
+        "worldPos": [
+          0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.4694,
+          -1.701,
+          -0.0327
+        ],
+        "bboxMax": [
+          0.5323,
+          -1.5215,
+          0.0328
+        ]
+      },
+      {
+        "name": "Candle_1_Wick",
+        "parent": "Candle_1",
+        "isMesh": true,
+        "worldPos": [
+          0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.4981,
+          -1.5334,
+          -0.002
+        ],
+        "bboxMax": [
+          0.5019,
+          -1.5194,
+          0.002
+        ]
+      },
+      {
+        "name": "Flame_Anchor_1",
+        "parent": "Candle_1",
+        "isMesh": false,
+        "worldPos": [
+          0.5,
+          -1.5194,
+          0
+        ],
+        "localPos": [
+          0,
+          0.1816,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_2",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          0.3536,
+          -1.701,
+          0.3536
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_2_Wax",
+        "parent": "Candle_2",
+        "isMesh": true,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.3185,
+          -1.701,
+          0.3196
+        ],
+        "bboxMax": [
+          0.3844,
+          -1.5049,
+          0.3841
+        ]
+      },
+      {
+        "name": "Candle_2_Wick",
+        "parent": "Candle_2",
+        "isMesh": true,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.3516,
+          -1.5165,
+          0.3516
+        ],
+        "bboxMax": [
+          0.3555,
+          -1.5025,
+          0.3555
+        ]
+      },
+      {
+        "name": "Flame_Anchor_2",
+        "parent": "Candle_2",
+        "isMesh": false,
+        "worldPos": [
+          0.3536,
+          -1.5025,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0.1985,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_3",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          -1.701,
+          0.5
+        ],
+        "localPos": [
+          0,
+          -1.701,
+          0.5
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_3_Wax",
+        "parent": "Candle_3",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          -1.701,
+          0.5
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0334,
+          -1.701,
+          0.4678
+        ],
+        "bboxMax": [
+          0.0338,
+          -1.5373,
+          0.5344
+        ]
+      },
+      {
+        "name": "Candle_3_Wick",
+        "parent": "Candle_3",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          -1.701,
+          0.5
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0019,
+          -1.5489,
+          0.498
+        ],
+        "bboxMax": [
+          0.0019,
+          -1.5349,
+          0.502
+        ]
+      },
+      {
+        "name": "Flame_Anchor_3",
+        "parent": "Candle_3",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          -1.5349,
+          0.5
+        ],
+        "localPos": [
+          0,
+          0.1661,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_4",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          -0.3536,
+          -1.701,
+          0.3536
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_4_Wax",
+        "parent": "Candle_4",
+        "isMesh": true,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3824,
+          -1.701,
+          0.3283
+        ],
+        "bboxMax": [
+          -0.3286,
+          -1.5371,
+          0.3801
+        ]
+      },
+      {
+        "name": "Candle_4_Wick",
+        "parent": "Candle_4",
+        "isMesh": true,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3553,
+          -1.5483,
+          0.3517
+        ],
+        "bboxMax": [
+          -0.3518,
+          -1.5343,
+          0.3554
+        ]
+      },
+      {
+        "name": "Flame_Anchor_4",
+        "parent": "Candle_4",
+        "isMesh": false,
+        "worldPos": [
+          -0.3536,
+          -1.5343,
+          0.3536
+        ],
+        "localPos": [
+          0,
+          0.1667,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_5",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          -0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          -0.5,
+          -1.701,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_5_Wax",
+        "parent": "Candle_5",
+        "isMesh": true,
+        "worldPos": [
+          -0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.5323,
+          -1.701,
+          -0.0289
+        ],
+        "bboxMax": [
+          -0.4663,
+          -1.5135,
+          0.0357
+        ]
+      },
+      {
+        "name": "Candle_5_Wick",
+        "parent": "Candle_5",
+        "isMesh": true,
+        "worldPos": [
+          -0.5,
+          -1.701,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.502,
+          -1.5252,
+          -0.0019
+        ],
+        "bboxMax": [
+          -0.498,
+          -1.5112,
+          0.0019
+        ]
+      },
+      {
+        "name": "Flame_Anchor_5",
+        "parent": "Candle_5",
+        "isMesh": false,
+        "worldPos": [
+          -0.5,
+          -1.5112,
+          0
+        ],
+        "localPos": [
+          0,
+          0.1898,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_6",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          -0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_6_Wax",
+        "parent": "Candle_6",
+        "isMesh": true,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3794,
+          -1.701,
+          -0.3815
+        ],
+        "bboxMax": [
+          -0.3301,
+          -1.5152,
+          -0.3278
+        ]
+      },
+      {
+        "name": "Candle_6_Wick",
+        "parent": "Candle_6",
+        "isMesh": true,
+        "worldPos": [
+          -0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3551,
+          -1.527,
+          -0.3553
+        ],
+        "bboxMax": [
+          -0.352,
+          -1.513,
+          -0.3518
+        ]
+      },
+      {
+        "name": "Flame_Anchor_6",
+        "parent": "Candle_6",
+        "isMesh": false,
+        "worldPos": [
+          -0.3536,
+          -1.513,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0.188,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_7",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          -1.701,
+          -0.5
+        ],
+        "localPos": [
+          0,
+          -1.701,
+          -0.5
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_7_Wax",
+        "parent": "Candle_7",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          -1.701,
+          -0.5
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0329,
+          -1.701,
+          -0.532
+        ],
+        "bboxMax": [
+          0.0286,
+          -1.5168,
+          -0.47
+        ]
+      },
+      {
+        "name": "Candle_7_Wick",
+        "parent": "Candle_7",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          -1.701,
+          -0.5
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.002,
+          -1.5287,
+          -0.502
+        ],
+        "bboxMax": [
+          0.002,
+          -1.5147,
+          -0.498
+        ]
+      },
+      {
+        "name": "Flame_Anchor_7",
+        "parent": "Candle_7",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          -1.5147,
+          -0.5
+        ],
+        "localPos": [
+          0,
+          0.1863,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_8",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Candle_8_Wax",
+        "parent": "Candle_8",
+        "isMesh": true,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.3198,
+          -1.701,
+          -0.3882
+        ],
+        "bboxMax": [
+          0.3867,
+          -1.5226,
+          -0.3222
+        ]
+      },
+      {
+        "name": "Candle_8_Wick",
+        "parent": "Candle_8",
+        "isMesh": true,
+        "worldPos": [
+          0.3536,
+          -1.701,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          0.3516,
+          -1.5338,
+          -0.3555
+        ],
+        "bboxMax": [
+          0.3555,
+          -1.5198,
+          -0.3516
+        ]
+      },
+      {
+        "name": "Flame_Anchor_8",
+        "parent": "Candle_8",
+        "isMesh": false,
+        "worldPos": [
+          0.3536,
+          -1.5198,
+          -0.3536
+        ],
+        "localPos": [
+          0,
+          0.1812,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Chain",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Chain_Links",
+        "parent": "Chain",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0245,
+          -0.9754,
+          -0.0245
+        ],
+        "bboxMax": [
+          0.0245,
+          -0.0061,
+          0.0245
+        ]
+      },
+      {
+        "name": "Chain_Hook",
+        "parent": "Chain",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0043,
+          -0.023,
+          -0.023
+        ],
+        "bboxMax": [
+          0.0043,
+          0.023,
+          0.023
+        ]
+      },
+      {
+        "name": "Crystals",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Crystal_Drops",
+        "parent": "Crystals",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.5146,
+          -2.234,
+          -0.5142
+        ],
+        "bboxMax": [
+          0.5146,
+          -1.48,
+          0.5133
+        ]
+      },
+      {
+        "name": "Crystal_Beads",
+        "parent": "Crystals",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.4894,
+          -1.8661,
+          -0.4894
+        ],
+        "bboxMax": [
+          0.4894,
+          -1.3066,
+          0.4894
+        ]
+      },
+      {
+        "name": "Frame",
+        "parent": "Chandelier",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame_Gilt",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.534,
+          -2.2,
+          -0.534
+        ],
+        "bboxMax": [
+          0.534,
+          -0.975,
+          0.534
+        ]
+      }
+    ]
+  },
+  "redroom-invitation.glb": {
+    "sizeKB": 2351,
+    "worldBox": {
+      "min": [
+        -0.3126,
+        0,
+        -0.2126
+      ],
+      "max": [
+        0.3126,
+        0.1102,
+        0.2126
+      ],
+      "size": [
+        0.6252,
+        0.1102,
+        0.4252
+      ]
+    },
+    "totalTriangles": 15512,
+    "totalSubMeshes": 18,
+    "materials": [
+      "Silver_Tarnished",
+      "Pearl",
+      "Velvet_Red",
+      "Wax_Black",
+      "Card_Ivory",
+      "Card_Ivory_Print",
+      "Crystal",
+      "Liquid_Oxblood"
+    ],
+    "nodeDetails": [
+      {
+        "name": "RedroomInvitation",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Tray",
+        "parent": "RedroomInvitation",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.31,
+          0,
+          -0.21
+        ],
+        "bboxMax": [
+          0.31,
+          0.0255,
+          0.21
+        ]
+      },
+      {
+        "name": "Tray_Border",
+        "parent": "Tray",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3054,
+          0.023,
+          -0.2078
+        ],
+        "bboxMax": [
+          0.3057,
+          0.0294,
+          0.2078
+        ]
+      },
+      {
+        "name": "Tray_Beads",
+        "parent": "Tray",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3126,
+          0.0179,
+          -0.2126
+        ],
+        "bboxMax": [
+          0.3126,
+          0.0231,
+          0.2126
+        ]
+      },
+      {
+        "name": "Pearls",
+        "parent": "RedroomInvitation",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.214,
+          0.005,
+          0.0529
+        ],
+        "bboxMax": [
+          0.2945,
+          0.0365,
+          0.1703
+        ]
+      },
+      {
+        "name": "Envelope",
+        "parent": "RedroomInvitation",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0.0052,
+          0
+        ],
+        "localPos": [
+          0,
+          0.0052,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Envelope_Body",
+        "parent": "Envelope",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0.0052,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.1459,
+          0.0052,
+          -0.1151
+        ],
+        "bboxMax": [
+          0.1459,
+          0.0112,
+          0.1151
+        ]
+      },
+      {
+        "name": "Envelope_Flap",
+        "parent": "Envelope",
+        "isMesh": true,
+        "worldPos": [
+          -0.0187,
+          0.0115,
+          -0.088
+        ],
+        "localPos": [
+          0,
+          0.0063,
+          -0.09
+        ],
+        "bboxMin": [
+          -0.1459,
+          0.0115,
+          -0.1151
+        ],
+        "bboxMax": [
+          0.1311,
+          0.013,
+          0.0456
+        ]
+      },
+      {
+        "name": "Seal",
+        "parent": "Envelope",
+        "isMesh": false,
+        "worldPos": [
+          0.001,
+          0.0112,
+          0.0049
+        ],
+        "localPos": [
+          0,
+          0.006,
+          0.005
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Seal_Shard_1",
+        "parent": "Seal",
+        "isMesh": true,
+        "worldPos": [
+          -0.0123,
+          0.0112,
+          0.0009
+        ],
+        "localPos": [
+          -0.0122,
+          0,
+          -0.0067
+        ],
+        "bboxMin": [
+          -0.0255,
+          0.0112,
+          -0.0182
+        ],
+        "bboxMax": [
+          0.0052,
+          0.0172,
+          0.0214
+        ]
+      },
+      {
+        "name": "Seal_Shard_2",
+        "parent": "Seal",
+        "isMesh": true,
+        "worldPos": [
+          0.0042,
+          0.0112,
+          0.0192
+        ],
+        "localPos": [
+          0.0001,
+          0,
+          0.0146
+        ],
+        "bboxMin": [
+          -0.0171,
+          0.0112,
+          0.0022
+        ],
+        "bboxMax": [
+          0.0232,
+          0.0172,
+          0.0317
+        ]
+      },
+      {
+        "name": "Seal_Shard_3",
+        "parent": "Seal",
+        "isMesh": true,
+        "worldPos": [
+          0.0119,
+          0.0112,
+          -0.0044
+        ],
+        "localPos": [
+          0.0126,
+          0,
+          -0.0068
+        ],
+        "bboxMin": [
+          -0.0041,
+          0.0112,
+          -0.0234
+        ],
+        "bboxMax": [
+          0.0271,
+          0.0172,
+          0.0161
+        ]
+      },
+      {
+        "name": "Seal_Crumbs",
+        "parent": "Seal",
+        "isMesh": true,
+        "worldPos": [
+          0.001,
+          0.0112,
+          0.0049
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.0076,
+          0.0119,
+          -0.0041
+        ],
+        "bboxMax": [
+          0.0082,
+          0.0155,
+          0.0124
+        ]
+      },
+      {
+        "name": "Card",
+        "parent": "Envelope",
+        "isMesh": true,
+        "worldPos": [
+          -0.0011,
+          0.0082,
+          -0.0054
+        ],
+        "localPos": [
+          0,
+          0.003,
+          -0.0055
+        ],
+        "bboxMin": [
+          -0.1357,
+          0.0072,
+          -0.111
+        ],
+        "bboxMax": [
+          0.1334,
+          0.0092,
+          0.1003
+        ]
+      },
+      {
+        "name": "Glass",
+        "parent": "RedroomInvitation",
+        "isMesh": false,
+        "worldPos": [
+          -0.2,
+          0.005,
+          -0.09
+        ],
+        "localPos": [
+          -0.2,
+          0.005,
+          -0.09
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Glass_Coupe",
+        "parent": "Glass",
+        "isMesh": true,
+        "worldPos": [
+          -0.2,
+          0.005,
+          -0.09
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.252,
+          0.005,
+          -0.142
+        ],
+        "bboxMax": [
+          -0.148,
+          0.1102,
+          -0.038
+        ]
+      },
+      {
+        "name": "Glass_Liquid",
+        "parent": "Glass",
+        "isMesh": true,
+        "worldPos": [
+          -0.2,
+          0.005,
+          -0.09
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2405,
+          0.0795,
+          -0.1305
+        ],
+        "bboxMax": [
+          -0.1595,
+          0.094,
+          -0.0495
+        ]
+      }
+    ]
+  },
+  "redroom-mirror.glb": {
+    "sizeKB": 2589.4,
+    "worldBox": {
+      "min": [
+        -0.65,
+        0,
+        -0.037
+      ],
+      "max": [
+        0.65,
+        2.2,
+        0.062
+      ],
+      "size": [
+        1.3,
+        2.2,
+        0.099
+      ]
+    },
+    "totalTriangles": 27551,
+    "totalSubMeshes": 9,
+    "materials": [
+      "Gold_Tarnished",
+      "Gilt",
+      "Gold_Recess",
+      "Mirror_Placeholder"
+    ],
+    "nodeDetails": [
+      {
+        "name": "Mirror",
+        "parent": "ROOT",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame",
+        "parent": "Mirror",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Frame_Body",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.65,
+          0,
+          -0.037
+        ],
+        "bboxMax": [
+          0.65,
+          1.962,
+          0.037
+        ]
+      },
+      {
+        "name": "Frame_Moulding",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6356,
+          0.0133,
+          0.019
+        ],
+        "bboxMax": [
+          0.6357,
+          1.9475,
+          0.054
+        ]
+      },
+      {
+        "name": "Frame_Recess",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.55,
+          0.1,
+          0.0375
+        ],
+        "bboxMax": [
+          0.55,
+          1.862,
+          0.0395
+        ]
+      },
+      {
+        "name": "Frame_Beads",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.529,
+          0.121,
+          0.032
+        ],
+        "bboxMax": [
+          0.5293,
+          1.8408,
+          0.05
+        ]
+      },
+      {
+        "name": "Frame_Acanthus",
+        "parent": "Frame",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.6308,
+          0.0134,
+          0.038
+        ],
+        "bboxMax": [
+          0.6308,
+          1.4152,
+          0.058
+        ]
+      },
+      {
+        "name": "Crest",
+        "parent": "Mirror",
+        "isMesh": false,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": null,
+        "bboxMax": null
+      },
+      {
+        "name": "Crest_Shell",
+        "parent": "Crest",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2843,
+          1.842,
+          -0.012
+        ],
+        "bboxMax": [
+          0.2733,
+          2.1106,
+          0.028
+        ]
+      },
+      {
+        "name": "Crest_Ribs",
+        "parent": "Crest",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.2134,
+          1.8518,
+          0.028
+        ],
+        "bboxMax": [
+          0.2134,
+          2.07,
+          0.036
+        ]
+      },
+      {
+        "name": "Crest_Ornament",
+        "parent": "Crest",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.3635,
+          1.829,
+          -0.034
+        ],
+        "bboxMax": [
+          0.3635,
+          2.2,
+          0.062
+        ]
+      },
+      {
+        "name": "Mirror_Glass",
+        "parent": "Mirror",
+        "isMesh": true,
+        "worldPos": [
+          0,
+          0,
+          0
+        ],
+        "localPos": [
+          0,
+          0,
+          0
+        ],
+        "bboxMin": [
+          -0.508,
+          0.13,
+          -0.004
+        ],
+        "bboxMax": [
+          0.508,
+          1.82,
+          -0.004
+        ]
+      }
+    ]
+  }
+}

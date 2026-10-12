@@ -29,18 +29,18 @@ const HOME_LOOK_POINTS = [
 
 const REDROOM_CAM_POINTS = [
   new THREE.Vector3(0.0, 1.7, 7.5),   // R1: Title & smoke dragon
-  new THREE.Vector3(0.0, 1.8, 4.2),   // R2: Mirror
-  new THREE.Vector3(-2.2, 1.7, 3.6),  // R3: Dress code / left candelabra
-  new THREE.Vector3(0.0, 1.15, 2.4),  // R4: Invitation tray
+  new THREE.Vector3(0.0, 1.8, 4.4),   // R2: Mirror
+  new THREE.Vector3(-1.3, 1.75, 4.8), // R3: Dress code / candelabras on plinths
+  new THREE.Vector3(0.0, 1.38, 3.25), // R4: Invitation tray on round table at (0, 0.85, 2.2)
   new THREE.Vector3(0.0, 2.2, 8.0),   // R5: Wide partners
   new THREE.Vector3(0.0, 1.8, 6.0),   // R6: Outro
 ];
 
 const REDROOM_LOOK_POINTS = [
-  new THREE.Vector3(0.0, 1.7, 0.0),   // R1: Badge
-  new THREE.Vector3(0.0, 1.8, 0.0),   // R2: Mirror
-  new THREE.Vector3(-3.0, 1.6, 0.6),  // R3: Candelabra
-  new THREE.Vector3(0.0, 0.95, 1.4),  // R4: Down 25° at tray
+  new THREE.Vector3(0.0, 1.68, 0.6),  // R1: Badge at (0, 1.7, 0.6) level-framed, table in lower quarter
+  new THREE.Vector3(0.0, 1.5, -0.6),  // R2: Mirror at (0, 0.3, -0.6)
+  new THREE.Vector3(-1.6, 1.65, 0.2), // R3: Left candelabra on plinth
+  new THREE.Vector3(0.0, 0.90, 2.2),  // R4: Down onto tray on table at (0, 0.85, 2.2)
   new THREE.Vector3(0.0, 1.5, 0.0),   // R5: Wide
   new THREE.Vector3(0.0, 1.7, 0.0),   // R6: Badge and mirror
 ];
@@ -163,22 +163,22 @@ export function CameraRig() {
 
     // Apply Part 10 Transition camera moves (driven one-way by frame.transition)
     if (motionEnabled) {
-      if (tr.type === 'T1' && world === 'home' && tr.dollyProgress > 0) {
-        // Part 10 T1 (0.25–1.05 s): Camera pushes through left doorway (dolly 3.2 m)
+      if (tr.type === 'T1' && tr.dollyProgress > 0) {
+        // Part 10 T1: Camera pushes through left doorway at (-1.45, 0, 0)
         const dp = tr.dollyProgress;
-        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, -1.2, dp);
+        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, -1.45, dp);
         targetPos.current.y = THREE.MathUtils.lerp(targetPos.current.y, 1.5, dp);
         targetPos.current.z -= 3.2 * dp;
-        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, -1.2, dp);
+        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, -1.45, dp);
         targetLook.current.y = THREE.MathUtils.lerp(targetLook.current.y, 1.5, dp);
         targetLook.current.z = THREE.MathUtils.lerp(targetLook.current.z, -1.5, dp);
-      } else if (tr.type === 'T2' && world === 'home' && tr.dollyProgress > 0) {
-        // Part 10 T2 (0.25–1.00 s): Camera pushes into right Diwali doorway
+      } else if (tr.type === 'T2' && tr.dollyProgress > 0) {
+        // Part 10 T2: Camera pushes into right Diwali doorway at (1.45, 0, 0)
         const dp = tr.dollyProgress;
-        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, 1.2, dp);
+        targetPos.current.x = THREE.MathUtils.lerp(targetPos.current.x, 1.45, dp);
         targetPos.current.y = THREE.MathUtils.lerp(targetPos.current.y, 1.5, dp);
         targetPos.current.z -= 3.0 * dp;
-        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, 1.2, dp);
+        targetLook.current.x = THREE.MathUtils.lerp(targetLook.current.x, 1.45, dp);
         targetLook.current.y = THREE.MathUtils.lerp(targetLook.current.y, 1.5, dp);
         targetLook.current.z = THREE.MathUtils.lerp(targetLook.current.z, -1.5, dp);
       } else if (tr.type === 'T4' && tr.phase === 'exit' && tr.dollyProgress > 0) {
@@ -211,14 +211,14 @@ export function CameraRig() {
       currentPos.current.copy(targetPos.current);
       currentLook.current.copy(targetLook.current);
     } else {
-      // Smoothly damp camera transform with lambda = 6
-      currentPos.current.x = THREE.MathUtils.damp(currentPos.current.x, targetPos.current.x, 6, delta);
-      currentPos.current.y = THREE.MathUtils.damp(currentPos.current.y, targetPos.current.y, 6, delta);
-      currentPos.current.z = THREE.MathUtils.damp(currentPos.current.z, targetPos.current.z, 6, delta);
+      // Smoothly damp camera transform with lambda = 12
+      currentPos.current.x = THREE.MathUtils.damp(currentPos.current.x, targetPos.current.x, 12, delta);
+      currentPos.current.y = THREE.MathUtils.damp(currentPos.current.y, targetPos.current.y, 12, delta);
+      currentPos.current.z = THREE.MathUtils.damp(currentPos.current.z, targetPos.current.z, 12, delta);
 
-      currentLook.current.x = THREE.MathUtils.damp(currentLook.current.x, targetLook.current.x, 6, delta);
-      currentLook.current.y = THREE.MathUtils.damp(currentLook.current.y, targetLook.current.y, 6, delta);
-      currentLook.current.z = THREE.MathUtils.damp(currentLook.current.z, targetLook.current.z, 6, delta);
+      currentLook.current.x = THREE.MathUtils.damp(currentLook.current.x, targetLook.current.x, 12, delta);
+      currentLook.current.y = THREE.MathUtils.damp(currentLook.current.y, targetLook.current.y, 12, delta);
+      currentLook.current.z = THREE.MathUtils.damp(currentLook.current.z, targetLook.current.z, 12, delta);
     }
 
     camera.position.copy(currentPos.current);

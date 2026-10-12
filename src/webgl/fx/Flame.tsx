@@ -1,112 +1,234 @@
 'use client';
 
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 /**
- * Procedural Camera-Facing Teardrop Flame per BRIEF.md Part 5.3:
- * - Instanced/billboard camera-facing teardrop with core gradient and noise flicker
- * - Additive blending for bloom integration
- * - Zero baked textures
+ * Grounds a standing 3D object using its world-space bounding box (Global Rule 2):
+ * Computes THREE.Box3().setFromObject(obj) and offsets obj.position.y so its lowest
+ * point sits at targetMinY (default y = 0 floor, or plinth/table height).
  */
+export function groundObjectToY(obj: THREE.Object3D, targetMinY = 0): number {
+  obj.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(obj);
+  if (!box.isEmpty() && Number.isFinite(box.min.y)) {
+    const offset = targetMinY - box.min.y;
+    obj.position.y += offset;
+    obj.updateMatrixWorld(true);
+    return offset;
+  }
+  return 0;
+}
 
-const FlameShader = {
+/**
+ * Collects empty anchor nodes (e.g. Flame_Anchor_*, Light_Anchor) from a GLB hierarchy
+ * in natural sorted order (Flame_Anchor_1 .. Flame_Anchor_8, Flame_Anchor_L, Flame_Anchor_R).
+ */
+export function findAnchorNodes(
+  root: THREE.Object3D,
+  prefix = 'Flame_Anchor'
+): THREE.Object3D[] {
+  const anchors: THREE.Object3D[] = [];
+  root.traverse((node) => {
+    if (node.name && node.name.startsWith(prefix)) {
+      anchors.push(node);
+    }
+  });
+  anchors.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  return anchors;
+}
+
+/**
+ * Reads the local-space position of a named anchor relative to the GLB root.
+ * Used when building InstancedMesh props so flames sit on the GLB's own anchor empty.
+ */
+export function getAnchorOffsetFromRoot(
+  root: THREE.Object3D,
+  anchorName = 'Flame_Anchor'
+): THREE.Vector3 {
+  root.updateMatrixWorld(true);
+  const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
+  const target = root.getObjectByName(anchorName);
+  const out = new THREE.Vector3();
+  if (target) {
+    target.getWorldPosition(out);
+    out.applyMatrix4(rootInv);
+  }
+  return out;
+}
+
+const InstancedFlameShader = {
   vertexShader: /* glsl */ `
-    uniform vec2 uScale;
+    attribute float aIntensity;
+    attribute float aPhase;
+    uniform vec2 uBaseScale;
     varying vec2 vUv;
+    varying float vIntensity;
+    varying float vPhase;
+
     void main() {
       vUv = uv;
-      // Billboard to face camera while respecting scale
-      vec4 mvPosition = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
-      mvPosition.xy += position.xy * uScale;
+      vIntensity = aIntensity;
+      vPhase = aPhase;
+
+      // Extract instance world/group position and uniform scale from instanceMatrix
+      vec4 instOrigin = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+      float instScale = length(instanceMatrix[0].xyz);
+
+      vec4 mvPosition = modelViewMatrix * instOrigin;
+      // Offset quad upward so the bottom of the flame core sits right on the anchor empty
+      vec2 quadOffset = vec2(position.x, position.y + 0.22);
+      mvPosition.xy += quadOffset * uBaseScale * instScale;
       gl_Position = projectionMatrix * mvPosition;
     }
   `,
   fragmentShader: /* glsl */ `
     uniform float uTime;
-    uniform float uIntensity;
     uniform vec3 uColorCore;
     uniform vec3 uColorTip;
     varying vec2 vUv;
+    varying float vIntensity;
+    varying float vPhase;
 
     void main() {
-      // Centered UV: x in [-0.5, 0.5], y in [0.0, 1.0]
-      vec2 p = vUv - vec2(0.5, 0.0);
-      
-      // Teardrop shape equation
+      if (vIntensity <= 0.01) discard;
+
+      // Soft additive halo sprite around the flame (Global Rule 7)
+      vec2 haloCoord = (vUv - vec2(0.5, 0.34)) * vec2(2.0, 1.6);
+      float haloDistSq = dot(haloCoord, haloCoord);
+      float halo = exp(-haloDistSq * 5.5) * 0.42;
+
+      // Teardrop flame core mapped to center region of quad
+      vec2 p = vec2((vUv.x - 0.5) * 2.4, (vUv.y - 0.18) * 1.45);
       float y = clamp(p.y, 0.0, 1.0);
-      // Width tapers at top and round bottom
-      float w = sqrt(y) * (1.0 - y) * 1.8;
-      
-      // Flickering horizontal offset
-      float flicker = sin(uTime * 22.0 + y * 6.0) * 0.04 * y;
+      float w = sqrt(y) * (1.0 - y) * 1.65;
+
+      float flicker = sin(uTime * 19.0 + vPhase + y * 5.5) * 0.045 * y
+                    + cos(uTime * 11.3 + vPhase * 1.7) * 0.02 * y;
       float dist = abs(p.x - flicker);
-      
-      if (dist > w || y <= 0.01 || y >= 0.98) {
-        discard;
+
+      float coreMask = 0.0;
+      if (y > 0.01 && y < 0.99 && dist < w) {
+        float edge = 1.0 - smoothstep(0.0, w, dist);
+        float vert = 1.0 - y * 0.85;
+        coreMask = edge * vert;
       }
-      
-      // Normalized radius inside flame
-      float edge = 1.0 - smoothstep(0.0, w, dist);
-      float vert = 1.0 - y;
-      
-      // Inner hot core to outer glow
-      vec3 col = mix(uColorTip, uColorCore, edge * vert * 1.5);
-      float alpha = edge * vert * uIntensity;
-      
-      gl_FragColor = vec4(col * 2.2, alpha);
+
+      if (halo < 0.008 && coreMask <= 0.001) discard;
+
+      vec3 coreCol = mix(uColorTip, uColorCore, clamp(coreMask * 1.6, 0.0, 1.0));
+      vec3 finalCol = uColorTip * halo * 1.35 + coreCol * coreMask * 2.4;
+      float alpha = clamp((halo + coreMask) * vIntensity, 0.0, 1.0);
+
+      gl_FragColor = vec4(finalCol * vIntensity, alpha);
     }
   `,
 };
 
-interface FlameProps {
-  position?: [number, number, number];
+interface AnchorFlamesProps {
+  anchors: THREE.Object3D[];
+  worldId: 'home' | 'redroom' | 'diwali';
   scale?: number;
-  intensity?: number;
+  intensitiesRef?: React.MutableRefObject<number[]>;
+  baseIntensity?: number;
   colorCore?: string;
   colorTip?: string;
 }
 
-export function Flame({
-  position = [0, 0, 0],
-  scale = 0.12,
-  intensity = 1.0,
+/**
+ * Renders camera-facing teardrop flames + additive halo sprites at the exact world
+ * position of each GLB Flame_Anchor_* empty every frame in a single InstancedMesh draw call.
+ */
+export function AnchorFlames({
+  anchors,
+  worldId,
+  scale = 0.22,
+  intensitiesRef,
+  baseIntensity = 1.0,
   colorCore = '#FFF5D0',
-  colorTip = '#FF6A00',
-}: FlameProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const uniforms = useMemo(() => {
-    return {
-      uTime: { value: 0 },
-      uIntensity: { value: intensity },
-      uScale: { value: new THREE.Vector2(scale, scale * 1.8) },
-      uColorCore: { value: new THREE.Color(colorCore) },
-      uColorTip: { value: new THREE.Color(colorTip) },
-    };
-  }, [colorCore, colorTip, intensity, scale]);
+  colorTip = '#FF7A18',
+}: AnchorFlamesProps) {
+  const count = Math.max(1, anchors.length);
+  const meshRef = useRef<THREE.InstancedMesh>(null);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const worldPos = useMemo(() => new THREE.Vector3(), []);
+
+  const { geometry, material, intensityAttr } = useMemo(() => {
+    const geo = new THREE.PlaneGeometry(1, 1);
+    const intensities = new Float32Array(count);
+    const phases = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      intensities[i] = baseIntensity;
+      phases[i] = i * 1.618 * Math.PI;
+    }
+    const iAttr = new THREE.InstancedBufferAttribute(intensities, 1);
+    const pAttr = new THREE.InstancedBufferAttribute(phases, 1);
+    geo.setAttribute('aIntensity', iAttr);
+    geo.setAttribute('aPhase', pAttr);
+
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: InstancedFlameShader.vertexShader,
+      fragmentShader: InstancedFlameShader.fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uBaseScale: { value: new THREE.Vector2(scale, scale * 1.65) },
+        uColorCore: { value: new THREE.Color(colorCore) },
+        uColorTip: { value: new THREE.Color(colorTip) },
+      },
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    return { geometry: geo, material: mat, intensityAttr: iAttr };
+  }, [count, baseIntensity, scale, colorCore, colorTip]);
+
+  useEffect(() => {
+    if (meshRef.current) {
+      meshRef.current.frustumCulled = false;
+    }
+  }, []);
 
   useFrame(() => {
-    uniforms.uTime.value = frame.time;
-    uniforms.uIntensity.value = intensity;
-    uniforms.uScale.value.set(scale, scale * 1.8);
+    const st = useStore.getState();
+    if (st.world !== worldId && st.previousWorld !== worldId) return;
+    if (!meshRef.current || anchors.length === 0) return;
+
+    material.uniforms.uTime.value = frame.time;
+
+    let intensityDirty = false;
+    for (let i = 0; i < anchors.length; i++) {
+      const anchor = anchors[i];
+      anchor.getWorldPosition(worldPos);
+      dummy.position.copy(worldPos);
+      dummy.scale.setScalar(1);
+      dummy.updateMatrix();
+      meshRef.current.setMatrixAt(i, dummy.matrix);
+
+      const targetInt = intensitiesRef?.current?.[i] ?? baseIntensity;
+      if (Math.abs(intensityAttr.getX(i) - targetInt) > 0.001) {
+        intensityAttr.setX(i, targetInt);
+        intensityDirty = true;
+      }
+    }
+    meshRef.current.instanceMatrix.needsUpdate = true;
+    if (intensityDirty) {
+      intensityAttr.needsUpdate = true;
+    }
   });
 
+  if (anchors.length === 0) return null;
+
   return (
-    <group position={position}>
-      {/* Flame Billboard */}
-      <mesh ref={meshRef}>
-        <planeGeometry args={[1, 1]} />
-        <shaderMaterial
-          vertexShader={FlameShader.vertexShader}
-          fragmentShader={FlameShader.fragmentShader}
-          uniforms={uniforms}
-          transparent
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-    </group>
+    <instancedMesh
+      ref={meshRef}
+      args={[geometry, material, count]}
+      frustumCulled={false}
+    />
   );
 }
+
+export { InstancedFlameShader };

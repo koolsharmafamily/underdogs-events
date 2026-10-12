@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 /**
- * Mirror Fog & Finger-Wipe Shader per BRIEF.md Part 8 R2 & R6:
+ * Mirror Fog & Finger-Wipe Shader applied directly to redroom-mirror.glb's Mirror_Glass node:
  * - Condensation drawn over the mirror glass
  * - "RED ROOM" wiped clear as if by a finger (scroll 20% to 60% of R2)
  * - Line 2: blurred dark-red silhouette passes left-to-right behind glass
@@ -29,7 +30,6 @@ const MirrorFogShader = {
     uniform sampler2D uWipeMap;
     varying vec2 vUv;
 
-    // Simple pseudo-noise
     float hash(vec2 p) {
       return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
     }
@@ -42,7 +42,7 @@ const MirrorFogShader = {
       // 2. Sample finger-wipe text mask ("RED ROOM")
       vec4 wipeSample = texture2D(uWipeMap, vUv);
       float isLetter = wipeSample.r;
-      float letterOrder = vUv.x; // wipes left to right
+      float letterOrder = vUv.x;
 
       // Finger wipe removes fog as uWipeProgress increases from 0 to 1
       float wipeReveal = smoothstep(letterOrder - 0.15, letterOrder, uWipeProgress);
@@ -50,8 +50,8 @@ const MirrorFogShader = {
       float fogAmount = clamp(fogBase - clearedFog * 0.95, 0.05, 0.9);
 
       // Deep dark reflective mirror color underneath
-      vec3 mirrorBase = vec3(0.04, 0.01, 0.015);
-      vec3 fogCol = vec3(0.18, 0.08, 0.09);
+      vec3 mirrorBase = vec3(0.05, 0.012, 0.018);
+      vec3 fogCol = vec3(0.20, 0.085, 0.095);
 
       // 3. Passing dark-red silhouette behind glass
       float silDist = distance(vUv, vec2(uSilhouetteX, 0.5));
@@ -69,13 +69,12 @@ const MirrorFogShader = {
         finalCol += (eyeL + eyeR) * ember * uEasterEgg;
       }
 
-      gl_FragColor = vec4(finalCol, 0.92);
+      gl_FragColor = vec4(finalCol, 0.96);
     }
   `,
 };
 
-export function MirrorFog() {
-  const meshRef = useRef<THREE.Mesh>(null);
+export function MirrorFog({ mirrorScene }: { mirrorScene?: THREE.Object3D }) {
   const silhouetteTimer = useRef(0);
   const easterEggTimer = useRef(0);
 
@@ -97,7 +96,6 @@ export function MirrorFog() {
       ctx.letterSpacing = '12px';
       ctx.fillText('RED ROOM', 512, 512);
 
-      // Soft finger blur edge
       ctx.shadowColor = '#ffffff';
       ctx.shadowBlur = 18;
       ctx.fillText('RED ROOM', 512, 512);
@@ -118,7 +116,28 @@ export function MirrorFog() {
     };
   }, [wipeTexture]);
 
+  const fogMaterial = useMemo(() => {
+    return new THREE.ShaderMaterial({
+      vertexShader: MirrorFogShader.vertexShader,
+      fragmentShader: MirrorFogShader.fragmentShader,
+      uniforms,
+      transparent: true,
+      depthWrite: true,
+    });
+  }, [uniforms]);
+
+  // Apply fog shader directly to the Mirror_Glass node inside redroom-mirror.glb
+  useEffect(() => {
+    if (!mirrorScene) return;
+    const glassNode = mirrorScene.getObjectByName('Mirror_Glass') as THREE.Mesh | undefined;
+    if (glassNode && glassNode.isMesh) {
+      glassNode.material = fogMaterial;
+    }
+  }, [mirrorScene, fogMaterial]);
+
   useFrame((_, delta) => {
+    const st = useStore.getState();
+    if (st.world !== 'redroom' && st.previousWorld !== 'redroom') return;
     const t = frame.time;
     const p2 = frame.dampedProgress['R2'] ?? 0;
     const p6 = frame.dampedProgress['R6'] ?? 0;
@@ -157,20 +176,5 @@ export function MirrorFog() {
     }
   });
 
-  return (
-    <mesh
-      ref={meshRef}
-      position={[0, 1.85, -0.38]}
-      scale={[1.15, 1.85, 1]}
-    >
-      <planeGeometry args={[1, 1]} />
-      <shaderMaterial
-        vertexShader={MirrorFogShader.vertexShader}
-        fragmentShader={MirrorFogShader.fragmentShader}
-        uniforms={uniforms}
-        transparent
-        depthWrite={false}
-      />
-    </mesh>
-  );
+  return null;
 }

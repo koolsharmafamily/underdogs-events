@@ -4,8 +4,11 @@ import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 export function Beams() {
+  const world = useStore((s) => s.world);
+  const previousWorld = useStore((s) => s.previousWorld);
   const beamGroupRef = useRef<THREE.Group>(null);
   const beam1Ref = useRef<THREE.Mesh>(null);
   const beam2Ref = useRef<THREE.Mesh>(null);
@@ -13,6 +16,7 @@ export function Beams() {
 
   // Volumetric beam cones sweeping ±18° at 0.05 Hz per Part 5.4
   useFrame(() => {
+    if (world !== 'home' && previousWorld !== 'home') return;
     const t = frame.time;
     const sweep = Math.sin(t * 0.314) * THREE.MathUtils.degToRad(18); // 0.05 Hz
 
@@ -22,7 +26,7 @@ export function Beams() {
   });
 
   return (
-    <group ref={beamGroupRef} name="VolumetricBeams" position={[0, 4.5, -2.5]}>
+    <group ref={beamGroupRef} name="VolumetricBeams" position={[0, 4.5, -3.2]}>
       {/* Beam 1: Magenta (cone) */}
       <mesh
         ref={beam1Ref}
@@ -31,10 +35,10 @@ export function Beams() {
       >
         <coneGeometry args={[1.2, 8.0, 32, 1, true]} />
         <meshBasicMaterial
-          color="#FF4FD8"
+          color="#D73EBC"
           transparent
-          opacity={0.16}
-          side={THREE.DoubleSide}
+          opacity={0.035}
+          side={THREE.FrontSide}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -48,10 +52,10 @@ export function Beams() {
       >
         <coneGeometry args={[1.2, 8.0, 32, 1, true]} />
         <meshBasicMaterial
-          color="#FF4FD8"
+          color="#D73EBC"
           transparent
-          opacity={0.16}
-          side={THREE.DoubleSide}
+          opacity={0.035}
+          side={THREE.FrontSide}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
@@ -67,8 +71,8 @@ export function Beams() {
         <meshBasicMaterial
           color="#FFFFFF"
           transparent
-          opacity={0.12}
-          side={THREE.DoubleSide}
+          opacity={0.02}
+          side={THREE.FrontSide}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />

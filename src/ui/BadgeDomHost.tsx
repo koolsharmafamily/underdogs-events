@@ -24,8 +24,9 @@ export function BadgeDomHost({
   const hoverDoor = useStore((s) => s.hoverDoor)
   const blinkTrigger = useStore((s) => s.blinkTrigger)
   const triggerBlink = useStore((s) => s.triggerBlink)
-
-  const isSvgVisible = Boolean(showSvgPreview)
+  const tier = useStore((s) => s.tier)
+  const isT0 = tier === 'T0'
+  const isVisible = Boolean(showSvgPreview) || isT0
 
   const [blinkL, setBlinkL] = useState(false)
   const [blinkR, setBlinkR] = useState(false)
@@ -95,15 +96,27 @@ export function BadgeDomHost({
           : undefined,
       }}
     >
-      {isSvgVisible && (
-        <UnderdogsBadgeSvg
-          skin={skin}
-          size="100%"
-          blinkingLeft={blinkL}
-          blinkingRight={blinkR}
-          tongueAngle={tongueAngle}
-          className="drop-shadow-[0_0_48px_rgba(255,255,255,0.08)]"
-        />
+      {isVisible && (
+        skin === 'home' ? (
+          <picture className="w-full h-full flex items-center justify-center">
+            <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
+            <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
+            <img
+              src="/media/badge-enamel-still.webp"
+              alt="Underdogs Enamel Badge"
+              className="w-full h-full object-contain select-none pointer-events-none drop-shadow-[0_12px_40px_rgba(173,12,128,0.25)]"
+            />
+          </picture>
+        ) : (
+          <UnderdogsBadgeSvg
+            skin={skin}
+            size="100%"
+            blinkingLeft={blinkL}
+            blinkingRight={blinkR}
+            tongueAngle={tongueAngle}
+            className="drop-shadow-[0_0_48px_rgba(255,255,255,0.08)]"
+          />
+        )
       )}
     </button>
   )

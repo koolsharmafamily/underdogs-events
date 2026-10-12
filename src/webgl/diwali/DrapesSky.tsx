@@ -5,9 +5,11 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
+import { groundObjectToY } from '../fx/Flame';
 
 /**
- * Procedural layered Haveli silhouette texture (2-3 layered parallax planes of arches and palms).
+ * Procedural layered Haveli silhouette texture (layered parallax planes of arches and palms).
  */
 function createHaveliTexture(layer: number): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
@@ -17,17 +19,14 @@ function createHaveliTexture(layer: number): THREE.CanvasTexture {
 
   ctx.clearRect(0, 0, 1024, 512);
 
-  // Colors: rani-deep and indigo gradients
   const fillColor = layer === 0 ? '#1C061E' : layer === 1 ? '#2E0B2B' : '#45103A';
   ctx.fillStyle = fillColor;
 
-  // Draw haveli silhouette base
   ctx.beginPath();
   const baseY = 340 + layer * 35;
   ctx.moveTo(0, 512);
   ctx.lineTo(0, baseY);
 
-  // Repeat arch pattern across width
   const arches = 6;
   const archW = 1024 / arches;
   for (let i = 0; i < arches; i++) {
@@ -35,7 +34,6 @@ function createHaveliTexture(layer: number): THREE.CanvasTexture {
     const xMid = x0 + archW * 0.5;
     const x1 = (i + 1) * archW;
 
-    // Jharokha / scalloped arch top
     const peakY = baseY - 70 - (i % 2 === 0 ? 30 : 0) + layer * 15;
     ctx.lineTo(x0, baseY - 20);
     ctx.quadraticCurveTo(x0 + archW * 0.2, peakY, xMid, peakY - 15);
@@ -47,7 +45,6 @@ function createHaveliTexture(layer: number): THREE.CanvasTexture {
   ctx.closePath();
   ctx.fill();
 
-  // Add palm tree silhouettes at edges
   if (layer === 0) {
     const drawPalm = (px: number, py: number) => {
       ctx.strokeStyle = fillColor;
@@ -57,12 +54,16 @@ function createHaveliTexture(layer: number): THREE.CanvasTexture {
       ctx.quadraticCurveTo(px + 15, py + 80, px + 25, py);
       ctx.stroke();
 
-      // Palm fronds
       ctx.lineWidth = 4;
       for (let a = -1.2; a <= 1.2; a += 0.35) {
         ctx.beginPath();
         ctx.moveTo(px + 25, py);
-        ctx.quadraticCurveTo(px + 25 + Math.cos(a) * 60, py + Math.sin(a) * 40 - 20, px + 25 + Math.cos(a) * 80, py + Math.sin(a) * 60 + 10);
+        ctx.quadraticCurveTo(
+          px + 25 + Math.cos(a) * 60,
+          py + Math.sin(a) * 40 - 20,
+          px + 25 + Math.cos(a) * 80,
+          py + Math.sin(a) * 60 + 10
+        );
         ctx.stroke();
       }
     };
@@ -78,20 +79,36 @@ function createHaveliTexture(layer: number): THREE.CanvasTexture {
 export function DrapesSky() {
   const drapesGltf = useGLTF('/models/curtain-open-diwali.glb');
 
-  const backDrapeRef = useRef<THREE.Group>(null);
   const skyGroupRef = useRef<THREE.Group>(null);
   const haveli1Ref = useRef<THREE.Mesh>(null);
   const haveli2Ref = useRef<THREE.Mesh>(null);
 
-  const clonedDrapes = useMemo(() => drapesGltf.scene.clone(true), [drapesGltf.scene]);
+  // ONE instance of curtain-open-diwali.glb as front proscenium; back_L and back_R lift in D2
+  const { prosceniumScene, backL, backR, backInitial } = useMemo(() => {
+    const scene = drapesGltf.scene.clone(true);
+    groundObjectToY(scene, 0);
 
-  // Haveli textures
+    const bL = scene.getObjectByName('back_L') ?? null;
+    const bR = scene.getObjectByName('back_R') ?? null;
+
+    return {
+      prosceniumScene: scene,
+      backL: bL,
+      backR: bR,
+      backInitial: {
+        posYL: bL ? bL.position.y : 2.25,
+        scaleYL: bL ? bL.scale.y : 2.25,
+        posYR: bR ? bR.position.y : 2.25,
+        scaleYR: bR ? bR.scale.y : 2.25,
+      },
+    };
+  }, [drapesGltf.scene]);
+
   const [tex1, tex2] = useMemo(() => {
     if (typeof document === 'undefined') return [null, null];
     return [createHaveliTexture(0), createHaveliTexture(1)];
   }, []);
 
-  // Sky gradient plane
   const skyTexture = useMemo(() => {
     if (typeof document === 'undefined') return null;
     const canvas = document.createElement('canvas');
@@ -99,7 +116,6 @@ export function DrapesSky() {
     canvas.height = 512;
     const ctx = canvas.getContext('2d')!;
 
-    // Night sky gradient: --dw-night (#14161F) to deep violet (#2A0A1C to #3E0C2D)
     const grad = ctx.createLinearGradient(0, 0, 0, 512);
     grad.addColorStop(0, '#0E1018');
     grad.addColorStop(0.45, '#1B142A');
@@ -115,24 +131,39 @@ export function DrapesSky() {
   }, []);
 
   useFrame(() => {
+    const st = useStore.getState();
+    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
     const p2 = frame.dampedProgress['D2'] ?? 0;
-    // From line 3 (p2 >= 0.4), the back drapes lift:
-    // velvet panels rise with folds bunching at the top
-    const liftP = THREE.MathUtils.clamp((p2 - 0.38) / 0.5, 0, 1);
-    const easedLift = THREE.MathUtils.smoothstep(liftP, 0, 1);
 
-    if (backDrapeRef.current) {
-      // Lift upward by 4.2m and bunch scale Y slightly
-      backDrapeRef.current.position.y = easedLift * 4.2;
-      backDrapeRef.current.scale.y = 1.0 - easedLift * 0.35;
+    // From line 3 (p2 >= 0.35), back_L and back_R lift: translate up + compress toward top (y = 4.5)
+    const liftP = THREE.MathUtils.clamp((p2 - 0.35) / 0.48, 0, 1);
+    const easedLift = THREE.MathUtils.smoothstep(liftP, 0, 1);
+    const gatherFactor = 1.0 - easedLift * 0.86; // Compresses drape height toward valance at y = 4.5
+
+    if (backL) {
+      backL.scale.y = backInitial.scaleYL * gatherFactor;
+      if (backInitial.posYL > 0.1) {
+        // Mesh origin at center (2.25) with top at 4.5
+        backL.position.y = 4.5 - backInitial.posYL * gatherFactor;
+      } else {
+        // Mesh origin at bottom (0) with top at 4.5
+        backL.position.y = 4.5 * (1.0 - gatherFactor);
+      }
+    }
+
+    if (backR) {
+      backR.scale.y = backInitial.scaleYR * gatherFactor;
+      if (backInitial.posYR > 0.1) {
+        backR.position.y = 4.5 - backInitial.posYR * gatherFactor;
+      } else {
+        backR.position.y = 4.5 * (1.0 - gatherFactor);
+      }
     }
 
     if (skyGroupRef.current) {
-      // Fade in sky opacity / presence
       skyGroupRef.current.position.y = THREE.MathUtils.lerp(-1.2, 0.0, easedLift);
     }
 
-    // Parallax on haveli layers via pointer
     const ptrX = frame.pointer.damped.x;
     if (haveli1Ref.current) {
       haveli1Ref.current.position.x = ptrX * 0.25;
@@ -184,9 +215,9 @@ export function DrapesSky() {
         )}
       </group>
 
-      {/* Back Velvet Drapes that lift on D2 */}
-      <group ref={backDrapeRef} position={[0, 0, -3.2]}>
-        <primitive object={clonedDrapes} />
+      {/* ONE instance of curtain-open-diwali.glb as front proscenium (panel_L/R, valance, tiebacks) + lifting back_L/back_R */}
+      <group name="DiwaliProsceniumDrapes" position={[0, 0, -0.4]} scale={[1, 1, 1]}>
+        <primitive object={prosceniumScene} />
       </group>
     </group>
   );

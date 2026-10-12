@@ -55,7 +55,7 @@ export function PostFX() {
         offset={0.15}
         darkness={vignetteDarkness}
       />
-      <ToneMapping mode={ToneMappingMode.AGX} />
+      <ToneMapping mode={ToneMappingMode.NEUTRAL} />
     </EffectComposer>
   );
 }

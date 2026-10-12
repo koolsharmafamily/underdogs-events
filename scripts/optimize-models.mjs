@@ -49,19 +49,37 @@ console.log(`Processing ${files.length} GLB files from ${srcDir}...`);
 
 const report = [];
 
+const COPY_VERBATIM = new Set([
+  'badge-enamel.glb',
+  'badge-neon.glb',
+  'badge-jewelled.glb',
+  'diwali-diya-brass.glb',
+  'diwali-diya-terracotta.glb',
+  'diwali-kandil.glb',
+  'diwali-marigold.glb',
+  'diwali-rose-petal.glb',
+  'diwali-card.glb',
+  'redroom-candle.glb',
+  'redroom-invitation.glb',
+]);
+
 for (const file of files) {
   const inPath = path.join(srcDir, file);
   const outPath = path.join(destDir, file);
 
-  console.log(`\nOptimizing ${file}...`);
-  try {
-    const extraFlags = file.startsWith('badge-') ? ' --join false --flatten false' : '';
-    execSync(
-      `npx @gltf-transform/cli optimize "${inPath}" "${outPath}" --compress meshopt --texture-compress webp --texture-size 1024${extraFlags}`,
-      { stdio: 'pipe' }
-    );
-  } catch {
+  if (COPY_VERBATIM.has(file)) {
+    console.log(`\nCopying original ${file} verbatim...`);
     fs.copyFileSync(inPath, outPath);
+  } else {
+    console.log(`\nOptimizing ${file} (preserving full scene graph & anchors)...`);
+    try {
+      execSync(
+        `npx @gltf-transform/cli optimize "${inPath}" "${outPath}" --compress meshopt --texture-compress webp --texture-size 1024 --join false --flatten false --prune false --palette false --simplify false`,
+        { stdio: 'pipe' }
+      );
+    } catch {
+      fs.copyFileSync(inPath, outPath);
+    }
   }
 
   const stat = fs.statSync(outPath);

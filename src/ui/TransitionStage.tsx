@@ -41,13 +41,13 @@ export function TransitionStage() {
       {/* Solid dark / film-cut veil */}
       <div
         ref={veilRef}
-        className="absolute inset-0 bg-[#060101] opacity-0"
+        className="pointer-events-none absolute inset-0 bg-[#060101] opacity-0"
       />
 
       {/* Warm white-gold exposure wash (T2 & T3 Diwali flash) */}
       <div
         ref={washRef}
-        className="absolute inset-0 opacity-0"
+        className="pointer-events-none absolute inset-0 opacity-0"
         style={{
           background:
             'radial-gradient(circle at 58% 50%, #FFFDF5 0%, #FFE494 48%, #D4AF6A 100%)',
@@ -58,12 +58,12 @@ export function TransitionStage() {
       <div
         ref={curtainWrapRef}
         data-theme="redroom"
-        className="absolute inset-0 opacity-0"
+        className="pointer-events-none absolute inset-0 opacity-0"
       >
         {/* Left Velvet Curtain Panel (52% width for seamless overlap at centre) */}
         <div
           ref={leftCurtainRef}
-          className="transition-curtain-left absolute inset-y-0 left-0 w-[52%] origin-left"
+          className="pointer-events-none transition-curtain-left absolute inset-y-0 left-0 w-[52%] origin-left"
           style={{
             transform: 'translate3d(-102%, 0, 0)',
             background:
@@ -75,7 +75,7 @@ export function TransitionStage() {
         {/* Right Velvet Curtain Panel */}
         <div
           ref={rightCurtainRef}
-          className="transition-curtain-right absolute inset-y-0 right-0 w-[52%] origin-right"
+          className="pointer-events-none transition-curtain-right absolute inset-y-0 right-0 w-[52%] origin-right"
           style={{
             transform: 'translate3d(102%, 0, 0)',
             background:

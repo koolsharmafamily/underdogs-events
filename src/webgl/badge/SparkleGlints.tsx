@@ -78,17 +78,14 @@ export function SparkleGlints({ active }: SparkleGlintsProps) {
         // Twinkle pulse: mostly subtle, spikes sharply
         const wave = Math.sin(t * p.speed + p.phase);
         const intensity = Math.pow(Math.max(0, wave), 4);
-        m.scale.setScalar(0.04 + intensity * 0.09);
-        (m.material as THREE.MeshBasicMaterial).opacity = 0.2 + intensity * 0.8;
+        m.scale.setScalar(0.03 + intensity * 0.09);
         m.rotation.z = t * 0.5 + p.phase;
       }
     }
   });
 
-  if (!active) return null;
-
   return (
-    <group ref={groupRef} name="SparkleGlints">
+    <group ref={groupRef} name="SparkleGlints" visible={active}>
       {glintPoints.map((p, idx) => (
         <mesh
           key={idx}

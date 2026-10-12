@@ -48,13 +48,14 @@ async function buildPosters() {
     console.log(`✓ Created ${path.relative(rootDir, outOgDiwali)} (1200x630)`);
   }
 
-  // 2. Home enamel badge capture from build (Part 13.7 & 13.8) — clean crop of the 3D enamel badge & stage
+  // 2. Home enamel badge capture (Part 13.7 & 13.8) — clean composition with authentic pink enamel badge
   const homePosterWebp = path.join(mediaDir, 'home-poster.webp');
   const ogHomePng = path.join(mediaDir, 'og-home.png');
+  const badgeStillPath = path.join(mediaDir, 'badge-enamel-still.png');
 
-  if (fs.existsSync(ARTIFACT_HOME_CAPTURE)) {
-    const badgeCropBuffer = await sharp(ARTIFACT_HOME_CAPTURE)
-      .extract({ left: 710, top: 180, width: 420, height: 420 })
+  if (fs.existsSync(badgeStillPath)) {
+    const badgeResized440 = await sharp(badgeStillPath)
+      .resize(440, 440)
       .toBuffer();
 
     await sharp({
@@ -65,10 +66,14 @@ async function buildPosters() {
         background: { r: 7, g: 9, b: 13, alpha: 1 },
       },
     })
-      .composite([{ input: badgeCropBuffer, left: 760, top: 240 }])
+      .composite([{ input: badgeResized440, left: 760, top: 230 }])
       .webp({ quality: 90 })
       .toFile(homePosterWebp);
-    console.log(`✓ Created ${path.relative(rootDir, homePosterWebp)} from 3D enamel badge build capture`);
+    console.log(`✓ Created ${path.relative(rootDir, homePosterWebp)} from authentic pink badge still`);
+
+    const badgeResized360 = await sharp(badgeStillPath)
+      .resize(360, 360)
+      .toBuffer();
 
     await sharp({
       create: {
@@ -78,10 +83,10 @@ async function buildPosters() {
         background: { r: 7, g: 9, b: 13, alpha: 1 },
       },
     })
-      .composite([{ input: badgeCropBuffer, gravity: 'center' }])
+      .composite([{ input: badgeResized360, left: 420, top: 135 }])
       .png({ compressionLevel: 9 })
       .toFile(ogHomePng);
-    console.log(`✓ Created ${path.relative(rootDir, ogHomePng)} (1200x630) from 3D enamel badge build capture`);
+    console.log(`✓ Created ${path.relative(rootDir, ogHomePng)} (1200x630) from authentic pink badge still`);
   }
 
   console.log('All posters and Open Graph assets generated successfully!');

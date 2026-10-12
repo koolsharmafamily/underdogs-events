@@ -51,12 +51,24 @@ export function DiwaliView() {
       return
     }
 
+    const prev = {
+      line: 0,
+      sky: false,
+    }
+
     const onTick = () => {
       const p2 = frame.progress.D2 ?? 0
       const idx = Math.min(4, Math.floor(p2 * 5))
-      setActiveStoryLine(idx)
+      if (idx !== prev.line) {
+        prev.line = idx
+        setActiveStoryLine(idx)
+      }
       // From line 3 (idx >= 2) the back drapes lift to reveal the night sky (Part 9 D2)
-      setSkyRevealed(idx >= 2)
+      const nextSky = idx >= 2
+      if (nextSky !== prev.sky) {
+        prev.sky = nextSky
+        setSkyRevealed(nextSky)
+      }
     }
 
     gsap.ticker.add(onTick)
@@ -164,12 +176,12 @@ export function DiwaliView() {
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
-                      className={`font-bodoni italic text-display-l font-medium text-[var(--dw-ivory)] balance-heading transition-all duration-700 ${
+                      className={`font-bodoni italic text-display-l font-medium text-[var(--dw-ivory)] balance-heading transition-all ${
                         isCurrent
-                          ? 'relative opacity-100 translate-y-0'
+                          ? 'duration-[650ms] relative opacity-100 translate-y-0'
                           : isPast
-                            ? 'pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10'
-                            : 'pointer-events-none absolute inset-x-0 opacity-0 translate-y-10'
+                            ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10'
+                            : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10'
                       }`}
                     >
                       {line}
@@ -226,7 +238,7 @@ export function DiwaliView() {
         </div>
       </div>
 
-      {/* D3 · The invitation (180vh, pinned) */}
+      {/* D3 · The invitation (130vh, pinned) */}
       <section
         id="diwali-invitation"
         ref={d3Ref}
@@ -248,12 +260,12 @@ export function DiwaliView() {
         </div>
       </section>
 
-      {/* D4 · Now showing: the official teaser (100vh, not pinned) */}
+      {/* D4 · Now showing: the official teaser (80vh, not pinned) */}
       <section
         ref={d4Ref}
         data-scene="D4"
         aria-labelledby="diwali-teaser-label"
-        className="relative min-h-[100svh] flex flex-col items-center justify-center py-24"
+        className="relative scene-d4 flex flex-col items-center justify-center py-20"
       >
         <div className="site-container flex flex-col items-center gap-8">
           <h2

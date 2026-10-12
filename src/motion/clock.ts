@@ -33,7 +33,9 @@ export function startClock() {
   })
 
   const lenis = new Lenis({
-    lerp: 0.09,
+    lerp: 0.12,
+    wheelMultiplier: 1.15,
+    touchMultiplier: 1.4,
     smoothWheel: true,
     syncTouch: false,
     autoRaf: false,
@@ -143,22 +145,22 @@ export function startClock() {
     const targetPx = frame.pointer.ndc.x * decayFactor
     const targetPy = frame.pointer.ndc.y * decayFactor
 
-    frame.pointer.damped.x = damp(frame.pointer.damped.x, targetPx, 8, dt)
-    frame.pointer.damped.y = damp(frame.pointer.damped.y, targetPy, 8, dt)
+    frame.pointer.damped.x = damp(frame.pointer.damped.x, targetPx, 10, dt)
+    frame.pointer.damped.y = damp(frame.pointer.damped.y, targetPy, 10, dt)
 
-    // Update damped progress for all active scenes (lambda = 4 per Part 6.2)
+    // Update damped progress for all active scenes (lambda = 7)
     const snap = frame.snapCamera
     for (const key in frame.progress) {
       const raw = frame.progress[key] ?? 0
       const prev = frame.dampedProgress[key] ?? raw
-      frame.dampedProgress[key] = snap ? raw : damp(prev, raw, 4, dt)
+      frame.dampedProgress[key] = snap ? raw : damp(prev, raw, 7, dt)
     }
 
     webglAdvance(time)
   }
 
   gsap.ticker.add(tick)
-  gsap.ticker.lagSmoothing(500, 33)
+  gsap.ticker.lagSmoothing(0)
 
   return {
     lenis,

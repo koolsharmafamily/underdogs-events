@@ -4,6 +4,7 @@ import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 interface FireworkBurst {
   active: boolean;
@@ -155,6 +156,8 @@ export function Fireworks({ particlesPerBurst = 300 }: { particlesPerBurst?: num
   };
 
   useFrame((_, delta) => {
+    const st = useStore.getState();
+    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
     const t = frame.time;
     const p2 = frame.dampedProgress['D2'] ?? 0;
     const p5 = frame.dampedProgress['D5'] ?? 0;

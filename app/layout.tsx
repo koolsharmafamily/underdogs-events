@@ -57,6 +57,17 @@ export default function RootLayout({
       data-motion="on"
       className={`${coreFontVariables} ${redRoomFontVariables} ${diwaliFontVariables}`}
     >
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/media/badge-enamel-still.webp"
+          imageSrcSet="/media/badge-enamel-still-512.webp 768w, /media/badge-enamel-still.webp 1024w"
+          imageSizes="(max-width: 768px) 512px, 1024px"
+          fetchPriority="high"
+          type="image/webp"
+        />
+      </head>
       <body>
         {/* Skip link comes first in tab order (Part 11) */}
         <a href="#main-content" className="skip-link">

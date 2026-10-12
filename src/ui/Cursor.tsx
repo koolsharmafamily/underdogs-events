@@ -90,11 +90,7 @@ export function Cursor() {
       }`}
     >
       {effectiveWorld === 'home' && (
-        <div
-          className={`flex items-center justify-center transition-transform duration-250 ${
-            hoveringLink ? 'scale-125 rotate-45' : 'scale-100 rotate-0'
-          }`}
-        >
+        <div className="flex items-center justify-center">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path
               d="M1 1L9 9M9 1L1 9"
@@ -106,22 +102,14 @@ export function Cursor() {
       )}
 
       {effectiveWorld === 'redroom' && (
-        <div
-          className={`flex items-center justify-center rounded-full transition-all duration-250 ${
-            hoveringLink
-              ? 'h-2.5 w-2.5 bg-[#FF2A1F] shadow-[0_0_14px_3px_rgba(255,42,31,0.85)]'
-              : 'h-1.5 w-1.5 bg-[#FF2A1F] shadow-[0_0_10px_2px_rgba(255,42,31,0.75)]'
-          }`}
-        />
+        <div className="flex items-center justify-center">
+          <div className="h-1.5 w-1.5 rounded-full bg-[#FF2A1F]" />
+        </div>
       )}
 
       {effectiveWorld === 'diwali' && (
-        <div
-          className={`flex items-center justify-center text-[#F2D38B] transition-transform duration-250 ${
-            hoveringLink ? 'scale-150 rotate-45' : 'scale-100 rotate-0'
-          }`}
-        >
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+        <div className="flex items-center justify-center text-[#F2D38B]">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor">
             <path d="M6 0L7.35 4.65L12 6L7.35 7.35L6 12L4.65 7.35L0 6L4.65 4.65L6 0Z" />
           </svg>
         </div>

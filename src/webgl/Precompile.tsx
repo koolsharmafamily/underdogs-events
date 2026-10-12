@@ -4,11 +4,12 @@ import { useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { useStore } from '@/state/store';
-import { createSkinMaterials } from './badge/skins';
 
 /**
  * Precompiles all shaders, materials, and dissolve combinations asynchronously on load (BRIEF.md Part 5.1).
- * Ensures zero shader compilation hitches occur during scroll interaction or world dissolve transitions.
+ * Traverses all objects, temporarily forces visibility and disables frustum culling across all 3 world lighting
+ * configurations (Home, Red Room, Diwali) so renderer.compileAsync warms up every single WebGLProgram ahead of time,
+ * ensuring zero shader compilation hitches occur during transitions.
  */
 export function Precompile() {
   const { gl, scene, camera } = useThree();
@@ -17,50 +18,99 @@ export function Precompile() {
     let cancelled = false;
 
     if (gl && scene && camera && typeof gl.compileAsync === 'function') {
-      // Build dummy test mesh with dissolve uniforms for precompilation
-      const dummyGroup = new THREE.Group();
-      const geom = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+      const warmAllPrograms = async () => {
+        const homeStage = scene.getObjectByName('HomeStageGroup');
+        const redRoomSet = scene.getObjectByName('RedRoomSetGroup');
+        const diwaliSet = scene.getObjectByName('DiwaliSetGroup');
+        const enamelSkin = scene.getObjectByName('EnamelSkin');
+        const neonSkin = scene.getObjectByName('NeonSkin');
+        const jewelledSkin = scene.getObjectByName('JewelledSkin');
 
-      const dummyUniforms = {
-        uDissolve: { value: 0.5 },
-        uRole: { value: 0.0 },
-        uEdgeColor: { value: new THREE.Color('#FF4A1F') },
-        uEdgeIntensity: { value: 5.0 },
-        uEdgeWidth: { value: 0.06 },
+        // Helper: force visibility and disable frustum culling for a subtree
+        const enableSubtree = (root: THREE.Object3D) => {
+          const altered: { obj: THREE.Object3D; wasVisible: boolean; wasCulled: boolean }[] = [];
+          root.traverse((obj) => {
+            const wasVisible = obj.visible;
+            const wasCulled = (obj as THREE.Mesh).frustumCulled ?? true;
+            if (!wasVisible || wasCulled) {
+              altered.push({ obj, wasVisible, wasCulled });
+              obj.visible = true;
+              (obj as THREE.Mesh).frustumCulled = false;
+            }
+          });
+          return altered;
+        };
+
+        const restoreSubtree = (altered: { obj: THREE.Object3D; wasVisible: boolean; wasCulled: boolean }[]) => {
+          altered.forEach(({ obj, wasVisible, wasCulled }) => {
+            obj.visible = wasVisible;
+            (obj as THREE.Mesh).frustumCulled = wasCulled;
+          });
+        };
+
+        // Ensure badge skins are all active and uncullable during precompilation
+        const badgeAltered: { obj: THREE.Object3D; wasVisible: boolean; wasCulled: boolean }[] = [];
+        [enamelSkin, neonSkin, jewelledSkin].forEach((skin) => {
+          if (skin) {
+            badgeAltered.push(...enableSubtree(skin));
+          }
+        });
+
+        // 1. Warm Home lighting setup
+        if (homeStage) {
+          const homeAltered = enableSubtree(homeStage);
+          if (redRoomSet) redRoomSet.visible = false;
+          if (diwaliSet) diwaliSet.visible = false;
+          await gl.compileAsync(scene, camera);
+          restoreSubtree(homeAltered);
+        }
+
+        // 2. Warm Red Room lighting setup
+        if (redRoomSet) {
+          if (homeStage) homeStage.visible = false;
+          const redAltered = enableSubtree(redRoomSet);
+          if (diwaliSet) diwaliSet.visible = false;
+          await gl.compileAsync(scene, camera);
+          restoreSubtree(redAltered);
+        }
+
+        // 3. Warm Diwali lighting setup
+        if (diwaliSet) {
+          if (homeStage) homeStage.visible = false;
+          if (redRoomSet) redRoomSet.visible = false;
+          const diwaliAltered = enableSubtree(diwaliSet);
+          await gl.compileAsync(scene, camera);
+          restoreSubtree(diwaliAltered);
+        }
+
+        // Restore badge skins
+        restoreSubtree(badgeAltered);
+
+        // Restore active world visibility
+        const currentWorld = useStore.getState().world;
+        if (homeStage) homeStage.visible = currentWorld === 'home';
+        if (redRoomSet) redRoomSet.visible = currentWorld === 'redroom';
+        if (diwaliSet) diwaliSet.visible = currentWorld === 'diwali';
+
+        const activeSkin =
+          currentWorld === 'redroom' ? 'neon' : currentWorld === 'diwali' ? 'jewelled' : 'enamel';
+        if (enamelSkin) enamelSkin.visible = activeSkin === 'enamel';
+        if (neonSkin) neonSkin.visible = activeSkin === 'neon';
+        if (jewelledSkin) jewelledSkin.visible = activeSkin === 'jewelled';
+
+        if (!cancelled) {
+          useStore.getState().setPrecompiled(true);
+        }
       };
 
-      // Instantiate materials for all skins with dissolve
-      const enamelMats = createSkinMaterials('enamel', dummyUniforms);
-      const neonMats = createSkinMaterials('neon', dummyUniforms);
-      const jewelledMats = createSkinMaterials('jewelled', dummyUniforms);
-
-      const allMats = [
-        ...Object.values(enamelMats),
-        ...Object.values(neonMats),
-        ...Object.values(jewelledMats),
-      ];
-
-      allMats.forEach((mat) => {
-        if (mat instanceof THREE.Material) {
-          dummyGroup.add(new THREE.Mesh(geom, mat));
+      warmAllPrograms().catch((err) => {
+        console.warn('Precompile error:', err);
+        if (!cancelled) {
+          useStore.getState().setPrecompiled(true);
         }
       });
-
-      scene.add(dummyGroup);
-
-      gl.compileAsync(scene, camera)
-        .then(() => {
-          if (!cancelled) {
-            scene.remove(dummyGroup);
-            geom.dispose();
-            useStore.getState().setPrecompiled(true);
-          }
-        })
-        .catch(() => {
-          scene.remove(dummyGroup);
-          geom.dispose();
-          useStore.getState().setPrecompiled(true);
-        });
+    } else {
+      useStore.getState().setPrecompiled(true);
     }
 
     return () => {

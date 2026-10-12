@@ -129,6 +129,9 @@ function syncCurtainDom(closeNorm: number) {
 
 function resetStageComplete() {
   const store = useStore.getState()
+  const lenis = getLenis()
+  if (lenis) lenis.start()
+
   frame.transition.t = 0
   frame.transition.elapsed = 0
   frame.transition.duration = 0
@@ -145,7 +148,10 @@ function resetStageComplete() {
   store.setTargetSkinOverride(null)
   store.setTransition('none', false)
 
-  if (stageRefs?.stageEl) gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
+  if (stageRefs?.stageEl) {
+    stageRefs.stageEl.style.pointerEvents = 'none'
+    gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
+  }
   if (stageRefs?.veilEl) gsap.set(stageRefs.veilEl, { opacity: 0 })
   if (stageRefs?.washEl) gsap.set(stageRefs.washEl, { opacity: 0 })
   syncCurtainDom(0)
@@ -169,9 +175,17 @@ export function notifyRouteEntered() {
     pendingEnterCallback = null
     // Run on next animation frame so layout & ScrollTrigger have settled
     requestAnimationFrame(() => {
-      ScrollTrigger.refresh()
-      frame.snapCamera = true
-      fn()
+      try {
+        ScrollTrigger.refresh()
+      } catch (e) {
+        // Safe layout refresh catch
+      }
+      try {
+        fn()
+      } catch (e) {
+        console.error('Enter animation error:', e)
+        resetStageComplete()
+      }
     })
   }
 }
@@ -303,6 +317,12 @@ export function runRouteTransition(
   }
   pendingEnterCallback = null
 
+  // Stop Lenis during exit to prevent visible scroll jump (Part B Item 7)
+  const lenis = getLenis()
+  if (lenis) {
+    lenis.stop()
+  }
+
   // Initialize frame.transition state
   store.setTransition(type, true)
   frame.transition.type = type
@@ -336,16 +356,37 @@ export function runRouteTransition(
   // Helper to await destination mount at cover point (max wait 1.2 s per Part 13.6)
   const triggerCoverAndWaitForMount = (enterFn: () => void) => {
     frame.transition.phase = 'covered'
-    pendingEnterCallback = enterFn
+
+    // Scroll to top or restored position with { immediate: true } while covered per Part B Item 7
+    const targetScroll =
+      toWorld === 'home'
+        ? (store.t4ScrollTarget === 'H5' ? getSavedRouteScroll('/') : 0)
+        : 0
+    if (lenis) {
+      lenis.scrollTo(targetScroll, { immediate: true })
+    } else if (typeof window !== 'undefined') {
+      window.scrollTo({ top: targetScroll, behavior: 'instant' as ScrollBehavior })
+    }
+
+    pendingEnterCallback = () => {
+      if (lenis) lenis.start()
+      enterFn()
+    }
     if (typeof window !== 'undefined') {
       pendingEnterFallbackTimer = window.setTimeout(() => {
         if (pendingEnterCallback) {
           const fn = pendingEnterCallback
           pendingEnterCallback = null
-          fn()
+          try {
+            fn()
+          } catch (e) {
+            console.error('Fallback enter animation error:', e)
+            resetStageComplete()
+          }
         }
       }, 1200)
     }
+    console.log('[Transition Debug] triggerCoverAndWaitForMount called, setting pendingEnterCallback and invoking onCover()...');
     onCover()
   }
 
@@ -377,268 +418,13 @@ export function runRouteTransition(
   }
 
   // ---------------------------------------------------------------------------
-  // T1 · Home → The Red Room (≈ 2.40 s, cover at 1.35 s)
+  // T1 · Home → The Red Room (1.60 s total, cover at 0.90 s)
   // ---------------------------------------------------------------------------
   if (type === 'T1') {
-    frame.transition.duration = 2.4
-    frame.transition.coverTime = 1.35
+    frame.transition.duration = 1.6
+    frame.transition.coverTime = 0.9
     setCurtainPalette('redroom')
     gsap.set(veilEl, { backgroundColor: '#060101', opacity: 0 })
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 2.4
-        syncCurtainDom(frame.transition.curtainClose)
-      },
-      onComplete: () => {
-        syncCurtainDom(1)
-        gsap.set(veilEl, { opacity: 1 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          // Behind closed curtains, drop solid veil and part the curtains (1.35 -> 2.40 s = 1.05 s)
-          gsap.set(veilEl, { opacity: 0 })
-          const enterTl = gsap.timeline({
-            onUpdate: function () {
-              const enterTime = this.time()
-              frame.transition.elapsed = 1.35 + enterTime
-              frame.transition.t = Math.min(1, (1.35 + enterTime) / 2.4)
-              syncCurtainDom(frame.transition.curtainClose)
-            },
-            onComplete: resetStageComplete,
-          })
-          enterTl.to(
-            frame.transition,
-            {
-              curtainClose: 0,
-              dollyProgress: 0,
-              doorProgress: 0,
-              duration: 1.05,
-              ease: 'ease.inOut',
-            },
-            0
-          )
-          activeTimeline = enterTl
-        })
-      },
-    })
-
-    // 0.00–0.55 s: Red door swings open 0 -> 75° (ease.inOut), red light floods out
-    exitTl.to(
-      frame.transition,
-      {
-        doorProgress: 1,
-        duration: 0.55,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-
-    // 0.25 s: Badge begins its dissolve from Enamel to Neon (ember edge)
-    exitTl.call(
-      () => {
-        store.setTargetSkinOverride('neon')
-      },
-      [],
-      0.25
-    )
-
-    // 0.25–1.05 s: Camera pushes through doorway (dolly 3.2, FOV +6°, chromAb peaking at 0.0015 mid-way)
-    exitTl.to(
-      frame.transition,
-      {
-        dollyProgress: 1,
-        duration: 0.8,
-        ease: 'ease.inOut',
-      },
-      0.25
-    )
-    exitTl.to(
-      frame.transition,
-      {
-        chromAb: 0.0015,
-        duration: 0.4,
-        ease: 'ease.in',
-      },
-      0.25
-    )
-    exitTl.to(
-      frame.transition,
-      {
-        chromAb: 0,
-        duration: 0.4,
-        ease: 'ease.out',
-      },
-      0.65
-    )
-
-    // 0.85–1.10 s: Home DOM fades out
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.25,
-          ease: 'ease.inOut',
-        },
-        0.85
-      )
-    }
-
-    // 0.85–1.35 s: Red velvet curtains sweep in from both sides and close
-    exitTl.to(
-      frame.transition,
-      {
-        curtainClose: 1,
-        duration: 0.5,
-        ease: 'ease.inOut',
-      },
-      0.85
-    )
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T2 · Home → Diwali (≈ 1.25 s exit to film cut, then D0 title card)
-  // ---------------------------------------------------------------------------
-  if (type === 'T2') {
-    frame.transition.duration = 1.5
-    frame.transition.coverTime = 1.25
-    gsap.set(veilEl, { backgroundColor: '#0B0B0F', opacity: 0 })
-
-    const exitTl = gsap.timeline({
-      onUpdate: function () {
-        const time = this.time()
-        frame.transition.elapsed = time
-        frame.transition.t = time / 1.5
-      },
-      onComplete: () => {
-        gsap.set(veilEl, { opacity: 1 })
-        if (washEl) gsap.set(washEl, { opacity: 0 })
-        triggerCoverAndWaitForMount(() => {
-          frame.transition.phase = 'enter'
-          // Hand off directly to D0 title card (#0B0B0F)
-          const enterTl = gsap.timeline({ onComplete: resetStageComplete })
-          enterTl.to(
-            veilEl,
-            {
-              opacity: 0,
-              duration: 0.25,
-              ease: 'ease.out',
-            },
-            0
-          )
-          enterTl.to(
-            frame.transition,
-            {
-              dollyProgress: 0,
-              doorProgress: 0,
-              exposureWash: 0,
-              duration: 0.25,
-              ease: 'ease.out',
-            },
-            0
-          )
-          activeTimeline = enterTl
-        })
-      },
-    })
-
-    // 0.00–0.55 s: Both Diwali door leaves open 0 -> 70° (ease.inOut), warm gold light floods out
-    exitTl.to(
-      frame.transition,
-      {
-        doorProgress: 1,
-        duration: 0.55,
-        ease: 'ease.inOut',
-      },
-      0
-    )
-
-    // 0.25 s: Badge begins dissolve from Enamel to Jewelled (gold-spark edge)
-    exitTl.call(
-      () => {
-        store.setTargetSkinOverride('jewelled')
-      },
-      [],
-      0.25
-    )
-
-    // 0.25–1.00 s: Camera pushes in; exposure ramps 1.0 -> 2.2 (screen washes to warm white-gold)
-    exitTl.to(
-      frame.transition,
-      {
-        dollyProgress: 1,
-        exposureWash: 1,
-        duration: 0.75,
-        ease: 'ease.inOut',
-      },
-      0.25
-    )
-    if (washEl) {
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0.96,
-          duration: 0.75,
-          ease: 'ease.in',
-        },
-        0.25
-      )
-    }
-    if (mainEl) {
-      exitTl.to(
-        mainEl,
-        {
-          opacity: 0,
-          duration: 0.45,
-          ease: 'ease.in',
-        },
-        0.45
-      )
-    }
-
-    // 1.00–1.25 s: Wash cuts to #0B0B0F black, like a film cut
-    exitTl.to(
-      veilEl,
-      {
-        opacity: 1,
-        duration: 0.22,
-        ease: 'ease.inOut',
-      },
-      1.03
-    )
-    if (washEl) {
-      exitTl.to(
-        washEl,
-        {
-          opacity: 0,
-          duration: 0.18,
-          ease: 'ease.out',
-        },
-        1.07
-      )
-    }
-
-    activeTimeline = exitTl
-    return
-  }
-
-  // ---------------------------------------------------------------------------
-  // T3 · World ↔ World (≈ 1.60 s plus entry, cover at 0.80 s)
-  // ---------------------------------------------------------------------------
-  if (type === 'T3') {
-    frame.transition.duration = 1.6
-    frame.transition.coverTime = 0.8
-    const isLeavingDiwali = fromWorld === 'diwali'
-    setCurtainPalette(isLeavingDiwali ? 'diwali' : 'redroom')
-    gsap.set(veilEl, {
-      backgroundColor: toWorld === 'diwali' ? '#0B0B0F' : '#060101',
-      opacity: 0,
-    })
 
     const exitTl = gsap.timeline({
       onUpdate: function () {
@@ -652,18 +438,273 @@ export function runRouteTransition(
         gsap.set(veilEl, { opacity: 1 })
         triggerCoverAndWaitForMount(() => {
           frame.transition.phase = 'enter'
+          // Behind closed curtains, drop solid veil and part the curtains (0.90 -> 1.60 s = 0.70 s)
+          gsap.set(veilEl, { opacity: 0 })
+          const enterTl = gsap.timeline({
+            onUpdate: function () {
+              const enterTime = this.time()
+              frame.transition.elapsed = 0.9 + enterTime
+              frame.transition.t = Math.min(1, (0.9 + enterTime) / 1.6)
+              syncCurtainDom(frame.transition.curtainClose)
+            },
+            onComplete: resetStageComplete,
+          })
+          enterTl.to(
+            frame.transition,
+            {
+              curtainClose: 0,
+              dollyProgress: 0,
+              doorProgress: 0,
+              duration: 0.7,
+              ease: 'ease.inOut',
+            },
+            0
+          )
+          activeTimeline = enterTl
+        })
+      },
+    })
+
+    // 0.00–0.45 s: Red door swings open 0 -> 75° (ease.inOut), red light floods out
+    exitTl.to(
+      frame.transition,
+      {
+        doorProgress: 1,
+        duration: 0.45,
+        ease: 'ease.inOut',
+      },
+      0
+    )
+
+    // 0.15 s: Badge begins its dissolve from Enamel to Neon (ember edge)
+    exitTl.call(
+      () => {
+        store.setTargetSkinOverride('neon')
+      },
+      [],
+      0.15
+    )
+
+    // 0.15–0.70 s: Camera pushes through doorway (dolly, FOV +6°, chromAb)
+    exitTl.to(
+      frame.transition,
+      {
+        dollyProgress: 1,
+        duration: 0.55,
+        ease: 'ease.inOut',
+      },
+      0.15
+    )
+    exitTl.to(
+      frame.transition,
+      {
+        chromAb: 0.0015,
+        duration: 0.28,
+        ease: 'ease.in',
+      },
+      0.15
+    )
+    exitTl.to(
+      frame.transition,
+      {
+        chromAb: 0,
+        duration: 0.27,
+        ease: 'ease.out',
+      },
+      0.43
+    )
+
+    // 0.55–0.75 s: Home DOM fades out
+    if (mainEl) {
+      exitTl.to(
+        mainEl,
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'ease.inOut',
+        },
+        0.55
+      )
+    }
+
+    // 0.55–0.90 s: Red velvet curtains sweep in from both sides and close
+    exitTl.to(
+      frame.transition,
+      {
+        curtainClose: 1,
+        duration: 0.35,
+        ease: 'ease.inOut',
+      },
+      0.55
+    )
+
+    activeTimeline = exitTl
+    return
+  }
+
+  // ---------------------------------------------------------------------------
+  // T2 · Home → Diwali (0.85 s total, cover at 0.65 s, then D0 title card)
+  // ---------------------------------------------------------------------------
+  if (type === 'T2') {
+    frame.transition.duration = 0.85
+    frame.transition.coverTime = 0.65
+    gsap.set(veilEl, { backgroundColor: '#0B0B0F', opacity: 0 })
+
+    const exitTl = gsap.timeline({
+      onUpdate: function () {
+        const time = this.time()
+        frame.transition.elapsed = time
+        frame.transition.t = time / 0.85
+      },
+      onComplete: () => {
+        gsap.set(veilEl, { opacity: 1 })
+        if (washEl) gsap.set(washEl, { opacity: 0 })
+        triggerCoverAndWaitForMount(() => {
+          frame.transition.phase = 'enter'
+          // Hand off directly to D0 title card (#0B0B0F)
+          const enterTl = gsap.timeline({ onComplete: resetStageComplete })
+          enterTl.to(
+            veilEl,
+            {
+              opacity: 0,
+              duration: 0.2,
+              ease: 'ease.out',
+            },
+            0
+          )
+          enterTl.to(
+            frame.transition,
+            {
+              dollyProgress: 0,
+              doorProgress: 0,
+              exposureWash: 0,
+              duration: 0.2,
+              ease: 'ease.out',
+            },
+            0
+          )
+          activeTimeline = enterTl
+        })
+      },
+    })
+
+    // 0.00–0.35 s: Both Diwali door leaves open 0 -> 70° (ease.inOut), warm gold light floods out
+    exitTl.to(
+      frame.transition,
+      {
+        doorProgress: 1,
+        duration: 0.35,
+        ease: 'ease.inOut',
+      },
+      0
+    )
+
+    // 0.15 s: Badge begins dissolve from Enamel to Jewelled (gold-spark edge)
+    exitTl.call(
+      () => {
+        store.setTargetSkinOverride('jewelled')
+      },
+      [],
+      0.15
+    )
+
+    // 0.15–0.58 s: Camera pushes in; exposure ramps
+    exitTl.to(
+      frame.transition,
+      {
+        dollyProgress: 1,
+        exposureWash: 1,
+        duration: 0.43,
+        ease: 'ease.inOut',
+      },
+      0.15
+    )
+    if (washEl) {
+      exitTl.to(
+        washEl,
+        {
+          opacity: 0.96,
+          duration: 0.43,
+          ease: 'ease.in',
+        },
+        0.15
+      )
+    }
+    if (mainEl) {
+      exitTl.to(
+        mainEl,
+        {
+          opacity: 0,
+          duration: 0.25,
+          ease: 'ease.in',
+        },
+        0.3
+      )
+    }
+
+    // 0.50–0.65 s: Wash cuts to #0B0B0F black, like a film cut
+    exitTl.to(
+      veilEl,
+      {
+        opacity: 1,
+        duration: 0.15,
+        ease: 'ease.inOut',
+      },
+      0.5
+    )
+    if (washEl) {
+      exitTl.to(
+        washEl,
+        {
+          opacity: 0,
+          duration: 0.12,
+          ease: 'ease.out',
+        },
+        0.53
+      )
+    }
+
+    activeTimeline = exitTl
+    return
+  }
+
+  // ---------------------------------------------------------------------------
+  // T3 · World ↔ World (1.10 s total, cover at 0.55 s)
+  // ---------------------------------------------------------------------------
+  if (type === 'T3') {
+    frame.transition.duration = 1.1
+    frame.transition.coverTime = 0.55
+    const isLeavingDiwali = fromWorld === 'diwali'
+    setCurtainPalette(isLeavingDiwali ? 'diwali' : 'redroom')
+    gsap.set(veilEl, {
+      backgroundColor: toWorld === 'diwali' ? '#0B0B0F' : '#060101',
+      opacity: 0,
+    })
+
+    const exitTl = gsap.timeline({
+      onUpdate: function () {
+        const time = this.time()
+        frame.transition.elapsed = time
+        frame.transition.t = time / 1.1
+        syncCurtainDom(frame.transition.curtainClose)
+      },
+      onComplete: () => {
+        syncCurtainDom(1)
+        gsap.set(veilEl, { opacity: 1 })
+        triggerCoverAndWaitForMount(() => {
+          frame.transition.phase = 'enter'
           // Continue badge 180° flip from -PI to 0 so front face settles toward camera
           frame.transition.badgeFlip = -Math.PI
 
           if (toWorld === 'redroom') {
-            // Target is Red Room: part the curtains over 1.4 s
+            // Target is Red Room: part the curtains over 0.55 s
             setCurtainPalette('redroom')
             gsap.set(veilEl, { opacity: 0 })
             const enterTl = gsap.timeline({
               onUpdate: function () {
                 const enterTime = this.time()
-                frame.transition.elapsed = 0.8 + enterTime
-                frame.transition.t = Math.min(1, (0.8 + enterTime) / 2.2)
+                frame.transition.elapsed = 0.55 + enterTime
+                frame.transition.t = Math.min(1, (0.55 + enterTime) / 1.1)
                 syncCurtainDom(frame.transition.curtainClose)
               },
               onComplete: resetStageComplete,
@@ -672,7 +713,7 @@ export function runRouteTransition(
               frame.transition,
               {
                 curtainClose: 0,
-                duration: 1.4,
+                duration: 0.55,
                 ease: 'ease.inOut',
               },
               0
@@ -681,20 +722,20 @@ export function runRouteTransition(
               frame.transition,
               {
                 badgeFlip: 0,
-                duration: 0.8,
+                duration: 0.55,
                 ease: 'ease.out',
               },
               0
             )
             activeTimeline = enterTl
           } else {
-            // Target is Diwali: open curtains into the short 1.6 s D0 title card
+            // Target is Diwali: open into the short title card
             syncCurtainDom(0)
             const enterTl = gsap.timeline({
               onUpdate: function () {
                 const enterTime = this.time()
-                frame.transition.elapsed = 0.8 + enterTime
-                frame.transition.t = Math.min(1, (0.8 + enterTime) / 1.6)
+                frame.transition.elapsed = 0.55 + enterTime
+                frame.transition.t = Math.min(1, (0.55 + enterTime) / 1.1)
               },
               onComplete: resetStageComplete,
             })
@@ -702,7 +743,7 @@ export function runRouteTransition(
               veilEl,
               {
                 opacity: 0,
-                duration: 0.35,
+                duration: 0.25,
                 ease: 'ease.out',
               },
               0
@@ -712,7 +753,7 @@ export function runRouteTransition(
               {
                 curtainClose: 0,
                 badgeFlip: 0,
-                duration: 0.8,
+                duration: 0.55,
                 ease: 'ease.out',
               },
               0
@@ -723,13 +764,13 @@ export function runRouteTransition(
       },
     })
 
-    // 0.00–0.80 s: Current world closes through its own medium (curtains or drapes + gold flash)
+    // 0.00–0.55 s: Current world closes through curtains/drapes
     exitTl.to(
       frame.transition,
       {
         curtainClose: 1,
         badgeFlip: Math.PI,
-        duration: 0.8,
+        duration: 0.55,
         ease: 'ease.inOut',
       },
       0
@@ -741,7 +782,7 @@ export function runRouteTransition(
         washEl,
         {
           opacity: 0.65,
-          duration: 0.32,
+          duration: 0.22,
           ease: 'ease.out',
         },
         0.05
@@ -750,20 +791,20 @@ export function runRouteTransition(
         washEl,
         {
           opacity: 0,
-          duration: 0.38,
+          duration: 0.25,
           ease: 'ease.inOut',
         },
-        0.37
+        0.27
       )
     }
 
-    // At edge-on (0.35 s, ~90°), trigger badge skin dissolve
+    // At edge-on (0.25 s, ~90°), trigger badge skin dissolve
     exitTl.call(
       () => {
         store.setTargetSkinOverride(destSkin)
       },
       [],
-      0.35
+      0.25
     )
 
     if (mainEl) {
@@ -771,10 +812,10 @@ export function runRouteTransition(
         mainEl,
         {
           opacity: 0,
-          duration: 0.45,
+          duration: 0.3,
           ease: 'ease.inOut',
         },
-        0.2
+        0.15
       )
     }
 
@@ -783,11 +824,11 @@ export function runRouteTransition(
   }
 
   // ---------------------------------------------------------------------------
-  // T4 · World → Home ("Back to the gate", or nav badge; ≈ 1.20 s, cover at 0.60 s)
+  // T4 · World → Home ("Back to the gate", or nav badge; 0.80 s total, cover at 0.40 s)
   // ---------------------------------------------------------------------------
   if (type === 'T4') {
-    frame.transition.duration = 1.2
-    frame.transition.coverTime = 0.6
+    frame.transition.duration = 0.8
+    frame.transition.coverTime = 0.4
     const darkestColor = fromWorld === 'redroom' ? '#060101' : '#0B0B0F'
     gsap.set(veilEl, { backgroundColor: darkestColor, opacity: 0 })
 
@@ -798,7 +839,7 @@ export function runRouteTransition(
       onUpdate: function () {
         const time = this.time()
         frame.transition.elapsed = time
-        frame.transition.t = time / 1.2
+        frame.transition.t = time / 0.8
       },
       onComplete: () => {
         gsap.set(veilEl, { opacity: 1 })
@@ -807,8 +848,8 @@ export function runRouteTransition(
           const enterTl = gsap.timeline({
             onUpdate: function () {
               const enterTime = this.time()
-              frame.transition.elapsed = 0.6 + enterTime
-              frame.transition.t = Math.min(1, (0.6 + enterTime) / 1.2)
+              frame.transition.elapsed = 0.4 + enterTime
+              frame.transition.t = Math.min(1, (0.4 + enterTime) / 0.8)
             },
             onComplete: resetStageComplete,
           })
@@ -816,7 +857,7 @@ export function runRouteTransition(
             veilEl,
             {
               opacity: 0,
-              duration: 0.6,
+              duration: 0.4,
               ease: 'ease.out',
             },
             0
@@ -825,7 +866,7 @@ export function runRouteTransition(
             frame.transition,
             {
               dollyProgress: 0,
-              duration: 0.6,
+              duration: 0.4,
               ease: 'ease.out',
             },
             0
@@ -835,12 +876,12 @@ export function runRouteTransition(
       },
     })
 
-    // 0.00–0.60 s: World fades to darkest colour while camera pulls back fast
+    // 0.00–0.40 s: World fades to darkest colour while camera pulls back fast
     exitTl.to(
       frame.transition,
       {
         dollyProgress: 1,
-        duration: 0.6,
+        duration: 0.4,
         ease: 'ease.inOut',
       },
       0
@@ -849,7 +890,7 @@ export function runRouteTransition(
       veilEl,
       {
         opacity: 1,
-        duration: 0.6,
+        duration: 0.4,
         ease: 'ease.inOut',
       },
       0
@@ -859,7 +900,7 @@ export function runRouteTransition(
         mainEl,
         {
           opacity: 0,
-          duration: 0.45,
+          duration: 0.3,
           ease: 'ease.in',
         },
         0

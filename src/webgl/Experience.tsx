@@ -1,9 +1,10 @@
 'use client';
 
 import React, { Component, useEffect, useRef, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { PerformanceMonitor } from '@react-three/drei';
 import * as THREE from 'three';
+import { frame } from '@/state/frame';
 import { QualityProvider, useQuality } from './QualityProvider';
 import { CameraRig } from './CameraRig';
 import { WorldDirector } from './WorldDirector';
@@ -43,6 +44,28 @@ class AssetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryStat
     }
     return this.props.children;
   }
+}
+
+function TransitionTuning({ baseDpr }: { baseDpr: number | [number, number] }) {
+  const { gl } = useThree();
+  const dprVal = Array.isArray(baseDpr) ? baseDpr[1] : baseDpr;
+
+  useFrame(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      if (frame.transition.phase !== 'idle') {
+        const reducedDpr = Math.max(1, dprVal - 0.25);
+        if (gl.getPixelRatio() !== reducedDpr) {
+          gl.setPixelRatio(reducedDpr);
+        }
+      } else {
+        if (gl.getPixelRatio() !== dprVal) {
+          gl.setPixelRatio(dprVal);
+        }
+      }
+    }
+  });
+
+  return null;
 }
 
 function CanvasInner() {
@@ -115,7 +138,7 @@ function CanvasInner() {
             antialias: settings.tier !== 'T1',
             alpha: true,
             outputColorSpace: THREE.SRGBColorSpace,
-            toneMapping: settings.hasComposer ? THREE.NoToneMapping : THREE.AgXToneMapping,
+            toneMapping: settings.hasComposer ? THREE.NoToneMapping : THREE.NeutralToneMapping,
           }}
           camera={{
             fov: 34,
@@ -126,6 +149,7 @@ function CanvasInner() {
           onCreated={({ gl, advance }) => {
             advanceRef.current = advance;
             setWebglAdvance((time) => advance(time));
+            (window as unknown as { __threeRenderer?: THREE.WebGLRenderer }).__threeRenderer = gl;
 
             const domEl = gl.domElement;
             const glCtx = gl.getContext();
@@ -202,7 +226,7 @@ function CanvasInner() {
               downgradeTier();
             }}
           />
-          <Precompile />
+          <TransitionTuning baseDpr={settings.dpr} />
           <CameraRig />
           <WorldDirector />
           <DoorProjector />

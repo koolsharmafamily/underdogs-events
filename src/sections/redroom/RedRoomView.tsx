@@ -74,34 +74,32 @@ export function RedRoomView() {
       return
     }
 
+    const prev = {
+      story: 0,
+      dress: 4,
+      card: 'open' as 'sealed' | 'opening' | 'open',
+    }
+
     const onTick = () => {
       const p2 = frame.progress.R2 ?? 0
-      if (p2 < 0.34) {
-        setActiveStoryIdx(0)
-      } else if (p2 < 0.67) {
-        setActiveStoryIdx(1)
-      } else {
-        setActiveStoryIdx(2)
+      const nextStory = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2
+      if (nextStory !== prev.story) {
+        prev.story = nextStory
+        setActiveStoryIdx(nextStory)
       }
 
       const p3 = frame.progress.R3 ?? 0
-      if (p3 < 0.22) {
-        setDressStep(1)
-      } else if (p3 < 0.48) {
-        setDressStep(2)
-      } else if (p3 < 0.72) {
-        setDressStep(3)
-      } else {
-        setDressStep(4)
+      const nextDress = p3 < 0.22 ? 1 : p3 < 0.48 ? 2 : p3 < 0.72 ? 3 : 4
+      if (nextDress !== prev.dress) {
+        prev.dress = nextDress
+        setDressStep(nextDress)
       }
 
       const p4 = frame.progress.R4 ?? 0
-      if (p4 < 0.25) {
-        setCardStage('sealed')
-      } else if (p4 < 0.55) {
-        setCardStage('opening')
-      } else {
-        setCardStage('open')
+      const nextCard = p4 < 0.25 ? 'sealed' : p4 < 0.55 ? 'opening' : 'open'
+      if (nextCard !== prev.card) {
+        prev.card = nextCard
+        setCardStage(nextCard)
       }
     }
 
@@ -133,32 +131,38 @@ export function RedRoomView() {
         aria-label={site.redRoom.title}
         className="scene-section scene-r1"
       >
-        <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
-          <div className="site-container flex flex-col items-center gap-6">
+        <div className="scene-sticky flex flex-col justify-between items-center pt-10 pb-8 sm:pb-12 text-center pointer-events-none">
+          {/* Upper Stage: Presenter and Interactive 3D Badge Host */}
+          <div className="site-container flex flex-col items-center gap-3 pointer-events-auto">
             <p className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[var(--rr-ash)]">
               {site.redRoom.presenter}
             </p>
 
-            <BadgeDomHost
-              skin="redroom"
-              sizeClass="w-[180px] h-[180px] sm:w-[230px] sm:h-[230px]"
-              label="Underdogs Neon Badge — click or press Enter to blink"
-            />
+            <div className="flex items-center justify-center my-2 sm:my-4">
+              <BadgeDomHost
+                skin="redroom"
+                sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
+                label="Underdogs Neon Badge — click or press Enter to blink"
+              />
+            </div>
+          </div>
 
-            <p className="font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--rr-neon)]">
+          {/* Lower Stage: Kicker, Title, Blood Drips, Date and Jump Action */}
+          <div className="site-container flex flex-col items-center gap-2.5 sm:gap-3.5 pointer-events-auto">
+            <p className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[var(--rr-neon)]">
               {site.redRoom.kicker}
             </p>
 
             {/* Title with SVG blood drips layer underneath (Part 8 R1) */}
             <div className="relative inline-block">
-              <h1 className="font-cinzel-decorative text-display-xl font-black uppercase text-[var(--rr-bone)] balance-heading">
+              <h1 className="font-cinzel-decorative text-[clamp(2rem,4.4vw,3.6rem)] font-black uppercase text-[var(--rr-bone)] leading-none balance-heading drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
                 {site.redRoom.title}
               </h1>
 
               {/* SVG blood drips growing from bottom edges */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none relative mx-auto h-14 w-full"
+                className="pointer-events-none relative mx-auto h-10 w-full"
               >
                 {DRIPS.map((drip, i) => (
                   <svg
@@ -187,7 +191,7 @@ export function RedRoomView() {
               </div>
             </div>
 
-            <p className="font-manrope text-lead text-[var(--rr-ash)]">
+            <p className="font-manrope text-sm sm:text-base text-[var(--rr-ash)] max-w-[560px]">
               {site.redRoom.sub}
             </p>
 
@@ -245,22 +249,22 @@ export function RedRoomView() {
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
-                      className={`font-cormorant italic text-heading sm:text-display-l font-medium text-[var(--rr-bone)] balance-heading transition-all duration-700 ${
+                      className={`font-cormorant italic text-heading sm:text-display-l font-medium text-[var(--rr-bone)] balance-heading transition-all ${
                         isCurrent
-                          ? 'relative opacity-100'
-                          : 'pointer-events-none absolute inset-x-0 opacity-0'
+                          ? 'duration-[650ms] relative opacity-100'
+                          : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0'
                       }`}
                     >
                       {words.map((word, wIdx) => (
                         <span
                           key={`${idx}-${wIdx}`}
                           style={{
-                            transitionDelay: isCurrent ? `${wIdx * 40}ms` : '0ms',
+                            transitionDelay: isCurrent ? `${wIdx * 25}ms` : '0ms',
                           }}
-                          className={`inline-block mr-[0.26em] transition-all duration-500 ${
+                          className={`inline-block mr-[0.26em] transition-all ${
                             isCurrent
-                              ? 'opacity-100 blur-0 translate-y-0'
-                              : 'opacity-0 blur-[8px] translate-y-1'
+                              ? 'duration-[500ms] opacity-100 blur-0 translate-y-0'
+                              : 'duration-[350ms] opacity-0 blur-[8px] translate-y-1'
                           }`}
                         >
                           {word}
@@ -277,7 +281,7 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* R3 · Dress code (160vh, pinned) */}
+      {/* R3 · Dress code (110vh, pinned) */}
       <section
         ref={r3Ref}
         data-scene="R3"
@@ -292,7 +296,7 @@ export function RedRoomView() {
                 return (
                   <p
                     key={line}
-                    className={`font-cinzel text-display-l font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-700 ${
+                    className={`font-cinzel text-display-l font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[650ms] ${
                       lit ? 'opacity-100 translate-y-0' : 'opacity-20 translate-y-4'
                     }`}
                   >
@@ -358,7 +362,7 @@ export function RedRoomView() {
         </div>
       </div>
 
-      {/* R4 · The invitation (220vh, pinned) */}
+      {/* R4 · The invitation (150vh, pinned) */}
       <section
         id="redroom-invitation"
         ref={r4Ref}
@@ -392,12 +396,12 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* R5 · In association with (100vh, not pinned) */}
+      {/* R5 · In association with (80vh, not pinned) */}
       <section
         ref={r5Ref}
         data-scene="R5"
         aria-labelledby="redroom-partners-label"
-        className="relative min-h-[100svh] flex items-center py-24"
+        className="relative scene-r5 flex items-center py-20"
       >
         <div className="site-container site-grid items-center gap-y-12">
           {/* Framed official poster on the left wall */}

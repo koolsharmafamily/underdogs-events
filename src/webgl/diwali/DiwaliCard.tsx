@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 export function DiwaliCard() {
   const cardGltf = useGLTF('/models/diwali-card.glb');
@@ -14,6 +15,8 @@ export function DiwaliCard() {
   const clonedCard = useMemo(() => cardGltf.scene.clone(true), [cardGltf.scene]);
 
   useFrame(() => {
+    const st = useStore.getState();
+    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
     const p3 = frame.dampedProgress['D3'] ?? 0;
     const p4 = frame.dampedProgress['D4'] ?? 0;
 

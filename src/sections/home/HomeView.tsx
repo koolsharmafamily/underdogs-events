@@ -58,40 +58,50 @@ export function HomeView() {
       return
     }
 
+    const prev = {
+      heroText: true,
+      cue: true,
+      stmt: 0,
+      about: false,
+      season: 3,
+    }
+
     const onTick = () => {
       const p1 = frame.progress.H1 ?? 0
       // Part 7 H1: hero text exits as a one-shot at 15%, returns when user scrolls back above 10% (hysteresis)
-      if (p1 > 0.15) {
+      if (p1 > 0.15 && prev.heroText) {
+        prev.heroText = false
         setHeroTextVisible(false)
-      } else if (p1 < 0.10) {
+      } else if (p1 < 0.10 && !prev.heroText) {
+        prev.heroText = true
         setHeroTextVisible(true)
       }
 
-      if (p1 > 0.1) {
+      if (p1 > 0.1 && prev.cue) {
+        prev.cue = false
         setCueVisible(false)
-      } else if (p1 < 0.08) {
+      } else if (p1 < 0.08 && !prev.cue) {
+        prev.cue = true
         setCueVisible(true)
       }
 
       const p2 = frame.progress.H2 ?? 0
-      if (p2 < 0.34) {
-        setActiveStatement(0)
-        setShowAboutBody(false)
-      } else if (p2 < 0.67) {
-        setActiveStatement(1)
-        setShowAboutBody(false)
-      } else {
-        setActiveStatement(2)
-        setShowAboutBody(true)
+      const nextStmt = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2
+      const nextAbout = p2 >= 0.67
+      if (nextStmt !== prev.stmt) {
+        prev.stmt = nextStmt
+        setActiveStatement(nextStmt)
+      }
+      if (nextAbout !== prev.about) {
+        prev.about = nextAbout
+        setShowAboutBody(nextAbout)
       }
 
       const p4 = frame.progress.H4 ?? 0
-      if (p4 < 0.28) {
-        setSeasonStep(1)
-      } else if (p4 < 0.56) {
-        setSeasonStep(2)
-      } else {
-        setSeasonStep(3)
+      const nextSeason = p4 < 0.28 ? 1 : p4 < 0.56 ? 2 : 3
+      if (nextSeason !== prev.season) {
+        prev.season = nextSeason
+        setSeasonStep(nextSeason)
       }
     }
 
@@ -133,10 +143,10 @@ export function HomeView() {
 
             {/* Copy occupies columns 1–6, bottom-aligned at 72% viewport height on desktop (Part 7 H1) */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-4 transition-all duration-700 ${
+              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-4 transition-all ${
                 heroTextVisible || !motionEnabled
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 -translate-y-8 pointer-events-none'
+                  ? 'duration-[650ms] opacity-100 translate-y-0'
+                  : 'duration-[350ms] opacity-0 -translate-y-8 pointer-events-none'
               }`}
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--steel)]">
@@ -160,7 +170,7 @@ export function HomeView() {
         </div>
       </section>
 
-      {/* H2 · Who we are (220vh desktop, pinned) */}
+      {/* H2 · Who we are (150vh desktop, pinned) */}
       <section
         ref={h2Ref}
         data-scene="H2"
@@ -205,12 +215,12 @@ export function HomeView() {
                       <p
                         key={stmt}
                         aria-hidden={!isCurrent}
-                        className={`font-unbounded text-heading sm:text-display-l font-extrabold uppercase text-[var(--paper)] balance-heading transition-all duration-700 ${
+                        className={`font-unbounded text-heading sm:text-display-l font-extrabold uppercase text-[var(--paper)] balance-heading transition-all ${
                           isCurrent
-                            ? 'relative opacity-100 translate-y-0'
+                            ? 'duration-[650ms] relative opacity-100 translate-y-0'
                             : isPast
-                              ? 'pointer-events-none absolute inset-x-0 opacity-0 -translate-y-12'
-                              : 'pointer-events-none absolute inset-x-0 opacity-0 translate-y-12'
+                              ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-12'
+                              : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-12'
                         }`}
                       >
                         {stmt}
@@ -264,12 +274,12 @@ export function HomeView() {
         </div>
       </section>
 
-      {/* H3 · Nights we've thrown (110vh, not pinned) */}
+      {/* H3 · Nights we've thrown (90vh, not pinned) */}
       <section
         ref={h3Ref}
         data-scene="H3"
         aria-labelledby="home-nights-label"
-        className="relative min-h-[110svh] flex flex-col justify-center py-24"
+        className="relative scene-h3 flex flex-col justify-center py-20"
       >
         <div className="site-container mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-6">

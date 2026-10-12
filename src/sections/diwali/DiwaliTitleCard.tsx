@@ -32,7 +32,7 @@ export function DiwaliTitleCard() {
     setStep(3)
     const finishId = window.setTimeout(() => {
       setDone(true)
-    }, 650)
+    }, 350)
     timersRef.current.push(finishId)
   }, [])
 
@@ -54,14 +54,17 @@ export function DiwaliTitleCard() {
       // Ignore storage access errors
     }
 
-    // Part 10 T3: "or the short 1.6 s title card"
+    // Default 2.2 s title card (1.2 s on repeat visits or T3 arrival, skippable on input)
     const isShort = isRepeat || lastNavigationOrigin === 'T3'
-    const scale = isShort ? 0.5 : 1.0
+    const step1Time = isShort ? 150 : 250
+    const step2Time = isShort ? 450 : 800
+    const step3Time = isShort ? 900 : 1650
+    const totalTime = isShort ? 1200 : 2200
 
-    const t1 = window.setTimeout(() => setStep(1), 250 * scale)
-    const t2 = window.setTimeout(() => setStep(2), 950 * scale)
-    const t3 = window.setTimeout(() => setStep(3), 2350 * scale)
-    const t4 = window.setTimeout(() => setDone(true), 3150 * scale)
+    const t1 = window.setTimeout(() => setStep(1), step1Time)
+    const t2 = window.setTimeout(() => setStep(2), step2Time)
+    const t3 = window.setTimeout(() => setStep(3), step3Time)
+    const t4 = window.setTimeout(() => setDone(true), totalTime)
 
     timersRef.current = [t1, t2, t3, t4]
 

@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 export function CinemaLightbox() {
   const posterTex = useTexture('/media/diwali-teaser.webp');
@@ -38,6 +39,8 @@ export function CinemaLightbox() {
   }, []);
 
   useFrame(() => {
+    const st = useStore.getState();
+    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
     const p4 = frame.dampedProgress['D4'] ?? 0;
     const p5 = frame.dampedProgress['D5'] ?? 0;
     const t = frame.time;

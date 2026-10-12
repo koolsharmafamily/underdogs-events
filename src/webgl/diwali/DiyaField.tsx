@@ -1,143 +1,284 @@
 'use client';
 
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
+import { getAnchorOffsetFromRoot, InstancedFlameShader } from '../fx/Flame';
 
-interface DiyaConfig {
-  type: 'brass' | 'terracotta';
+interface DiyaInstanceSpec {
+  type: 'terracotta' | 'brass';
   pos: [number, number, number];
   scale: number;
+  rotY: number;
+  floating: boolean;
   speed: number;
   phase: number;
 }
 
-const DIYA_CONFIGS: DiyaConfig[] = [
-  // 5 Brass diyas
-  { type: 'brass', pos: [-1.9, 1.1, -0.6], scale: 0.52, speed: 0.85, phase: 0.0 },
-  { type: 'brass', pos: [1.8, 1.3, -0.8], scale: 0.50, speed: 0.95, phase: 1.2 },
-  { type: 'brass', pos: [-2.5, 2.3, 0.3], scale: 0.58, speed: 0.80, phase: 2.4 },
-  { type: 'brass', pos: [2.3, 2.1, 0.2], scale: 0.55, speed: 0.90, phase: 3.6 },
-  { type: 'brass', pos: [-0.95, 0.75, 1.2], scale: 0.48, speed: 1.05, phase: 4.8 },
-  // 5 Terracotta diyas
-  { type: 'terracotta', pos: [1.05, 0.8, 1.1], scale: 0.48, speed: 0.92, phase: 0.6 },
-  { type: 'terracotta', pos: [-1.6, 2.7, -1.2], scale: 0.56, speed: 0.88, phase: 1.8 },
-  { type: 'terracotta', pos: [1.65, 2.6, -1.0], scale: 0.54, speed: 0.82, phase: 3.0 },
-  { type: 'terracotta', pos: [-2.2, 1.5, -1.8], scale: 0.52, speed: 1.00, phase: 4.2 },
-  { type: 'terracotta', pos: [2.15, 1.45, -1.6], scale: 0.50, speed: 0.90, phase: 5.4 },
+// 12 terracotta diyas on the floor (y = 0) in a soft arc in front of the badge (uniform scale ×3)
+const FLOOR_TERRACOTTA_DIYAS: DiyaInstanceSpec[] = Array.from({ length: 12 }, (_, i) => {
+  const t = i / 11; // 0..1
+  const angle = THREE.MathUtils.lerp(-1.18, 1.18, t);
+  const radius = 1.45 + (i % 2 === 0 ? 0.14 : -0.06);
+  const x = Math.sin(angle) * radius;
+  const z = Math.cos(angle) * radius - 0.15;
+  return {
+    type: 'terracotta',
+    pos: [Number(x.toFixed(3)), 0, Number(z.toFixed(3))],
+    scale: 3.0,
+    rotY: -angle * 0.65,
+    floating: false,
+    speed: 0,
+    phase: i * 0.52,
+  };
+});
+
+// 24 floating diyas (mix of brass and terracotta, desktop; 10 mobile) at z = -3..+2, y = 0.4..3.2, scale ×2.5..4
+const FLOATING_DIYAS_24: DiyaInstanceSpec[] = [
+  { type: 'brass', pos: [-2.1, 1.15, 0.4], scale: 3.2, rotY: 0.2, floating: true, speed: 0.9, phase: 0.0 },
+  { type: 'terracotta', pos: [2.05, 1.25, 0.3], scale: 3.1, rotY: -0.2, floating: true, speed: 0.85, phase: 0.5 },
+  { type: 'brass', pos: [-2.6, 2.35, -0.4], scale: 3.6, rotY: 0.35, floating: true, speed: 0.78, phase: 1.1 },
+  { type: 'terracotta', pos: [2.55, 2.25, -0.5], scale: 3.5, rotY: -0.3, floating: true, speed: 0.88, phase: 1.6 },
+  { type: 'brass', pos: [-1.35, 0.65, 1.45], scale: 2.8, rotY: 0.15, floating: true, speed: 1.02, phase: 2.1 },
+  { type: 'terracotta', pos: [1.38, 0.72, 1.4], scale: 2.85, rotY: -0.18, floating: true, speed: 0.94, phase: 2.6 },
+  { type: 'brass', pos: [-1.75, 2.85, -1.2], scale: 3.4, rotY: 0.4, floating: true, speed: 0.82, phase: 3.1 },
+  { type: 'terracotta', pos: [1.8, 2.75, -1.1], scale: 3.35, rotY: -0.4, floating: true, speed: 0.86, phase: 3.6 },
+  { type: 'brass', pos: [-2.85, 1.55, -1.6], scale: 3.8, rotY: 0.5, floating: true, speed: 0.92, phase: 4.1 },
+  { type: 'terracotta', pos: [2.8, 1.62, -1.5], scale: 3.7, rotY: -0.45, floating: true, speed: 0.89, phase: 4.6 },
+  // Desktop-only additional 14 floating diyas (depths z = -3..+2, heights y = 0.4..3.2, scale 2.5..4)
+  { type: 'brass', pos: [-0.95, 2.95, -1.9], scale: 3.1, rotY: 0.1, floating: true, speed: 0.8, phase: 5.1 },
+  { type: 'terracotta', pos: [0.98, 3.05, -1.85], scale: 3.15, rotY: -0.1, floating: true, speed: 0.84, phase: 5.6 },
+  { type: 'brass', pos: [-2.2, 0.52, -0.8], scale: 2.7, rotY: 0.3, floating: true, speed: 0.96, phase: 0.3 },
+  { type: 'terracotta', pos: [2.25, 0.58, -0.75], scale: 2.75, rotY: -0.28, floating: true, speed: 0.91, phase: 0.8 },
+  { type: 'brass', pos: [-3.1, 2.05, 0.85], scale: 3.9, rotY: 0.45, floating: true, speed: 0.76, phase: 1.4 },
+  { type: 'terracotta', pos: [3.05, 1.98, 0.8], scale: 3.85, rotY: -0.42, floating: true, speed: 0.79, phase: 1.9 },
+  { type: 'brass', pos: [-1.55, 1.85, -2.5], scale: 3.3, rotY: 0.22, floating: true, speed: 0.87, phase: 2.4 },
+  { type: 'terracotta', pos: [1.58, 1.92, -2.4], scale: 3.25, rotY: -0.25, floating: true, speed: 0.83, phase: 2.9 },
+  { type: 'brass', pos: [-2.45, 3.12, -2.2], scale: 3.7, rotY: 0.38, floating: true, speed: 0.75, phase: 3.4 },
+  { type: 'terracotta', pos: [2.42, 3.08, -2.1], scale: 3.65, rotY: -0.36, floating: true, speed: 0.77, phase: 3.9 },
+  { type: 'brass', pos: [-2.15, 0.88, 1.75], scale: 2.6, rotY: 0.28, floating: true, speed: 1.04, phase: 4.4 },
+  { type: 'terracotta', pos: [2.12, 0.92, 1.7], scale: 2.65, rotY: -0.26, floating: true, speed: 1.0, phase: 4.9 },
+  { type: 'brass', pos: [-0.65, 2.55, -2.85], scale: 3.0, rotY: 0.08, floating: true, speed: 0.81, phase: 5.4 },
+  { type: 'terracotta', pos: [0.68, 2.62, -2.8], scale: 2.95, rotY: -0.08, floating: true, speed: 0.85, phase: 5.9 },
 ];
 
-const FlameShader = {
-  vertexShader: /* glsl */ `
-    uniform vec2 uScale;
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      vec4 mvPosition = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
-      mvPosition.xy += position.xy * uScale;
-      gl_Position = projectionMatrix * mvPosition;
-    }
-  `,
-  fragmentShader: /* glsl */ `
-    uniform float uTime;
-    uniform float uIntensity;
-    uniform vec3 uColorCore;
-    uniform vec3 uColorTip;
-    varying vec2 vUv;
+interface SubMeshEntry {
+  geometry: THREE.BufferGeometry;
+  material: THREE.Material;
+}
 
-    void main() {
-      vec2 p = vUv - vec2(0.5, 0.0);
-      float y = clamp(p.y, 0.0, 1.0);
-      float w = sqrt(y) * (1.0 - y) * 1.8;
-      float flicker = sin(uTime * 22.0 + y * 6.0) * 0.04 * y;
-      float dist = abs(p.x - flicker);
-      if (dist > w || y <= 0.01 || y >= 0.98) {
-        discard;
-      }
-      float edge = 1.0 - smoothstep(0.0, w, dist);
-      float vert = 1.0 - y;
-      vec3 col = mix(uColorTip, uColorCore, edge * vert * 1.5);
-      float alpha = edge * vert * uIntensity;
-      gl_FragColor = vec4(col * 2.2, alpha);
+function extractSubMeshes(root: THREE.Object3D): SubMeshEntry[] {
+  const list: SubMeshEntry[] = [];
+  root.traverse((node) => {
+    if ((node as THREE.Mesh).isMesh) {
+      const m = node as THREE.Mesh;
+      const mat = Array.isArray(m.material) ? m.material[0] : m.material;
+      list.push({ geometry: m.geometry, material: mat });
     }
-  `,
-};
+  });
+  return list;
+}
 
-export function DiyaField({ count = 10 }: { count?: number }) {
+export function DiyaField() {
+  const { size } = useThree();
+  const isMobile = size.width < 768;
+
   const brassGltf = useGLTF('/models/diwali-diya-brass.glb');
   const terraGltf = useGLTF('/models/diwali-diya-terracotta.glb');
 
-  const activeConfigs = useMemo(() => {
-    return DIYA_CONFIGS.slice(0, Math.min(count, DIYA_CONFIGS.length));
-  }, [count]);
+  // Extract sub-meshes (Diya, Oil, Wick) and Flame_Anchor offset from each GLB (zero clone())
+  const {
+    terraSubMeshes,
+    brassSubMeshes,
+    terraAnchorOffset,
+    brassAnchorOffset,
+    terraSpecs,
+    brassSpecs,
+    allSpecs,
+  } = useMemo(() => {
+    const tSubs = extractSubMeshes(terraGltf.scene);
+    const bSubs = extractSubMeshes(brassGltf.scene);
+    const tAnchor = getAnchorOffsetFromRoot(terraGltf.scene, 'Flame_Anchor');
+    const bAnchor = getAnchorOffsetFromRoot(brassGltf.scene, 'Flame_Anchor');
 
-  // Pre-clone models once in useMemo to eliminate GC churn and render thrashing
-  const clonedModels = useMemo(() => {
-    return activeConfigs.map((cfg) => {
-      const src = cfg.type === 'brass' ? brassGltf.scene : terraGltf.scene;
-      return src.clone(true);
-    });
-  }, [activeConfigs, brassGltf.scene, terraGltf.scene]);
+    const floatingSlice = FLOATING_DIYAS_24.slice(0, isMobile ? 10 : 24);
+    const combined = [...FLOOR_TERRACOTTA_DIYAS, ...floatingSlice];
+    const tSpecs = combined.filter((d) => d.type === 'terracotta');
+    const bSpecs = combined.filter((d) => d.type === 'brass');
 
-  // Shared flame geometry & material
-  const flameGeo = useMemo(() => new THREE.PlaneGeometry(1, 1), []);
-  const flameMat = useMemo(() => {
-    return new THREE.ShaderMaterial({
-      vertexShader: FlameShader.vertexShader,
-      fragmentShader: FlameShader.fragmentShader,
+    return {
+      terraSubMeshes: tSubs,
+      brassSubMeshes: bSubs,
+      terraAnchorOffset: tAnchor,
+      brassAnchorOffset: bAnchor,
+      terraSpecs: tSpecs,
+      brassSpecs: bSpecs,
+      allSpecs: [...tSpecs, ...bSpecs],
+    };
+  }, [terraGltf.scene, brassGltf.scene, isMobile]);
+
+  const terraMeshRefs = useRef<(THREE.InstancedMesh | null)[]>([]);
+  const brassMeshRefs = useRef<(THREE.InstancedMesh | null)[]>([]);
+  const flameMeshRef = useRef<THREE.InstancedMesh>(null);
+
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const flameVec = useMemo(() => new THREE.Vector3(), []);
+
+  // Single InstancedMesh for all diya flames + additive halos
+  const { flameGeo, flameMat } = useMemo(() => {
+    const total = allSpecs.length;
+    const geo = new THREE.PlaneGeometry(1, 1);
+    const intensities = new Float32Array(total);
+    const phases = new Float32Array(total);
+    for (let i = 0; i < total; i++) {
+      intensities[i] = 1.25;
+      phases[i] = allSpecs[i].phase;
+    }
+    geo.setAttribute('aIntensity', new THREE.InstancedBufferAttribute(intensities, 1));
+    geo.setAttribute('aPhase', new THREE.InstancedBufferAttribute(phases, 1));
+
+    const mat = new THREE.ShaderMaterial({
+      vertexShader: InstancedFlameShader.vertexShader,
+      fragmentShader: InstancedFlameShader.fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uIntensity: { value: 1.2 },
-        uScale: { value: new THREE.Vector2(0.06, 0.11) },
-        uColorCore: { value: new THREE.Color('#FFF2D6') },
+        uBaseScale: { value: new THREE.Vector2(0.075, 0.125) },
+        uColorCore: { value: new THREE.Color('#FFF5D6') },
         uColorTip: { value: new THREE.Color('#FF8020') },
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-  }, []);
 
-  const diyaRefs = useRef<(THREE.Group | null)[]>([]);
+    return { flameGeo: geo, flameMat: mat };
+  }, [allSpecs]);
+
+  // Initialize static/initial matrices
+  useEffect(() => {
+    terraMeshRefs.current.forEach((im) => {
+      if (im) im.frustumCulled = false;
+    });
+    brassMeshRefs.current.forEach((im) => {
+      if (im) im.frustumCulled = false;
+    });
+    if (flameMeshRef.current) {
+      flameMeshRef.current.frustumCulled = false;
+    }
+  }, [terraSpecs, brassSpecs]);
 
   useFrame(() => {
+    const st = useStore.getState();
+    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
     const t = frame.time;
-    // Update shared flame time uniform once per frame
+
     flameMat.uniforms.uTime.value = t;
 
-    // Bobbing ±0.04m at 0.1-0.2 Hz
-    for (let i = 0; i < activeConfigs.length; i++) {
-      const el = diyaRefs.current[i];
-      if (el) {
-        const cfg = activeConfigs[i];
-        const bob = Math.sin(t * cfg.speed + cfg.phase) * 0.04;
-        el.position.y = cfg.pos[1] + bob;
+    let flameIdx = 0;
+
+    // 1. Update Terracotta Diya InstancedMeshes (12 floor + floating terracotta) & their Flame_Anchor positions
+    for (let i = 0; i < terraSpecs.length; i++) {
+      const spec = terraSpecs[i];
+      const bob = spec.floating ? Math.sin(t * spec.speed + spec.phase) * 0.04 : 0;
+      const y = spec.pos[1] + bob;
+
+      dummy.position.set(spec.pos[0], y, spec.pos[2]);
+      dummy.rotation.set(0, spec.rotY, 0);
+      dummy.scale.setScalar(spec.scale);
+      dummy.updateMatrix();
+
+      for (let m = 0; m < terraMeshRefs.current.length; m++) {
+        const im = terraMeshRefs.current[m];
+        if (im) im.setMatrixAt(i, dummy.matrix);
       }
+
+      // Compute exact world position of Flame_Anchor for this diya instance
+      if (flameMeshRef.current) {
+        flameVec.copy(terraAnchorOffset).applyMatrix4(dummy.matrix);
+        dummy.position.copy(flameVec);
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.setScalar(spec.scale * 0.85);
+        dummy.updateMatrix();
+        flameMeshRef.current.setMatrixAt(flameIdx, dummy.matrix);
+      }
+      flameIdx++;
+    }
+
+    // 2. Update Brass Diya InstancedMeshes (floating brass) & their Flame_Anchor positions
+    for (let i = 0; i < brassSpecs.length; i++) {
+      const spec = brassSpecs[i];
+      const bob = spec.floating ? Math.sin(t * spec.speed + spec.phase) * 0.04 : 0;
+      const y = spec.pos[1] + bob;
+
+      dummy.position.set(spec.pos[0], y, spec.pos[2]);
+      dummy.rotation.set(0, spec.rotY, 0);
+      dummy.scale.setScalar(spec.scale);
+      dummy.updateMatrix();
+
+      for (let m = 0; m < brassMeshRefs.current.length; m++) {
+        const im = brassMeshRefs.current[m];
+        if (im) im.setMatrixAt(i, dummy.matrix);
+      }
+
+      if (flameMeshRef.current) {
+        flameVec.copy(brassAnchorOffset).applyMatrix4(dummy.matrix);
+        dummy.position.copy(flameVec);
+        dummy.rotation.set(0, 0, 0);
+        dummy.scale.setScalar(spec.scale * 0.85);
+        dummy.updateMatrix();
+        flameMeshRef.current.setMatrixAt(flameIdx, dummy.matrix);
+      }
+      flameIdx++;
+    }
+
+    for (let m = 0; m < terraMeshRefs.current.length; m++) {
+      const im = terraMeshRefs.current[m];
+      if (im) im.instanceMatrix.needsUpdate = true;
+    }
+    for (let m = 0; m < brassMeshRefs.current.length; m++) {
+      const im = brassMeshRefs.current[m];
+      if (im) im.instanceMatrix.needsUpdate = true;
+    }
+    if (flameMeshRef.current) {
+      flameMeshRef.current.instanceMatrix.needsUpdate = true;
     }
   });
 
   return (
     <group name="DiyaField">
-      {activeConfigs.map((cfg, idx) => (
-        <group
-          key={idx}
+      {/* Terracotta Diya Sub-Meshes (Diya, Oil, Wick) */}
+      {terraSubMeshes.map((sm, idx) => (
+        <instancedMesh
+          key={`terra-${idx}`}
           ref={(el) => {
-            diyaRefs.current[idx] = el;
+            terraMeshRefs.current[idx] = el;
           }}
-          position={cfg.pos}
-          scale={[cfg.scale, cfg.scale, cfg.scale]}
-        >
-          <primitive object={clonedModels[idx]} />
-          {/* Shared procedural flame sitting on diya wick */}
-          <mesh
-            geometry={flameGeo}
-            material={flameMat}
-            position={[0, 0.08, 0.02]}
-          />
-        </group>
+          args={[sm.geometry, sm.material, terraSpecs.length]}
+          frustumCulled={false}
+        />
       ))}
+
+      {/* Brass Diya Sub-Meshes (Diya, Oil, Wick) */}
+      {brassSubMeshes.map((sm, idx) => (
+        <instancedMesh
+          key={`brass-${idx}`}
+          ref={(el) => {
+            brassMeshRefs.current[idx] = el;
+          }}
+          args={[sm.geometry, sm.material, brassSpecs.length]}
+          frustumCulled={false}
+        />
+      ))}
+
+      {/* Instanced Diya Flames + Additive Halos on Flame_Anchor */}
+      <instancedMesh
+        ref={flameMeshRef}
+        args={[flameGeo, flameMat, allSpecs.length]}
+        frustumCulled={false}
+      />
     </group>
   );
 }
