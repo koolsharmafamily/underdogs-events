@@ -273,12 +273,12 @@ html.has-custom-cursor button {
   }
 }
 
-/* Scene lengths (Desktop vh vs Mobile ×0.85) */
-.scene-h1 { height: calc(90svh * 0.85); }
+/* Scene lengths (Desktop vh vs Mobile ×0.85 per BRIEF.md Part 7, 8, 9) */
+.scene-h1 { height: calc(120svh * 0.85); }
 .scene-h2 { height: calc(150svh * 0.85); }
-.scene-h3 { min-height: calc(90svh * 0.85); }
-.scene-h4 { height: calc(110svh * 0.85); }
-.scene-h5 { min-height: calc(100svh * 0.85); }
+.scene-h3 { min-height: calc(110svh * 0.85); }
+.scene-h4 { height: calc(160svh * 0.85); }
+.scene-h5 { min-height: calc(140svh * 0.85); }
 
 .scene-r1 { height: calc(110svh * 0.85); }
 .scene-r2 { height: calc(140svh * 0.85); }
@@ -294,11 +294,11 @@ html.has-custom-cursor button {
 .scene-d5 { height: calc(90svh * 0.85); }
 
 @media (min-width: 1024px) {
-  .scene-h1 { height: 90svh; }
+  .scene-h1 { height: 120svh; }
   .scene-h2 { height: 150svh; }
-  .scene-h3 { min-height: 90svh; }
-  .scene-h4 { height: 110svh; }
-  .scene-h5 { height: 100svh; }
+  .scene-h3 { min-height: 110svh; }
+  .scene-h4 { height: 160svh; }
+  .scene-h5 { height: 140svh; }
 
   .scene-r1 { height: 110svh; }
   .scene-r2 { height: 140svh; }

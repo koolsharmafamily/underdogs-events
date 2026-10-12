@@ -44,8 +44,8 @@ export function DoorProjector() {
     const height = typeof window !== 'undefined' ? window.innerHeight : 900;
     const isPortrait = width < height;
 
-    const redX = isPortrait ? 0 : -1.45;
-    const diwaliX = isPortrait ? 0 : 1.45;
+    const redX = isPortrait ? 0 : -1.65;
+    const diwaliX = isPortrait ? 0 : 1.65;
     const halfW = isPortrait ? 0.45 : 0.72;
     const redBottomY = isPortrait ? 1.55 : 0.0;
     const redTopY = isPortrait ? 2.89 : 2.55;

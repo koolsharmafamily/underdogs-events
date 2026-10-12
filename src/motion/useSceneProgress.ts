@@ -15,7 +15,11 @@ export function useSceneProgress(id: string, ref: RefObject<HTMLElement | null>)
     const st = ScrollTrigger.create({
       trigger: el,
       start: 'top top',
-      end: 'bottom bottom',
+      end: () => {
+        const h = el.offsetHeight
+        const winH = window.innerHeight
+        return h > winH ? 'bottom bottom' : 'bottom top'
+      },
       onUpdate: (self) => {
         frame.progress[id] = self.progress
       },

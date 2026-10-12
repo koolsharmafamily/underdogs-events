@@ -45,6 +45,7 @@ export function HomeView() {
   const [activeStatement, setActiveStatement] = useState(0)
   const [showAboutBody, setShowAboutBody] = useState(false)
   const [seasonStep, setSeasonStep] = useState(3)
+  const [seasonFade, setSeasonFade] = useState(1)
 
   useEffect(() => {
     if (!motionEnabled) {
@@ -52,6 +53,7 @@ export function HomeView() {
       setActiveStatement(0)
       setShowAboutBody(true)
       setSeasonStep(3)
+      setSeasonFade(1)
       return
     }
 
@@ -60,6 +62,7 @@ export function HomeView() {
       stmt: 0,
       about: false,
       season: 3,
+      fade: 1,
     }
 
     const onTick = () => {
@@ -90,6 +93,12 @@ export function HomeView() {
       if (nextSeason !== prev.season) {
         prev.season = nextSeason
         setSeasonStep(nextSeason)
+      }
+
+      const nextFade = p4 > 0.65 ? Math.max(0, 1 - (p4 - 0.65) / 0.25) : 1
+      if (Math.abs(nextFade - prev.fade) > 0.05 || nextFade === 0 || nextFade === 1) {
+        prev.fade = nextFade
+        setSeasonFade(nextFade)
       }
     }
 
@@ -159,12 +168,6 @@ export function HomeView() {
             >
               {site.home.about.label}
             </h2>
-            <span
-              aria-hidden="true"
-              className="font-mono text-[11px] tabular-nums tracking-[0.08em] text-[var(--steel)]"
-            >
-              0{activeStatement + 1} / 03
-            </span>
           </div>
 
           <div className="site-container site-grid mt-auto md:my-auto items-center pb-4 md:pb-0">
@@ -289,7 +292,10 @@ export function HomeView() {
             </h2>
           </div>
 
-          <div className="site-container mt-auto md:my-auto flex flex-col items-center text-center gap-6 pb-4 md:pb-0">
+          <div
+            className="site-container mt-auto md:my-auto flex flex-col items-center text-center gap-6 pb-4 md:pb-0 transition-opacity duration-300"
+            style={{ opacity: motionEnabled ? seasonFade : 1 }}
+          >
             <div className="flex flex-col items-center gap-2">
               {site.home.season.lines.map((line, idx) => {
                 const visible = idx < seasonStep

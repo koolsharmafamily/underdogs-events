@@ -171,9 +171,7 @@ export function DiwaliView() {
               </div>
             )}
 
-            <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--dw-gold-bright)]">
-              <span>0{activeStoryLine + 1} / 05</span>
-              <span aria-hidden="true">·</span>
+            <div className="flex items-center justify-center font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--dw-gold-bright)]">
               <span>{skyRevealed ? 'Night sky revealed' : 'Velvet chamber'}</span>
             </div>
 

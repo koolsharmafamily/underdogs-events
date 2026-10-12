@@ -28,7 +28,7 @@ export const site = {
       cue: 'Enter',
     },
     about: {
-      label: '(01) Who we are',
+      label: 'Who we are',
       statements: [
         'We don’t throw parties. We build worlds — and open the gate.',
         'Every night gets a name, a dress code and a reason to remember it.',
@@ -38,19 +38,19 @@ export const site = {
         'Underdogs Entertainment is a party and entertainment crew from Nagpur. Past nights include Project X, Maison Blanche, Afrochella, Akai Yane, Luau and Anti V — plus our Holi, Diwali and New Year’s Eve editions.',
     },
     nights: {
-      label: '(02) Nights we’ve thrown',
+      label: 'Nights we’ve thrown',
       latest: { name: 'Project X', detail: '22 Aug 2026 · Pablo, Nagpur' },   // (client) caption
       // (client) Instagram highlights, newest first
       list: ['Project X', 'Retro Holi', 'Anti V', 'Diwali 2k25', 'Holi 2k25', 'Maison Blanche',
              'Afrochella', 'Akai Yane', 'NYE 2024', 'Diwali 2k24', 'Luau', 'Holi 2k24', 'NYE 2k23'],
     },
     season: {
-      label: '(03) This season',
+      label: 'This season',
       lines: ['Two worlds.', 'Two celebrations.', 'One unforgettable season.'],
       tagline: 'This year, different.',
     },
     worlds: {
-      label: '(04) Choose a door',
+      label: 'Choose a door',
       one: { kicker: 'World One', name: 'The Red Room', occasion: 'Halloween',
              date: 'Sat 24 Oct 2026', place: 'Millo, Civil Lines, Nagpur',
              cta: 'Enter World One', href: '/the-red-room' },

@@ -418,9 +418,13 @@ export function Badge({
       const h2X = isMobile ? 0 : 0.85;
       const h2Y = isMobile ? (size.height < 700 ? 1.65 : 1.82) : 1.5;
 
-      const h5Scale = isMobile ? 0.38 : 0.52;
+      const h3Scale = isMobile ? 0.5 : 0.62;
+      const h3X = isMobile ? 0 : 1.6;
+      const h3Y = isMobile ? 2.5 : 2.1;
+
+      const h5Scale = isMobile ? 0 : 0.40;
       const h5X = 0;
-      const h5Y = isMobile ? 3.25 : 2.85;
+      const h5Y = isMobile ? 3.35 : 2.72; // Floats above and between doors on desktop; fades out on mobile stacked doors
 
       if (scrollP <= 0.2) {
         const t = Math.max(0, Math.min(1, scrollP / 0.2));
@@ -433,42 +437,86 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
         choreoYaw.current = 0;
         h2SpinDone.current = false;
-      } else if (scrollP <= 0.5) {
+      } else if (scrollP <= 0.48) {
         choreoPos.current.set(h2X, h2Y, 0);
         choreoScale.current = h2Scale;
-        const spinT = (scrollP - 0.2) / 0.3;
+        const spinT = (scrollP - 0.2) / 0.28;
         choreoYaw.current = THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
         h2SpinDone.current = spinT >= 0.98;
-      } else if (scrollP <= 0.72) {
-        const t = (scrollP - 0.5) / 0.22;
+      } else if (scrollP <= 0.68) {
+        // H3: Badge parks at top-right host position
+        const t = Math.max(0, Math.min(1, (scrollP - 0.48) / 0.2));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
-          THREE.MathUtils.lerp(h2X, isMobile ? 0 : -0.75, smoothT),
-          THREE.MathUtils.lerp(h2Y, isMobile ? 1.55 : 1.5, smoothT),
+          THREE.MathUtils.lerp(h2X, h3X, smoothT),
+          THREE.MathUtils.lerp(h2Y, h3Y, smoothT),
           0
         );
-        choreoScale.current = THREE.MathUtils.lerp(h2Scale, isMobile ? 0.85 : 1.05, smoothT);
+        choreoScale.current = THREE.MathUtils.lerp(h2Scale, h3Scale, smoothT);
+        choreoYaw.current = Math.PI * 2;
+      } else if (scrollP <= 0.85) {
+        // H4: Badge returns to center (x = 0) and rises up above door height (y = 3.3)
+        const t = Math.max(0, Math.min(1, (scrollP - 0.68) / 0.17));
+        const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
+        choreoPos.current.set(
+          THREE.MathUtils.lerp(h3X, h5X, smoothT),
+          THREE.MathUtils.lerp(h3Y, h5Y, smoothT),
+          0
+        );
+        choreoScale.current = THREE.MathUtils.lerp(h3Scale, h5Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
       } else {
-        const t = Math.max(0, Math.min(1, (scrollP - 0.72) / 0.28));
-        const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
-        choreoPos.current.set(
-          THREE.MathUtils.lerp(isMobile ? 0 : -0.75, h5X, smoothT),
-          THREE.MathUtils.lerp(isMobile ? 1.55 : 1.5, h5Y, smoothT),
-          0
-        );
-        choreoScale.current = THREE.MathUtils.lerp(isMobile ? 0.85 : 1.05, h5Scale, smoothT);
+        // H5: Badge floats above and between both doors at (0, 3.3, 0)
+        choreoPos.current.set(h5X, h5Y, 0);
+        choreoScale.current = h5Scale;
         choreoYaw.current = Math.PI * 2;
       }
     } else if (world === 'redroom') {
+      const r3 = frame.dampedProgress['R3'] ?? frame.dampedProgress['r3'] ?? 0;
+      const r4 = frame.dampedProgress['R4'] ?? frame.dampedProgress['r4'] ?? 0;
+      const r5 = frame.dampedProgress['R5'] ?? frame.dampedProgress['r5'] ?? 0;
+      const r6 = frame.dampedProgress['R6'] ?? frame.dampedProgress['r6'] ?? 0;
       const targetScale = isMobile ? 0.78 : 0.95;
-      choreoPos.current.set(0, 1.7, 0.6);
-      choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+
+      if (r6 > 0.05) {
+        // R6: Outro — badge returns centered
+        const t = THREE.MathUtils.smoothstep(r6, 0.05, 0.4);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(3.8, 1.7, t), 0.6);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.8, t);
+      } else if (r4 > 0 || r5 > 0 || r3 > 0.6) {
+        // R4 & R5: Camera cranes down onto invitation tray — lift badge out of frame
+        const t = r4 > 0 || r5 > 0 ? 1 : THREE.MathUtils.smoothstep(r3, 0.6, 0.95);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(1.7, 3.8, t), 0.6);
+        choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
+      } else {
+        choreoPos.current.set(0, 1.7, 0.6);
+        choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+      }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
     } else if (world === 'diwali') {
+      const d1 = frame.dampedProgress['D1'] ?? frame.dampedProgress['d1'] ?? 0;
+      const d2 = frame.dampedProgress['D2'] ?? frame.dampedProgress['d2'] ?? 0;
+      const d3 = frame.dampedProgress['D3'] ?? frame.dampedProgress['d3'] ?? 0;
+      const d4 = frame.dampedProgress['D4'] ?? frame.dampedProgress['d4'] ?? 0;
+      const d5 = frame.dampedProgress['D5'] ?? frame.dampedProgress['d5'] ?? 0;
+
       const targetScale = isMobile ? 0.76 : 0.92;
-      choreoPos.current.set(0, 1.7, 0);
-      choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+
+      if (d5 > 0.05) {
+        // D5: Outro — badge returns centered among diyas and petals
+        const t = THREE.MathUtils.smoothstep(d5, 0, 0.5);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(0.3, 1.7, t), 0);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.75, t);
+      } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
+        // D1: Hero jewelled badge
+        choreoPos.current.set(0, 1.7, 0);
+        choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+      } else {
+        // D2, D3, D4: Descend & hide badge to clear stage for story text, sky fireworks, and 3D card
+        const t = d2 > 0 ? 1 : THREE.MathUtils.smoothstep(d1, 0.7, 0.95);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(1.7, 0.3, t), 0);
+        choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
+      }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
     }
 

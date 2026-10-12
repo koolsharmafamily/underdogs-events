@@ -190,13 +190,13 @@ export function HomeStage() {
       }
     }
 
-    // 2. Doors placement: Desktop (-1.45, 0, 0) & (1.45, 0, 0) at scale 0.8; Mobile stacked vertically
+    // 2. Doors placement: Desktop (-1.65, 0, 0) & (1.65, 0, 0) at scale 0.78; Mobile stacked vertically
     const isPortrait = size.width < size.height;
-    const redTargetX = isPortrait ? 0 : -1.45;
-    const diwaliTargetX = isPortrait ? 0 : 1.45;
+    const redTargetX = isPortrait ? 0 : -1.65;
+    const diwaliTargetX = isPortrait ? 0 : 1.65;
     const redOpenY = isPortrait ? 1.55 : 0;
     const diwaliOpenY = isPortrait ? -0.15 : 0;
-    const doorTargetScale = isPortrait ? 0.42 : 0.8;
+    const doorTargetScale = isPortrait ? 0.42 : 0.78;
 
     let redTargetY = -8.0;
     let diwaliTargetY = -8.0;
@@ -205,13 +205,13 @@ export function HomeStage() {
     const effP4 = Math.max(p4, frame.progress['H4'] ?? 0);
     const effP5 = Math.max(p5, frame.progress['H5'] ?? 0);
 
-    if (effP5 > 0.001 || effP4 > 0.8 || tr.type === 'T1' || tr.type === 'T2') {
+    if (effP5 > 0.001 || effP4 > 0.88 || tr.type === 'T1' || tr.type === 'T2') {
       redTargetY = redOpenY;
       diwaliTargetY = diwaliOpenY;
       doorsVisible = true;
-    } else if (effP4 > 0.35) {
+    } else if (effP4 > 0.65) {
       doorsVisible = true;
-      const riseP = THREE.MathUtils.clamp((effP4 - 0.35) / 0.45, 0, 1);
+      const riseP = THREE.MathUtils.clamp((effP4 - 0.65) / 0.23, 0, 1);
       redTargetY = THREE.MathUtils.lerp(-8.0, redOpenY, riseP);
       diwaliTargetY = THREE.MathUtils.lerp(-8.0, diwaliOpenY, riseP);
     }
@@ -401,14 +401,14 @@ export function HomeStage() {
       />
       <pointLight
         ref={leftPointLightRef}
-        position={[-1.45, 0.5, 0.45]}
+        position={[-1.65, 0.5, 0.45]}
         intensity={0}
         color="#FF2A1F"
         distance={5.5}
       />
       <pointLight
         ref={rightPointLightRef}
-        position={[1.45, 0.5, 0.45]}
+        position={[1.65, 0.5, 0.45]}
         intensity={0}
         color="#FFC46B"
         distance={5.5}
@@ -421,7 +421,7 @@ export function HomeStage() {
       </mesh>
 
       {/* Floor glow cards for light leaks under doors */}
-      <mesh ref={redLeakMeshRef} position={[-1.45, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh ref={redLeakMeshRef} position={[-1.65, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#FF2A1F"
@@ -431,7 +431,7 @@ export function HomeStage() {
         />
       </mesh>
 
-      <mesh ref={diwaliLeakMeshRef} position={[1.45, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh ref={diwaliLeakMeshRef} position={[1.65, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#F2D38B"
@@ -441,22 +441,22 @@ export function HomeStage() {
         />
       </mesh>
 
-      {/* Door 1: Red Room GLB at (-1.45, 0, 0), uniform scale 0.8, grounded */}
+      {/* Door 1: Red Room GLB at (-1.65, 0, 0), uniform scale 0.78, grounded */}
       <group
         ref={redDoorRef}
         visible={false}
-        position={[-1.45, -8.0, 0]}
-        scale={[0.8, 0.8, 0.8]}
+        position={[-1.65, -8.0, 0]}
+        scale={[0.78, 0.78, 0.78]}
       >
         <primitive object={redScene} />
       </group>
 
-      {/* Door 2: Diwali GLB at (1.45, 0, 0), uniform scale 0.8, grounded */}
+      {/* Door 2: Diwali GLB at (1.65, 0, 0), uniform scale 0.78, grounded */}
       <group
         ref={diwaliDoorRef}
         visible={false}
-        position={[1.45, -8.0, 0]}
-        scale={[0.8, 0.8, 0.8]}
+        position={[1.65, -8.0, 0]}
+        scale={[0.78, 0.78, 0.78]}
       >
         <primitive object={diwaliScene} />
       </group>
