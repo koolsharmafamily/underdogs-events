@@ -98,9 +98,11 @@ body {
 
 /* Custom cursor active state on fine pointer devices */
 html.has-custom-cursor,
+html.has-custom-cursor body,
+html.has-custom-cursor *,
 html.has-custom-cursor a,
 html.has-custom-cursor button {
-  cursor: none;
+  cursor: none !important;
 }
 
 /* Selection colour: the world's accent on its void (Part 4.4) */

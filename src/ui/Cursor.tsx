@@ -91,21 +91,17 @@ export function Cursor() {
     >
       {effectiveWorld === 'home' && (
         <div
-          className={`flex items-center justify-center transition-all duration-250 ${
-            hoveringLink
-              ? 'h-9 w-9 rounded-full border-[1.5px] border-[#FCF9FC]'
-              : 'h-[10px] w-[10px]'
+          className={`flex items-center justify-center transition-transform duration-250 ${
+            hoveringLink ? 'scale-125 rotate-45' : 'scale-100 rotate-0'
           }`}
         >
-          {!hoveringLink && (
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-              <path
-                d="M1 1L9 9M9 1L1 9"
-                stroke="#FCF9FC"
-                strokeWidth="1.5"
-              />
-            </svg>
-          )}
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path
+              d="M1 1L9 9M9 1L1 9"
+              stroke="#FCF9FC"
+              strokeWidth="1.5"
+            />
+          </svg>
         </div>
       )}
 
@@ -113,7 +109,7 @@ export function Cursor() {
         <div
           className={`flex items-center justify-center rounded-full transition-all duration-250 ${
             hoveringLink
-              ? 'h-7 w-7 border border-[#FF2A1F] bg-[#FF2A1F]/15 shadow-[0_0_16px_rgba(255,42,31,0.55)]'
+              ? 'h-2.5 w-2.5 bg-[#FF2A1F] shadow-[0_0_14px_3px_rgba(255,42,31,0.85)]'
               : 'h-1.5 w-1.5 bg-[#FF2A1F] shadow-[0_0_10px_2px_rgba(255,42,31,0.75)]'
           }`}
         />
