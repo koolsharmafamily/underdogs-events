@@ -9,7 +9,6 @@ import { useSceneProgress } from '@/motion/useSceneProgress'
 import { useEnterTransition } from '@/motion/transitions'
 import { getLenis } from '@/motion/clock'
 import { BadgeDomHost } from '@/ui/BadgeDomHost'
-import { ScrollCue } from '@/ui/ScrollCue'
 import { Marquee } from '@/ui/Marquee'
 import { Divider } from '@/ui/Divider'
 import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
@@ -42,7 +41,6 @@ export function HomeView() {
   useSceneProgress('H4', h4Ref)
   useSceneProgress('H5', h5Ref)
 
-  const [cueVisible, setCueVisible] = useState(true)
   const [heroTextVisible, setHeroTextVisible] = useState(true)
   const [activeStatement, setActiveStatement] = useState(0)
   const [showAboutBody, setShowAboutBody] = useState(false)
@@ -50,7 +48,6 @@ export function HomeView() {
 
   useEffect(() => {
     if (!motionEnabled) {
-      setCueVisible(true)
       setHeroTextVisible(true)
       setActiveStatement(0)
       setShowAboutBody(true)
@@ -60,7 +57,6 @@ export function HomeView() {
 
     const prev = {
       heroText: true,
-      cue: true,
       stmt: 0,
       about: false,
       season: 3,
@@ -75,14 +71,6 @@ export function HomeView() {
       } else if (p1 < 0.10 && !prev.heroText) {
         prev.heroText = true
         setHeroTextVisible(true)
-      }
-
-      if (p1 > 0.1 && prev.cue) {
-        prev.cue = false
-        setCueVisible(false)
-      } else if (p1 < 0.08 && !prev.cue) {
-        prev.cue = true
-        setCueVisible(true)
       }
 
       const p2 = frame.progress.H2 ?? 0
@@ -111,16 +99,6 @@ export function HomeView() {
     }
   }, [motionEnabled])
 
-  const scrollToWhoWeAre = () => {
-    if (!h2Ref.current) return
-    const lenis = getLenis()
-    if (lenis) {
-      lenis.scrollTo(h2Ref.current)
-    } else {
-      h2Ref.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }
-
   return (
     <main id="main-content" className="relative z-10">
       {/* H1 · Hero, "Gate to Rage" (120vh desktop, ×0.85 mobile, pinned) */}
@@ -143,7 +121,7 @@ export function HomeView() {
 
             {/* Copy occupies columns 1–6, bottom-aligned at 72% viewport height on desktop (Part 7 H1) */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-4 transition-all ${
+              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-5 transition-all ${
                 heroTextVisible || !motionEnabled
                   ? 'duration-[650ms] opacity-100 translate-y-0'
                   : 'duration-[350ms] opacity-0 -translate-y-8 pointer-events-none'
@@ -161,10 +139,6 @@ export function HomeView() {
               <p className="font-manrope text-lead text-[var(--paper)]/90 measure-copy pretty-copy">
                 {site.home.hero.lead}
               </p>
-
-              <div className="pt-2">
-                <ScrollCue visible={cueVisible} onActivate={scrollToWhoWeAre} />
-              </div>
             </div>
           </div>
         </div>
@@ -249,15 +223,6 @@ export function HomeView() {
                   sizeClass="w-[200px] h-[200px] lg:w-[260px] lg:h-[260px]"
                   label="Underdogs Badge choreography preview"
                 />
-                {activeStatement === 1 && (
-                  <span
-                    aria-hidden="true"
-                    className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--chrome)]"
-                    style={{ transform: 'rotateY(180deg)' }}
-                  >
-                    GATE TO RAGE · NAGPUR
-                  </span>
-                )}
               </div>
             </div>
           </div>

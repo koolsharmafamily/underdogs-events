@@ -7,7 +7,7 @@ import { site } from '@/content/site'
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
 import { useSceneProgress } from '@/motion/useSceneProgress'
-import { runFadeCutJump, useEnterTransition } from '@/motion/transitions'
+import { useEnterTransition } from '@/motion/transitions'
 import { BadgeDomHost } from '@/ui/BadgeDomHost'
 import { Divider } from '@/ui/Divider'
 import { InvitationCard } from '@/ui/InvitationCard'
@@ -194,26 +194,6 @@ export function RedRoomView() {
             <p className="font-manrope text-sm sm:text-base text-[var(--rr-ash)] max-w-[560px]">
               {site.redRoom.sub}
             </p>
-
-            <button
-              type="button"
-              onClick={() => runFadeCutJump('#redroom-invitation')}
-              className="nav-roll-link mt-1 inline-flex min-h-[44px] items-center gap-2 border-b border-[var(--rr-bone)]/30 px-2 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--rr-bone)] hover:border-[var(--rr-neon)] hover:text-[var(--rr-neon)] transition-colors"
-            >
-              <span className="nav-roll-inner">
-                <span className="nav-roll-line">{site.redRoom.jump}</span>
-                <span className="nav-roll-line" aria-hidden="true">
-                  {site.redRoom.jump}
-                </span>
-              </span>
-              <svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
-                <path
-                  d="M5 1V10.5M5 10.5L1.5 7M5 10.5L8.5 7"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </section>

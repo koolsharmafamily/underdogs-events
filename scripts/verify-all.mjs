@@ -29,8 +29,10 @@ async function run() {
   });
 
   // A. Home H1
-  await page.goto('http://localhost:3000/?skipLoader=1', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(1500);
+  await page.goto('http://localhost:3000/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(600);
+  await page.mouse.click(10, 10); // Skip loader instantly
+  await page.waitForTimeout(2000); // Allow crossfade to complete cleanly
   await page.screenshot({ path: path.join(screenshotDir, 'verified_home_h1_1440x900.png') });
   console.log('Captured verified_home_h1_1440x900.png');
 
@@ -111,7 +113,7 @@ async function run() {
 
   // Home H1 Mobile
   await mPage.goto('http://localhost:3000/?skipLoader=1', { waitUntil: 'networkidle' });
-  await mPage.waitForTimeout(1500);
+  await mPage.waitForTimeout(2500);
   await mPage.screenshot({ path: path.join(screenshotDir, 'verified_home_h1_390x844.png') });
   console.log('Captured verified_home_h1_390x844.png');
 
