@@ -418,9 +418,9 @@ export function Badge({
       const h2X = isMobile ? 0 : 0.85;
       const h2Y = isMobile ? (size.height < 700 ? 1.65 : 1.82) : 1.5;
 
-      const h3Scale = isMobile ? 0.5 : 0.62;
-      const h3X = isMobile ? 0 : 1.6;
-      const h3Y = isMobile ? 2.5 : 2.1;
+      const h3Scale = isMobile ? 0 : 0.38;
+      const h3X = isMobile ? 0 : 2.45;
+      const h3Y = isMobile ? 3.5 : 2.95;
 
       const h5Scale = isMobile ? 0 : 0.40;
       const h5X = 0;
@@ -437,15 +437,15 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
         choreoYaw.current = 0;
         h2SpinDone.current = false;
-      } else if (scrollP <= 0.48) {
+      } else if (scrollP <= 0.46) {
         choreoPos.current.set(h2X, h2Y, 0);
         choreoScale.current = h2Scale;
-        const spinT = (scrollP - 0.2) / 0.28;
+        const spinT = (scrollP - 0.2) / 0.26;
         choreoYaw.current = THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
         h2SpinDone.current = spinT >= 0.98;
-      } else if (scrollP <= 0.68) {
-        // H3: Badge parks at top-right host position
-        const t = Math.max(0, Math.min(1, (scrollP - 0.48) / 0.2));
+      } else if (scrollP <= 0.52) {
+        // Fast, smooth transition from H2 center-right to H3 top-right parking position
+        const t = Math.max(0, Math.min(1, (scrollP - 0.46) / 0.06));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
           THREE.MathUtils.lerp(h2X, h3X, smoothT),
@@ -454,9 +454,14 @@ export function Badge({
         );
         choreoScale.current = THREE.MathUtils.lerp(h2Scale, h3Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
-      } else if (scrollP <= 0.85) {
-        // H4: Badge returns to center (x = 0) and rises up above door height (y = 3.3)
-        const t = Math.max(0, Math.min(1, (scrollP - 0.68) / 0.17));
+      } else if (scrollP <= 0.66) {
+        // H3: Badge is cleanly and steadily parked at top-right host position, clear of all marquee text
+        choreoPos.current.set(h3X, h3Y, 0);
+        choreoScale.current = h3Scale;
+        choreoYaw.current = Math.PI * 2;
+      } else if (scrollP <= 0.82) {
+        // H4: Badge glides along the top from top-right to center (x = 0, y = 2.72), remaining high above text
+        const t = Math.max(0, Math.min(1, (scrollP - 0.66) / 0.16));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
           THREE.MathUtils.lerp(h3X, h5X, smoothT),
@@ -466,7 +471,7 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(h3Scale, h5Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
       } else {
-        // H5: Badge floats above and between both doors at (0, 3.3, 0)
+        // H5: Badge floats above and between both doors at (0, 2.72, 0)
         choreoPos.current.set(h5X, h5Y, 0);
         choreoScale.current = h5Scale;
         choreoYaw.current = Math.PI * 2;

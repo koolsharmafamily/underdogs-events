@@ -62,27 +62,27 @@ export function Marquee({ items }: MarqueeProps) {
     return (
       <ul
         aria-label="Past nights"
-        className="site-container flex flex-wrap items-center gap-x-6 gap-y-4 py-8"
+        className="site-container flex flex-wrap items-center gap-x-6 gap-y-3 py-6"
       >
         {items.map((item, idx) => {
           const isOutline = idx % 2 === 1
           return (
-            <li key={item} className="inline-flex items-center gap-6">
+            <li key={item} className="inline-flex items-center gap-4">
               <span
                 onMouseEnter={triggerBlink}
-                className={`font-unbounded text-display-l font-extrabold uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
+                className={`font-unbounded text-[clamp(16px,1.8vw,26px)] font-bold tracking-[0.05em] uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
                   isOutline ? 'marquee-outline-item' : 'text-[var(--paper)]'
                 }`}
               >
                 {item}
               </span>
               {idx < items.length - 1 && (
-                <span aria-hidden="true" className="text-[var(--magenta)]">
-                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <span aria-hidden="true" className="text-[var(--magenta)] opacity-75">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
-                      d="M2 2L16 16M16 2L2 16"
+                      d="M2 2L10 10M10 2L2 10"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                     />
                   </svg>
                 </span>
@@ -99,7 +99,7 @@ export function Marquee({ items }: MarqueeProps) {
   const repeatedReverse = [...reversedItems, ...reversedItems]
 
   return (
-    <div className="flex flex-col gap-6 overflow-hidden py-4">
+    <div className="flex flex-col gap-3.5 sm:gap-4 overflow-hidden py-3">
       {/* Screen-reader accessible single list */}
       <ul className="sr-only">
         {items.map((item) => (
@@ -119,18 +119,18 @@ export function Marquee({ items }: MarqueeProps) {
               <span key={`r1-${idx}`} className="inline-flex items-center">
                 <span
                   onMouseEnter={triggerBlink}
-                  className={`px-4 font-unbounded text-display-l font-extrabold uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
+                  className={`px-3 font-unbounded text-[clamp(16px,1.8vw,26px)] font-bold tracking-[0.05em] uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
                     isOutline ? 'marquee-outline-item' : 'text-[var(--paper)]'
                   }`}
                 >
                   {item}
                 </span>
-                <span className="mx-3 inline-flex items-center text-[var(--magenta)]">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <span className="mx-2.5 inline-flex items-center text-[var(--magenta)] opacity-75">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
-                      d="M2.5 2.5L17.5 17.5M17.5 2.5L2.5 17.5"
+                      d="M2 2L10 10M10 2L2 10"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                     />
                   </svg>
                 </span>
@@ -152,18 +152,18 @@ export function Marquee({ items }: MarqueeProps) {
               <span key={`r2-${idx}`} className="inline-flex items-center">
                 <span
                   onMouseEnter={triggerBlink}
-                  className={`px-4 font-unbounded text-display-l font-extrabold uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
+                  className={`px-3 font-unbounded text-[clamp(16px,1.8vw,26px)] font-bold tracking-[0.05em] uppercase transition-colors duration-200 hover:text-[var(--magenta)] ${
                     isOutline ? 'marquee-outline-item' : 'text-[var(--paper)]'
                   }`}
                 >
                   {item}
                 </span>
-                <span className="mx-3 inline-flex items-center text-[var(--magenta)]">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <span className="mx-2.5 inline-flex items-center text-[var(--magenta)] opacity-75">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
-                      d="M2.5 2.5L17.5 17.5M17.5 2.5L2.5 17.5"
+                      d="M2 2L10 10M10 2L2 10"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                     />
                   </svg>
                 </span>
