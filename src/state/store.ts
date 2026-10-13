@@ -27,6 +27,7 @@ export interface AppStore {
   loadingProgress: number
   isPrecompiled: boolean
   loaderPopped: boolean
+  renderedWorlds: Record<WorldId, boolean>
 
   setWorld: (world: WorldId) => void
   setPhase: (phase: LoaderPhase) => void
@@ -34,6 +35,7 @@ export interface AppStore {
   setLoadingProgress: (progress: number) => void
   setPrecompiled: (precompiled: boolean) => void
   setLoaderPopped: (popped: boolean) => void
+  markWorldRendered: (world: WorldId) => void
   setMotionEnabled: (enabled: boolean, persist?: boolean) => void
   toggleMotion: () => void
   setPrefersReducedMotion: (reduced: boolean) => void
@@ -84,6 +86,7 @@ export const useStore = create<AppStore>((set, get) => ({
   loadingProgress: 0,
   isPrecompiled: false,
   loaderPopped: false,
+  renderedWorlds: { home: false, redroom: false, diwali: false },
 
   setWorld: (world) => {
     const cur = get().world
@@ -104,6 +107,13 @@ export const useStore = create<AppStore>((set, get) => ({
   setPrecompiled: (isPrecompiled) => set({ isPrecompiled }),
 
   setLoaderPopped: (loaderPopped) => set({ loaderPopped }),
+
+  markWorldRendered: (w) =>
+    set((state) =>
+      state.renderedWorlds[w]
+        ? state
+        : { renderedWorlds: { ...state.renderedWorlds, [w]: true } }
+    ),
 
   setMotionEnabled: (enabled, persist = true) => {
     set({ motionEnabled: enabled })

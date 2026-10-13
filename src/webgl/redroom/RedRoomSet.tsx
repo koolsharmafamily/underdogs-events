@@ -11,13 +11,6 @@ import { SmokeDragon } from './SmokeDragon';
 import { MirrorFog } from './MirrorFog';
 import { InvitationTray } from './InvitationTray';
 
-// Preload finished Red Room GLB models
-useGLTF.preload('/models/curtain-open.glb');
-useGLTF.preload('/models/redroom-mirror.glb');
-useGLTF.preload('/models/redroom-chandelier.glb');
-useGLTF.preload('/models/redroom-candelabra.glb');
-useGLTF.preload('/models/redroom-candle.glb');
-
 interface CandleClusterItem {
   variant: 0 | 1 | 2; // 0 = Candle_A, 1 = Candle_B, 2 = Candle_C
   pos: [number, number, number];

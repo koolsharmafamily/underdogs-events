@@ -14,7 +14,6 @@ import { InvitationCard } from '@/ui/InvitationCard'
 import { TransitionLink } from '@/ui/TransitionLink'
 import { Footer } from '@/ui/Footer'
 import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
-import { DiwaliTitleCard } from './DiwaliTitleCard'
 import { diwaliCardOverlayRef } from '@/webgl/tracking/DiwaliCardProjector'
 
 const BULB_COUNT = 16
@@ -79,10 +78,7 @@ export function DiwaliView() {
 
   return (
     <main id="main-content" className="relative z-10 text-[var(--dw-ivory)]">
-      {/* D0 · Film title card */}
-      <DiwaliTitleCard />
-
-      {/* D1 · The jewelled badge (160vh, pinned) */}
+      {/* D1 · The jewelled badge (110vh, pinned) */}
       <section
         ref={d1Ref}
         data-scene="D1"

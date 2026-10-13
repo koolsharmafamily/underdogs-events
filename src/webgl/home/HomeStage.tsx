@@ -9,10 +9,6 @@ import { useStore } from '@/state/store';
 import { Beams } from './Beams';
 import { AnchorFlames, findAnchorNodes, groundObjectToY } from '../fx/Flame';
 
-// Preload finished GLB models in public/models/
-useGLTF.preload('/models/door-redroom.glb');
-useGLTF.preload('/models/door-diwali.glb');
-
 const SPRING_OMEGA = 2 * Math.PI * 2.2; // f = 2.2 Hz
 const SPRING_ZETA = 0.65;
 

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { Suspense, useRef, useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
@@ -10,11 +10,6 @@ import { SkinId, DISSOLVE_EDGES } from './skins';
 import { DissolveUniforms, injectDissolve } from './dissolve.glsl';
 import { BadgeBehaviours } from './behaviours';
 import { SparkleGlints } from './SparkleGlints';
-
-// Preload all 3 badge models (Part 5.2, Part 12.4)
-useGLTF.preload('/models/badge-enamel.glb');
-useGLTF.preload('/models/badge-neon.glb');
-useGLTF.preload('/models/badge-jewelled.glb');
 
 interface BadgeProps {
   position?: [number, number, number];
@@ -32,6 +27,13 @@ interface PreparedScene {
   };
   neonMaterials: THREE.MeshStandardMaterial[];
 }
+
+const EMPTY_ANIMATED_NODES = {
+  eyeL: null as THREE.Group | null,
+  eyeR: null as THREE.Group | null,
+  tongue: null as THREE.Group | null,
+  drips: null as THREE.Mesh | null,
+};
 
 function prepareBadgeScene(
   sourceScene: THREE.Group,
@@ -86,6 +88,30 @@ function prepareBadgeScene(
   return { clone, animatedNodes, neonMaterials };
 }
 
+function BadgeSkinMesh({
+  url,
+  skinName,
+  uniforms,
+  backTexture,
+  preparedMapRef,
+}: {
+  url: string;
+  skinName: SkinId;
+  uniforms: DissolveUniforms;
+  backTexture: THREE.CanvasTexture | null;
+  preparedMapRef: React.MutableRefObject<Record<SkinId, PreparedScene | null>>;
+}) {
+  const gltf = useGLTF(url);
+  const prepared = useMemo(
+    () => prepareBadgeScene(gltf.scene, uniforms, backTexture, skinName),
+    [gltf.scene, uniforms, backTexture, skinName]
+  );
+
+  preparedMapRef.current[skinName] = prepared;
+
+  return <primitive object={prepared.clone} />;
+}
+
 export function Badge({
   position = [0, 1.5, 0],
   rotation = [0, 0, 0],
@@ -94,17 +120,19 @@ export function Badge({
   const { size } = useThree();
   const rootRef = useRef<THREE.Group>(null);
 
-  // Authentically loaded GLBs from public/models/
-  const enamelGltf = useGLTF('/models/badge-enamel.glb');
-  const neonGltf = useGLTF('/models/badge-neon.glb');
-  const jewelledGltf = useGLTF('/models/badge-jewelled.glb');
-
-  // Groups for each pre-mounted skin
+  // Groups for each skin
   const enamelGroupRef = useRef<THREE.Group>(null);
   const neonGroupRef = useRef<THREE.Group>(null);
   const jewelledGroupRef = useRef<THREE.Group>(null);
 
+  const preparedMapRef = useRef<Record<SkinId, PreparedScene | null>>({
+    enamel: null,
+    neon: null,
+    jewelled: null,
+  });
+
   const world = useStore((s) => s.world);
+  const phase = useStore((s) => s.phase);
   const targetSkinOverride = useStore((s) => s.targetSkinOverride);
   const motionEnabled = useStore((s) => s.motionEnabled);
   const hoverDoor = useStore((s) => s.hoverDoor);
@@ -116,6 +144,28 @@ export function Badge({
   const worldSkin: SkinId =
     world === 'redroom' ? 'neon' : world === 'diwali' ? 'jewelled' : 'enamel';
   const targetSkin: SkinId = targetSkinOverride ?? worldSkin;
+
+  // Only mount the active skin on initial load so we don't block on 4.2MB of other worlds' badges
+  const [mountedSkins, setMountedSkins] = useState<Record<SkinId, boolean>>(() => ({
+    enamel: targetSkin === 'enamel',
+    neon: targetSkin === 'neon',
+    jewelled: targetSkin === 'jewelled',
+  }));
+
+  useEffect(() => {
+    setMountedSkins((prev) =>
+      prev[targetSkin] ? prev : { ...prev, [targetSkin]: true }
+    );
+  }, [targetSkin]);
+
+  // Warm remaining badge skins in the background AFTER initial coin fade-out is completely done
+  useEffect(() => {
+    if (phase !== 'complete') return;
+    const t = window.setTimeout(() => {
+      setMountedSkins({ enamel: true, neon: true, jewelled: true });
+    }, 900);
+    return () => window.clearTimeout(t);
+  }, [phase]);
 
   // Lifecycle state tracking via REFS ONLY (zero React re-renders mid-transition)
   const activeSkinRef = useRef<SkinId>(targetSkin);
@@ -160,21 +210,22 @@ export function Badge({
     uEdgeWidth: { value: DISSOLVE_EDGES.jewelled.width },
   }), []);
 
-  // Engraved Back Canvas Texture per Part 7 H2: "GATE TO RAGE · NAGPUR"
+  // Engraved Back Canvas Texture (512x512 for 4x faster generation & GPU upload)
   const backTexture = useMemo(() => {
     if (typeof document === 'undefined') return null;
     const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 1024;
+    canvas.width = 512;
+    canvas.height = 512;
     const ctx = canvas.getContext('2d');
     if (!ctx) return null;
 
+    ctx.scale(0.5, 0.5);
     ctx.fillStyle = '#C8CCD6';
     ctx.fillRect(0, 0, 1024, 1024);
 
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.lineWidth = 1;
-    for (let y = 0; y < 1024; y += 4) {
+    ctx.lineWidth = 2;
+    for (let y = 0; y < 1024; y += 8) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(1024, y);
@@ -224,20 +275,6 @@ export function Badge({
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
   }, []);
-
-  // Pre-prepare all 3 scenes ONCE with cloned authentic GLB materials
-  const enamelPrepared = useMemo(
-    () => prepareBadgeScene(enamelGltf.scene, enamelUniforms, backTexture, 'enamel'),
-    [enamelGltf.scene, enamelUniforms, backTexture]
-  );
-  const neonPrepared = useMemo(
-    () => prepareBadgeScene(neonGltf.scene, neonUniforms, backTexture, 'neon'),
-    [neonGltf.scene, neonUniforms, backTexture]
-  );
-  const jewelledPrepared = useMemo(
-    () => prepareBadgeScene(jewelledGltf.scene, jewelledUniforms, backTexture, 'jewelled'),
-    [jewelledGltf.scene, jewelledUniforms, backTexture]
-  );
 
   const getSkinGroup = (skin: SkinId) => {
     if (skin === 'neon') return neonGroupRef.current;
@@ -331,14 +368,6 @@ export function Badge({
   const choreoYaw = useRef(0);
   const choreoScale = useRef(scale);
   const h2SpinDone = useRef(false);
-
-  // Active animated nodes based on current active skin
-  const currentNodes =
-    activeSkinRef.current === 'neon'
-      ? neonPrepared.animatedNodes
-      : activeSkinRef.current === 'jewelled'
-        ? jewelledPrepared.animatedNodes
-        : enamelPrepared.animatedNodes;
 
   // Frame priority -30 per Part 13.3
   useFrame((_, delta) => {
@@ -565,6 +594,9 @@ export function Badge({
 
     rootRef.current.scale.setScalar(choreoScale.current * popScale);
 
+    const activePrepared = preparedMapRef.current[activeSkinRef.current];
+    const currentNodes = activePrepared ? activePrepared.animatedNodes : EMPTY_ANIMATED_NODES;
+
     // 6. Update autonomous and interactive behaviours with choreography
     behaviours.update(
       rootRef.current,
@@ -590,18 +622,19 @@ export function Badge({
     );
 
     // 7. Neon emissive flicker (Red Room) preserving original GLB emissiveIntensity ratio without white-clipping
-    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrepared.neonMaterials.length > 0) {
+    const neonPrep = preparedMapRef.current.neon;
+    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrep && neonPrep.neonMaterials.length > 0) {
       const flicker = 1.0 + Math.sin(frame.time * 24.0) * 0.08 * (Math.sin(frame.time * 7.3) > 0 ? 1 : 0);
-      neonPrepared.neonMaterials.forEach((m) => {
+      neonPrep.neonMaterials.forEach((m) => {
         const base = Math.min(1.75, m.userData.baseEmissiveIntensity ?? 1.0);
         m.emissiveIntensity = base * flicker;
       });
     }
 
     // 8. Neon drips extension animation per Part 5.2
-    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrepared.animatedNodes.drips) {
+    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrep?.animatedNodes.drips) {
       const cycle = (frame.time % 8.0) / 8.0;
-      neonPrepared.animatedNodes.drips.scale.y = 1.0 + Math.sin(cycle * Math.PI * 2) * 0.06 + 0.06;
+      neonPrep.animatedNodes.drips.scale.y = 1.0 + Math.sin(cycle * Math.PI * 2) * 0.06 + 0.06;
     }
   }, -30);
 
@@ -639,19 +672,49 @@ export function Badge({
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
     >
-      {/* Pre-mounted Enamel Skin GLB (Home - Pink) */}
+      {/* Enamel Skin GLB (Home - Pink) */}
       <group ref={enamelGroupRef} name="EnamelSkin" visible={targetSkin === 'enamel'}>
-        <primitive object={enamelPrepared.clone} />
+        {mountedSkins.enamel && (
+          <Suspense fallback={null}>
+            <BadgeSkinMesh
+              url="/models/badge-enamel.glb"
+              skinName="enamel"
+              uniforms={enamelUniforms}
+              backTexture={backTexture}
+              preparedMapRef={preparedMapRef}
+            />
+          </Suspense>
+        )}
       </group>
 
-      {/* Pre-mounted Neon Skin GLB (The Red Room - Red) */}
+      {/* Neon Skin GLB (The Red Room - Red) */}
       <group ref={neonGroupRef} name="NeonSkin" visible={targetSkin === 'neon'}>
-        <primitive object={neonPrepared.clone} />
+        {mountedSkins.neon && (
+          <Suspense fallback={null}>
+            <BadgeSkinMesh
+              url="/models/badge-neon.glb"
+              skinName="neon"
+              uniforms={neonUniforms}
+              backTexture={backTexture}
+              preparedMapRef={preparedMapRef}
+            />
+          </Suspense>
+        )}
       </group>
 
-      {/* Pre-mounted Jewelled Skin GLB (Diwali - Jewelled Pink & Gold) */}
+      {/* Jewelled Skin GLB (Diwali - Jewelled Pink & Gold) */}
       <group ref={jewelledGroupRef} name="JewelledSkin" visible={targetSkin === 'jewelled'}>
-        <primitive object={jewelledPrepared.clone} />
+        {mountedSkins.jewelled && (
+          <Suspense fallback={null}>
+            <BadgeSkinMesh
+              url="/models/badge-jewelled.glb"
+              skinName="jewelled"
+              uniforms={jewelledUniforms}
+              backTexture={backTexture}
+              preparedMapRef={preparedMapRef}
+            />
+          </Suspense>
+        )}
       </group>
 
       {/* Directional Sparkle Glints on Pavé Diamond Face for Jewelled Skin */}

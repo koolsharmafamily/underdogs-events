@@ -15,15 +15,6 @@ import { DiwaliCardProjector } from '@/webgl/tracking/DiwaliCardProjector';
 import { CinemaLightbox } from './CinemaLightbox';
 import { AnchorFlames, getAnchorOffsetFromRoot } from '../fx/Flame';
 
-// Preload Diwali assets
-useGLTF.preload('/models/curtain-open-diwali.glb');
-useGLTF.preload('/models/diwali-card.glb');
-useGLTF.preload('/models/diwali-diya-brass.glb');
-useGLTF.preload('/models/diwali-diya-terracotta.glb');
-useGLTF.preload('/models/diwali-kandil.glb');
-useGLTF.preload('/models/diwali-marigold.glb');
-useGLTF.preload('/models/diwali-rose-petal.glb');
-
 interface KandilSpec {
   pos: [number, number, number];
   scale: number;

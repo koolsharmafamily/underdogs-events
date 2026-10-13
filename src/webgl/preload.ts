@@ -22,6 +22,7 @@ export function preloadWorldAssets(world: WorldId) {
   } else if (world === 'diwali') {
     useGLTF.preload('/models/badge-jewelled.glb')
     useGLTF.preload('/models/curtain-open-diwali.glb')
+    useGLTF.preload('/models/diwali-kandil.glb')
     useGLTF.preload('/models/diwali-diya-brass.glb')
     useGLTF.preload('/models/diwali-diya-terracotta.glb')
     useGLTF.preload('/models/diwali-rose-petal.glb')

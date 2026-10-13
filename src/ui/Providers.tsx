@@ -13,6 +13,7 @@ import {
 } from '@/motion/transitions'
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
+import { preloadWorldAssets } from '@/webgl/preload'
 import { TransitionStage } from './TransitionStage'
 
 const Experience = dynamic(
@@ -64,6 +65,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // Handle route changes, T4 H5 gate landing, and T5 scroll restoration
   useEffect(() => {
     const world = pathToWorld(pathname)
+    preloadWorldAssets(world)
     setWorld(world)
     prevPathnameRef.current = pathname
 

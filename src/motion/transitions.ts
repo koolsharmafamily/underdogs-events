@@ -4,12 +4,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { frame, type TransitionType } from '@/state/frame'
 import { useStore } from '@/state/store'
 import type { WorldId } from '@/theme/tokens'
+import { preloadWorldAssets } from '@/webgl/preload'
 import { getLenis } from './clock'
 import { registerMotionEases } from './eases'
 
 export interface TransitionStageRefs {
   stageEl: HTMLElement | null
   veilEl: HTMLElement | null
+  coinEl?: HTMLElement | null
   washEl: HTMLElement | null
   curtainWrapEl: HTMLElement | null
   leftCurtainEl: HTMLElement | null
@@ -20,9 +22,11 @@ let stageRefs: TransitionStageRefs | null = null
 let activeTimeline: gsap.core.Timeline | null = null
 let pendingEnterCallback: (() => void) | null = null
 let pendingEnterFallbackTimer: number | null = null
+let pendingTargetWorld: WorldId | null = null
+let isRouteEntered = false
+let isWorldRendered = false
 
 const SCROLL_STORAGE_PREFIX = 'underdogs-scroll:'
-
 
 export function registerTransitionStage(refs: TransitionStageRefs | null) {
   stageRefs = refs
@@ -33,6 +37,7 @@ export function registerTransitionVeil(el: HTMLElement | null) {
     stageRefs = {
       stageEl: el,
       veilEl: el,
+      coinEl: null,
       washEl: null,
       curtainWrapEl: null,
       leftCurtainEl: null,
@@ -114,6 +119,7 @@ function resetStageComplete() {
     gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
   }
   if (stageRefs?.veilEl) gsap.set(stageRefs.veilEl, { opacity: 0 })
+  if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 })
 
   const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
   if (mainEl) {
@@ -121,24 +127,27 @@ function resetStageComplete() {
   }
 }
 
-/**
- * Called by destination page's `useEnterTransition` once its first frame is ready (Part 13.6)
- */
-export function notifyRouteEntered() {
+function tryProceedEnter(force = false) {
+  if (!pendingEnterCallback) return
+  if (!force && (!isRouteEntered || !isWorldRendered)) return
+
   if (pendingEnterFallbackTimer !== null && typeof window !== 'undefined') {
     window.clearTimeout(pendingEnterFallbackTimer)
     pendingEnterFallbackTimer = null
   }
-  if (pendingEnterCallback) {
-    const fn = pendingEnterCallback
-    pendingEnterCallback = null
-    // Run on next animation frame so layout & ScrollTrigger have settled
+
+  const fn = pendingEnterCallback
+  pendingEnterCallback = null
+  pendingTargetWorld = null
+
+  // Wait one animation frame after layout + WebGL settle so frame 1 of the coin dissolve is 100% hitch-free
+  requestAnimationFrame(() => {
+    try {
+      ScrollTrigger.refresh()
+    } catch {
+      // Safe layout refresh catch
+    }
     requestAnimationFrame(() => {
-      try {
-        ScrollTrigger.refresh()
-      } catch (e) {
-        // Safe layout refresh catch
-      }
       try {
         fn()
       } catch (e) {
@@ -146,6 +155,24 @@ export function notifyRouteEntered() {
         resetStageComplete()
       }
     })
+  })
+}
+
+/**
+ * Called by destination page's `useEnterTransition` once its DOM is mounted
+ */
+export function notifyRouteEntered() {
+  isRouteEntered = true
+  tryProceedEnter(false)
+}
+
+/**
+ * Called by `Precompile` once the destination 3D world has compiled shaders and rendered 2 warm WebGL frames
+ */
+export function notifyWorldRendered(world: WorldId) {
+  if (pendingTargetWorld === world) {
+    isWorldRendered = true
+    tryProceedEnter(false)
   }
 }
 
@@ -179,33 +206,69 @@ export function runFadeCutJump(target: number | string | HTMLElement) {
   }
 
   const veilEl = stageRefs?.veilEl
+  const coinEl = stageRefs?.coinEl
   if (!veilEl) {
     performScroll()
     return
   }
 
-  const outDur = motionEnabled ? 0.35 : 0.15
-  const inDur = motionEnabled ? 0.45 : 0.15
+  const outDur = motionEnabled ? 0.28 : 0.14
+  const inDur = motionEnabled ? 0.45 : 0.16
 
   gsap.killTweensOf(veilEl)
+  if (coinEl) gsap.killTweensOf(coinEl)
   if (stageRefs?.stageEl) gsap.set(stageRefs.stageEl, { pointerEvents: 'auto' })
+  if (coinEl) gsap.set(coinEl, { opacity: 0, scale: 0.92 })
 
   const tl = gsap.timeline({
     onComplete: () => {
       if (stageRefs?.stageEl) gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
+      if (coinEl) gsap.set(coinEl, { opacity: 1, scale: 1 })
     },
   })
 
-  tl.to(veilEl, {
-    opacity: 1,
-    duration: outDur,
-    ease: 'ease.inOut',
-    onComplete: performScroll,
-  }).to(veilEl, {
-    opacity: 0,
-    duration: inDur,
-    ease: 'ease.out',
-  })
+  tl.to(
+    veilEl,
+    {
+      opacity: 1,
+      duration: outDur,
+      ease: 'power2.inOut',
+      onComplete: performScroll,
+    },
+    0
+  )
+  if (coinEl) {
+    tl.to(
+      coinEl,
+      {
+        opacity: 1,
+        scale: 1,
+        duration: outDur,
+        ease: 'power2.out',
+        force3D: true,
+      },
+      0.03
+    ).to(
+      coinEl,
+      {
+        opacity: 0,
+        scale: 0.92,
+        duration: inDur * 0.85,
+        ease: 'power2.inOut',
+        force3D: true,
+      },
+      outDur + 0.04
+    )
+  }
+  tl.to(
+    veilEl,
+    {
+      opacity: 0,
+      duration: inDur,
+      ease: 'power2.out',
+    },
+    outDur + 0.14
+  )
 }
 
 export interface RouteTransitionOptions {
@@ -239,6 +302,9 @@ export function runRouteTransition(
   const fromWorld = pathToWorld(fromPath)
   const toWorld = pathToWorld(toPath)
   const destSkin = worldToSkin(toWorld)
+
+  // Ensure target world's 3D assets begin preloading immediately
+  preloadWorldAssets(toWorld)
 
   // Save current route's scroll position before leaving (Part 10 T5)
   if (!options.isPopState) {
@@ -275,6 +341,9 @@ export function runRouteTransition(
     pendingEnterFallbackTimer = null
   }
   pendingEnterCallback = null
+  pendingTargetWorld = null
+  isRouteEntered = false
+  isWorldRendered = false
 
   // Stop Lenis during exit to prevent visible scroll jump
   const lenis = getLenis()
@@ -304,13 +373,19 @@ export function runRouteTransition(
     return
   }
 
-  const { stageEl, veilEl } = stageRefs
-  if (stageEl) gsap.set(stageEl, { pointerEvents: 'auto' })
+  const { stageEl, veilEl, coinEl } = stageRefs
+  if (stageEl) {
+    stageEl.style.pointerEvents = 'auto'
+    gsap.set(stageEl, { pointerEvents: 'auto' })
+  }
   gsap.set(veilEl, { opacity: 0 })
+  if (coinEl) {
+    gsap.set(coinEl, { opacity: 0, scale: 0.92 })
+  }
 
   const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
 
-  // Helper to await destination mount at cover point
+  // Helper to await BOTH destination DOM mount AND 3D WebGL frame readiness at cover point
   const triggerCoverAndWaitForMount = (enterFn: () => void) => {
     frame.transition.phase = 'covered'
 
@@ -327,30 +402,31 @@ export function runRouteTransition(
 
     frame.snapCamera = true
 
+    const currentStore = useStore.getState()
+    pendingTargetWorld = toWorld
+    isRouteEntered = false
+    isWorldRendered = Boolean(currentStore.renderedWorlds[toWorld] || currentStore.tier === 'T0')
+
     pendingEnterCallback = () => {
       if (lenis) lenis.start()
       enterFn()
     }
+
     if (typeof window !== 'undefined') {
       pendingEnterFallbackTimer = window.setTimeout(() => {
-        if (pendingEnterCallback) {
-          const fn = pendingEnterCallback
-          pendingEnterCallback = null
-          try {
-            fn()
-          } catch (e) {
-            console.error('Fallback enter animation error:', e)
-            resetStageComplete()
-          }
-        }
-      }, 1600)
+        tryProceedEnter(true)
+      }, 950)
     }
+
     onCover()
   }
 
-  // Classy minimalistic transition with centered pink badge on luxury dark background
-  const outDur = motionEnabled ? 0.32 : 0.16
-  const inDur = motionEnabled ? 0.40 : 0.16
+  // Classy minimalistic two-step transition with centered pink badge on luxury dark vignette
+  const outDur = motionEnabled ? 0.28 : 0.14
+  const coinFadeDur = motionEnabled ? 0.42 : 0.18
+  const veilOverlap = motionEnabled ? 0.14 : 0.04
+  const veilFadeDur = motionEnabled ? 0.48 : 0.2
+  const inDur = veilOverlap + veilFadeDur
 
   frame.transition.duration = outDur + inDur
   frame.transition.coverTime = outDur
@@ -373,34 +449,63 @@ export function runRouteTransition(
           },
           onComplete: resetStageComplete,
         })
+
+        // Step 1: Centered pink coin smoothly scales down slightly and melts into the dark vignette
+        if (coinEl) {
+          enterTl.to(
+            coinEl,
+            {
+              opacity: 0,
+              scale: 0.92,
+              duration: coinFadeDur,
+              ease: 'power2.inOut',
+              force3D: true,
+            },
+            0
+          )
+        }
+
+        // Release pointer-events as soon as the veil begins lifting so user can immediately interact/scroll
+        enterTl.call(
+          () => {
+            if (stageEl) {
+              stageEl.style.pointerEvents = 'none'
+            }
+          },
+          [],
+          veilOverlap
+        )
+
+        // Step 2: Dark vignette smoothly lifts to reveal the warm 3D world
         enterTl.to(
           veilEl,
           {
             opacity: 0,
-            duration: inDur,
+            duration: veilFadeDur,
             ease: 'power2.out',
           },
-          0
+          veilOverlap
         )
+
         activeTimeline = enterTl
       })
     },
   })
 
-  // Fade out main content
+  // Fade out current page content
   if (mainEl) {
     exitTl.to(
       mainEl,
       {
         opacity: 0,
-        duration: outDur * 0.75,
+        duration: outDur * 0.72,
         ease: 'power1.out',
       },
       0
     )
   }
 
-  // Smoothly fade in the centered pink badge veil
+  // Smoothly fade in the dark vignette veil
   exitTl.to(
     veilEl,
     {
@@ -410,6 +515,21 @@ export function runRouteTransition(
     },
     0
   )
+
+  // Materialize the centered pink coin
+  if (coinEl) {
+    exitTl.to(
+      coinEl,
+      {
+        opacity: 1,
+        scale: 1,
+        duration: outDur,
+        ease: 'power2.out',
+        force3D: true,
+      },
+      0.03
+    )
+  }
 
   activeTimeline = exitTl
 }

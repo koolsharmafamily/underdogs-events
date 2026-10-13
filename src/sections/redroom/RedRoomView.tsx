@@ -27,8 +27,6 @@ const DRIPS = [
 export function RedRoomView() {
   const motionEnabled = useStore((s) => s.motionEnabled)
   const setWorld = useStore((s) => s.setWorld)
-  const lastNavigationOrigin = useStore((s) => s.lastNavigationOrigin)
-  const [entryDone, setEntryDone] = useState(lastNavigationOrigin !== 'direct')
   const [activeStoryIdx, setActiveStoryIdx] = useState(0)
   const [dressStep, setDressStep] = useState(4)
   const [cardStage, setCardStage] = useState<'sealed' | 'opening' | 'open'>('open')
@@ -53,18 +51,6 @@ export function RedRoomView() {
   useSceneProgress('R4', r4Ref)
   useSceneProgress('R5', r5Ref)
   useSceneProgress('R6', r6Ref)
-
-  // R0 Direct visit entry curtain reveal (Part 8 R0: skipped when arriving through T1/T3)
-  useEffect(() => {
-    if (!motionEnabled || lastNavigationOrigin !== 'direct') {
-      setEntryDone(true)
-      return
-    }
-    const timer = window.setTimeout(() => {
-      setEntryDone(true)
-    }, 850)
-    return () => window.clearTimeout(timer)
-  }, [motionEnabled, lastNavigationOrigin])
 
   useEffect(() => {
     if (!motionEnabled) {
@@ -111,20 +97,7 @@ export function RedRoomView() {
 
   return (
     <main id="main-content" className="relative z-10 text-[var(--rr-bone)]">
-      {/* R0 · Entry overlay ("UNDERDOGS PRESENT" over curtains) */}
-      {!entryDone && (
-        <div
-          aria-hidden="true"
-          onClick={() => setEntryDone(true)}
-          className="fixed inset-0 z-40 flex items-center justify-center bg-[#060101] transition-opacity duration-700"
-        >
-          <p className="font-cinzel text-[13px] uppercase tracking-[0.28em] text-[#EFD9CD]">
-            {site.redRoom.presenter}
-          </p>
-        </div>
-      )}
-
-      {/* R1 · Title and the smoke dragon (160vh, pinned) */}
+      {/* R1 · Title and the smoke dragon (110vh, pinned) */}
       <section
         ref={r1Ref}
         data-scene="R1"

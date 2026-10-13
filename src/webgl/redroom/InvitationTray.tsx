@@ -17,8 +17,6 @@ import { groundObjectToY } from '../fx/Flame';
  * - 80–100%: Hold. Tracked DOM overlay visible
  */
 
-useGLTF.preload('/models/redroom-invitation.glb');
-
 interface NodeTransform {
   pos: THREE.Vector3;
   rot: THREE.Euler;

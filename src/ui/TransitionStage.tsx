@@ -4,19 +4,18 @@ import React, { useEffect, useRef } from 'react'
 import { registerTransitionStage } from '@/motion/transitions'
 
 /**
- * Persistent transition overlay stage controlled directly via GSAP refs in transitions.ts (zero React state updates per frame):
- * - veilEl: solid world-darkness / film-cut black veil (#060101 / #0B0B0F / #07090D)
- * - washEl: warm white-gold exposure wash for T2 (0.25–1.00s) and T3 Diwali gold flash
- * - curtainWrapEl, leftCurtainEl, rightCurtainEl: full-height pleated velvet curtains that sweep in from both sides (T1 0.85–1.35s, T3 0.00–0.80s) and part with fold bunching (T1 1.35–2.40s, T3->RedRoom)
+ * Persistent transition overlay stage controlled directly via GSAP refs in transitions.ts (zero React state updates per frame).
  */
 export function TransitionStage() {
   const stageRef = useRef<HTMLDivElement>(null)
   const veilRef = useRef<HTMLDivElement>(null)
+  const coinRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     registerTransitionStage({
       stageEl: stageRef.current,
       veilEl: veilRef.current,
+      coinEl: coinRef.current,
       washEl: null,
       curtainWrapEl: null,
       leftCurtainEl: null,
@@ -37,14 +36,26 @@ export function TransitionStage() {
       {/* Classy minimalistic veil with centered pink badge */}
       <div
         ref={veilRef}
-        className="pointer-events-none absolute inset-0 opacity-0 flex items-center justify-center select-none"
+        className="pointer-events-none absolute inset-0 opacity-0 flex items-center justify-center select-none will-change-[opacity]"
         style={{
           background:
             'radial-gradient(ellipse at 50% 50%, #170915 0%, #09060B 65%, #050406 100%)',
         }}
       >
-        <div className="badge-breathe relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-none">
-          <picture className="w-full h-full flex items-center justify-center">
+        <div
+          ref={coinRef}
+          className="relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-none will-change-[transform,opacity]"
+        >
+          {/* Static radial glow behind coin instead of expensive per-frame CSS drop-shadow filter */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-4 rounded-full"
+            style={{
+              background:
+                'radial-gradient(circle, rgba(215,62,188,0.32) 0%, rgba(215,62,188,0) 70%)',
+            }}
+          />
+          <picture className="badge-breathe relative z-10 w-full h-full flex items-center justify-center">
             <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
             <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
             <img
@@ -54,7 +65,7 @@ export function TransitionStage() {
               height={1024}
               fetchPriority="high"
               decoding="async"
-              className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_50px_rgba(215,62,188,0.28)] select-none"
+              className="w-full h-full object-contain pointer-events-none select-none"
             />
           </picture>
         </div>
