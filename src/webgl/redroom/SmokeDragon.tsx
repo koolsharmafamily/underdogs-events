@@ -17,71 +17,80 @@ export function SmokeDragon() {
   const whiskerLRef = useRef<THREE.Mesh>(null);
   const whiskerRRef = useRef<THREE.Mesh>(null);
   const segmentRefs = useRef<(THREE.Group | null)[]>([]);
-  const frontClawLRef = useRef<THREE.Group>(null);
-  const frontClawRRef = useRef<THREE.Group>(null);
-  const backClawLRef = useRef<THREE.Group>(null);
-  const backClawRRef = useRef<THREE.Group>(null);
+  const frontLegLRef = useRef<THREE.Group>(null);
+  const frontLegRRef = useRef<THREE.Group>(null);
+  const backLegLRef = useRef<THREE.Group>(null);
+  const backLegRRef = useRef<THREE.Group>(null);
   const smokePointsRef = useRef<THREE.Points>(null);
 
-  // Materials created once with high-end dark lacquer and glowing red/ember accents
+  // Materials: Rich crimson scales, gilded imperial gold underbelly & horns, glowing ember fins
   const materials = useMemo(() => {
-    // 1. Dark smoked obsidian body scales with crimson specular sheen
+    // 1. Rich imperial crimson scales with metallic ruby sheen
     const scaleMat = new THREE.MeshStandardMaterial({
-      color: '#1C0305',
-      roughness: 0.22,
-      metalness: 0.82,
-      emissive: '#3D0509',
+      color: '#8A1118',
+      roughness: 0.28,
+      metalness: 0.62,
+      emissive: '#45060A',
+      emissiveIntensity: 0.35,
+    });
+
+    // 2. Gilded imperial gold underbelly plating
+    const bellyMat = new THREE.MeshStandardMaterial({
+      color: '#C99738',
+      roughness: 0.3,
+      metalness: 0.8,
+      emissive: '#3D2802',
       emissiveIntensity: 0.25,
     });
 
-    // 2. Crimson underbelly plating
-    const bellyMat = new THREE.MeshStandardMaterial({
-      color: '#42060B',
-      roughness: 0.35,
-      metalness: 0.45,
-    });
-
-    // 3. Glowing fiery dorsal spine fins and horns
+    // 3. Glowing fiery dorsal spine fins
     const finMat = new THREE.MeshStandardMaterial({
-      color: '#9E120D',
-      roughness: 0.25,
-      metalness: 0.6,
-      emissive: '#FF2A1F',
-      emissiveIntensity: 0.9,
+      color: '#FF2A15',
+      roughness: 0.2,
+      metalness: 0.4,
+      emissive: '#FF2A15',
+      emissiveIntensity: 1.1,
     });
 
-    // 4. Piercing glowing ember eyes
+    // 4. Swept imperial antlers / horns & claws
+    const goldHornMat = new THREE.MeshStandardMaterial({
+      color: '#E0B553',
+      roughness: 0.22,
+      metalness: 0.88,
+      emissive: '#523A08',
+      emissiveIntensity: 0.3,
+    });
+
+    // 5. Piercing fiery ember eyes
     const eyeMat = new THREE.MeshBasicMaterial({
-      color: '#FFA03A',
+      color: '#FFAE33',
     });
 
-    // 5. Gilded talons / claws
-    const talonMat = new THREE.MeshStandardMaterial({
-      color: '#D4AF6A',
-      roughness: 0.25,
-      metalness: 0.85,
-    });
-
-    return { scaleMat, bellyMat, finMat, eyeMat, talonMat };
+    return { scaleMat, bellyMat, finMat, goldHornMat, eyeMat };
   }, []);
 
-  // Shared geometries
+  // Shared geometries for maximum performance (0 memory churn)
   const geometries = useMemo(() => {
-    // Head cranium & snout
-    const snoutGeo = new THREE.ConeGeometry(0.14, 0.38, 7);
-    const browGeo = new THREE.BoxGeometry(0.24, 0.08, 0.18);
-    const hornGeo = new THREE.ConeGeometry(0.04, 0.36, 6);
-    const jawGeo = new THREE.ConeGeometry(0.11, 0.28, 6);
-    const eyeGeo = new THREE.SphereGeometry(0.032, 10, 10);
-    const whiskerGeo = new THREE.CylinderGeometry(0.008, 0.003, 0.45, 5);
+    // Head: Snout cranium, brow, horns, jaw, eyes, whiskers
+    const snoutGeo = new THREE.ConeGeometry(0.15, 0.42, 8);
+    const browGeo = new THREE.BoxGeometry(0.26, 0.10, 0.20);
+    const hornGeo = new THREE.ConeGeometry(0.045, 0.42, 6);
+    const jawGeo = new THREE.ConeGeometry(0.12, 0.32, 7);
+    const eyeGeo = new THREE.SphereGeometry(0.038, 10, 10);
+    const whiskerGeo = new THREE.CylinderGeometry(0.009, 0.003, 0.55, 6);
 
-    // Segment pieces
-    const segGeo = new THREE.CylinderGeometry(1, 1, 1, 8);
-    const finGeo = new THREE.ConeGeometry(0.08, 0.24, 4);
+    // Segment pieces (unit cylinder along Y axis so we can orient between spine points)
+    const segGeo = new THREE.CylinderGeometry(1, 1, 1, 10);
+    const bellyGeo = new THREE.CylinderGeometry(0.85, 0.85, 0.95, 8);
+    const finGeo = new THREE.ConeGeometry(0.08, 0.28, 4);
 
-    // Claw piece
-    const legUpperGeo = new THREE.CylinderGeometry(0.04, 0.03, 0.22, 6);
-    const talonGeo = new THREE.ConeGeometry(0.02, 0.10, 4);
+    // Claws / Legs
+    const upperLegGeo = new THREE.CylinderGeometry(0.045, 0.035, 0.26, 6);
+    const lowerLegGeo = new THREE.CylinderGeometry(0.032, 0.022, 0.22, 6);
+    const talonGeo = new THREE.ConeGeometry(0.02, 0.12, 4);
+
+    // Tail fin plume
+    const tailPlumeGeo = new THREE.ConeGeometry(0.12, 0.5, 4);
 
     return {
       snoutGeo,
@@ -91,14 +100,17 @@ export function SmokeDragon() {
       eyeGeo,
       whiskerGeo,
       segGeo,
+      bellyGeo,
       finGeo,
-      legUpperGeo,
+      upperLegGeo,
+      lowerLegGeo,
       talonGeo,
+      tailPlumeGeo,
     };
   }, []);
 
-  // Particle smoke trail billowing behind the dragon
-  const smokeCount = tier === 'T1' ? 400 : tier === 'T2' ? 900 : 1600;
+  // Volumetric ember particle trail
+  const smokeCount = tier === 'T1' ? 300 : tier === 'T2' ? 700 : 1200;
   const smokeData = useMemo(() => {
     const geo = new THREE.BufferGeometry();
     const pos = new Float32Array(smokeCount * 3);
@@ -106,12 +118,12 @@ export function SmokeDragon() {
     const ages = new Float32Array(smokeCount);
 
     for (let i = 0; i < smokeCount; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 0.4;
-      pos[i * 3 + 1] = 2.2 + (Math.random() - 0.5) * 0.4;
-      pos[i * 3 + 2] = 0.6 + (Math.random() - 0.5) * 0.4;
-      vels[i * 3] = (Math.random() - 0.5) * 0.3;
-      vels[i * 3 + 1] = Math.random() * 0.25 + 0.05;
-      vels[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+      pos[i * 3] = (Math.random() - 0.5) * 0.3;
+      pos[i * 3 + 1] = 2.4 + (Math.random() - 0.5) * 0.3;
+      pos[i * 3 + 2] = -0.2 + (Math.random() - 0.5) * 0.3;
+      vels[i * 3] = (Math.random() - 0.5) * 0.2;
+      vels[i * 3 + 1] = Math.random() * 0.2 + 0.05;
+      vels[i * 3 + 2] = (Math.random() - 0.5) * 0.2;
       ages[i] = Math.random() * 2.0;
     }
 
@@ -119,18 +131,31 @@ export function SmokeDragon() {
     return { geo, vels, ages, count: smokeCount };
   }, [smokeCount]);
 
-  // Pre-allocated vectors for frame loop
-  const pVecA = useMemo(() => new THREE.Vector3(), []);
-  const pVecB = useMemo(() => new THREE.Vector3(), []);
-  const dirVec = useMemo(() => new THREE.Vector3(), []);
+  // Pre-allocated vectors & quaternions for 60fps frame loop
+  const pA = useMemo(() => new THREE.Vector3(), []);
+  const pB = useMemo(() => new THREE.Vector3(), []);
+  const spinePosArray = useMemo(
+    () => Array.from({ length: SEGMENTS_COUNT + 2 }, () => new THREE.Vector3()),
+    []
+  );
+  const upAxis = useMemo(() => new THREE.Vector3(0, 1, 0), []);
+  const forwardVec = useMemo(() => new THREE.Vector3(), []);
+  const segQuat = useMemo(() => new THREE.Quaternion(), []);
 
-  // Parametric trajectory for dragon spine in 3D Red Room space
+  /**
+   * Flight path in 3D Red Room space:
+   * - Sweeps gracefully left and right: x in [-2.0, 2.0]
+   * - Mid-high altitude: y in [2.2, 2.85] (above table y=0.85 and title text y<=1.0, below chandelier y>=3.5)
+   * - When crossing center (|x| < 0.8), z <= 0.0 (strictly BEHIND the badge at z=0.6)
+   * - When coming forward (z > 0.4), |x| >= 1.25 (out on wide flanks, never covering badge)
+   * - On scroll into R2-R3: lifts seamlessly into upper ceiling (y -> 4.8)
+   */
   const sampleSpine = (timeVal: number, lift: number, out: THREE.Vector3) => {
-    const angle = timeVal * 0.52;
-    const rad = 1.35 + Math.sin(timeVal * 0.72) * 0.3;
-    const x = Math.sin(angle) * rad + Math.cos(timeVal * 1.1) * 0.25;
-    const y = 2.15 + Math.sin(timeVal * 0.95) * 0.32 + Math.cos(timeVal * 0.4) * 0.18 + lift;
-    const z = 0.65 + Math.cos(angle) * 0.55 - lift * 0.45;
+    const angle = timeVal * 0.48;
+    const x = Math.sin(angle) * 1.85 + Math.cos(timeVal * 0.24) * 0.25;
+    const y = 2.45 + Math.sin(timeVal * 0.82) * 0.28 + Math.cos(timeVal * 0.36) * 0.14 + lift;
+    // z is behind badge (z <= 0.0) when x is near 0; swings forward only at outer wings
+    const z = -0.15 + Math.sin(angle * 2.0) * 0.55 - lift * 0.35;
     out.set(x, y, z);
   };
 
@@ -143,68 +168,103 @@ export function SmokeDragon() {
     const p2 = frame.dampedProgress['R2'] ?? 0;
     const p3 = frame.dampedProgress['R3'] ?? 0;
 
-    // As user scrolls past R1 into R2 & R3, dragon gracefully glides upward into ceiling space (y -> 4.5)
-    // so it NEVER obscures the mirror fog or dress code text!
-    const scrollLift = Math.max(0, (p1 - 0.4) * 2.6) + (p2 + p3) * 3.2;
+    // As user scrolls past R1 into R2 & R3, dragon glides up into ceiling darkness
+    const scrollLift = Math.max(0, (p1 - 0.4) * 2.4) + (p2 + p3) * 3.4;
 
-    // Pointer subtle steering within 1.5m
-    const ptrX = frame.pointer.damped.x * 0.35;
-    const ptrY = frame.pointer.damped.y * 0.25;
+    // Pointer subtle steering
+    const ptrX = frame.pointer.damped.x * 0.3;
+    const ptrY = frame.pointer.damped.y * 0.2;
 
-    // 1. Update Head Transform
-    sampleSpine(t, scrollLift, pVecA);
-    sampleSpine(t + 0.08, scrollLift, pVecB);
-    pVecA.x += ptrX;
-    pVecA.y += ptrY;
-    pVecB.x += ptrX;
-    pVecB.y += ptrY;
+    // 1. Calculate positions along the spine for Head + all 24 Vertebrae
+    // Step size ~0.10s provides ~0.16m natural spacing between segments
+    const dtStep = 0.105;
+    for (let k = 0; k < SEGMENTS_COUNT + 2; k++) {
+      const sampleTime = t - k * dtStep;
+      sampleSpine(sampleTime, scrollLift, spinePosArray[k]);
+      spinePosArray[k].x += ptrX;
+      spinePosArray[k].y += ptrY;
 
+      // Add undulating serpentine swimming wave (amplitude increases down the body)
+      if (k > 0) {
+        const wavePhase = t * 3.2 - k * 0.32;
+        const waveAmp = (k / SEGMENTS_COUNT) * 0.14;
+        spinePosArray[k].x += Math.sin(wavePhase) * waveAmp;
+        spinePosArray[k].y += Math.cos(wavePhase * 0.8) * (waveAmp * 0.5);
+      }
+    }
+
+    const headPos = spinePosArray[0];
+    const neckPos = spinePosArray[1];
+
+    // 2. Position and Orient Head
     if (headRef.current) {
-      headRef.current.position.copy(pVecA);
-      headRef.current.lookAt(pVecB);
-      // Breathing tilt
-      headRef.current.rotation.z += Math.sin(t * 1.6) * 0.12;
+      headRef.current.position.copy(headPos);
+      headRef.current.lookAt(neckPos);
+      // Breathing / undulating banking roll
+      headRef.current.rotation.z += Math.sin(t * 1.5) * 0.15;
 
-      // Whiskers waving
-      if (whiskerLRef.current) whiskerLRef.current.rotation.z = Math.sin(t * 4.2) * 0.2 + 0.3;
-      if (whiskerRRef.current) whiskerRRef.current.rotation.z = -Math.sin(t * 4.2) * 0.2 - 0.3;
+      // Whiskers swimming wave
+      if (whiskerLRef.current) {
+        whiskerLRef.current.rotation.z = 0.35 + Math.sin(t * 4.5) * 0.22;
+        whiskerLRef.current.rotation.x = -0.3 + Math.cos(t * 3.8) * 0.15;
+      }
+      if (whiskerRRef.current) {
+        whiskerRRef.current.rotation.z = -0.35 - Math.sin(t * 4.5) * 0.22;
+        whiskerRRef.current.rotation.x = -0.3 + Math.cos(t * 3.8) * 0.15;
+      }
 
       // Subtle jaw breathing opening
-      if (jawRef.current) jawRef.current.rotation.x = Math.max(0, Math.sin(t * 1.8) * 0.18);
+      if (jawRef.current) {
+        jawRef.current.rotation.x = Math.max(0, Math.sin(t * 1.8) * 0.22);
+      }
     }
 
-    // 2. Update 24 Segment Vertebrae following along the spine with kinematic time delay
-    let leadPos = pVecA;
+    // 3. Position and Orient each of the 24 Body Vertebrae
     for (let i = 0; i < SEGMENTS_COUNT; i++) {
-      const seg = segmentRefs.current[i];
-      if (!seg) continue;
+      const segGroup = segmentRefs.current[i];
+      if (!segGroup) continue;
 
-      const lagTime = t - (i + 1) * 0.048;
-      sampleSpine(lagTime, scrollLift, pVecA);
+      const curPos = spinePosArray[i + 1];
+      const prevPos = spinePosArray[i];
 
-      // Organic lateral and vertical sine wave undulation along spine
-      const wavePhase = t * 3.4 - i * 0.28;
-      const waveAmp = (i / SEGMENTS_COUNT) * 0.12;
-      pVecA.x += Math.sin(wavePhase) * waveAmp;
-      pVecA.y += Math.cos(wavePhase * 0.7) * (waveAmp * 0.6);
+      // Segment placed at mid-point between vertebrae
+      pA.copy(curPos).add(prevPos).multiplyScalar(0.5);
+      segGroup.position.copy(pA);
 
-      seg.position.copy(pVecA);
-      seg.lookAt(leadPos);
+      // Orient segment cylinder axis (Y) from curPos to prevPos
+      forwardVec.copy(prevPos).sub(curPos);
+      const segLength = forwardVec.length();
+      if (segLength > 0.001) {
+        forwardVec.normalize();
+        segQuat.setFromUnitVectors(upAxis, forwardVec);
+        segGroup.quaternion.copy(segQuat);
+      }
 
-      // Spine bank / roll tilt
-      seg.rotation.z += Math.sin(wavePhase) * 0.18;
-
-      leadPos = pVecA;
+      // Add serpentine bank roll
+      const wavePhase = t * 3.2 - (i + 1) * 0.32;
+      segGroup.rotateY(Math.sin(wavePhase) * 0.2);
     }
 
-    // 3. Update 4 Claws paddling in phase
-    const clawPhase = t * 3.4;
-    if (frontClawLRef.current) frontClawLRef.current.rotation.x = Math.sin(clawPhase) * 0.35 + 0.2;
-    if (frontClawRRef.current) frontClawRRef.current.rotation.x = Math.sin(clawPhase + Math.PI) * 0.35 + 0.2;
-    if (backClawLRef.current) backClawLRef.current.rotation.x = Math.sin(clawPhase + 1.2) * 0.35 + 0.2;
-    if (backClawRRef.current) backClawRRef.current.rotation.x = Math.sin(clawPhase + 1.2 + Math.PI) * 0.35 + 0.2;
+    // 4. Update 4 Claws paddling in phase with serpentine wave
+    const clawPhase = t * 3.2;
+    if (frontLegLRef.current) {
+      frontLegLRef.current.rotation.x = Math.sin(clawPhase) * 0.35 + 0.2;
+      frontLegLRef.current.rotation.z = 0.5 + Math.cos(clawPhase) * 0.15;
+    }
+    if (frontLegRRef.current) {
+      frontLegRRef.current.rotation.x = Math.sin(clawPhase + Math.PI) * 0.35 + 0.2;
+      frontLegRRef.current.rotation.z = -0.5 - Math.cos(clawPhase) * 0.15;
+    }
+    if (backLegLRef.current) {
+      backLegLRef.current.rotation.x = Math.sin(clawPhase + 1.2) * 0.35 + 0.2;
+      backLegLRef.current.rotation.z = 0.45 + Math.cos(clawPhase + 1.2) * 0.15;
+    }
+    if (backLegRRef.current) {
+      backLegRRef.current.rotation.x = Math.sin(clawPhase + 1.2 + Math.PI) * 0.35 + 0.2;
+      backLegRRef.current.rotation.z = -0.45 - Math.cos(clawPhase + 1.2) * 0.15;
+    }
 
-    // 4. Update Particle Smoke & Ember Trail from dragon body
+    // 5. Update Particle Smoke & Ember Trail drifting behind dragon
     if (smokePointsRef.current) {
       const posArray = smokePointsRef.current.geometry.attributes.position.array as Float32Array;
       const count = smokeData.count;
@@ -212,18 +272,15 @@ export function SmokeDragon() {
       for (let i = 0; i < count; i++) {
         smokeData.ages[i] += delta;
 
-        // If particle exceeded lifetime, respawn at dragon segment ~12 (mid-body)
-        if (smokeData.ages[i] > 2.2) {
+        // If particle expired, respawn at a random dragon body segment
+        if (smokeData.ages[i] > 2.0) {
           smokeData.ages[i] = 0;
-          const segIdx = Math.floor(Math.random() * 18);
-          const sObj = segmentRefs.current[segIdx];
-          if (sObj) {
-            posArray[i * 3] = sObj.position.x + (Math.random() - 0.5) * 0.15;
-            posArray[i * 3 + 1] = sObj.position.y + (Math.random() - 0.5) * 0.15;
-            posArray[i * 3 + 2] = sObj.position.z + (Math.random() - 0.5) * 0.15;
-          }
+          const segIdx = Math.floor(Math.random() * SEGMENTS_COUNT);
+          const sPos = spinePosArray[segIdx + 1];
+          posArray[i * 3] = sPos.x + (Math.random() - 0.5) * 0.18;
+          posArray[i * 3 + 1] = sPos.y + (Math.random() - 0.5) * 0.18;
+          posArray[i * 3 + 2] = sPos.z + (Math.random() - 0.5) * 0.18;
         } else {
-          // Drift and billow upward
           posArray[i * 3] += smokeData.vels[i * 3] * delta;
           posArray[i * 3 + 1] += smokeData.vels[i * 3 + 1] * delta;
           posArray[i * 3 + 2] += smokeData.vels[i * 3 + 2] * delta;
@@ -237,64 +294,64 @@ export function SmokeDragon() {
   return (
     <group ref={rootRef} name="SmokeDragon3D">
       {/* 1. Sculpted Dragon Head */}
-      <group ref={headRef} position={[0, 2.2, 0.6]}>
-        {/* Point light casting warm ember dragon eye illumination */}
-        <pointLight color="#FF4A1F" intensity={1.8} distance={3.5} decay={2} />
+      <group ref={headRef} position={[0, 2.45, -0.15]}>
+        {/* Warm ember dragon point light casting illumination */}
+        <pointLight color="#FF5A1F" intensity={3.2} distance={4.0} decay={2} />
 
-        {/* Snout & Cranium */}
+        {/* Snout & Cranium (oriented along Z) */}
         <mesh
-          position={[0, 0, 0.16]}
-          rotation={[Math.PI / 2, 0, 0]}
+          position={[0, 0, -0.18]}
+          rotation={[-Math.PI / 2, 0, 0]}
           geometry={geometries.snoutGeo}
           material={materials.scaleMat}
         />
 
         {/* Brow Ridge */}
         <mesh
-          position={[0, 0.08, 0]}
+          position={[0, 0.08, -0.02]}
           geometry={geometries.browGeo}
           material={materials.scaleMat}
         />
 
-        {/* Left Swept Horn */}
+        {/* Left Swept Horn / Antler */}
         <mesh
-          position={[-0.11, 0.18, -0.12]}
-          rotation={[-0.65, -0.22, -0.32]}
+          position={[-0.12, 0.20, 0.10]}
+          rotation={[0.65, -0.25, -0.35]}
           geometry={geometries.hornGeo}
-          material={materials.finMat}
+          material={materials.goldHornMat}
         />
 
-        {/* Right Swept Horn */}
+        {/* Right Swept Horn / Antler */}
         <mesh
-          position={[0.11, 0.18, -0.12]}
-          rotation={[-0.65, 0.22, 0.32]}
+          position={[0.12, 0.20, 0.10]}
+          rotation={[0.65, 0.25, 0.35]}
           geometry={geometries.hornGeo}
-          material={materials.finMat}
+          material={materials.goldHornMat}
         />
 
-        {/* Left Whisker (Barbel) */}
+        {/* Left Flowing Whisker (Barbel) */}
         <mesh
           ref={whiskerLRef}
-          position={[-0.10, -0.04, 0.22]}
-          rotation={[-0.3, -0.3, 0.3]}
+          position={[-0.11, -0.04, -0.22]}
+          rotation={[-0.3, -0.3, 0.35]}
           geometry={geometries.whiskerGeo}
-          material={materials.finMat}
+          material={materials.goldHornMat}
         />
 
-        {/* Right Whisker (Barbel) */}
+        {/* Right Flowing Whisker (Barbel) */}
         <mesh
           ref={whiskerRRef}
-          position={[0.10, -0.04, 0.22]}
-          rotation={[-0.3, 0.3, -0.3]}
+          position={[0.11, -0.04, -0.22]}
+          rotation={[-0.3, 0.3, -0.35]}
           geometry={geometries.whiskerGeo}
-          material={materials.finMat}
+          material={materials.goldHornMat}
         />
 
         {/* Articulated Lower Jaw */}
-        <group ref={jawRef} position={[0, -0.06, 0.05]}>
+        <group ref={jawRef} position={[0, -0.06, -0.06]}>
           <mesh
-            position={[0, -0.02, 0.12]}
-            rotation={[Math.PI / 2 - 0.2, 0, 0]}
+            position={[0, -0.02, -0.12]}
+            rotation={[-Math.PI / 2 + 0.2, 0, 0]}
             geometry={geometries.jawGeo}
             material={materials.scaleMat}
           />
@@ -302,12 +359,12 @@ export function SmokeDragon() {
 
         {/* Glowing Ember Eyes */}
         <mesh
-          position={[-0.08, 0.08, 0.06]}
+          position={[-0.09, 0.09, -0.06]}
           geometry={geometries.eyeGeo}
           material={materials.eyeMat}
         />
         <mesh
-          position={[0.08, 0.08, 0.06]}
+          position={[0.09, 0.09, -0.06]}
           geometry={geometries.eyeGeo}
           material={materials.eyeMat}
         />
@@ -315,13 +372,12 @@ export function SmokeDragon() {
 
       {/* 2. Articulated 24 Body Vertebrae Segments */}
       {Array.from({ length: SEGMENTS_COUNT }).map((_, idx) => {
-        // Tapered anatomical profile:
-        // Neck (0..3) ~0.12m -> Chest/Torso (4..10) ~0.18m -> Abdomen (11..18) ~0.14m -> Tail (19..23) ~0.04m
+        // Anatomical taper along spine:
+        // Neck (0..3) radius ~0.11m -> Midbody (4..12) radius ~0.16m -> Hind (13..18) radius ~0.12m -> Tail (19..23) ~0.04m
         const norm = idx / SEGMENTS_COUNT;
-        const radius = (Math.sin(norm * Math.PI) * 0.12 + 0.05) * (1 - norm * 0.55);
-        const length = 0.14;
+        const radius = (Math.sin(norm * Math.PI) * 0.11 + 0.05) * (1 - norm * 0.45);
+        const segLen = 0.18;
 
-        // Front Claws attached at vertebra 6, Back Claws attached at vertebra 15
         const isFrontLegAnchor = idx === 5;
         const isBackLegAnchor = idx === 14;
 
@@ -331,29 +387,27 @@ export function SmokeDragon() {
             ref={(el) => {
               segmentRefs.current[idx] = el;
             }}
-            position={[0, 2.0, 0]}
+            position={[0, 2.45, 0]}
           >
-            {/* Cylindrical Torso Segment */}
+            {/* Cylindrical Scale Torso Segment (oriented along local Y) */}
             <mesh
-              rotation={[Math.PI / 2, 0, 0]}
-              scale={[radius, length, radius]}
+              scale={[radius, segLen, radius]}
               geometry={geometries.segGeo}
               material={materials.scaleMat}
             />
 
-            {/* Underbelly Plate */}
+            {/* Gilded Underbelly Plating on bottom side (-Z in local cylinder) */}
             <mesh
-              position={[0, -radius * 0.65, 0]}
-              scale={[radius * 0.82, length * 0.95, radius * 0.35]}
-              rotation={[Math.PI / 2, 0, 0]}
-              geometry={geometries.segGeo}
+              position={[0, 0, -radius * 0.55]}
+              scale={[radius * 0.8, segLen * 0.95, radius * 0.35]}
+              geometry={geometries.bellyGeo}
               material={materials.bellyMat}
             />
 
-            {/* Glowing Dorsal Spine Fin */}
+            {/* Glowing Dorsal Spine Fin on top side (+Z in local cylinder) */}
             <mesh
-              position={[0, radius + 0.09, 0]}
-              rotation={[-0.2, 0, 0]}
+              position={[0, 0, radius + 0.08]}
+              rotation={[Math.PI / 2, 0, 0]}
               scale={[1, 1 - norm * 0.45, 1]}
               geometry={geometries.finGeo}
               material={materials.finMat}
@@ -362,30 +416,44 @@ export function SmokeDragon() {
             {/* Front Left & Right Claws */}
             {isFrontLegAnchor && (
               <>
-                <group ref={frontClawLRef} position={[-radius * 0.9, -0.04, 0]}>
+                <group ref={frontLegLRef} position={[-radius * 0.9, 0, 0]}>
                   <mesh
-                    rotation={[0, 0, 0.6]}
-                    geometry={geometries.legUpperGeo}
+                    position={[-0.08, -0.06, 0]}
+                    rotation={[0, 0, 0.7]}
+                    geometry={geometries.upperLegGeo}
                     material={materials.scaleMat}
                   />
                   <mesh
-                    position={[-0.12, -0.14, 0.04]}
-                    rotation={[-0.4, 0, 0.8]}
+                    position={[-0.18, -0.16, 0.04]}
+                    rotation={[-0.3, 0, 0.9]}
+                    geometry={geometries.lowerLegGeo}
+                    material={materials.scaleMat}
+                  />
+                  <mesh
+                    position={[-0.22, -0.26, 0.08]}
+                    rotation={[-0.4, 0, 1.1]}
                     geometry={geometries.talonGeo}
-                    material={materials.talonMat}
+                    material={materials.goldHornMat}
                   />
                 </group>
-                <group ref={frontClawRRef} position={[radius * 0.9, -0.04, 0]}>
+                <group ref={frontLegRRef} position={[radius * 0.9, 0, 0]}>
                   <mesh
-                    rotation={[0, 0, -0.6]}
-                    geometry={geometries.legUpperGeo}
+                    position={[0.08, -0.06, 0]}
+                    rotation={[0, 0, -0.7]}
+                    geometry={geometries.upperLegGeo}
                     material={materials.scaleMat}
                   />
                   <mesh
-                    position={[0.12, -0.14, 0.04]}
-                    rotation={[-0.4, 0, -0.8]}
+                    position={[0.18, -0.16, 0.04]}
+                    rotation={[-0.3, 0, -0.9]}
+                    geometry={geometries.lowerLegGeo}
+                    material={materials.scaleMat}
+                  />
+                  <mesh
+                    position={[0.22, -0.26, 0.08]}
+                    rotation={[-0.4, 0, -1.1]}
                     geometry={geometries.talonGeo}
-                    material={materials.talonMat}
+                    material={materials.goldHornMat}
                   />
                 </group>
               </>
@@ -394,30 +462,44 @@ export function SmokeDragon() {
             {/* Back Left & Right Claws */}
             {isBackLegAnchor && (
               <>
-                <group ref={backClawLRef} position={[-radius * 0.9, -0.04, 0]}>
+                <group ref={backLegLRef} position={[-radius * 0.9, 0, 0]}>
                   <mesh
-                    rotation={[0, 0, 0.5]}
-                    geometry={geometries.legUpperGeo}
+                    position={[-0.07, -0.05, 0]}
+                    rotation={[0, 0, 0.6]}
+                    geometry={geometries.upperLegGeo}
                     material={materials.scaleMat}
                   />
                   <mesh
-                    position={[-0.10, -0.12, 0.04]}
-                    rotation={[-0.3, 0, 0.7]}
+                    position={[-0.16, -0.14, 0.04]}
+                    rotation={[-0.25, 0, 0.8]}
+                    geometry={geometries.lowerLegGeo}
+                    material={materials.scaleMat}
+                  />
+                  <mesh
+                    position={[-0.20, -0.22, 0.07]}
+                    rotation={[-0.35, 0, 1.0]}
                     geometry={geometries.talonGeo}
-                    material={materials.talonMat}
+                    material={materials.goldHornMat}
                   />
                 </group>
-                <group ref={backClawRRef} position={[radius * 0.9, -0.04, 0]}>
+                <group ref={backLegRRef} position={[radius * 0.9, 0, 0]}>
                   <mesh
-                    rotation={[0, 0, -0.5]}
-                    geometry={geometries.legUpperGeo}
+                    position={[0.07, -0.05, 0]}
+                    rotation={[0, 0, -0.6]}
+                    geometry={geometries.upperLegGeo}
                     material={materials.scaleMat}
                   />
                   <mesh
-                    position={[0.10, -0.12, 0.04]}
-                    rotation={[-0.3, 0, -0.7]}
+                    position={[0.16, -0.14, 0.04]}
+                    rotation={[-0.25, 0, -0.8]}
+                    geometry={geometries.lowerLegGeo}
+                    material={materials.scaleMat}
+                  />
+                  <mesh
+                    position={[0.20, -0.22, 0.07]}
+                    rotation={[-0.35, 0, -1.0]}
                     geometry={geometries.talonGeo}
-                    material={materials.talonMat}
+                    material={materials.goldHornMat}
                   />
                 </group>
               </>
@@ -426,10 +508,9 @@ export function SmokeDragon() {
             {/* Tail Flame Tip at very end */}
             {idx === SEGMENTS_COUNT - 1 && (
               <mesh
-                position={[0, 0.02, -0.14]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                scale={[0.07, 0.28, 0.07]}
-                geometry={geometries.finGeo}
+                position={[0, -segLen * 0.6, 0]}
+                rotation={[Math.PI, 0, 0]}
+                geometry={geometries.tailPlumeGeo}
                 material={materials.finMat}
               />
             )}

@@ -332,8 +332,8 @@ export function RedRoomSet() {
         <primitive object={prosceniumCurtain} />
       </group>
 
-      {/* Swaying Chandelier hanging from origin (chain top) at (0, 5.2, 0.4), uniform scale 1.0 */}
-      <group ref={chandelierRef} position={[0, 5.2, 0.4]} scale={[1, 1, 1]}>
+      {/* Swaying Chandelier hanging from ceiling at (0, 5.75, 0.4), scale 0.95 */}
+      <group ref={chandelierRef} position={[0, 5.75, 0.4]} scale={[0.95, 0.95, 0.95]}>
         <primitive object={chandelier} />
       </group>
 
