@@ -137,19 +137,22 @@ export const useStore = create<AppStore>((set, get) => ({
     if (typeof window !== 'undefined') {
       try {
         const stored = window.localStorage.getItem(MOTION_STORAGE_KEY)
-        if (stored === '1' || stored === '0') {
-          const enabled = stored === '1' && !reduced
-          set({ motionEnabled: enabled })
-          syncDocumentDataset(get().world, enabled)
+        if (stored === '0') {
+          set({ motionEnabled: false })
+          syncDocumentDataset(get().world, false)
+          return
+        }
+        if (stored === '1') {
+          set({ motionEnabled: true })
+          syncDocumentDataset(get().world, true)
           return
         }
       } catch {
         // Ignore storage errors
       }
     }
-    const enabled = !reduced
-    set({ motionEnabled: enabled })
-    syncDocumentDataset(get().world, enabled)
+    set({ motionEnabled: true })
+    syncDocumentDataset(get().world, true)
   },
 
   setHoverDoor: (hoverDoor) => set({ hoverDoor }),

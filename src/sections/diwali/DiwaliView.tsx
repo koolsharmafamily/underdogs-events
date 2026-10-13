@@ -85,14 +85,16 @@ export function DiwaliView() {
         aria-label={site.diwali.title}
         className="scene-section scene-d1"
       >
-        <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
-          <div className="site-container flex flex-col items-center gap-6">
+        <div className="scene-sticky flex flex-col items-center justify-between pt-14 pb-10 sm:py-16 text-center">
+          <div className="site-container flex flex-col items-center">
             <BadgeDomHost
               skin="diwali"
-              sizeClass="w-[180px] h-[180px] sm:w-[240px] sm:h-[240px]"
+              sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
               label="Underdogs Jewelled Badge — click or press Enter for sparkle blink"
             />
+          </div>
 
+          <div className="site-container flex flex-col items-center gap-3 sm:gap-4">
             <p className="font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--dw-gold-bright)]">
               {site.diwali.kicker}
             </p>
@@ -101,12 +103,12 @@ export function DiwaliView() {
             <div className="relative inline-flex flex-col items-center">
               <span
                 lang="hi"
-                className="self-end mb-1 sm:mb-2 translate-x-2 font-devanagari text-heading text-[var(--dw-gold-bright)]"
+                className="self-end mb-1 translate-x-2 font-devanagari text-[clamp(22px,2.5vw,38px)] text-[var(--dw-gold-bright)]"
               >
                 {site.diwali.accent}
               </span>
               <h1
-                className={`font-bodoni italic text-display-xl font-medium tracking-tight ${
+                className={`font-bodoni italic text-[clamp(48px,7.5vw,128px)] leading-[0.9] font-medium tracking-tight ${
                   motionEnabled ? 'diwali-gold-shimmer' : 'text-[var(--dw-ivory)]'
                 }`}
               >
@@ -114,37 +116,37 @@ export function DiwaliView() {
               </h1>
             </div>
 
-            <p className="font-manrope text-lead text-[var(--dw-ivory)]/90">
+            <p className="font-manrope text-sm sm:text-base text-[var(--dw-ivory)]/90">
               {site.diwali.sub}
             </p>
           </div>
         </div>
       </section>
 
-      {/* D2 · "Now meet the other" (260vh, pinned) */}
+      {/* D2 · "Now meet the other" (180vh, pinned) */}
       <section
         ref={d2Ref}
         data-scene="D2"
         aria-label="Diwali story"
         className="scene-section scene-d2 bg-transparent"
       >
-        <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
-          <div className="site-container flex flex-col items-center gap-8 max-w-[900px]">
+        <div className="scene-sticky flex flex-col items-center justify-center py-20 text-center">
+          <div className="site-container flex flex-col items-center gap-6 sm:gap-8 max-w-[820px]">
             <Divider variant="sparkle" active />
 
             {!motionEnabled ? (
-              <div className="flex flex-col gap-6 py-6">
+              <div className="flex flex-col gap-3.5 py-2">
                 {site.diwali.story.map((line) => (
                   <p
                     key={line}
-                    className="font-bodoni italic text-display-l font-medium text-[var(--dw-ivory)] balance-heading"
+                    className="font-bodoni italic text-[clamp(18px,2.1vw,28px)] leading-[1.25] font-medium text-[var(--dw-ivory)] balance-heading"
                   >
                     {line}
                   </p>
                 ))}
               </div>
             ) : (
-              <div className="relative min-h-[200px] sm:min-h-[240px] w-full flex items-center justify-center">
+              <div className="relative min-h-[180px] sm:min-h-[220px] w-full flex items-center justify-center">
                 {site.diwali.story.map((line, idx) => {
                   const isCurrent = idx === activeStoryLine
                   const isPast = idx < activeStoryLine
@@ -152,7 +154,7 @@ export function DiwaliView() {
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
-                      className={`font-bodoni italic text-display-l font-medium text-[var(--dw-ivory)] balance-heading transition-all ${
+                      className={`font-bodoni italic text-[clamp(24px,3.4vw,52px)] leading-[1.15] font-medium text-[var(--dw-ivory)] balance-heading transition-all ${
                         isCurrent
                           ? 'duration-[650ms] relative opacity-100 translate-y-0'
                           : isPast
@@ -291,18 +293,18 @@ export function DiwaliView() {
         </div>
       </section>
 
-      {/* D5 · Outro (120vh, pinned) */}
+      {/* D5 · Outro (90vh, pinned) */}
       <section
         ref={d5Ref}
         data-scene="D5"
         aria-label="Diwali Outro"
         className="scene-section scene-d5"
       >
-        <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
-          <div className="site-container flex flex-col items-center gap-8 max-w-[780px]">
+        <div className="scene-sticky flex flex-col items-center justify-between pt-16 pb-12 sm:py-20 text-center">
+          <div className="site-container flex flex-col items-center justify-between h-full max-w-[780px]">
             <BadgeDomHost
               skin="diwali"
-              sizeClass="w-[150px] h-[150px]"
+              sizeClass="w-[140px] h-[140px]"
               label="Underdogs Jewelled Badge"
             />
 
@@ -316,7 +318,7 @@ export function DiwaliView() {
 
             <p
               lang="hi"
-              className="font-devanagari text-display-l text-[var(--dw-gold-bright)]"
+              className="font-devanagari text-[clamp(26px,3.6vw,52px)] leading-[1.15] text-[var(--dw-gold-bright)]"
             >
               {site.diwali.outro.wish}
             </p>

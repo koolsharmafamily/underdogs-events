@@ -428,7 +428,7 @@ export function Badge({
       }
     }
 
-    // 4. Multi-section choreography per Part 7 H0-H5, Part 8 R0-R4, Part 9 D0-D4
+    // 4. Multi-section choreography per Part 7 H0-H5, Part 8 R0-R6, Part 9 D0-D5
     const isMobile = size.width < 768;
     const isTablet = size.width >= 768 && size.width < 1024;
     const h1 = frame.dampedProgress['H1'] ?? frame.dampedProgress['h1'] ?? 0;
@@ -439,21 +439,22 @@ export function Badge({
     const scrollP = THREE.MathUtils.clamp(h1 * 0.2 + h2 * 0.3 + h3 * 0.15 + h4 * 0.2 + h5 * 0.15, 0, 1);
 
     if (world === 'home') {
-      const h0Scale = isMobile ? 0.92 : isTablet ? 1.05 : 1.22;
-      const h0X = isMobile ? 0 : 1.45;
-      const h0Y = isMobile ? (size.height < 700 ? 1.45 : 1.62) : 1.5;
+      const h0Scale = isMobile ? 0.80 : isTablet ? 0.96 : 1.12;
+      const h0X = isMobile ? 0 : isTablet ? 1.32 : 1.58;
+      const h0Y = isMobile ? (size.height < 700 ? 1.68 : 1.82) : 1.52;
 
-      const h2Scale = isMobile ? 1.02 : 1.4;
-      const h2X = isMobile ? 0 : 0.85;
-      const h2Y = isMobile ? (size.height < 700 ? 1.65 : 1.82) : 1.5;
+      // H2: Keep badge firmly in the right column (x = 1.62 desktop, 1.35 tablet) and upper stage on mobile so it never overlaps text
+      const h2Scale = isMobile ? (motionEnabled ? 0.68 : 0.56) : isTablet ? 0.90 : 1.06;
+      const h2X = isMobile ? 0 : isTablet ? 1.35 : 1.62;
+      const h2Y = isMobile ? (motionEnabled ? 2.15 : 2.35) : 1.55;
 
-      const h3Scale = isMobile ? 0 : 0.38;
+      const h3Scale = isMobile ? 0 : 0.36;
       const h3X = isMobile ? 0 : 2.45;
-      const h3Y = isMobile ? 3.5 : 2.95;
+      const h3Y = isMobile ? 3.5 : 2.98;
 
-      const h5Scale = isMobile ? 0 : 0.40;
+      const h5Scale = isMobile ? 0 : 0.38;
       const h5X = 0;
-      const h5Y = isMobile ? 3.35 : 2.72; // Floats above and between doors on desktop; fades out on mobile stacked doors
+      const h5Y = isMobile ? 3.35 : 2.78; // Floats above and between doors on desktop; fades out on mobile stacked doors
 
       if (scrollP <= 0.2) {
         const t = Math.max(0, Math.min(1, scrollP / 0.2));
@@ -489,7 +490,7 @@ export function Badge({
         choreoScale.current = h3Scale;
         choreoYaw.current = Math.PI * 2;
       } else if (scrollP <= 0.82) {
-        // H4: Badge glides along the top from top-right to center (x = 0, y = 2.72), remaining high above text
+        // H4: Badge glides along the top from top-right to center (x = 0, y = 2.78), remaining high above text
         const t = Math.max(0, Math.min(1, (scrollP - 0.66) / 0.16));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
@@ -500,30 +501,33 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(h3Scale, h5Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
       } else {
-        // H5: Badge floats above and between both doors at (0, 2.72, 0)
+        // H5: Badge floats above and between both doors at (0, 2.78, 0)
         choreoPos.current.set(h5X, h5Y, 0);
         choreoScale.current = h5Scale;
         choreoYaw.current = Math.PI * 2;
       }
     } else if (world === 'redroom') {
+      const r1 = frame.dampedProgress['R1'] ?? frame.dampedProgress['r1'] ?? 0;
+      const r2 = frame.dampedProgress['R2'] ?? frame.dampedProgress['r2'] ?? 0;
       const r3 = frame.dampedProgress['R3'] ?? frame.dampedProgress['r3'] ?? 0;
       const r4 = frame.dampedProgress['R4'] ?? frame.dampedProgress['r4'] ?? 0;
       const r5 = frame.dampedProgress['R5'] ?? frame.dampedProgress['r5'] ?? 0;
       const r6 = frame.dampedProgress['R6'] ?? frame.dampedProgress['r6'] ?? 0;
-      const targetScale = isMobile ? 0.78 : 0.95;
+      const targetScale = isMobile ? 0.68 : 0.82;
 
       if (r6 > 0.05) {
-        // R6: Outro — badge returns centered
+        // R6: Outro — badge returns in upper stage above outro text
         const t = THREE.MathUtils.smoothstep(r6, 0.05, 0.4);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(3.8, 1.7, t), 0.6);
-        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.8, t);
-      } else if (r4 > 0 || r5 > 0 || r3 > 0.6) {
-        // R4 & R5: Camera cranes down onto invitation tray — lift badge out of frame
-        const t = r4 > 0 || r5 > 0 ? 1 : THREE.MathUtils.smoothstep(r3, 0.6, 0.95);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(1.7, 3.8, t), 0.6);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(3.8, 2.15, t), 0.6);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.72, t);
+      } else if (r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r1 > 0.72) {
+        // R2, R3, R4, R5: Lift badge out of frame so mirror fog, story text, dress code, and invitation never overlap
+        const t = r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 ? 1 : THREE.MathUtils.smoothstep(r1, 0.72, 0.96);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(1.92, 3.8, t), 0.6);
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       } else {
-        choreoPos.current.set(0, 1.7, 0.6);
+        // R1: Hero neon badge positioned in upper half above the lower-half "THE RED ROOM" title
+        choreoPos.current.set(0, 1.92, 0.6);
         choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
       }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
@@ -534,21 +538,21 @@ export function Badge({
       const d4 = frame.dampedProgress['D4'] ?? frame.dampedProgress['d4'] ?? 0;
       const d5 = frame.dampedProgress['D5'] ?? frame.dampedProgress['d5'] ?? 0;
 
-      const targetScale = isMobile ? 0.76 : 0.92;
+      const targetScale = isMobile ? 0.66 : 0.80;
 
       if (d5 > 0.05) {
-        // D5: Outro — badge returns centered among diyas and petals
+        // D5: Outro — badge returns in upper stage above outro text
         const t = THREE.MathUtils.smoothstep(d5, 0, 0.5);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(0.3, 1.7, t), 0);
-        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.75, t);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(0.3, 2.35, t), 0);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.70, t);
       } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
-        // D1: Hero jewelled badge
-        choreoPos.current.set(0, 1.7, 0);
+        // D1: Hero jewelled badge in upper stage (y = 2.28, above camera lookAt y = 1.9) so it sits cleanly above the "Diwali" title
+        choreoPos.current.set(0, 2.28, 0);
         choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
       } else {
         // D2, D3, D4: Descend & hide badge to clear stage for story text, sky fireworks, and 3D card
         const t = d2 > 0 ? 1 : THREE.MathUtils.smoothstep(d1, 0.7, 0.95);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(1.7, 0.3, t), 0);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(2.28, 0.3, t), 0);
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);

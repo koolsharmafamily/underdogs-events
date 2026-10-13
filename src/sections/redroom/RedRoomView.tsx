@@ -183,18 +183,18 @@ export function RedRoomView() {
             <Divider variant="diamond" active />
 
             {!motionEnabled ? (
-              <div className="flex flex-col gap-8 py-6">
+              <div className="flex flex-col gap-5 py-4 max-w-[780px]">
                 {site.redRoom.story.map((line) => (
                   <p
                     key={line}
-                    className="font-cormorant italic text-heading sm:text-display-l font-medium text-[var(--rr-bone)] balance-heading"
+                    className="font-cormorant italic text-[clamp(20px,2.3vw,32px)] leading-[1.25] font-medium text-[var(--rr-bone)] balance-heading"
                   >
                     {line}
                   </p>
                 ))}
               </div>
             ) : (
-              <div className="relative min-h-[240px] sm:min-h-[300px] w-full flex items-center justify-center">
+              <div className="relative min-h-[200px] sm:min-h-[240px] w-full max-w-[820px] flex items-center justify-center">
                 {site.redRoom.story.map((line, idx) => {
                   const isCurrent = idx === activeStoryIdx
                   const words = line.split(' ')
@@ -202,7 +202,7 @@ export function RedRoomView() {
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
-                      className={`font-cormorant italic text-heading sm:text-display-l font-medium text-[var(--rr-bone)] balance-heading transition-all ${
+                      className={`font-cormorant italic text-[clamp(24px,3.4vw,52px)] leading-[1.15] font-medium text-[var(--rr-bone)] balance-heading transition-all ${
                         isCurrent
                           ? 'duration-[650ms] relative opacity-100'
                           : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0'
@@ -242,14 +242,14 @@ export function RedRoomView() {
         className="scene-section scene-r3"
       >
         <div className="scene-sticky flex items-center py-24">
-          <div className="site-container flex flex-col items-center md:items-start text-center md:text-left gap-8">
+          <div className="site-container flex flex-col items-center md:items-start text-center md:text-left gap-7 max-w-[680px] md:ml-[6vw]">
             <div className="flex flex-col gap-3">
               {site.redRoom.dress.lines.map((line, idx) => {
                 const lit = idx < dressStep
                 return (
                   <p
                     key={line}
-                    className={`font-cinzel text-display-l font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[650ms] ${
+                    className={`font-cinzel text-[clamp(24px,3.6vw,54px)] leading-[1.08] font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[650ms] ${
                       lit ? 'opacity-100 translate-y-0' : 'opacity-20 translate-y-4'
                     }`}
                   >
@@ -259,12 +259,12 @@ export function RedRoomView() {
               })}
             </div>
 
-            <div className="w-full max-w-[680px]">
+            <div className="w-full max-w-[560px]">
               <Divider variant="diamond" active={dressStep >= 4} />
             </div>
 
             <p
-              className={`font-cinzel text-heading font-bold uppercase tracking-[0.04em] text-[var(--rr-neon)] balance-heading transition-opacity duration-500 ${
+              className={`font-cinzel text-[clamp(18px,2.2vw,30px)] leading-[1.2] font-bold uppercase tracking-[0.04em] text-[var(--rr-neon)] balance-heading transition-opacity duration-500 ${
                 dressStep >= 4 ? 'opacity-100 rr-neon-pulse' : 'opacity-25'
               }`}
             >
@@ -402,26 +402,26 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* R6 · Outro (120vh, pinned) */}
+      {/* R6 · Outro (90vh, pinned) */}
       <section
         ref={r6Ref}
         data-scene="R6"
         aria-label="The Red Room Outro"
         className="scene-section scene-r6"
       >
-        <div className="scene-sticky flex flex-col items-center justify-center py-24 text-center">
-          <div className="site-container flex flex-col items-center gap-8 max-w-[780px]">
+        <div className="scene-sticky flex flex-col items-center justify-between pt-16 pb-12 sm:py-20 text-center">
+          <div className="site-container flex flex-col items-center justify-between h-full max-w-[780px]">
             <BadgeDomHost
               skin="redroom"
               sizeClass="w-[140px] h-[140px]"
               label="Underdogs Neon Badge"
             />
 
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center gap-2.5">
               {site.redRoom.outro.lines.map((line) => (
                 <p
                   key={line}
-                  className="font-cormorant italic text-display-l font-medium text-[var(--rr-bone)] balance-heading"
+                  className="font-cormorant italic text-[clamp(24px,3.2vw,46px)] leading-[1.15] font-medium text-[var(--rr-bone)] balance-heading"
                 >
                   {line}
                 </p>

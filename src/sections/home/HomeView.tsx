@@ -128,9 +128,9 @@ export function HomeView() {
               />
             </div>
 
-            {/* Copy occupies columns 1–6, bottom-aligned at 72% viewport height on desktop (Part 7 H1) */}
+            {/* Copy occupies columns 1–6, strictly confined to left half on desktop */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-5 transition-all ${
+              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 max-w-[560px] flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-5 transition-all ${
                 heroTextVisible || !motionEnabled
                   ? 'duration-[650ms] opacity-100 translate-y-0'
                   : 'duration-[350ms] opacity-0 -translate-y-8 pointer-events-none'
@@ -140,7 +140,7 @@ export function HomeView() {
                 {site.home.hero.label}
               </p>
 
-              <h1 className="font-unbounded text-[clamp(48px,8.2vw,148px)] leading-[0.9] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading">
+              <h1 className="font-unbounded text-[clamp(42px,6.2vw,104px)] leading-[0.92] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading">
                 <span className="sr-only">{site.brand.name} — </span>
                 {site.home.hero.title}
               </h1>
@@ -171,20 +171,21 @@ export function HomeView() {
           </div>
 
           <div className="site-container site-grid mt-auto md:my-auto items-center pb-4 md:pb-0">
-            <div className="col-span-4 md:col-span-5 lg:col-span-8">
+            {/* Strictly left half (columns 1–6, max 560px) so text never crosses into the 3D badge on the right */}
+            <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 max-w-[560px] pr-2 lg:pr-6 flex flex-col gap-6">
               {!motionEnabled ? (
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-3.5 sm:gap-4">
                   {site.home.about.statements.map((stmt) => (
                     <p
                       key={stmt}
-                      className="font-unbounded text-heading sm:text-display-l font-extrabold uppercase text-[var(--paper)] balance-heading"
+                      className="font-unbounded text-[clamp(17px,1.9vw,26px)] leading-[1.2] tracking-[-0.02em] font-extrabold uppercase text-[var(--paper)] balance-heading"
                     >
                       {stmt}
                     </p>
                   ))}
                 </div>
               ) : (
-                <div className="relative min-h-[110px] sm:min-h-[260px] flex items-end md:items-center">
+                <div className="relative min-h-[120px] sm:min-h-[180px] lg:min-h-[210px] flex items-end md:items-center">
                   {site.home.about.statements.map((stmt, idx) => {
                     const isCurrent = idx === activeStatement
                     const isPast = idx < activeStatement
@@ -192,12 +193,12 @@ export function HomeView() {
                       <p
                         key={stmt}
                         aria-hidden={!isCurrent}
-                        className={`font-unbounded text-heading sm:text-display-l font-extrabold uppercase text-[var(--paper)] balance-heading transition-all ${
+                        className={`font-unbounded text-[clamp(22px,2.7vw,42px)] leading-[1.12] tracking-[-0.02em] font-extrabold uppercase text-[var(--paper)] balance-heading transition-all ${
                           isCurrent
                             ? 'duration-[650ms] relative opacity-100 translate-y-0'
                             : isPast
-                              ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-12'
-                              : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-12'
+                              ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10'
+                              : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10'
                         }`}
                       >
                         {stmt}
@@ -206,10 +207,18 @@ export function HomeView() {
                   })}
                 </div>
               )}
+
+              <p
+                className={`font-manrope text-sm sm:text-base lg:text-lead text-[var(--paper)]/85 max-w-[52ch] pretty-copy transition-opacity duration-500 ${
+                  showAboutBody || !motionEnabled ? 'opacity-100' : 'opacity-45'
+                }`}
+              >
+                {site.home.about.body}
+              </p>
             </div>
 
-            {/* Badge stage representation for H2 (edge-on / engraved back / front) */}
-            <div className="hidden md:flex md:col-span-3 lg:col-span-4 items-center justify-center">
+            {/* Badge stage representation for H2 strictly in right half (columns 7–12) */}
+            <div className="hidden md:flex md:col-span-4 lg:col-span-6 lg:col-start-7 items-center justify-center">
               <div
                 className="flex flex-col items-center gap-3 transition-transform duration-700"
                 style={{
@@ -223,22 +232,14 @@ export function HomeView() {
               >
                 <BadgeDomHost
                   skin="home"
-                  sizeClass="w-[200px] h-[200px] lg:w-[260px] lg:h-[260px]"
+                  sizeClass="w-[220px] h-[220px] lg:w-[300px] lg:h-[300px]"
                   label="Underdogs Badge choreography preview"
                 />
               </div>
             </div>
           </div>
 
-          <div className="site-container">
-            <p
-              className={`font-manrope text-lead text-[var(--paper)]/90 measure-copy pretty-copy transition-opacity duration-500 ${
-                showAboutBody || !motionEnabled ? 'opacity-100' : 'opacity-40'
-              }`}
-            >
-              {site.home.about.body}
-            </p>
-          </div>
+          <div className="site-container" aria-hidden="true" />
         </div>
       </section>
 
@@ -293,7 +294,7 @@ export function HomeView() {
           </div>
 
           <div
-            className="site-container mt-auto md:my-auto flex flex-col items-center text-center gap-6 pb-4 md:pb-0 transition-opacity duration-300"
+            className="site-container mt-auto md:my-auto pt-16 md:pt-20 flex flex-col items-center text-center gap-6 pb-4 md:pb-0 transition-opacity duration-300"
             style={{ opacity: motionEnabled ? seasonFade : 1 }}
           >
             <div className="flex flex-col items-center gap-2">
@@ -302,7 +303,7 @@ export function HomeView() {
                 return (
                   <p
                     key={line}
-                    className={`font-unbounded text-[clamp(30px,5.2vw,88px)] leading-[0.94] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading transition-all duration-700 ${
+                    className={`font-unbounded text-[clamp(26px,4.2vw,68px)] leading-[0.96] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading transition-all duration-700 ${
                       visible
                         ? 'opacity-100 translate-y-0'
                         : 'opacity-15 translate-y-6'
@@ -368,21 +369,6 @@ export function HomeView() {
                 onBlur={() => setHoverDoor(null)}
                 className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
               >
-                {!motionEnabled && (
-                  <div className="relative mx-auto flex h-[200px] w-full max-w-[200px] items-end justify-center border-x border-t border-[#C8A15A]/45 bg-[#2A0403]/50 pt-6 mb-3 overflow-hidden">
-                    <div
-                      aria-hidden="true"
-                      className="h-full w-full border border-[#7C0F0C] bg-[#510805] flex items-center justify-center"
-                    >
-                      <span className="h-5 w-5 border border-[#C8A15A] inline-block" />
-                    </div>
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-x-0 bottom-0 h-1.5 bg-[#FF2A1F]"
-                    />
-                  </div>
-                )}
-
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
@@ -426,26 +412,6 @@ export function HomeView() {
                 onBlur={() => setHoverDoor(null)}
                 className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#F2D38B]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2D38B] transition-all duration-300"
               >
-                {!motionEnabled && (
-                  <div className="relative mx-auto flex h-[200px] w-full max-w-[200px] items-end justify-center border-x border-t border-[#C6A76A]/55 bg-[#7E1347]/40 pt-6 mb-3 overflow-hidden">
-                    <div
-                      aria-hidden="true"
-                      className="grid h-full w-full grid-cols-2 border border-[#C6A76A]/60 bg-[#7E1347]"
-                    >
-                      <div className="border-r border-[#C6A76A]/45 flex items-center justify-end pr-2">
-                        <span className="h-3 w-3 border border-[#F2D38B]" />
-                      </div>
-                      <div className="flex items-center justify-start pl-2">
-                        <span className="h-3 w-3 border border-[#F2D38B]" />
-                      </div>
-                    </div>
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-x-0 bottom-0 h-1.5 bg-[#F2D38B]"
-                    />
-                  </div>
-                )}
-
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#F2D38B]">

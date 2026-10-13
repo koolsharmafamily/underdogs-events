@@ -1,8 +1,9 @@
 'use client';
 
-import { useThree, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 /**
  * Module-level ref to Card DOM overlay for direct zero-state transform updates (Part 8 R4 & Part 14)
@@ -18,9 +19,10 @@ export const cardOverlayRef: {
 
 export function CardProjector() {
   useFrame(() => {
+    const motionEnabled = useStore.getState().motionEnabled;
     const p4 = frame.dampedProgress['R4'] ?? 0;
     const p5 = frame.dampedProgress['R5'] ?? 0;
-    const isVisible = p4 > 0.35 && p5 < 0.25;
+    const isVisible = motionEnabled && p4 > 0.35 && p5 < 0.25;
 
     const el = cardOverlayRef.current;
     if (!el) return;

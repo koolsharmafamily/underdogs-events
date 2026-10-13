@@ -3,6 +3,7 @@
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { frame } from '@/state/frame';
+import { useStore } from '@/state/store';
 
 /**
  * Module-level ref to Diwali Card DOM overlay for direct zero-state transform updates (Part 9 D3 & Part 14)
@@ -16,13 +17,14 @@ export const diwaliCardOverlayRef: {
 
 export function DiwaliCardProjector() {
   useFrame(() => {
+    const motionEnabled = useStore.getState().motionEnabled;
     const p3 = frame.dampedProgress['D3'] ?? 0;
     const p4 = frame.dampedProgress['D4'] ?? 0;
 
     const el = diwaliCardOverlayRef.current;
     if (!el) return;
 
-    const isVisible = p3 > 0.28 && p4 < 0.25;
+    const isVisible = motionEnabled && p3 > 0.28 && p4 < 0.25;
 
     if (!isVisible) {
       if (el.style.opacity !== '0') {
