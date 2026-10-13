@@ -152,11 +152,11 @@ const DragonSmokeShader = {
       gl_PointSize = (aSize * bodyThickness * 140.0) / -mvPosition.z;
       gl_Position = projectionMatrix * mvPosition;
 
-      // Deep smoked charcoal with red ember rim
-      vec3 smokeCol = vec3(0.08, 0.02, 0.02);
-      vec3 emberCol = vec3(1.0, 0.22, 0.08);
-      vColor = mix(smokeCol, emberCol, pow(aProgress, 3.0) * 0.7);
-      vAlpha *= (0.14 + 0.32 * sin(aProgress * 3.14159));
+      // Deep smoked crimson charcoal with vibrant ember highlights
+      vec3 smokeCol = vec3(0.24, 0.04, 0.03);
+      vec3 emberCol = vec3(1.0, 0.38, 0.12);
+      vColor = mix(smokeCol, emberCol, pow(aProgress, 2.2) * 0.85);
+      vAlpha *= (0.28 + 0.45 * sin(aProgress * 3.14159));
     }
   `,
   fragmentShader: /* glsl */ `
@@ -169,7 +169,7 @@ const DragonSmokeShader = {
       float dist = length(coord);
       if (dist > 0.5) discard;
       float alpha = smoothstep(0.5, 0.0, dist) * vAlpha;
-      gl_FragColor = vec4(vColor * 1.6, alpha);
+      gl_FragColor = vec4(vColor * 1.8, alpha);
     }
   `,
 };
@@ -178,6 +178,7 @@ export function SmokeDragon() {
   const { tier } = useQuality();
   const pointsRef = useRef<THREE.Points>(null);
   const headGroupRef = useRef<THREE.Group>(null);
+  const jawRef = useRef<THREE.Group>(null);
   const eyeLRef = useRef<THREE.Mesh>(null);
   const eyeRRef = useRef<THREE.Mesh>(null);
   const emberSparksRef = useRef<THREE.Points>(null);
@@ -185,7 +186,7 @@ export function SmokeDragon() {
   const animTimer = useRef(0);
 
   // Optimized particle count by tier for zero overdraw stutter
-  const particleCount = tier === 'T1' ? 3000 : tier === 'T2' ? 8000 : 14000;
+  const particleCount = tier === 'T1' ? 4000 : tier === 'T2' ? 9000 : 16000;
 
   // Geometry attributes
   const { geometry, uniforms } = useMemo(() => {
@@ -265,7 +266,7 @@ export function SmokeDragon() {
     const st = useStore.getState();
     if (st.world !== 'redroom' && st.previousWorld !== 'redroom') return;
 
-    // Mobile: pause particles during transitions to conserve bandwidth (Part B Item 9)
+    // Mobile: pause particles during transitions to conserve bandwidth
     if (frame.transition.phase !== 'idle' && typeof window !== 'undefined' && window.innerWidth < 768) {
       return;
     }
@@ -299,7 +300,7 @@ export function SmokeDragon() {
 
     // 3. Head animation:
     // 0.0 - 2.2s follows tip of spline
-    // 2.2 - 3.0s rises to (0.0, 2.45, 1.15) facing camera
+    // 2.2 - 3.0s rises to (0.0, 2.45, 1.15) facing camera; jaw opens 18°
     if (headGroupRef.current) {
       if (animT < 2.2) {
         getSplinePoint(Math.min(1.0, animT / 2.2), tempHeadVec, breathe);
@@ -312,7 +313,12 @@ export function SmokeDragon() {
           THREE.MathUtils.lerp(2.35, 2.45, riseP) + frame.pointer.damped.y * 0.1,
           THREE.MathUtils.lerp(1.0, 1.15, riseP)
         );
-        headGroupRef.current.rotation.set(0.1, 0, 0);
+        headGroupRef.current.rotation.set(0.12, 0, 0);
+
+        // Jaw hinges open 18° (0.314 rad) per Part 8 R1
+        if (jawRef.current) {
+          jawRef.current.rotation.x = riseP * 0.314;
+        }
 
         // Eyes flare x3
         const flare = 1.0 + Math.sin(riseP * Math.PI) * 2.0;
@@ -362,15 +368,74 @@ export function SmokeDragon() {
         />
       </points>
 
-      {/* Dragon Head Ember Eyes (no solid cone or transmission buffer pass) */}
+      {/* 3D Smoked-Glass Dragon Head Shell with Cranium, Horns, Jaw & Ember Eyes */}
       <group ref={headGroupRef} position={[-1.4, 2.2, -0.2]}>
-        <mesh ref={eyeLRef} position={[-0.08, 0.08, 0.12]}>
-          <sphereGeometry args={[0.022, 8, 8]} />
-          <meshBasicMaterial color="#FF4A1F" />
+        {/* Upper Cranium / Snout */}
+        <mesh position={[0, 0.05, 0.04]} rotation={[0.2, 0, 0]}>
+          <coneGeometry args={[0.13, 0.32, 6]} />
+          <meshStandardMaterial
+            color="#32060A"
+            roughness={0.16}
+            metalness={0.7}
+            emissive="#7A0D15"
+            emissiveIntensity={0.35}
+          />
         </mesh>
-        <mesh ref={eyeRRef} position={[0.08, 0.08, 0.12]}>
-          <sphereGeometry args={[0.022, 8, 8]} />
-          <meshBasicMaterial color="#FF4A1F" />
+
+        {/* Brow Ridge */}
+        <mesh position={[0, 0.09, -0.04]}>
+          <boxGeometry args={[0.24, 0.07, 0.16]} />
+          <meshStandardMaterial
+            color="#220406"
+            roughness={0.2}
+            metalness={0.75}
+          />
+        </mesh>
+
+        {/* Left Horn */}
+        <mesh position={[-0.10, 0.16, -0.12]} rotation={[-0.55, -0.2, -0.3]}>
+          <coneGeometry args={[0.035, 0.28, 5]} />
+          <meshStandardMaterial
+            color="#4A0B10"
+            roughness={0.25}
+            metalness={0.8}
+            emissive="#FF2A1F"
+            emissiveIntensity={0.2}
+          />
+        </mesh>
+
+        {/* Right Horn */}
+        <mesh position={[0.10, 0.16, -0.12]} rotation={[-0.55, 0.2, 0.3]}>
+          <coneGeometry args={[0.035, 0.28, 5]} />
+          <meshStandardMaterial
+            color="#4A0B10"
+            roughness={0.25}
+            metalness={0.8}
+            emissive="#FF2A1F"
+            emissiveIntensity={0.2}
+          />
+        </mesh>
+
+        {/* Articulated Lower Jaw */}
+        <group ref={jawRef} position={[0, -0.04, -0.02]}>
+          <mesh position={[0, -0.02, 0.10]} rotation={[-0.18, 0, 0]}>
+            <coneGeometry args={[0.09, 0.22, 5]} />
+            <meshStandardMaterial
+              color="#280508"
+              roughness={0.2}
+              metalness={0.65}
+            />
+          </mesh>
+        </group>
+
+        {/* Glowing Ember Eyes */}
+        <mesh ref={eyeLRef} position={[-0.075, 0.09, 0.08]}>
+          <sphereGeometry args={[0.026, 12, 12]} />
+          <meshBasicMaterial color="#FF551F" />
+        </mesh>
+        <mesh ref={eyeRRef} position={[0.075, 0.09, 0.08]}>
+          <sphereGeometry args={[0.026, 12, 12]} />
+          <meshBasicMaterial color="#FF551F" />
         </mesh>
       </group>
 

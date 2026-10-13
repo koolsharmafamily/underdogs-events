@@ -104,7 +104,7 @@ export function RedRoomView() {
         aria-label={site.redRoom.title}
         className="scene-section scene-r1"
       >
-        <div className="scene-sticky flex flex-col justify-between items-center pt-10 pb-8 sm:pb-12 text-center pointer-events-none">
+        <div className="scene-sticky flex flex-col justify-between items-center pt-20 sm:pt-24 pb-8 sm:pb-12 text-center pointer-events-none">
           {/* Upper Stage: Presenter and Interactive 3D Badge Host */}
           <div className="site-container flex flex-col items-center gap-3 pointer-events-auto">
             <p className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[var(--rr-ash)]">
