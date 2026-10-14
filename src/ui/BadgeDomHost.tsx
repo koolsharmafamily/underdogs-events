@@ -130,7 +130,6 @@ export function BadgeDomHost({
     if (wasClick) {
       performBlink();
       triggerBlink();
-      // Click / tap triggers full 360° coin spin like a real tossed coin
       coinSpin.triggerCoinFlip();
     } else {
       // Swiped through: impart velocity
@@ -163,17 +162,13 @@ export function BadgeDomHost({
       onPointerUp={handlePointerUp}
       onPointerCancel={handlePointerCancel}
       onClick={(e) => {
-        // Prevent double trigger if pointerUp already handled click
         if (hasDraggedRef.current) {
           e.preventDefault();
           return;
         }
-        // Keyboard Enter/Space activation (e.detail === 0)
-        if (e.detail === 0) {
-          performBlink();
-          triggerBlink();
-          coinSpin.triggerCoinFlip();
-        }
+        performBlink();
+        triggerBlink();
+        coinSpin.triggerCoinFlip();
       }}
       onMouseEnter={() => {
         performWag();

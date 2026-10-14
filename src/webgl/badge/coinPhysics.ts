@@ -107,3 +107,7 @@ class CoinPhysicsManager {
 }
 
 export const coinSpin = new CoinPhysicsManager();
+
+if (typeof window !== "undefined") {
+  (window as unknown as { __coinSpin?: CoinPhysicsManager }).__coinSpin = coinSpin;
+}
