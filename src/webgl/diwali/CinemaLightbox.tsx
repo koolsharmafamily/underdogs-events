@@ -1,18 +1,20 @@
-'use client';
+"use client";
 
-import React, { useMemo, useRef } from 'react';
-import * as THREE from 'three';
-import { useTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
+import React, { useMemo, useRef, useLayoutEffect } from "react";
+import * as THREE from "three";
+import { useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { composition } from "../composition";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
 
 export function CinemaLightbox() {
-  const posterTex = useTexture('/media/diwali-teaser.webp');
+  const posterTex = useTexture("/media/diwali-teaser.webp");
   posterTex.colorSpace = THREE.SRGBColorSpace;
 
   const groupRef = useRef<THREE.Group>(null);
-  const bulbMatsRef = useRef<THREE.MeshStandardMaterial[]>([]);
+  const bulbMesh = useRef<THREE.InstancedMesh>(null);
+  const bulbColor = useMemo(() => new THREE.Color(), []);
 
   // 16 marquee bulbs along perimeter
   const bulbCount = 16;
@@ -38,17 +40,27 @@ export function CinemaLightbox() {
     return list;
   }, []);
 
+  useLayoutEffect(() => {
+    if (!bulbMesh.current) return;
+    const matrix = new THREE.Matrix4();
+    bulbs.forEach((b, i) => {
+      bulbMesh.current!.setMatrixAt(i, matrix.makeTranslation(b.x, b.y, b.z));
+      bulbMesh.current!.setColorAt(i, new THREE.Color("#FFD27A"));
+    });
+    bulbMesh.current.instanceMatrix.needsUpdate = true;
+  }, [bulbs]);
+
   useFrame(() => {
     const st = useStore.getState();
-    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
-    const p4 = frame.dampedProgress['D4'] ?? 0;
-    const p5 = frame.dampedProgress['D5'] ?? 0;
+    if (st.world !== "diwali" && st.previousWorld !== "diwali") return;
+    const p4 = frame.dampedProgress["D4"] ?? 0;
+    const p5 = frame.dampedProgress["D5"] ?? 0;
     const t = frame.time;
 
     if (!groupRef.current) return;
 
     // Lightbox appears during D4 only (Part 9 D4)
-    const isD4 = p4 > 0.02 && p5 < 0.25;
+    const isD4 = composition.scene === "D4";
     groupRef.current.visible = isD4;
 
     if (isD4) {
@@ -65,16 +77,20 @@ export function CinemaLightbox() {
       const seqP = THREE.MathUtils.clamp((p4 - 0.02) / 0.15, 0, 1);
       const activeBulbs = Math.floor(seqP * bulbCount);
 
-      bulbMatsRef.current.forEach((mat, idx) => {
-        if (!mat) return;
-        if (idx <= activeBulbs) {
-          // Subtle warm bulb chasing flicker
-          const chase = Math.sin(t * 8.0 + idx * 0.4) * 0.2 + 0.8;
-          mat.emissiveIntensity = 2.2 * chase;
-        } else {
-          mat.emissiveIntensity = 0.05;
+      if (bulbMesh.current) {
+        for (let idx = 0; idx < bulbCount; idx++) {
+          const glow =
+            idx <= activeBulbs
+              ? 1.8 + Math.sin(t * 0.8 + idx * 0.4) * 0.12
+              : 0.05;
+          bulbMesh.current.setColorAt(
+            idx,
+            bulbColor.set("#FFD27A").multiplyScalar(glow),
+          );
         }
-      });
+        if (bulbMesh.current.instanceColor)
+          bulbMesh.current.instanceColor.needsUpdate = true;
+      }
     }
   });
 
@@ -97,20 +113,10 @@ export function CinemaLightbox() {
       </mesh>
 
       {/* Marquee Bulbs around perimeter */}
-      {bulbs.map((b, i) => (
-        <mesh key={i} position={[b.x, b.y, b.z]}>
-          <sphereGeometry args={[0.025, 12, 12]} />
-          <meshStandardMaterial
-            ref={(el) => {
-              if (el) bulbMatsRef.current[i] = el;
-            }}
-            color="#FFF4D0"
-            emissive="#FFD27A"
-            emissiveIntensity={0.1}
-            roughness={0.1}
-          />
-        </mesh>
-      ))}
+      <instancedMesh ref={bulbMesh} args={[undefined, undefined, bulbCount]}>
+        <sphereGeometry args={[0.025, 8, 8]} />
+        <meshBasicMaterial color="#FFFFFF" toneMapped={false} />
+      </instancedMesh>
     </group>
   );
 }

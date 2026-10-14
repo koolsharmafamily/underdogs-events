@@ -1,60 +1,63 @@
-'use client'
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
-import { site } from '@/content/site'
-import { frame } from '@/state/frame'
-import { useStore } from '@/state/store'
-import { useSceneProgress } from '@/motion/useSceneProgress'
-import { useEnterTransition } from '@/motion/transitions'
-import { getLenis } from '@/motion/clock'
-import { BadgeDomHost } from '@/ui/BadgeDomHost'
-import { Marquee } from '@/ui/Marquee'
-import { Divider } from '@/ui/Divider'
-import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
-import { TransitionLink } from '@/ui/TransitionLink'
-import { Footer } from '@/ui/Footer'
-import { DomTwins } from '@/webgl/tracking/DomTwins'
+import React, { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { site } from "@/content/site";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { useSceneProgress } from "@/motion/useSceneProgress";
+import { useLineReveal } from "@/motion/useLineReveal";
+import { useEnterTransition } from "@/motion/transitions";
+import { getLenis } from "@/motion/clock";
+import { BadgeDomHost } from "@/ui/BadgeDomHost";
+import { Marquee } from "@/ui/Marquee";
+import { Divider } from "@/ui/Divider";
+import { AnnouncingSoon } from "@/ui/AnnouncingSoon";
+import { TransitionLink } from "@/ui/TransitionLink";
+import { Footer } from "@/ui/Footer";
+import { DomTwins } from "@/webgl/tracking/DomTwins";
 
 export function HomeView() {
-  const motionEnabled = useStore((s) => s.motionEnabled)
-  const hoverDoor = useStore((s) => s.hoverDoor)
-  const setHoverDoor = useStore((s) => s.setHoverDoor)
-  const setWorld = useStore((s) => s.setWorld)
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useLineReveal(titleRef, { triggerOnMount: true, delay: .18 });
+  const motionEnabled = useStore((s) => s.motionEnabled);
+  const hoverDoor = useStore((s) => s.hoverDoor);
+  const setHoverDoor = useStore((s) => s.setHoverDoor);
+  const setWorld = useStore((s) => s.setWorld);
 
-  useEnterTransition('home')
+  useEnterTransition("home");
 
   useEffect(() => {
-    setWorld('home')
-    document.documentElement.setAttribute('data-world', 'home')
-  }, [setWorld])
+    setWorld("home");
+    document.documentElement.setAttribute("data-world", "home");
+  }, [setWorld]);
 
-  const h1Ref = useRef<HTMLElement>(null)
-  const h2Ref = useRef<HTMLElement>(null)
-  const h3Ref = useRef<HTMLElement>(null)
-  const h4Ref = useRef<HTMLElement>(null)
-  const h5Ref = useRef<HTMLElement>(null)
+  const h1Ref = useRef<HTMLElement>(null);
+  const h2Ref = useRef<HTMLElement>(null);
+  const h3Ref = useRef<HTMLElement>(null);
+  const h4Ref = useRef<HTMLElement>(null);
+  const h5Ref = useRef<HTMLElement>(null);
 
-  useSceneProgress('H1', h1Ref)
-  useSceneProgress('H2', h2Ref)
-  useSceneProgress('H3', h3Ref)
-  useSceneProgress('H4', h4Ref)
-  useSceneProgress('H5', h5Ref)
+  useSceneProgress("H1", h1Ref);
+  useSceneProgress("H2", h2Ref);
+  useSceneProgress("H3", h3Ref);
+  useSceneProgress("H4", h4Ref);
+  useSceneProgress("H5", h5Ref);
 
-  const [heroTextVisible, setHeroTextVisible] = useState(true)
-  const [activeStatement, setActiveStatement] = useState(0)
-  const [showAboutBody, setShowAboutBody] = useState(false)
-  const [seasonStep, setSeasonStep] = useState(3)
-  const [seasonFade, setSeasonFade] = useState(1)
+  const [heroTextVisible, setHeroTextVisible] = useState(true);
+  const [activeStatement, setActiveStatement] = useState(0);
+  const [showAboutBody, setShowAboutBody] = useState(false);
+  const [seasonStep, setSeasonStep] = useState(3);
+  const [seasonFade, setSeasonFade] = useState(1);
 
   useEffect(() => {
     if (!motionEnabled) {
-      setHeroTextVisible(true)
-      setActiveStatement(0)
-      setShowAboutBody(true)
-      setSeasonStep(3)
-      setSeasonFade(1)
-      return
+      setHeroTextVisible(true);
+      setActiveStatement(0);
+      setShowAboutBody(true);
+      setSeasonStep(3);
+      setSeasonFade(1);
+      return;
     }
 
     const prev = {
@@ -63,50 +66,54 @@ export function HomeView() {
       about: false,
       season: 3,
       fade: 1,
-    }
+    };
 
     const onTick = () => {
-      const p1 = frame.progress.H1 ?? 0
-      // Part 7 H1: hero text exits as a one-shot at 15%, returns when user scrolls back above 10% (hysteresis)
-      if (p1 > 0.15 && prev.heroText) {
-        prev.heroText = false
-        setHeroTextVisible(false)
-      } else if (p1 < 0.10 && !prev.heroText) {
-        prev.heroText = true
-        setHeroTextVisible(true)
+      const p1 = frame.progress.H1 ?? 0;
+      // Part 7 H1: hero text exits as a one-shot at 90%, returns when user scrolls back above 85% (hysteresis)
+      if (p1 > 0.9 && prev.heroText) {
+        prev.heroText = false;
+        setHeroTextVisible(false);
+      } else if (p1 < 0.85 && !prev.heroText) {
+        prev.heroText = true;
+        setHeroTextVisible(true);
       }
 
-      const p2 = frame.progress.H2 ?? 0
-      const nextStmt = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2
-      const nextAbout = p2 >= 0.67
+      const p2 = frame.progress.H2 ?? 0;
+      const nextStmt = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2;
+      const nextAbout = p2 >= 0.67;
       if (nextStmt !== prev.stmt) {
-        prev.stmt = nextStmt
-        setActiveStatement(nextStmt)
+        prev.stmt = nextStmt;
+        setActiveStatement(nextStmt);
       }
       if (nextAbout !== prev.about) {
-        prev.about = nextAbout
-        setShowAboutBody(nextAbout)
+        prev.about = nextAbout;
+        setShowAboutBody(nextAbout);
       }
 
-      const p4 = frame.progress.H4 ?? 0
-      const nextSeason = p4 < 0.28 ? 1 : p4 < 0.56 ? 2 : 3
+      const p4 = frame.progress.H4 ?? 0;
+      const nextSeason = p4 < 0.28 ? 1 : p4 < 0.56 ? 2 : 3;
       if (nextSeason !== prev.season) {
-        prev.season = nextSeason
-        setSeasonStep(nextSeason)
+        prev.season = nextSeason;
+        setSeasonStep(nextSeason);
       }
 
-      const nextFade = p4 > 0.65 ? Math.max(0, 1 - (p4 - 0.65) / 0.25) : 1
-      if (Math.abs(nextFade - prev.fade) > 0.05 || nextFade === 0 || nextFade === 1) {
-        prev.fade = nextFade
-        setSeasonFade(nextFade)
+      const nextFade = p4 > 0.65 ? Math.max(0, 1 - (p4 - 0.65) / 0.25) : 1;
+      if (
+        Math.abs(nextFade - prev.fade) > 0.05 ||
+        nextFade === 0 ||
+        nextFade === 1
+      ) {
+        prev.fade = nextFade;
+        setSeasonFade(nextFade);
       }
-    }
+    };
 
-    gsap.ticker.add(onTick)
+    gsap.ticker.add(onTick);
     return () => {
-      gsap.ticker.remove(onTick)
-    }
-  }, [motionEnabled])
+      gsap.ticker.remove(onTick);
+    };
+  }, [motionEnabled]);
 
   return (
     <main id="main-content" className="relative z-10">
@@ -130,17 +137,18 @@ export function HomeView() {
 
             {/* Copy occupies columns 1–6, strictly confined to left half on desktop */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 max-w-[560px] flex flex-col justify-end lg:self-end lg:pt-24 lg:pb-[10svh] gap-5 transition-all ${
+              className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 max-w-[560px] flex flex-col justify-end lg:self-center lg:py-24 gap-5 transition-all ${
                 heroTextVisible || !motionEnabled
-                  ? 'duration-[650ms] opacity-100 translate-y-0'
-                  : 'duration-[350ms] opacity-0 -translate-y-8 pointer-events-none'
+                  ? "duration-[650ms] opacity-100 translate-y-0"
+                  : "duration-[350ms] opacity-0 -translate-y-8 pointer-events-none"
               }`}
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--steel)]">
+              <p className="font-mono text-[13px] sm:text-[14px] uppercase tracking-[0.14em] font-medium text-[var(--paper)]/85 flex items-center gap-2.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--world-accent)] shadow-[0_0_8px_var(--world-accent)]" aria-hidden="true" />
                 {site.home.hero.label}
               </p>
 
-              <h1 className="font-unbounded text-[clamp(42px,6.2vw,104px)] leading-[0.92] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading">
+              <h1 ref={titleRef} className="font-unbounded text-[clamp(34px,4.6vw,76px)] leading-[0.96] tracking-[-0.025em] font-extrabold uppercase text-[var(--paper)] balance-heading">
                 <span className="sr-only">{site.brand.name} — </span>
                 {site.home.hero.title}
               </h1>
@@ -187,30 +195,30 @@ export function HomeView() {
               ) : (
                 <div className="relative min-h-[120px] sm:min-h-[180px] lg:min-h-[210px] flex items-end md:items-center">
                   {site.home.about.statements.map((stmt, idx) => {
-                    const isCurrent = idx === activeStatement
-                    const isPast = idx < activeStatement
+                    const isCurrent = idx === activeStatement;
+                    const isPast = idx < activeStatement;
                     return (
                       <p
                         key={stmt}
                         aria-hidden={!isCurrent}
                         className={`font-unbounded text-[clamp(22px,2.7vw,42px)] leading-[1.12] tracking-[-0.02em] font-extrabold uppercase text-[var(--paper)] balance-heading transition-all ${
                           isCurrent
-                            ? 'duration-[650ms] relative opacity-100 translate-y-0'
+                            ? "duration-[650ms] relative opacity-100 translate-y-0"
                             : isPast
-                              ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10'
-                              : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10'
+                              ? "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10"
+                              : "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10"
                         }`}
                       >
                         {stmt}
                       </p>
-                    )
+                    );
                   })}
                 </div>
               )}
 
               <p
                 className={`font-manrope text-sm sm:text-base lg:text-lead text-[var(--paper)]/85 max-w-[52ch] pretty-copy transition-opacity duration-500 ${
-                  showAboutBody || !motionEnabled ? 'opacity-100' : 'opacity-45'
+                  showAboutBody || !motionEnabled ? "opacity-100" : "opacity-85"
                 }`}
               >
                 {site.home.about.body}
@@ -224,10 +232,10 @@ export function HomeView() {
                 style={{
                   transform:
                     activeStatement === 0
-                      ? 'perspective(800px) rotateY(72deg)'
+                      ? "perspective(800px) rotateY(72deg)"
                       : activeStatement === 1
-                        ? 'perspective(800px) rotateY(180deg)'
-                        : 'perspective(800px) rotateY(0deg)',
+                        ? "perspective(800px) rotateY(180deg)"
+                        : "perspective(800px) rotateY(0deg)",
                 }}
               >
                 <BadgeDomHost
@@ -259,7 +267,8 @@ export function HomeView() {
               {site.home.nights.label}
             </h2>
             <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--paper)]">
-              Latest: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
+              Latest: {site.home.nights.latest.name} —{" "}
+              {site.home.nights.latest.detail}
             </p>
           </div>
 
@@ -299,19 +308,19 @@ export function HomeView() {
           >
             <div className="flex flex-col items-center gap-2">
               {site.home.season.lines.map((line, idx) => {
-                const visible = idx < seasonStep
+                const visible = idx < seasonStep;
                 return (
                   <p
                     key={line}
                     className={`font-unbounded text-[clamp(26px,4.2vw,68px)] leading-[0.96] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading transition-all duration-700 ${
                       visible
-                        ? 'opacity-100 translate-y-0'
-                        : 'opacity-15 translate-y-6'
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-70 translate-y-6"
                     }`}
                   >
                     {line}
                   </p>
-                )
+                );
               })}
             </div>
 
@@ -349,25 +358,29 @@ export function HomeView() {
           </div>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
-          <div className="w-full flex-1 pointer-events-none min-h-[38vh] lg:min-h-[44vh]" aria-hidden="true" />
+          <div
+            className="w-full flex-1 pointer-events-none min-h-[38vh] lg:min-h-[44vh]"
+            aria-hidden="true"
+          />
 
           <div className="site-container site-grid relative z-30 items-end gap-y-8 pt-4 pb-8 lg:pb-12">
             {/* Door 1: The Red Room */}
             <div
               className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
-                hoverDoor === 'diwali' ? 'opacity-40' : 'opacity-100'
+                hoverDoor === "diwali" ? "opacity-40" : "opacity-100"
               }`}
             >
               <TransitionLink
+                data-door-caption="red"
                 href={site.home.worlds.one.href}
                 transitionType="T1"
                 origin="door"
                 aria-label={`Enter ${site.home.worlds.one.kicker}: ${site.home.worlds.one.name}, ${site.home.worlds.one.occasion}, Saturday 24 October 2026`}
-                onMouseEnter={() => setHoverDoor('redroom')}
+                onMouseEnter={() => setHoverDoor("redroom")}
                 onMouseLeave={() => setHoverDoor(null)}
-                onFocus={() => setHoverDoor('redroom')}
+                onFocus={() => setHoverDoor("redroom")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
+                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
@@ -378,12 +391,18 @@ export function HomeView() {
                     {site.home.worlds.one.name}
                   </span>
                   <span className="font-manrope text-body text-[#FCF9FC]/80">
-                    {site.home.worlds.one.occasion} · {site.home.worlds.one.date} ·{' '}
-                    {site.home.worlds.one.place}
+                    {site.home.worlds.one.occasion} ·{" "}
+                    {site.home.worlds.one.date} · {site.home.worlds.one.place}
                   </span>
                   <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FCF9FC] group-hover:text-[#FF2A1F] transition-colors">
                     <span>{site.home.worlds.one.cta}</span>
-                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                    <svg
+                      width="14"
+                      height="10"
+                      viewBox="0 0 14 10"
+                      fill="none"
+                      aria-hidden="true"
+                    >
                       <path
                         d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
                         stroke="currentColor"
@@ -398,19 +417,20 @@ export function HomeView() {
             {/* Door 2: Diwali */}
             <div
               className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
-                hoverDoor === 'redroom' ? 'opacity-40' : 'opacity-100'
+                hoverDoor === "redroom" ? "opacity-40" : "opacity-100"
               }`}
             >
               <TransitionLink
+                data-door-caption="diwali"
                 href={site.home.worlds.two.href}
                 transitionType="T2"
                 origin="door"
                 aria-label={`Enter ${site.home.worlds.two.kicker}: ${site.home.worlds.two.name}, ${site.home.worlds.two.occasion}, Saturday 7 November 2026`}
-                onMouseEnter={() => setHoverDoor('diwali')}
+                onMouseEnter={() => setHoverDoor("diwali")}
                 onMouseLeave={() => setHoverDoor(null)}
-                onFocus={() => setHoverDoor('diwali')}
+                onFocus={() => setHoverDoor("diwali")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 rounded-xl bg-[#06080C]/80 backdrop-blur-md border border-[var(--paper)]/15 hover:border-[#F2D38B]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2D38B] transition-all duration-300"
+                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#F2D38B]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2D38B] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
@@ -422,14 +442,23 @@ export function HomeView() {
                   </span>
                   <span
                     className="font-manrope text-body text-[#FFF6EE]/85"
-                    style={{ '--world-accent': '#F2D38B' } as React.CSSProperties}
+                    style={
+                      { "--world-accent": "#F2D38B" } as React.CSSProperties
+                    }
                   >
-                    {site.home.worlds.two.occasion} · {site.home.worlds.two.date} ·{' '}
+                    {site.home.worlds.two.occasion} ·{" "}
+                    {site.home.worlds.two.date} ·{" "}
                     <AnnouncingSoon value={site.home.worlds.two.place} />
                   </span>
                   <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#F2D38B] transition-colors">
                     <span>{site.home.worlds.two.cta}</span>
-                    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                    <svg
+                      width="14"
+                      height="10"
+                      viewBox="0 0 14 10"
+                      fill="none"
+                      aria-hidden="true"
+                    >
                       <path
                         d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
                         stroke="currentColor"
@@ -449,5 +478,5 @@ export function HomeView() {
       {/* H6 · Footer */}
       <Footer />
     </main>
-  )
+  );
 }

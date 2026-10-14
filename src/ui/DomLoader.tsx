@@ -1,251 +1,161 @@
-'use client'
+"use client";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { useProgress } from "@react-three/drei";
+import { useStore } from "@/state/store";
+import { registerMotionEases } from "@/motion/eases";
+import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
 
-import React, { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
-import { useStore } from '@/state/store'
-import { registerMotionEases } from '@/motion/eases'
-
-const LOADER_SEEN_KEY = 'underdogs-loader-seen'
-
-/**
- * Classy minimalistic loader with centered pink enamel badge on a dark radial vignette.
- * Waits for actual WebGL first-frame readiness of the active world before running a
- * GPU-composited two-step dissolve (coin gently recedes into the dark vignette, then vignette lifts).
- */
 export function DomLoader() {
-  const phase = useStore((s) => s.phase)
-  const setPhase = useStore((s) => s.setPhase)
-  const setLoaderPopped = useStore((s) => s.setLoaderPopped)
-  const motionEnabled = useStore((s) => s.motionEnabled)
-
-  const [visible, setVisible] = useState(true)
-  const [statusText, setStatusText] = useState<'Loading' | 'Ready'>('Loading')
-  const [showEnterAnyway, setShowEnterAnyway] = useState(false)
-
-  const containerRef = useRef<HTMLDivElement>(null)
-  const coinRef = useRef<HTMLDivElement>(null)
-  const isFinishedRef = useRef(false)
-  const isFastForwardRef = useRef(false)
-  const finishHandoffRef = useRef<(() => void) | null>(null)
-
+  const phase = useStore((s) => s.phase),
+    motion = useStore((s) => s.motionEnabled);
+  const { progress } = useProgress();
+  const root = useRef<HTMLDivElement>(null),
+    coin = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true),
+    [slow, setSlow] = useState(false);
+  const initialized = useRef(false),
+    repeatVisit = useRef(false);
   useEffect(() => {
-    registerMotionEases()
-
-    let isRepeat = false
-    try {
-      isRepeat = window.sessionStorage.getItem(LOADER_SEEN_KEY) === '1'
-      window.sessionStorage.setItem(LOADER_SEEN_KEY, '1')
-    } catch {
-      // Ignore storage access errors
+    registerMotionEases();
+    let repeat = false,
+      done = false,
+      tl: gsap.core.Timeline | null = null;
+    if (!initialized.current) {
+      try {
+        repeatVisit.current =
+          sessionStorage.getItem("underdogs-loader-seen") === "1";
+      } catch {}
+      initialized.current = true;
     }
-
-    if (typeof window !== 'undefined' && window.location.search.includes('skipLoader=1')) {
-      setVisible(false)
-      setPhase('complete')
-      setLoaderPopped(true)
-      return
-    }
-
-    const minDuration = !motionEnabled ? 0.25 : isRepeat ? 0.4 : 0.55
-    const startTime = performance.now()
-
-    let fontsDone = false
-    if (typeof document !== 'undefined' && document.fonts) {
-      document.fonts.ready
-        .then(() => {
-          fontsDone = true
-        })
-        .catch(() => {
-          fontsDone = true
-        })
-    } else {
-      fontsDone = true
-    }
-
-    // Safety font timeout so headless / offline environments never stall
-    const checkFonts = window.setTimeout(() => {
-      fontsDone = true
-    }, 350)
-
-    // 8-second fallback: "Enter anyway →"
-    const fallbackTimer = window.setTimeout(() => {
-      if (!isFinishedRef.current) {
-        setShowEnterAnyway(true)
+    repeat = repeatVisit.current;
+    if (repeat) setVisible(false);
+    const finish = () => {
+      if (done) return;
+      done = true;
+      try {
+        sessionStorage.setItem("underdogs-loader-seen", "1");
+      } catch {}
+      const store = useStore.getState();
+      store.setLoaderPopped(true);
+      const complete = () => {
+        setVisible(false);
+        store.setPhase("complete");
+      };
+      if (repeat || !root.current) {
+        complete();
+        return;
       }
-    }, 8000)
-
-    const finishHandoff = () => {
-      if (isFinishedRef.current) return
-      isFinishedRef.current = true
-
-      if (!containerRef.current) {
-        setStatusText('Ready')
-        setLoaderPopped(true)
-        setVisible(false)
-        setPhase('complete')
-        return
-      }
-
-      // Immediately release pointer events so scroll & interaction are never blocked during fade
-      containerRef.current.style.pointerEvents = 'none'
-
-      // Wait one animation frame to ensure any pending GPU work is completely flushed before starting tween
-      requestAnimationFrame(() => {
-        if (!containerRef.current) {
-          setStatusText('Ready')
-          setLoaderPopped(true)
-          setVisible(false)
-          setPhase('complete')
-          return
-        }
-
-        const tl = gsap.timeline({
-          onComplete: () => {
-            setStatusText('Ready')
-            setVisible(false)
-            setPhase('complete')
-          },
-        })
-
-        // Step 1: Centered pink coin smoothly scales down slightly and melts into the dark vignette
-        if (coinRef.current) {
-          tl.to(
-            coinRef.current,
-            {
-              opacity: 0,
-              scale: 0.92,
-              duration: motionEnabled ? 0.44 : 0.2,
-              ease: 'power2.inOut',
-              force3D: true,
-            },
-            0
-          )
-        }
-
-        // Step 2: Trigger 3D badge pop & smoothly lift the dark vignette as the coin finishes dissolving
-        tl.call(
-          () => {
-            setLoaderPopped(true)
-          },
-          [],
-          motionEnabled ? 0.16 : 0.05
-        )
-
+      tl = gsap.timeline({ onComplete: complete });
+      if (coin.current)
         tl.to(
-          containerRef.current,
-          {
-            opacity: 0,
-            duration: motionEnabled ? 0.52 : 0.22,
-            ease: 'power2.out',
-          },
-          motionEnabled ? 0.16 : 0.05
-        )
-      })
-    }
-    finishHandoffRef.current = finishHandoff
-
-    // Lightweight readiness check with ZERO React state updates per frame
-    const checkReady = () => {
-      if (isFinishedRef.current) return
-
-      const elapsedSec = (performance.now() - startTime) / 1000
-      const store = useStore.getState()
-      const activeWorldReady = store.renderedWorlds[store.world] || store.tier === 'T0'
-
-      // Ready once active world has rendered 2 post-compile WebGL frames (or 1.35s safety fallback for headless/slow GPUs)
-      const webglReady = activeWorldReady || elapsedSec >= 1.35
-
+          coin.current.querySelector("svg"),
+          { opacity: 0, duration: 0.15 },
+          0,
+        );
       if (
-        isFastForwardRef.current ||
-        (fontsDone && webglReady && elapsedSec >= minDuration)
+        motion &&
+        coin.current &&
+        store.world === "home" &&
+        badgeScreenBounds.ready
       ) {
-        finishHandoff()
+        tl.to(
+          coin.current,
+          {
+            x: badgeScreenBounds.x - innerWidth / 2,
+            y: badgeScreenBounds.y - innerHeight / 2,
+            width: (badgeScreenBounds.size * 512) / 340,
+            height: (badgeScreenBounds.size * 512) / 340,
+            duration: 0.45,
+            ease: "ease.inOut",
+          },
+          0,
+        );
       }
-    }
-
-    gsap.ticker.add(checkReady)
-
-    // Skip trigger: fast-forward on user input once minimum 0.3s has passed
+      tl.to(
+        root.current,
+        { opacity: 0, duration: motion ? 0.3 : 0.15, ease: "ease.out" },
+        motion ? 0.3 : 0,
+      );
+    };
+    const check = () => {
+      const s = useStore.getState();
+      if (s.renderedWorlds[s.world] || s.tier === "T0") finish();
+    };
+    const timer = window.setTimeout(() => setSlow(true), 8000);
     const skip = () => {
-      if (isFinishedRef.current) return
-      isFastForwardRef.current = true
-      finishHandoff()
-    }
-
-    window.addEventListener('pointerdown', skip, { once: true })
-    window.addEventListener('keydown', skip, { once: true })
-    window.addEventListener('wheel', skip, { once: true, passive: true })
-
+      const s = useStore.getState();
+      if (s.renderedWorlds[s.world] || s.tier === "T0") finish();
+    };
+    gsap.ticker.add(check);
+    window.addEventListener("pointerdown", skip);
+    window.addEventListener("keydown", skip);
     return () => {
-      gsap.ticker.remove(checkReady)
-      window.clearTimeout(checkFonts)
-      window.clearTimeout(fallbackTimer)
-      window.removeEventListener('pointerdown', skip)
-      window.removeEventListener('keydown', skip)
-      window.removeEventListener('wheel', skip)
-    }
-  }, [motionEnabled, setPhase, setLoaderPopped])
-
+      gsap.ticker.remove(check);
+      clearTimeout(timer);
+      tl?.kill();
+      window.removeEventListener("pointerdown", skip);
+      window.removeEventListener("keydown", skip);
+    };
+  }, [motion]);
   return (
     <>
       <div role="status" aria-live="polite" className="sr-only">
-        {statusText}
+        {phase === "complete" ? "Ready" : "Loading"}
       </div>
-
-      {visible && phase !== 'complete' && (
+      {visible && phase !== "complete" ? (
         <div
-          ref={containerRef}
-          aria-hidden="true"
-          className="fixed inset-0 z-[100] flex items-center justify-center select-none will-change-[opacity]"
-          style={{
-            background:
-              'radial-gradient(ellipse at 50% 50%, #170915 0%, #09060B 65%, #050406 100%)',
-          }}
+          ref={root}
+          className="fixed inset-0 z-[100] flex items-center justify-center select-none"
+          style={{ background: "radial-gradient(ellipse,#170915,#07070B 70%)" }}
         >
-          {/* GPU-composited coin wrapper (separate from inner CSS breathing to avoid transform conflict) */}
           <div
-            ref={coinRef}
-            className="relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] lg:w-[340px] lg:h-[340px] flex items-center justify-center pointer-events-none will-change-[transform,opacity]"
+            ref={coin}
+            className="relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px]"
           >
-            {/* Static radial glow behind coin instead of expensive per-frame CSS drop-shadow filter */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-4 rounded-full"
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(215,62,188,0.32) 0%, rgba(215,62,188,0) 70%)',
-              }}
+            <img
+              src="/media/badge-enamel-still-512.webp"
+              alt="Underdogs Enamel Badge"
+              width={512}
+              height={512}
+              fetchPriority="high"
+              className="w-full h-full object-contain"
             />
-            <picture className="badge-breathe relative z-10 w-full h-full flex items-center justify-center">
-              <source srcSet="/media/badge-enamel-still.webp" media="(min-width: 769px)" />
-              <source srcSet="/media/badge-enamel-still-512.webp" media="(max-width: 768px)" />
-              <img
-                src="/media/badge-enamel-still.webp"
-                alt="Underdogs Enamel Badge"
-                width={1024}
-                height={1024}
-                fetchPriority="high"
-                decoding="async"
-                className="w-full h-full object-contain pointer-events-none select-none"
+            <svg
+              aria-label={`Loading ${Math.round(progress)}%`}
+              role="progressbar"
+              aria-valuenow={Math.round(progress)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              viewBox="0 0 100 100"
+              className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] -rotate-90"
+            >
+              <circle
+                cx="50"
+                cy="50"
+                r="48"
+                fill="none"
+                stroke="#D73EBC"
+                strokeWidth=".5"
+                strokeDasharray={302}
+                strokeDashoffset={302 * (1 - progress / 100)}
               />
-            </picture>
+            </svg>
           </div>
-
-          {showEnterAnyway && (
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center z-10">
-              <button
-                type="button"
-                onClick={() => {
-                  finishHandoffRef.current?.()
-                }}
-                className="font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--paper)] underline underline-offset-4 hover:text-[var(--magenta)] transition-colors cursor-pointer"
-              >
-                Enter anyway →
-              </button>
-            </div>
-          )}
+          {slow ? (
+            <button
+              className="absolute bottom-8 underline text-sm"
+              onClick={() => {
+                useStore.getState().setTier("T0");
+                setVisible(false);
+                useStore.getState().setPhase("complete");
+              }}
+            >
+              Enter anyway →
+            </button>
+          ) : null}
         </div>
-      )}
+      ) : null}
     </>
-  )
+  );
 }

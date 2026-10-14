@@ -1,68 +1,68 @@
-'use client'
+"use client";
 
-import React, { useEffect, useRef } from 'react'
-import { usePathname } from 'next/navigation'
-import { site } from '@/content/site'
-import { useStore } from '@/state/store'
-import { TransitionLink } from './TransitionLink'
-import { MotionToggle } from './MotionToggle'
-import { Divider } from './Divider'
+import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { site } from "@/content/site";
+import { useStore } from "@/state/store";
+import { TransitionLink } from "./TransitionLink";
+
+import { Divider } from "./Divider";
 
 export function Menu() {
-  const pathname = usePathname()
-  const menuOpen = useStore((s) => s.menuOpen)
-  const setMenuOpen = useStore((s) => s.setMenuOpen)
-  const world = useStore((s) => s.world)
-  const overlayRef = useRef<HTMLDivElement>(null)
-  const closeBtnRef = useRef<HTMLButtonElement>(null)
-  const previousFocusRef = useRef<HTMLElement | null>(null)
+  const pathname = usePathname();
+  const menuOpen = useStore((s) => s.menuOpen);
+  const setMenuOpen = useStore((s) => s.setMenuOpen);
+  const world = useStore((s) => s.world);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    setMenuOpen(false)
-  }, [pathname, setMenuOpen])
+    setMenuOpen(false);
+  }, [pathname, setMenuOpen]);
 
   useEffect(() => {
     if (!menuOpen) {
-      previousFocusRef.current?.focus()
-      return
+      previousFocusRef.current?.focus();
+      return;
     }
 
-    previousFocusRef.current = document.activeElement as HTMLElement | null
-    closeBtnRef.current?.focus()
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeBtnRef.current?.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        setMenuOpen(false)
-        return
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMenuOpen(false);
+        return;
       }
 
-      if (e.key === 'Tab' && overlayRef.current) {
+      if (e.key === "Tab" && overlayRef.current) {
         const focusable = overlayRef.current.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        )
-        if (focusable.length === 0) return
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
 
         if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault()
-          last.focus()
+          e.preventDefault();
+          last.focus();
         } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          first.focus()
+          e.preventDefault();
+          first.focus();
         }
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [menuOpen, setMenuOpen])
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [menuOpen, setMenuOpen]);
 
-  if (!menuOpen) return null
+  if (!menuOpen) return null;
 
   const dividerVariant =
-    world === 'redroom' ? 'diamond' : world === 'diwali' ? 'sparkle' : 'x'
+    world === "redroom" ? "diamond" : world === "diwali" ? "sparkle" : "x";
 
   return (
     <div
@@ -85,20 +85,35 @@ export function Menu() {
           className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center gap-2 font-cinzel text-[12px] uppercase tracking-[0.28em]"
         >
           <span>Close</span>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M1.5 1.5L10.5 10.5M10.5 1.5L1.5 10.5" stroke="currentColor" strokeWidth="1.5" />
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M1.5 1.5L10.5 10.5M10.5 1.5L1.5 10.5"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            />
           </svg>
         </button>
       </div>
 
-      <nav aria-label="Mobile pages" className="my-auto flex flex-col gap-6 py-8">
+      <nav
+        aria-label="Mobile pages"
+        className="my-auto flex flex-col gap-6 py-8"
+      >
         <TransitionLink
           href="/"
           origin="nav"
           onClick={() => setMenuOpen(false)}
-          aria-current={pathname === '/' ? 'page' : undefined}
+          aria-current={pathname === "/" ? "page" : undefined}
           className={`font-unbounded text-4xl font-extrabold uppercase tracking-tight ${
-            pathname === '/' ? 'text-[var(--world-accent)]' : 'text-[var(--world-text)]'
+            pathname === "/"
+              ? "text-[var(--world-accent)]"
+              : "text-[var(--world-text)]"
           }`}
         >
           {site.brand.line}
@@ -110,9 +125,11 @@ export function Menu() {
           href="/the-red-room"
           origin="nav"
           onClick={() => setMenuOpen(false)}
-          aria-current={pathname === '/the-red-room' ? 'page' : undefined}
+          aria-current={pathname === "/the-red-room" ? "page" : undefined}
           className={`font-cinzel-decorative text-4xl font-bold uppercase tracking-tight ${
-            pathname === '/the-red-room' ? 'text-[var(--world-accent)]' : 'text-[var(--world-text)]'
+            pathname === "/the-red-room"
+              ? "text-[var(--world-accent)]"
+              : "text-[var(--world-text)]"
           }`}
         >
           {site.home.worlds.one.name}
@@ -124,9 +141,11 @@ export function Menu() {
           href="/diwali"
           origin="nav"
           onClick={() => setMenuOpen(false)}
-          aria-current={pathname === '/diwali' ? 'page' : undefined}
+          aria-current={pathname === "/diwali" ? "page" : undefined}
           className={`font-bodoni italic text-4xl font-medium tracking-tight ${
-            pathname === '/diwali' ? 'text-[var(--world-accent)]' : 'text-[var(--world-text)]'
+            pathname === "/diwali"
+              ? "text-[var(--world-accent)]"
+              : "text-[var(--world-text)]"
           }`}
         >
           {site.home.worlds.two.name}
@@ -137,8 +156,7 @@ export function Menu() {
         <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--world-muted)]">
           {site.brand.city}
         </span>
-        <MotionToggle />
       </div>
     </div>
-  )
+  );
 }

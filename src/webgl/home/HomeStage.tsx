@@ -1,38 +1,69 @@
-'use client';
+"use client";
 
-import React, { useRef, useMemo } from 'react';
-import * as THREE from 'three';
-import { useGLTF, Environment, Lightformer } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-import { Beams } from './Beams';
-import { AnchorFlames, findAnchorNodes, groundObjectToY } from '../fx/Flame';
+import React, { useRef, useMemo, useEffect } from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { StageFloor } from "../StageFloor";
+import { doorModels } from "../tracking/doorModels";
+import { batchStaticSiblings } from "../batchStaticSiblings";
+import { composition } from "../composition";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { Beams } from "./Beams";
+import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
 
 const SPRING_OMEGA = 2 * Math.PI * 2.2; // f = 2.2 Hz
-const SPRING_ZETA = 0.65;
+const SPRING_ZETA = 0.6;
 
 function stepSpring(
   pos: number,
   vel: number,
   target: number,
-  dt: number
+  dt: number,
 ): [number, number] {
-  const force = -SPRING_OMEGA * SPRING_OMEGA * (pos - target) - 2 * SPRING_ZETA * SPRING_OMEGA * vel;
+  const force =
+    -SPRING_OMEGA * SPRING_OMEGA * (pos - target) -
+    2 * SPRING_ZETA * SPRING_OMEGA * vel;
   const nextVel = vel + force * dt;
   const nextPos = pos + nextVel * dt;
   return [nextPos, nextVel];
 }
 
 export function HomeStage() {
-  const { size } = useThree();
+  const { size, camera } = useThree();
+  const captionTops = useRef({ red: 0, diwali: 0 });
+  const projection = useMemo(() => new THREE.Vector3(), []);
+  useEffect(() => {
+    const measure = () => {
+      for (const key of ["red", "diwali"] as const) {
+        const el = document.querySelector<HTMLElement>(
+          '[data-door-caption="' + key + '"]',
+        );
+        if (el)
+          captionTops.current[key] =
+            el.getBoundingClientRect().top + window.scrollY;
+      }
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    const section = document.querySelector('[data-scene="H5"]');
+    if (section) observer.observe(section);
+    window.addEventListener("resize", measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", measure);
+      doorModels.red = null;
+      doorModels.diwali = null;
+    };
+  }, []);
   const world = useStore((s) => s.world);
   const previousWorld = useStore((s) => s.previousWorld);
   const hoverDoor = useStore((s) => s.hoverDoor);
   const loaderPopped = useStore((s) => s.loaderPopped);
 
-  const redDoorGltf = useGLTF('/models/door-redroom.glb');
-  const diwaliDoorGltf = useGLTF('/models/door-diwali.glb');
+  const redDoorGltf = useGLTF("/models/door-redroom.glb");
+  const diwaliDoorGltf = useGLTF("/models/door-diwali.glb");
 
   const redDoorRef = useRef<THREE.Group>(null);
   const diwaliDoorRef = useRef<THREE.Group>(null);
@@ -67,21 +98,23 @@ export function HomeStage() {
     groundObjectToY(rScene, 0);
     groundObjectToY(dScene, 0);
 
-    const rLeaf = rScene.getObjectByName('Leaf') ?? null;
-    const dLeafL = dScene.getObjectByName('Leaf_L') ?? null;
-    const dLeafR = dScene.getObjectByName('Leaf_R') ?? null;
-    const bL = dScene.getObjectByName('Bell_L') ?? null;
-    const bR = dScene.getObjectByName('Bell_R') ?? null;
+    const rLeaf = rScene.getObjectByName("Leaf") ?? null;
+    const dLeafL = dScene.getObjectByName("Leaf_L") ?? null;
+    const dLeafR = dScene.getObjectByName("Leaf_R") ?? null;
+    const bL = dScene.getObjectByName("Bell_L") ?? null;
+    const bR = dScene.getObjectByName("Bell_R") ?? null;
 
     const gMats: THREE.MeshStandardMaterial[] = [];
     const rLeakMats: THREE.MeshStandardMaterial[] = [];
     const dLeakMats: THREE.MeshStandardMaterial[] = [];
 
     // Clone only animated materials (Glass_Inlays and Light_Leak) per Global Rule 4
-    ['Glass_Inlays', 'Glass_Inlays_R'].forEach((name) => {
+    ["Glass_Inlays", "Glass_Inlays_R"].forEach((name) => {
       const node = dScene.getObjectByName(name) as THREE.Mesh | undefined;
       if (node && node.material) {
-        const orig = Array.isArray(node.material) ? node.material[0] : node.material;
+        const orig = Array.isArray(node.material)
+          ? node.material[0]
+          : node.material;
         const cloned = (orig as THREE.MeshStandardMaterial).clone();
         cloned.userData.baseEmissive = cloned.emissiveIntensity ?? 0.4;
         node.material = cloned;
@@ -89,7 +122,7 @@ export function HomeStage() {
       }
     });
 
-    const rLeakGroup = rScene.getObjectByName('Light_Leak');
+    const rLeakGroup = rScene.getObjectByName("Light_Leak");
     if (rLeakGroup) {
       rLeakGroup.traverse((c) => {
         if ((c as THREE.Mesh).isMesh) {
@@ -105,7 +138,7 @@ export function HomeStage() {
       });
     }
 
-    const dLeakGroup = dScene.getObjectByName('Light_Leak');
+    const dLeakGroup = dScene.getObjectByName("Light_Leak");
     if (dLeakGroup) {
       dLeakGroup.traverse((c) => {
         if ((c as THREE.Mesh).isMesh) {
@@ -122,9 +155,11 @@ export function HomeStage() {
     }
 
     // Flame anchors from both doors (Flame_Anchor_L, Flame_Anchor_R on each)
-    const rAnchors = findAnchorNodes(rScene, 'Flame_Anchor');
-    const dAnchors = findAnchorNodes(dScene, 'Flame_Anchor');
+    const rAnchors = findAnchorNodes(rScene, "Flame_Anchor");
+    const dAnchors = findAnchorNodes(dScene, "Flame_Anchor");
 
+    batchStaticSiblings(rScene);
+    batchStaticSiblings(dScene);
     return {
       redScene: rScene,
       diwaliScene: dScene,
@@ -153,12 +188,12 @@ export function HomeStage() {
   const rimIntensity = useRef(0);
 
   useFrame((_, delta) => {
-    if (world !== 'home' && previousWorld !== 'home') return;
+    if (world !== "home" && previousWorld !== "home") return;
     const dt = Math.min(delta, 1 / 30);
     const t = frame.time;
-    const p2 = frame.dampedProgress['H2'] ?? 0;
-    const p4 = frame.dampedProgress['H4'] ?? 0;
-    const p5 = frame.dampedProgress['H5'] ?? 0;
+    const p2 = frame.dampedProgress["H2"] ?? 0;
+    const p4 = frame.dampedProgress["H4"] ?? 0;
+    const p5 = frame.dampedProgress["H5"] ?? 0;
     const tr = frame.transition;
 
     // 1. Point Light 1: Rim light behind badge (rises over 900 ms on loader handoff)
@@ -166,7 +201,12 @@ export function HomeStage() {
       rimRiseTimer.current += dt;
       const targetRim = p4 > 0.05 ? THREE.MathUtils.lerp(2.8, 0.8, p4) : 2.8;
       const tNorm = Math.min(1, rimRiseTimer.current / 0.9);
-      rimIntensity.current = THREE.MathUtils.damp(rimIntensity.current, targetRim * tNorm, 6, dt);
+      rimIntensity.current = THREE.MathUtils.damp(
+        rimIntensity.current,
+        targetRim * tNorm,
+        6,
+        dt,
+      );
     } else {
       rimIntensity.current = 0;
     }
@@ -177,7 +217,7 @@ export function HomeStage() {
         rimPointLightRef.current.position.set(
           THREE.MathUtils.lerp(-0.6, 0.6, sub),
           1.5,
-          0.35
+          0.35,
         );
         rimPointLightRef.current.intensity = 2.6 * Math.sin(sub * Math.PI);
       } else {
@@ -190,26 +230,29 @@ export function HomeStage() {
     const isPortrait = size.width < size.height;
     const redTargetX = isPortrait ? 0 : -1.65;
     const diwaliTargetX = isPortrait ? 0 : 1.65;
-    const redOpenY = isPortrait ? 1.55 : 0;
-    const diwaliOpenY = isPortrait ? -0.15 : 0;
-    const doorTargetScale = isPortrait ? 0.42 : 0.78;
+    const bottomY = (top: number) => {
+      const depth = projection.set(0, 0, 0).project(camera).z;
+      return projection
+        .set(0, 1 - ((top - frame.scroll - 12) / size.height) * 2, depth)
+        .unproject(camera).y;
+    };
+    const redOpenY = isPortrait ? bottomY(captionTops.current.red) : 0;
+    const diwaliOpenY = isPortrait ? bottomY(captionTops.current.diwali) : 0;
+    doorModels.red = redDoorRef.current;
+    doorModels.diwali = diwaliDoorRef.current;
+    const doorTargetScale = isPortrait ? 0.38 : 0.78;
 
     let redTargetY = -8.0;
     let diwaliTargetY = -8.0;
     let doorsVisible = false;
 
-    const effP4 = Math.max(p4, frame.progress['H4'] ?? 0);
-    const effP5 = Math.max(p5, frame.progress['H5'] ?? 0);
+    const effP4 = Math.max(p4, frame.progress["H4"] ?? 0);
+    const effP5 = Math.max(p5, frame.progress["H5"] ?? 0);
 
-    if (effP5 > 0.001 || effP4 > 0.88 || tr.type === 'T1' || tr.type === 'T2') {
+    if (composition.scene === "H5" || tr.type === "T1" || tr.type === "T2") {
       redTargetY = redOpenY;
       diwaliTargetY = diwaliOpenY;
       doorsVisible = true;
-    } else if (effP4 > 0.65) {
-      doorsVisible = true;
-      const riseP = THREE.MathUtils.clamp((effP4 - 0.65) / 0.23, 0, 1);
-      redTargetY = THREE.MathUtils.lerp(-8.0, redOpenY, riseP);
-      diwaliTargetY = THREE.MathUtils.lerp(-8.0, diwaliOpenY, riseP);
     }
 
     if (redDoorRef.current) {
@@ -219,7 +262,14 @@ export function HomeStage() {
       redDoorRef.current.position.y =
         frame.snapCamera || (wasHidden && effP4 > 0.8)
           ? redTargetY
-          : THREE.MathUtils.damp(redDoorRef.current.position.y, redTargetY, 10, dt);
+          : isPortrait
+            ? redTargetY
+            : THREE.MathUtils.damp(
+                redDoorRef.current.position.y,
+                redTargetY,
+                10,
+                dt,
+              );
       redDoorRef.current.scale.setScalar(doorTargetScale);
     }
 
@@ -230,29 +280,51 @@ export function HomeStage() {
       diwaliDoorRef.current.position.y =
         frame.snapCamera || (wasHidden && effP4 > 0.8)
           ? diwaliTargetY
-          : THREE.MathUtils.damp(diwaliDoorRef.current.position.y, diwaliTargetY, 10, dt);
+          : isPortrait
+            ? diwaliTargetY
+            : THREE.MathUtils.damp(
+                diwaliDoorRef.current.position.y,
+                diwaliTargetY,
+                10,
+                dt,
+              );
       diwaliDoorRef.current.scale.setScalar(doorTargetScale);
     }
 
     // 3. Door Articulation via native Leaf / Leaf_L / Leaf_R nodes with f = 2.2 Hz spring
-    const targetRedAngle = hoverDoor === 'redroom' ? -0.1745 : 0;
-    const targetDiwaliAngle = hoverDoor === 'diwali' ? 0.1745 : 0;
+    const targetRedAngle = hoverDoor === "redroom" ? -0.1745 : 0;
+    const targetDiwaliAngle = hoverDoor === "diwali" ? 0.1745 : 0;
 
-    if (tr.type === 'T1' && tr.doorProgress > 0) {
+    if (tr.type === "T1" && tr.doorProgress > 0) {
       redAngle.current = THREE.MathUtils.lerp(-0.1745, -1.309, tr.doorProgress);
       redVel.current = 0;
     } else {
-      const [nextR, nextRV] = stepSpring(redAngle.current, redVel.current, targetRedAngle, dt);
+      const [nextR, nextRV] = stepSpring(
+        redAngle.current,
+        redVel.current,
+        targetRedAngle,
+        dt,
+      );
       redAngle.current = nextR;
       redVel.current = nextRV;
     }
 
     const prevDiwali = diwaliAngle.current;
-    if (tr.type === 'T2' && tr.doorProgress > 0) {
-      diwaliAngle.current = THREE.MathUtils.lerp(0.1745, 1.2217, tr.doorProgress);
-      diwaliVel.current = (diwaliAngle.current - prevDiwali) / Math.max(dt, 0.001);
+    if (tr.type === "T2" && tr.doorProgress > 0) {
+      diwaliAngle.current = THREE.MathUtils.lerp(
+        0.1745,
+        1.2217,
+        tr.doorProgress,
+      );
+      diwaliVel.current =
+        (diwaliAngle.current - prevDiwali) / Math.max(dt, 0.001);
     } else {
-      const [nextD, nextDV] = stepSpring(diwaliAngle.current, diwaliVel.current, targetDiwaliAngle, dt);
+      const [nextD, nextDV] = stepSpring(
+        diwaliAngle.current,
+        diwaliVel.current,
+        targetDiwaliAngle,
+        dt,
+      );
       diwaliAngle.current = nextD;
       diwaliVel.current = nextDV;
     }
@@ -269,10 +341,11 @@ export function HomeStage() {
 
     // 4. Diwali bells swing when leaves move
     const leafImpulse = (diwaliAngle.current - prevDiwali) * 14.0;
-    const bellAccel = -38.0 * bellSwing.current - 3.2 * bellSwingVel.current + leafImpulse;
+    const bellAccel =
+      -38.0 * bellSwing.current - 3.2 * bellSwingVel.current + leafImpulse;
     bellSwingVel.current += bellAccel * dt;
     bellSwing.current += bellSwingVel.current * dt;
-    const idleChime = hoverDoor === 'diwali' ? Math.sin(t * 6.5) * 0.035 : 0;
+    const idleChime = hoverDoor === "diwali" ? Math.sin(t * 6.5) * 0.035 : 0;
     if (bellL) {
       bellL.rotation.z = bellSwing.current + idleChime;
       bellL.rotation.x = bellSwing.current * 0.5;
@@ -284,25 +357,46 @@ export function HomeStage() {
 
     // 5. Diwali Glass_Inlays glow brighter on hover
     const targetGlassEmissive =
-      tr.type === 'T2' ? 2.6 : hoverDoor === 'diwali' ? 1.65 : 0.45;
+      tr.type === "T2" ? 2.6 : hoverDoor === "diwali" ? 1.65 : 0.45;
     for (let i = 0; i < glassMaterials.length; i++) {
       const gm = glassMaterials[i];
-      gm.emissiveIntensity = THREE.MathUtils.damp(gm.emissiveIntensity, targetGlassEmissive, 10, dt);
+      gm.emissiveIntensity = THREE.MathUtils.damp(
+        gm.emissiveIntensity,
+        targetGlassEmissive,
+        10,
+        dt,
+      );
     }
 
     // 6. Light leaks & Point Lights 2 & 3 (Left Red #FF2A1F, Right Gold #FFC46B)
     const leakBreathe = 1 + Math.sin(t * 1.256) * 0.2;
     const redSpill =
-      tr.type === 'T1' ? 2.5 + tr.doorProgress * 4.5 : hoverDoor === 'redroom' ? 2.5 : 1.0;
+      tr.type === "T1"
+        ? 2.5 + tr.doorProgress * 4.5
+        : hoverDoor === "redroom"
+          ? 2.5
+          : 1.0;
     const diwaliSpill =
-      tr.type === 'T2' ? 2.5 + tr.doorProgress * 5.0 : hoverDoor === 'diwali' ? 2.5 : 1.0;
+      tr.type === "T2"
+        ? 2.5 + tr.doorProgress * 5.0
+        : hoverDoor === "diwali"
+          ? 2.5
+          : 1.0;
 
     const redDim =
-      tr.type === 'T2' ? 1.0 - tr.doorProgress * 0.85 : hoverDoor === 'diwali' ? 0.6 : 1.0;
+      tr.type === "T2"
+        ? 1.0 - tr.doorProgress * 0.85
+        : hoverDoor === "diwali"
+          ? 0.6
+          : 1.0;
     const diwaliDim =
-      tr.type === 'T1' ? 1.0 - tr.doorProgress * 0.85 : hoverDoor === 'redroom' ? 0.6 : 1.0;
+      tr.type === "T1"
+        ? 1.0 - tr.doorProgress * 0.85
+        : hoverDoor === "redroom"
+          ? 0.6
+          : 1.0;
 
-    const doorsActive = effP4 > 0.35 || effP5 > 0.01 || tr.type === 'T1' || tr.type === 'T2';
+    const doorsActive = doorsVisible;
 
     // Update flame intensities on Flame_Anchor_L / Flame_Anchor_R
     const rFlameInt = doorsVisible ? 1.15 * redDim : 0;
@@ -315,37 +409,63 @@ export function HomeStage() {
     // Update GLB Light_Leak emissive intensities
     for (let i = 0; i < redLeakMaterials.length; i++) {
       const m = redLeakMaterials[i];
-      m.emissiveIntensity = doorsActive ? (m.userData.baseEmissive ?? 1) * leakBreathe * redSpill * redDim : 0;
+      m.emissiveIntensity = doorsActive
+        ? (m.userData.baseEmissive ?? 1) * leakBreathe * redSpill * redDim
+        : 0;
     }
     for (let i = 0; i < diwaliLeakMaterials.length; i++) {
       const m = diwaliLeakMaterials[i];
-      m.emissiveIntensity = doorsActive ? (m.userData.baseEmissive ?? 1) * leakBreathe * diwaliSpill * diwaliDim : 0;
+      m.emissiveIntensity = doorsActive
+        ? (m.userData.baseEmissive ?? 1) * leakBreathe * diwaliSpill * diwaliDim
+        : 0;
     }
 
     if (leftPointLightRef.current) {
       leftPointLightRef.current.position.set(redTargetX, redOpenY + 0.5, 0.45);
       const splitAmt = Math.min(1, Math.max(p4 * 1.4, doorsActive ? 0.8 : 0));
       leftPointLightRef.current.intensity =
-        (p4 > 0.05 || doorsActive) ? 1.8 * splitAmt * leakBreathe * redSpill * redDim : 0;
+        p4 > 0.05 || doorsActive
+          ? 1.8 * splitAmt * leakBreathe * redSpill * redDim
+          : 0;
     }
     if (rightPointLightRef.current) {
-      rightPointLightRef.current.position.set(diwaliTargetX, diwaliOpenY + 0.5, 0.45);
+      rightPointLightRef.current.position.set(
+        diwaliTargetX,
+        diwaliOpenY + 0.5,
+        0.45,
+      );
       const splitAmt = Math.min(1, Math.max(p4 * 1.4, doorsActive ? 0.8 : 0));
       rightPointLightRef.current.intensity =
-        (p4 > 0.05 || doorsActive) ? 1.8 * splitAmt * leakBreathe * diwaliSpill * diwaliDim : 0;
+        p4 > 0.05 || doorsActive
+          ? 1.8 * splitAmt * leakBreathe * diwaliSpill * diwaliDim
+          : 0;
     }
 
     if (redLeakMeshRef.current) {
       redLeakMeshRef.current.position.set(redTargetX, redOpenY + 0.01, 0.25);
       redLeakMeshRef.current.scale.set(1.1 * redSpill, 0.4 * redSpill, 1);
       const mat = redLeakMeshRef.current.material as THREE.MeshBasicMaterial;
-      if (mat) mat.opacity = doorsActive ? Math.min(1, 0.45 * leakBreathe * redSpill * redDim) : 0;
+      if (mat)
+        mat.opacity = doorsActive
+          ? Math.min(1, 0.45 * leakBreathe * redSpill * redDim)
+          : 0;
     }
     if (diwaliLeakMeshRef.current) {
-      diwaliLeakMeshRef.current.position.set(diwaliTargetX, diwaliOpenY + 0.01, 0.25);
-      diwaliLeakMeshRef.current.scale.set(1.1 * diwaliSpill, 0.4 * diwaliSpill, 1);
+      diwaliLeakMeshRef.current.position.set(
+        diwaliTargetX,
+        diwaliOpenY + 0.01,
+        0.25,
+      );
+      diwaliLeakMeshRef.current.scale.set(
+        1.1 * diwaliSpill,
+        0.4 * diwaliSpill,
+        1,
+      );
       const mat = diwaliLeakMeshRef.current.material as THREE.MeshBasicMaterial;
-      if (mat) mat.opacity = doorsActive ? Math.min(1, 0.45 * leakBreathe * diwaliSpill * diwaliDim) : 0;
+      if (mat)
+        mat.opacity = doorsActive
+          ? Math.min(1, 0.45 * leakBreathe * diwaliSpill * diwaliDim)
+          : 0;
     }
   });
 
@@ -355,37 +475,19 @@ export function HomeStage() {
       <Beams />
 
       {/* Art-directed reflections per BRIEF.md Part 5.4 */}
-      <Environment resolution={256} environmentIntensity={0.55}>
-        <Lightformer
-          form="rect"
-          intensity={2.8}
-          color="#FF4FD8"
-          scale={[2.5, 12, 1]}
-          position={[6.5, 2.5, 0.5]}
-          target={[0, 1.5, 0]}
-        />
-        <Lightformer
-          form="rect"
-          intensity={2.4}
-          color="#FFFFFF"
-          scale={[2.0, 12, 1]}
-          position={[-6.5, 2.5, 0.5]}
-          target={[0, 1.5, 0]}
-        />
-        <Lightformer
-          form="rect"
-          intensity={1.5}
-          color="#FFFFFF"
-          scale={[8, 6, 1]}
-          position={[0, 8.5, -1.0]}
-          target={[0, 1.5, 0]}
-        />
-      </Environment>
 
       {/* Directional & Ambient Lighting per Part 5.4 */}
       <ambientLight intensity={0.35} color="#0B0E14" />
-      <directionalLight position={[-4.0, 5.5, 4.0]} intensity={2.4} color="#FFFFFF" />
-      <directionalLight position={[3.5, 2.5, 3.5]} intensity={1.5} color="#FFF5FA" />
+      <directionalLight
+        position={[-4.0, 5.5, 4.0]}
+        intensity={2.4}
+        color="#FFFFFF"
+      />
+      <directionalLight
+        position={[3.5, 2.5, 3.5]}
+        intensity={0.35}
+        color="#C5CCEF"
+      />
 
       {/* Max 3 Real Point Lights in Home (Global Rule 7) */}
       <pointLight
@@ -411,13 +513,14 @@ export function HomeStage() {
       />
 
       {/* Stage Floor: Glossy dark floor (Part 5.4) */}
-      <mesh name="StageFloor" position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial color="#06080C" roughness={0.15} metalness={0.6} />
-      </mesh>
+      <StageFloor world="home" />
 
       {/* Floor glow cards for light leaks under doors */}
-      <mesh ref={redLeakMeshRef} position={[-1.65, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh
+        ref={redLeakMeshRef}
+        position={[-1.65, 0.01, 0.25]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#FF2A1F"
@@ -427,7 +530,11 @@ export function HomeStage() {
         />
       </mesh>
 
-      <mesh ref={diwaliLeakMeshRef} position={[1.65, 0.01, 0.25]} rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh
+        ref={diwaliLeakMeshRef}
+        position={[1.65, 0.01, 0.25]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#F2D38B"

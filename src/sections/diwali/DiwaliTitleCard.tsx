@@ -1,12 +1,12 @@
-'use client'
+"use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { site } from '@/content/site'
-import { getSavedRouteScroll } from '@/motion/transitions'
-import { useStore } from '@/state/store'
-import { Divider } from '@/ui/Divider'
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { site } from "@/content/site";
+import { getSavedRouteScroll } from "@/motion/transitions";
+import { useStore } from "@/state/store";
+import { Divider } from "@/ui/Divider";
 
-const DIWALI_CARD_SEEN_KEY = 'underdogs-diwali-titlecard-seen'
+const DIWALI_CARD_SEEN_KEY = "underdogs-diwali-titlecard-seen";
 
 /**
  * Part 9 D0 · The film title card (≤ 3.4 s, time-based)
@@ -19,54 +19,58 @@ const DIWALI_CARD_SEEN_KEY = 'underdogs-diwali-titlecard-seen'
  * - Replays / T3: on a repeat visit within the session or arriving via T3 (Part 10 T3), play the 1.6 s short version.
  */
 export function DiwaliTitleCard() {
-  const motionEnabled = useStore((s) => s.motionEnabled)
-  const lastNavigationOrigin = useStore((s) => s.lastNavigationOrigin)
-  const [done, setDone] = useState(false)
-  const [step, setStep] = useState<0 | 1 | 2 | 3>(0)
-  const [weave, setWeave] = useState({ x: 0, y: 0, opacity: 0.96 })
-  const timersRef = useRef<number[]>([])
+  const transitioning = useStore((s) => s.isTransitioning);
+  const phase = useStore((s) => s.phase);
+  const motionEnabled = useStore((s) => s.motionEnabled);
+  const lastNavigationOrigin = useStore((s) => s.lastNavigationOrigin);
+  const [done, setDone] = useState(false);
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
+  const [weave, setWeave] = useState({ x: 0, y: 0, opacity: 0.96 });
+  const timersRef = useRef<number[]>([]);
 
   const triggerBurn = useCallback(() => {
-    timersRef.current.forEach((id) => window.clearTimeout(id))
-    timersRef.current = []
-    setStep(3)
+    timersRef.current.forEach((id) => window.clearTimeout(id));
+    timersRef.current = [];
+    setStep(3);
     const finishId = window.setTimeout(() => {
-      setDone(true)
-    }, 350)
-    timersRef.current.push(finishId)
-  }, [])
+      setDone(true);
+    }, 350);
+    timersRef.current.push(finishId);
+  }, []);
 
   useEffect(() => {
+    if (transitioning || phase !== "complete") return;
     // Skip title card on reduced motion or when restoring a scrolled position via T5 (browser back/forward)
     if (
       !motionEnabled ||
-      (lastNavigationOrigin === 'T5' && getSavedRouteScroll('/diwali') > 100)
+      lastNavigationOrigin === "T3" ||
+      (lastNavigationOrigin === "T5" && getSavedRouteScroll("/diwali") > 100)
     ) {
-      setDone(true)
-      return
+      setDone(true);
+      return;
     }
 
-    let isRepeat = false
+    let isRepeat = false;
     try {
-      isRepeat = window.sessionStorage.getItem(DIWALI_CARD_SEEN_KEY) === '1'
-      window.sessionStorage.setItem(DIWALI_CARD_SEEN_KEY, '1')
+      isRepeat = window.sessionStorage.getItem(DIWALI_CARD_SEEN_KEY) === "1";
+      window.sessionStorage.setItem(DIWALI_CARD_SEEN_KEY, "1");
     } catch {
       // Ignore storage access errors
     }
 
     // Default 2.2 s title card (1.2 s on repeat visits or T3 arrival, skippable on input)
-    const isShort = isRepeat || lastNavigationOrigin === 'T3'
-    const step1Time = isShort ? 150 : 250
-    const step2Time = isShort ? 450 : 800
-    const step3Time = isShort ? 900 : 1650
-    const totalTime = isShort ? 1200 : 2200
+    const isShort = isRepeat;
+    const step1Time = isShort ? 150 : 250;
+    const step2Time = isShort ? 450 : 800;
+    const step3Time = isShort ? 900 : 1650;
+    const totalTime = isShort ? 1200 : 2200;
 
-    const t1 = window.setTimeout(() => setStep(1), step1Time)
-    const t2 = window.setTimeout(() => setStep(2), step2Time)
-    const t3 = window.setTimeout(() => setStep(3), step3Time)
-    const t4 = window.setTimeout(() => setDone(true), totalTime)
+    const t1 = window.setTimeout(() => setStep(1), step1Time);
+    const t2 = window.setTimeout(() => setStep(2), step2Time);
+    const t3 = window.setTimeout(() => setStep(3), step3Time);
+    const t4 = window.setTimeout(() => setDone(true), totalTime);
 
-    timersRef.current = [t1, t2, t3, t4]
+    timersRef.current = [t1, t2, t3, t4];
 
     // 24 fps stepped gate weave & projector flicker on backdrop/grain only (Part 9 D0)
     const flickerInterval = window.setInterval(() => {
@@ -74,34 +78,39 @@ export function DiwaliTitleCard() {
         x: Math.round((Math.random() - 0.5) * 2),
         y: Math.round((Math.random() - 0.5) * 2),
         opacity: 0.92 + Math.random() * 0.08,
-      })
-    }, 1000 / 24)
+      });
+    }, 1000 / 24);
 
     const onInputSkip = () => {
-      triggerBurn()
-    }
+      triggerBurn();
+    };
 
-    window.addEventListener('pointerdown', onInputSkip, { once: true })
-    window.addEventListener('keydown', onInputSkip, { once: true })
-    window.addEventListener('wheel', onInputSkip, { once: true, passive: true })
+    window.addEventListener("pointerdown", onInputSkip, { once: true });
+    window.addEventListener("keydown", onInputSkip, { once: true });
+    window.addEventListener("wheel", onInputSkip, {
+      once: true,
+      passive: true,
+    });
 
     return () => {
-      timersRef.current.forEach((id) => window.clearTimeout(id))
-      window.clearInterval(flickerInterval)
-      window.removeEventListener('pointerdown', onInputSkip)
-      window.removeEventListener('keydown', onInputSkip)
-      window.removeEventListener('wheel', onInputSkip)
-    }
-  }, [motionEnabled, lastNavigationOrigin, triggerBurn])
+      timersRef.current.forEach((id) => window.clearTimeout(id));
+      window.clearInterval(flickerInterval);
+      window.removeEventListener("pointerdown", onInputSkip);
+      window.removeEventListener("keydown", onInputSkip);
+      window.removeEventListener("wheel", onInputSkip);
+    };
+  }, [motionEnabled, lastNavigationOrigin, triggerBurn, transitioning, phase]);
 
-  if (done) return null
+  if (done) return null;
 
   return (
     <div
       aria-hidden="true"
       onClick={triggerBurn}
-      className={`fixed inset-0 z-40 flex items-center justify-center overflow-hidden bg-[#0B0B0F] transition-opacity duration-700 ${
-        step === 3 ? 'film-burn-mask opacity-0 pointer-events-none' : 'opacity-100'
+      className={`fixed inset-0 z-[90] flex items-center justify-center overflow-hidden bg-[#0B0B0F] transition-opacity duration-700 ${
+        step === 3
+          ? "film-burn-mask opacity-0 pointer-events-none"
+          : "opacity-100"
       }`}
     >
       {/* 24fps stepped backdrop + 8% grain + warm light leak (never applied to text) */}
@@ -123,7 +132,7 @@ export function DiwaliTitleCard() {
       <div className="site-container relative z-10 flex flex-col items-center text-center gap-6 max-w-[680px]">
         <div
           className={`w-full flex flex-col items-center gap-4 transition-opacity duration-500 ${
-            step >= 1 ? 'opacity-100' : 'opacity-0'
+            step >= 1 ? "opacity-100" : "opacity-0"
           }`}
         >
           <p className="font-cinzel text-[13px] font-medium uppercase tracking-[0.42em] text-[#EFB88A]">
@@ -136,7 +145,7 @@ export function DiwaliTitleCard() {
 
         <div
           className={`w-full flex flex-col items-center gap-4 transition-all duration-700 ${
-            step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+            step >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
           <div className="flex flex-col items-center">
@@ -155,5 +164,5 @@ export function DiwaliTitleCard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

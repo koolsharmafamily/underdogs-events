@@ -1,15 +1,19 @@
-'use client';
+"use client";
 
-import React, { Suspense, useRef, useMemo, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { useFrame, useThree } from '@react-three/fiber';
-import { useGLTF } from '@react-three/drei';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-import { SkinId, DISSOLVE_EDGES } from './skins';
-import { DissolveUniforms, injectDissolve } from './dissolve.glsl';
-import { BadgeBehaviours } from './behaviours';
-import { SparkleGlints } from './SparkleGlints';
+import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
+import * as THREE from "three";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useGLTF } from "@react-three/drei";
+import { badgeScreenBounds } from "./screenBounds";
+import { composition } from "../composition";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { SkinId, DISSOLVE_EDGES } from "./skins";
+import { DissolveUniforms, injectDissolve } from "./dissolve.glsl";
+import { BadgeBehaviours } from "./behaviours";
+import { SparkleGlints } from "./SparkleGlints";
+import { batchStaticSiblings } from "../batchStaticSiblings";
+import { coinSpin } from "./coinPhysics";
 
 interface BadgeProps {
   position?: [number, number, number];
@@ -39,7 +43,7 @@ function prepareBadgeScene(
   sourceScene: THREE.Group,
   uniforms: DissolveUniforms,
   backTexture: THREE.CanvasTexture | null,
-  skinName: SkinId
+  skinName: SkinId,
 ): PreparedScene {
   const clone = sourceScene.clone(true);
   const animatedNodes = {
@@ -49,6 +53,7 @@ function prepareBadgeScene(
     drips: null as THREE.Mesh | null,
   };
   const neonMaterials: THREE.MeshStandardMaterial[] = [];
+  const materials = new Map<string, THREE.MeshStandardMaterial>();
 
   clone.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
@@ -57,34 +62,48 @@ function prepareBadgeScene(
       mesh.receiveShadow = false;
 
       if (mesh.material) {
-        const origMat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-        const mat = (origMat as THREE.Material).clone() as THREE.MeshStandardMaterial;
+        const origMat = Array.isArray(mesh.material)
+          ? mesh.material[0]
+          : mesh.material;
+        const key = origMat.uuid + (mesh.name === "Back" ? ":back" : "");
+        const mat =
+          materials.get(key) ??
+          ((origMat as THREE.Material).clone() as THREE.MeshStandardMaterial);
+        materials.set(key, mat);
 
         // Apply authentic engraved back texture bump relief (BRIEF.md Part 7 H2)
-        if (mesh.name === 'Back' && backTexture) {
+        if (mesh.name === "Back" && backTexture) {
           mat.bumpMap = backTexture;
           mat.bumpScale = 0.04;
           mat.needsUpdate = true;
         }
 
         // Inject dissolve shader without modifying original material colours or properties
-        injectDissolve(mat, uniforms, `${skinName}_${mesh.name}`);
+        injectDissolve(mat, uniforms);
         mesh.material = mat;
 
         // Collect neon emissive materials for dynamic flicker without color replacement
-        if (mat.emissive && (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0)) {
+        if (
+          mat.emissive &&
+          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0)
+        ) {
           mat.userData.baseEmissiveIntensity = mat.emissiveIntensity ?? 1.0;
-          neonMaterials.push(mat);
+          if (!neonMaterials.includes(mat)) neonMaterials.push(mat);
         }
       }
     }
 
-    if (child.name === 'Eye_L' && (child as THREE.Group).isGroup) animatedNodes.eyeL = child as THREE.Group;
-    if (child.name === 'Eye_R' && (child as THREE.Group).isGroup) animatedNodes.eyeR = child as THREE.Group;
-    if (child.name === 'Tongue' && (child as THREE.Group).isGroup) animatedNodes.tongue = child as THREE.Group;
-    if (child.name === 'Drips' && (child as THREE.Mesh).isMesh) animatedNodes.drips = child as THREE.Mesh;
+    if (child.name === "Eye_L" && (child as THREE.Group).isGroup)
+      animatedNodes.eyeL = child as THREE.Group;
+    if (child.name === "Eye_R" && (child as THREE.Group).isGroup)
+      animatedNodes.eyeR = child as THREE.Group;
+    if (child.name === "Tongue" && (child as THREE.Group).isGroup)
+      animatedNodes.tongue = child as THREE.Group;
+    if (child.name === "Drips" && (child as THREE.Mesh).isMesh)
+      animatedNodes.drips = child as THREE.Mesh;
   });
 
+  batchStaticSiblings(clone);
   return { clone, animatedNodes, neonMaterials };
 }
 
@@ -104,7 +123,7 @@ function BadgeSkinMesh({
   const gltf = useGLTF(url);
   const prepared = useMemo(
     () => prepareBadgeScene(gltf.scene, uniforms, backTexture, skinName),
-    [gltf.scene, uniforms, backTexture, skinName]
+    [gltf.scene, uniforms, backTexture, skinName],
   );
 
   preparedMapRef.current[skinName] = prepared;
@@ -117,7 +136,7 @@ export function Badge({
   rotation = [0, 0, 0],
   scale = 1,
 }: BadgeProps) {
-  const { size } = useThree();
+  const { size, camera } = useThree();
   const rootRef = useRef<THREE.Group>(null);
 
   // Groups for each skin
@@ -138,92 +157,82 @@ export function Badge({
   const hoverDoor = useStore((s) => s.hoverDoor);
   const blinkTrigger = useStore((s) => s.blinkTrigger);
   const triggerBlink = useStore((s) => s.triggerBlink);
-  const loaderPopped = useStore((s) => s.loaderPopped);
 
   // Initial and target skin mapping
   const worldSkin: SkinId =
-    world === 'redroom' ? 'neon' : world === 'diwali' ? 'jewelled' : 'enamel';
+    world === "redroom" ? "neon" : world === "diwali" ? "jewelled" : "enamel";
   const targetSkin: SkinId = targetSkinOverride ?? worldSkin;
 
   // Only mount the active skin on initial load so we don't block on 4.2MB of other worlds' badges
-  const [mountedSkins, setMountedSkins] = useState<Record<SkinId, boolean>>(() => ({
-    enamel: targetSkin === 'enamel',
-    neon: targetSkin === 'neon',
-    jewelled: targetSkin === 'jewelled',
-  }));
+  const [mountedSkins, setMountedSkins] = useState<Record<SkinId, boolean>>(
+    () => ({
+      enamel: targetSkin === "enamel",
+      neon: targetSkin === "neon",
+      jewelled: targetSkin === "jewelled",
+    }),
+  );
 
   useEffect(() => {
     setMountedSkins((prev) =>
-      prev[targetSkin] ? prev : { ...prev, [targetSkin]: true }
+      prev[targetSkin] ? prev : { ...prev, [targetSkin]: true },
     );
   }, [targetSkin]);
-
-  // Warm remaining badge skins in the background AFTER initial coin fade-out is completely done
-  useEffect(() => {
-    if (phase !== 'complete') return;
-    const t = window.setTimeout(() => {
-      setMountedSkins({ enamel: true, neon: true, jewelled: true });
-    }, 900);
-    return () => window.clearTimeout(t);
-  }, [phase]);
 
   // Lifecycle state tracking via REFS ONLY (zero React re-renders mid-transition)
   const activeSkinRef = useRef<SkinId>(targetSkin);
   const outgoingSkinRef = useRef<SkinId | null>(null);
   const isDissolvingRef = useRef(false);
   const dissolveProgress = useRef(-0.1);
-  const dissolveDuration = useRef(1.2);
-
-  // Pop scale spring state for H0 handoff (Part 7 H0: scale spring 0.96 -> 1, one overshoot)
-  const popTimerRef = useRef(0);
-  const popActiveRef = useRef(false);
-
-  useEffect(() => {
-    if (loaderPopped) {
-      popActiveRef.current = true;
-      popTimerRef.current = 0;
-    }
-  }, [loaderPopped]);
+  const dissolveDuration = useRef(0.8);
 
   // Shared dissolve uniforms per skin created ONCE at mount
-  const enamelUniforms: DissolveUniforms = useMemo(() => ({
-    uDissolve: { value: -0.1 },
-    uRole: { value: 1.0 },
-    uEdgeColor: { value: DISSOLVE_EDGES.enamel.color.clone() },
-    uEdgeIntensity: { value: DISSOLVE_EDGES.enamel.intensity },
-    uEdgeWidth: { value: DISSOLVE_EDGES.enamel.width },
-  }), []);
+  const enamelUniforms: DissolveUniforms = useMemo(
+    () => ({
+      uDissolve: { value: -0.1 },
+      uRole: { value: 1.0 },
+      uEdgeColor: { value: DISSOLVE_EDGES.enamel.color.clone() },
+      uEdgeIntensity: { value: DISSOLVE_EDGES.enamel.intensity },
+      uEdgeWidth: { value: DISSOLVE_EDGES.enamel.width },
+    }),
+    [],
+  );
 
-  const neonUniforms: DissolveUniforms = useMemo(() => ({
-    uDissolve: { value: -0.1 },
-    uRole: { value: 1.0 },
-    uEdgeColor: { value: DISSOLVE_EDGES.neon.color.clone() },
-    uEdgeIntensity: { value: DISSOLVE_EDGES.neon.intensity },
-    uEdgeWidth: { value: DISSOLVE_EDGES.neon.width },
-  }), []);
+  const neonUniforms: DissolveUniforms = useMemo(
+    () => ({
+      uDissolve: { value: -0.1 },
+      uRole: { value: 1.0 },
+      uEdgeColor: { value: DISSOLVE_EDGES.neon.color.clone() },
+      uEdgeIntensity: { value: DISSOLVE_EDGES.neon.intensity },
+      uEdgeWidth: { value: DISSOLVE_EDGES.neon.width },
+    }),
+    [],
+  );
 
-  const jewelledUniforms: DissolveUniforms = useMemo(() => ({
-    uDissolve: { value: -0.1 },
-    uRole: { value: 1.0 },
-    uEdgeColor: { value: DISSOLVE_EDGES.jewelled.color.clone() },
-    uEdgeIntensity: { value: DISSOLVE_EDGES.jewelled.intensity },
-    uEdgeWidth: { value: DISSOLVE_EDGES.jewelled.width },
-  }), []);
+  const jewelledUniforms: DissolveUniforms = useMemo(
+    () => ({
+      uDissolve: { value: -0.1 },
+      uRole: { value: 1.0 },
+      uEdgeColor: { value: DISSOLVE_EDGES.jewelled.color.clone() },
+      uEdgeIntensity: { value: DISSOLVE_EDGES.jewelled.intensity },
+      uEdgeWidth: { value: DISSOLVE_EDGES.jewelled.width },
+    }),
+    [],
+  );
 
   // Engraved Back Canvas Texture (512x512 for 4x faster generation & GPU upload)
   const backTexture = useMemo(() => {
-    if (typeof document === 'undefined') return null;
-    const canvas = document.createElement('canvas');
+    if (typeof document === "undefined") return null;
+    const canvas = document.createElement("canvas");
     canvas.width = 512;
     canvas.height = 512;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return null;
 
     ctx.scale(0.5, 0.5);
-    ctx.fillStyle = '#C8CCD6';
+    ctx.fillStyle = "#C8CCD6";
     ctx.fillRect(0, 0, 1024, 1024);
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
     ctx.lineWidth = 2;
     for (let y = 0; y < 1024; y += 8) {
       ctx.beginPath();
@@ -232,13 +241,13 @@ export function Badge({
       ctx.stroke();
     }
 
-    ctx.strokeStyle = '#6E7484';
+    ctx.strokeStyle = "#6E7484";
     ctx.lineWidth = 12;
     ctx.beginPath();
     ctx.arc(512, 512, 450, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.strokeStyle = '#8E94A4';
+    ctx.strokeStyle = "#8E94A4";
     ctx.lineWidth = 6;
     ctx.beginPath();
     ctx.arc(512, 512, 380, 0, Math.PI * 2);
@@ -249,12 +258,12 @@ export function Badge({
     ctx.arc(512, 512, 240, 0, Math.PI * 2);
     ctx.stroke();
 
-    ctx.font = 'bold 50px sans-serif';
-    ctx.fillStyle = '#4B505E';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.font = "bold 50px sans-serif";
+    ctx.fillStyle = "#4B505E";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-    const text = 'GATE TO RAGE · NAGPUR';
+    const text = "GATE TO RAGE · NAGPUR";
     ctx.save();
     ctx.translate(512, 512);
     for (let i = 0; i < text.length; i++) {
@@ -267,9 +276,9 @@ export function Badge({
     }
     ctx.restore();
 
-    ctx.font = 'bold 64px sans-serif';
-    ctx.fillStyle = '#5A6070';
-    ctx.fillText('✕', 512, 512);
+    ctx.font = "bold 64px sans-serif";
+    ctx.fillStyle = "#5A6070";
+    ctx.fillText("✕", 512, 512);
 
     const tex = new THREE.CanvasTexture(canvas);
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -277,14 +286,14 @@ export function Badge({
   }, []);
 
   const getSkinGroup = (skin: SkinId) => {
-    if (skin === 'neon') return neonGroupRef.current;
-    if (skin === 'jewelled') return jewelledGroupRef.current;
+    if (skin === "neon") return neonGroupRef.current;
+    if (skin === "jewelled") return jewelledGroupRef.current;
     return enamelGroupRef.current;
   };
 
   const getSkinUniforms = (skin: SkinId) => {
-    if (skin === 'neon') return neonUniforms;
-    if (skin === 'jewelled') return jewelledUniforms;
+    if (skin === "neon") return neonUniforms;
+    if (skin === "jewelled") return jewelledUniforms;
     return enamelUniforms;
   };
 
@@ -292,9 +301,11 @@ export function Badge({
   useEffect(() => {
     const active = targetSkin;
     activeSkinRef.current = active;
-    if (enamelGroupRef.current) enamelGroupRef.current.visible = active === 'enamel';
-    if (neonGroupRef.current) neonGroupRef.current.visible = active === 'neon';
-    if (jewelledGroupRef.current) jewelledGroupRef.current.visible = active === 'jewelled';
+    if (enamelGroupRef.current)
+      enamelGroupRef.current.visible = active === "enamel";
+    if (neonGroupRef.current) neonGroupRef.current.visible = active === "neon";
+    if (jewelledGroupRef.current)
+      jewelledGroupRef.current.visible = active === "jewelled";
   }, [targetSkin]);
 
   // Handle skin changes (transitions or world swaps) purely via REFS and visibility
@@ -302,7 +313,7 @@ export function Badge({
     if (targetSkin !== activeSkinRef.current) {
       const prevSkin = activeSkinRef.current;
       const nextSkin = targetSkin;
-      const isTransitionRunning = frame.transition.phase !== 'idle';
+      const isTransitionRunning = frame.transition.phase !== "idle";
 
       if (!motionEnabled || !isTransitionRunning) {
         // Direct visit, refresh, or reduced motion: instant visibility switch without dissolve
@@ -327,7 +338,7 @@ export function Badge({
       activeSkinRef.current = nextSkin;
       isDissolvingRef.current = true;
       dissolveProgress.current = -0.1;
-      dissolveDuration.current = 0.8;
+      dissolveDuration.current = motionEnabled ? 0.8 : 0.3;
 
       const outGroup = getSkinGroup(prevSkin);
       const inGroup = getSkinGroup(nextSkin);
@@ -352,22 +363,17 @@ export function Badge({
     }
   }, [targetSkin, motionEnabled]);
 
-  // Drag-to-spin state
-  const dragRef = useRef({
-    isDragging: false,
-    startX: 0,
-    currentX: 0,
-    velocity: 0,
-    rotationY: 0,
-  });
-
   const behaviours = useMemo(() => new BadgeBehaviours(), []);
 
   // Choreography state refs (reversible per Part 6.2)
-  const choreoPos = useRef(new THREE.Vector3(position[0], position[1], position[2]));
+  const choreoPos = useRef(
+    new THREE.Vector3(position[0], position[1], position[2]),
+  );
   const choreoYaw = useRef(0);
   const choreoScale = useRef(scale);
   const h2SpinDone = useRef(false);
+  const screenCenter = useMemo(() => new THREE.Vector3(), []);
+  const screenEdge = useMemo(() => new THREE.Vector3(), []);
 
   // Frame priority -30 per Part 13.3
   useFrame((_, delta) => {
@@ -377,7 +383,8 @@ export function Badge({
 
     // 1. Advance dissolve progress (-0.1 to 1.1)
     if (isDissolvingRef.current) {
-      dissolveProgress.current += (delta * 1.2) / dissolveDuration.current;
+      const destinationReady = useStore.getState().renderedWorlds[world] && Boolean(preparedMapRef.current[activeSkinRef.current]);
+      if (destinationReady) dissolveProgress.current += (delta * 1.2) / dissolveDuration.current;
       const curProg = dissolveProgress.current;
 
       if (outgoingSkinRef.current) {
@@ -385,7 +392,7 @@ export function Badge({
         outU.uDissolve.value = curProg;
       }
       const inU = getSkinUniforms(activeSkinRef.current);
-      inU.uDissolve.value = curProg;
+      inU.uDissolve.value = destinationReady ? curProg : 0;
 
       if (curProg >= 1.1) {
         isDissolvingRef.current = false;
@@ -403,48 +410,38 @@ export function Badge({
       }
     }
 
-    // 2. Drag inertia physics (friction 2.4/s per Part 5.2)
-    const drag = dragRef.current;
-    if (!drag.isDragging) {
-      drag.rotationY += drag.velocity * delta;
-      drag.velocity = THREE.MathUtils.damp(drag.velocity, 0, 2.4, delta);
-      drag.rotationY = THREE.MathUtils.damp(drag.rotationY, 0, 4.0, delta);
-    }
+    // 2. Real coin rotational physics (full 360° spin with inertia & flutter)
+    coinSpin.update(delta, frame.time);
 
-    // 3. Pop scale spring on loader handoff (Part 7 H0: 0.96 -> 1.0, one overshoot)
-    let popScale = 1.0;
-    if (popActiveRef.current) {
-      popTimerRef.current += delta;
-      const t = popTimerRef.current;
-      const duration = 0.6;
-      if (t < duration) {
-        const p = t / duration;
-        const decay = Math.exp(-6 * p);
-        const oscillation = Math.sin(p * Math.PI * 3.5);
-        popScale = 1.0 + (0.96 - 1.0) * decay - 0.08 * decay * oscillation;
-      } else {
-        popActiveRef.current = false;
-        popScale = 1.0;
-      }
-    }
+    const popScale = 1;
 
     // 4. Multi-section choreography per Part 7 H0-H5, Part 8 R0-R6, Part 9 D0-D5
     const isMobile = size.width < 768;
     const isTablet = size.width >= 768 && size.width < 1024;
-    const h1 = frame.dampedProgress['H1'] ?? frame.dampedProgress['h1'] ?? 0;
-    const h2 = frame.dampedProgress['H2'] ?? frame.dampedProgress['h2'] ?? 0;
-    const h3 = frame.dampedProgress['H3'] ?? frame.dampedProgress['h3'] ?? 0;
-    const h4 = frame.dampedProgress['H4'] ?? frame.dampedProgress['h4'] ?? 0;
-    const h5 = frame.dampedProgress['H5'] ?? frame.dampedProgress['h5'] ?? 0;
-    const scrollP = THREE.MathUtils.clamp(h1 * 0.2 + h2 * 0.3 + h3 * 0.15 + h4 * 0.2 + h5 * 0.15, 0, 1);
+    const h1 = frame.dampedProgress["H1"] ?? frame.dampedProgress["h1"] ?? 0;
+    const h2 = frame.dampedProgress["H2"] ?? frame.dampedProgress["h2"] ?? 0;
+    const h3 = frame.dampedProgress["H3"] ?? frame.dampedProgress["h3"] ?? 0;
+    const h4 = frame.dampedProgress["H4"] ?? frame.dampedProgress["h4"] ?? 0;
+    const h5 = frame.dampedProgress["H5"] ?? frame.dampedProgress["h5"] ?? 0;
+    const scrollP = THREE.MathUtils.clamp(
+      h1 * 0.2 + h2 * 0.3 + h3 * 0.15 + h4 * 0.2 + h5 * 0.15,
+      0,
+      1,
+    );
 
-    if (world === 'home') {
-      const h0Scale = isMobile ? 0.80 : isTablet ? 0.96 : 1.12;
+    if (world === "home") {
+      const h0Scale = isMobile ? 0.8 : isTablet ? 0.96 : 1.12;
       const h0X = isMobile ? 0 : isTablet ? 1.32 : 1.58;
       const h0Y = isMobile ? (size.height < 700 ? 1.68 : 1.82) : 1.52;
 
       // H2: Keep badge firmly in the right column (x = 1.62 desktop, 1.35 tablet) and upper stage on mobile so it never overlaps text
-      const h2Scale = isMobile ? (motionEnabled ? 0.68 : 0.56) : isTablet ? 0.90 : 1.06;
+      const h2Scale = isMobile
+        ? motionEnabled
+          ? 0.68
+          : 0.56
+        : isTablet
+          ? 0.9
+          : 1.06;
       const h2X = isMobile ? 0 : isTablet ? 1.35 : 1.62;
       const h2Y = isMobile ? (motionEnabled ? 2.15 : 2.35) : 1.55;
 
@@ -462,7 +459,7 @@ export function Badge({
         choreoPos.current.set(
           THREE.MathUtils.lerp(h0X, h2X, smoothT),
           THREE.MathUtils.lerp(h0Y, h2Y, smoothT),
-          0
+          0,
         );
         choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
         choreoYaw.current = 0;
@@ -471,7 +468,8 @@ export function Badge({
         choreoPos.current.set(h2X, h2Y, 0);
         choreoScale.current = h2Scale;
         const spinT = (scrollP - 0.2) / 0.26;
-        choreoYaw.current = THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
+        choreoYaw.current =
+          THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
         h2SpinDone.current = spinT >= 0.98;
       } else if (scrollP <= 0.52) {
         // Fast, smooth transition from H2 center-right to H3 top-right parking position
@@ -480,7 +478,7 @@ export function Badge({
         choreoPos.current.set(
           THREE.MathUtils.lerp(h2X, h3X, smoothT),
           THREE.MathUtils.lerp(h2Y, h3Y, smoothT),
-          0
+          0,
         );
         choreoScale.current = THREE.MathUtils.lerp(h2Scale, h3Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
@@ -496,7 +494,7 @@ export function Badge({
         choreoPos.current.set(
           THREE.MathUtils.lerp(h3X, h5X, smoothT),
           THREE.MathUtils.lerp(h3Y, h5Y, smoothT),
-          0
+          0,
         );
         choreoScale.current = THREE.MathUtils.lerp(h3Scale, h5Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
@@ -506,13 +504,13 @@ export function Badge({
         choreoScale.current = h5Scale;
         choreoYaw.current = Math.PI * 2;
       }
-    } else if (world === 'redroom') {
-      const r1 = frame.dampedProgress['R1'] ?? frame.dampedProgress['r1'] ?? 0;
-      const r2 = frame.dampedProgress['R2'] ?? frame.dampedProgress['r2'] ?? 0;
-      const r3 = frame.dampedProgress['R3'] ?? frame.dampedProgress['r3'] ?? 0;
-      const r4 = frame.dampedProgress['R4'] ?? frame.dampedProgress['r4'] ?? 0;
-      const r5 = frame.dampedProgress['R5'] ?? frame.dampedProgress['r5'] ?? 0;
-      const r6 = frame.dampedProgress['R6'] ?? frame.dampedProgress['r6'] ?? 0;
+    } else if (world === "redroom") {
+      const r1 = frame.dampedProgress["R1"] ?? frame.dampedProgress["r1"] ?? 0;
+      const r2 = frame.dampedProgress["R2"] ?? frame.dampedProgress["r2"] ?? 0;
+      const r3 = frame.dampedProgress["R3"] ?? frame.dampedProgress["r3"] ?? 0;
+      const r4 = frame.dampedProgress["R4"] ?? frame.dampedProgress["r4"] ?? 0;
+      const r5 = frame.dampedProgress["R5"] ?? frame.dampedProgress["r5"] ?? 0;
+      const r6 = frame.dampedProgress["R6"] ?? frame.dampedProgress["r6"] ?? 0;
       const targetScale = isMobile ? 0.68 : 0.82;
 
       if (r6 > 0.05) {
@@ -522,33 +520,46 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.72, t);
       } else if (r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 || r1 > 0.72) {
         // R2, R3, R4, R5: Lift badge out of frame so mirror fog, story text, dress code, and invitation never overlap
-        const t = r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0 ? 1 : THREE.MathUtils.smoothstep(r1, 0.72, 0.96);
+        const t =
+          r2 > 0 || r3 > 0 || r4 > 0 || r5 > 0
+            ? 1
+            : THREE.MathUtils.smoothstep(r1, 0.72, 0.96);
         choreoPos.current.set(0, THREE.MathUtils.lerp(1.92, 3.8, t), 0.6);
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       } else {
         // R1: Hero neon badge positioned in upper half above the lower-half "THE RED ROOM" title
         choreoPos.current.set(0, 1.92, 0.6);
-        choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+        choreoScale.current = THREE.MathUtils.damp(
+          choreoScale.current,
+          targetScale,
+          8,
+          delta,
+        );
       }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
-    } else if (world === 'diwali') {
-      const d1 = frame.dampedProgress['D1'] ?? frame.dampedProgress['d1'] ?? 0;
-      const d2 = frame.dampedProgress['D2'] ?? frame.dampedProgress['d2'] ?? 0;
-      const d3 = frame.dampedProgress['D3'] ?? frame.dampedProgress['d3'] ?? 0;
-      const d4 = frame.dampedProgress['D4'] ?? frame.dampedProgress['d4'] ?? 0;
-      const d5 = frame.dampedProgress['D5'] ?? frame.dampedProgress['d5'] ?? 0;
+    } else if (world === "diwali") {
+      const d1 = frame.dampedProgress["D1"] ?? frame.dampedProgress["d1"] ?? 0;
+      const d2 = frame.dampedProgress["D2"] ?? frame.dampedProgress["d2"] ?? 0;
+      const d3 = frame.dampedProgress["D3"] ?? frame.dampedProgress["d3"] ?? 0;
+      const d4 = frame.dampedProgress["D4"] ?? frame.dampedProgress["d4"] ?? 0;
+      const d5 = frame.dampedProgress["D5"] ?? frame.dampedProgress["d5"] ?? 0;
 
-      const targetScale = isMobile ? 0.66 : 0.80;
+      const targetScale = isMobile ? 0.66 : 0.8;
 
       if (d5 > 0.05) {
         // D5: Outro — badge returns in upper stage above outro text
         const t = THREE.MathUtils.smoothstep(d5, 0, 0.5);
         choreoPos.current.set(0, THREE.MathUtils.lerp(0.3, 2.35, t), 0);
-        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.70, t);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.7, t);
       } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
         // D1: Hero jewelled badge in upper stage (y = 2.28, above camera lookAt y = 1.9) so it sits cleanly above the "Diwali" title
         choreoPos.current.set(0, 2.28, 0);
-        choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+        choreoScale.current = THREE.MathUtils.damp(
+          choreoScale.current,
+          targetScale,
+          8,
+          delta,
+        );
       } else {
         // D2, D3, D4: Descend & hide badge to clear stage for story text, sky fireworks, and 3D card
         const t = d2 > 0 ? 1 : THREE.MathUtils.smoothstep(d1, 0.7, 0.95);
@@ -558,48 +569,67 @@ export function Badge({
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
     }
 
-    // 5. Apply transitions choreo override (Part 10 T1/T2)
-    if (tr.phase !== 'idle') {
-      const p = tr.t;
-      let targetPosY = choreoPos.current.y;
-      let targetYaw = 0;
-      let targetScale = choreoScale.current;
-
-      if (tr.type === 'T1') {
-        if (p < 0.25) {
-          const t = p / 0.25;
-          targetScale = THREE.MathUtils.lerp(0.52, 0.7, t);
-          targetPosY = THREE.MathUtils.lerp(2.65, 2.0, t);
-        } else if (p < 0.75) {
-          const t = (p - 0.25) / 0.5;
-          targetScale = 0.7;
-          targetPosY = 2.0;
-          targetYaw = t * Math.PI * 2;
-        } else {
-          const t = (p - 0.75) / 0.25;
-          targetScale = THREE.MathUtils.lerp(0.7, 0.95, t);
-          targetPosY = THREE.MathUtils.lerp(2.0, 1.7, t);
-        }
-      } else if (tr.type === 'T2') {
-        targetPosY = 1.7;
-        targetScale = 0.95;
-        targetYaw = p * Math.PI * 2;
-      } else if (tr.type === 'T3') {
-        const t = Math.min(1, p / 0.8);
-        targetPosY = THREE.MathUtils.lerp(1.7, 2.65, t);
-        targetScale = THREE.MathUtils.lerp(0.95, 0.52, t);
+    // Framing changes only transforms, preserving the supplied GLB materials.
+    if (composition.hero) {
+      if (world === "home") {
+        choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.18 : 1.8, 0);
+        choreoScale.current = isMobile ? 1.0 : isTablet ? 1.35 : 1.9;
+      } else {
+        choreoPos.current.set(
+          0,
+          world === "redroom" ? 2.22 : 2.38,
+          world === "redroom" ? 0.6 : 0,
+        );
+        choreoScale.current = isMobile ? 0.84 : 1.85;
       }
-
-      // Frame-rate independent damp
-      choreoPos.current.y = THREE.MathUtils.damp(choreoPos.current.y, targetPosY, 8, delta);
-      choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, targetYaw, 8, delta);
-      choreoScale.current = THREE.MathUtils.damp(choreoScale.current, targetScale, 8, delta);
+    } else if (composition.scene === "H2") {
+      choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.65 : 1.85, 0);
+      choreoScale.current = isMobile ? 0.7 : 1.6;
+      choreoYaw.current = 0.12;
+    } else if (composition.scene === "R6" || composition.scene === "D5") {
+      choreoPos.current.set(0, 2.75, world === "redroom" ? 0.6 : 0);
+      choreoScale.current = isMobile ? 0.55 : 0.85;
     }
 
-    rootRef.current.scale.setScalar(choreoScale.current * popScale);
+    // One continuous badge move: exit to the centre, hold while assets prepare,
+    // then settle into the destination composition.
+    if (motionEnabled && tr.phase !== 'idle') {
+      const travelScale = isMobile ? .72 : 1.25;
+      if (tr.phase === 'exit') {
+        const p = THREE.MathUtils.smoothstep(tr.elapsed / Math.max(.01,tr.coverTime),0,1);
+        choreoPos.current.x = THREE.MathUtils.lerp(choreoPos.current.x,0,p);
+        choreoPos.current.y = THREE.MathUtils.lerp(choreoPos.current.y,1.95,p);
+        choreoPos.current.z = THREE.MathUtils.lerp(choreoPos.current.z,.6,p);
+        choreoScale.current = THREE.MathUtils.lerp(choreoScale.current,travelScale,p);
+        choreoYaw.current = Math.sin(p*Math.PI)*.35;
+      } else if (tr.phase === 'covered') {
+        choreoPos.current.set(0,1.95,.6);
+        choreoScale.current=travelScale;
+        choreoYaw.current=0;
+      } else {
+        const p=THREE.MathUtils.smoothstep((tr.elapsed-tr.coverTime)/Math.max(.01,tr.duration-tr.coverTime),0,1);
+        choreoPos.current.x *= p;
+        choreoPos.current.y=THREE.MathUtils.lerp(1.95,choreoPos.current.y,p);
+        choreoPos.current.z=THREE.MathUtils.lerp(.6,choreoPos.current.z,p);
+        choreoScale.current=THREE.MathUtils.lerp(travelScale,choreoScale.current,p);
+      }
+    }
+
+    rootRef.current.scale.setScalar(
+      frame.snapCamera || phase !== "complete"
+        ? choreoScale.current
+        : THREE.MathUtils.damp(
+            rootRef.current.scale.x,
+            choreoScale.current * popScale,
+            12,
+            delta,
+          ),
+    );
 
     const activePrepared = preparedMapRef.current[activeSkinRef.current];
-    const currentNodes = activePrepared ? activePrepared.animatedNodes : EMPTY_ANIMATED_NODES;
+    const currentNodes = activePrepared
+      ? activePrepared.animatedNodes
+      : EMPTY_ANIMATED_NODES;
 
     // 6. Update autonomous and interactive behaviours with choreography
     behaviours.update(
@@ -609,26 +639,45 @@ export function Badge({
       currentNodes.tongue,
       {
         time: frame.time,
-        dt: delta,
+        dt: motionEnabled && phase === "complete" ? delta : 0,
         pointer: {
           x: frame.pointer.damped.x,
           y: frame.pointer.damped.y,
           lastMoveTime: frame.pointer.lastMoveTime,
         },
         hoverDoor,
-        dragVelocity: drag.velocity,
-        dragRotationY: drag.rotationY,
-        isDragging: drag.isDragging,
+        dragVelocity: coinSpin.velocity,
+        dragRotationY: coinSpin.angleY,
+        isDragging: coinSpin.isDragging,
+        wobbleX: coinSpin.wobbleX,
         manualBlinkTrigger: blinkTrigger,
         choreoYaw: choreoYaw.current,
         choreoPos: choreoPos.current,
-      }
+      },
     );
 
+    screenCenter.copy(rootRef.current.position).project(camera);
+    screenEdge.copy(rootRef.current.position);
+    screenEdge.x += rootRef.current.scale.x * 0.52;
+    screenEdge.project(camera);
+    badgeScreenBounds.x = (screenCenter.x * 0.5 + 0.5) * size.width;
+    badgeScreenBounds.y = (-screenCenter.y * 0.5 + 0.5) * size.height;
+    badgeScreenBounds.size =
+      Math.abs(screenEdge.x - screenCenter.x) * size.width;
+    badgeScreenBounds.ready = true;
     // 7. Neon emissive flicker (Red Room) preserving original GLB emissiveIntensity ratio without white-clipping
     const neonPrep = preparedMapRef.current.neon;
-    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrep && neonPrep.neonMaterials.length > 0) {
-      const flicker = 1.0 + Math.sin(frame.time * 24.0) * 0.08 * (Math.sin(frame.time * 7.3) > 0 ? 1 : 0);
+    if (
+      (activeSkinRef.current === "neon" ||
+        outgoingSkinRef.current === "neon") &&
+      neonPrep &&
+      neonPrep.neonMaterials.length > 0
+    ) {
+      const flicker =
+        1.0 +
+        Math.sin(frame.time * 24.0) *
+          0.08 *
+          (Math.sin(frame.time * 7.3) > 0 ? 1 : 0);
       neonPrep.neonMaterials.forEach((m) => {
         const base = Math.min(1.75, m.userData.baseEmissiveIntensity ?? 1.0);
         m.emissiveIntensity = base * flicker;
@@ -636,32 +685,35 @@ export function Badge({
     }
 
     // 8. Neon drips extension animation per Part 5.2
-    if ((activeSkinRef.current === 'neon' || outgoingSkinRef.current === 'neon') && neonPrep?.animatedNodes.drips) {
+    if (
+      (activeSkinRef.current === "neon" ||
+        outgoingSkinRef.current === "neon") &&
+      neonPrep?.animatedNodes.drips
+    ) {
       const cycle = (frame.time % 8.0) / 8.0;
-      neonPrep.animatedNodes.drips.scale.y = 1.0 + Math.sin(cycle * Math.PI * 2) * 0.06 + 0.06;
+      neonPrep.animatedNodes.drips.scale.y =
+        1.0 + Math.sin(cycle * Math.PI * 2) * 0.06 + 0.06;
     }
   }, -30);
 
   // Pointer drag listeners for drag-to-spin
   const handlePointerDown = (e: any) => {
     e.stopPropagation();
-    dragRef.current.isDragging = true;
-    dragRef.current.startX = e.clientX ?? 0;
-    dragRef.current.velocity = 0;
+    coinSpin.onPointerDown();
     triggerBlink();
   };
 
   const handlePointerMove = (e: any) => {
-    if (!dragRef.current.isDragging) return;
+    if (!coinSpin.isDragging) return;
     const clientX = e.clientX ?? 0;
-    const deltaX = clientX - dragRef.current.startX;
-    dragRef.current.startX = clientX;
-    dragRef.current.rotationY += deltaX * 0.008;
-    dragRef.current.velocity = deltaX * 0.4;
+    const clientY = e.clientY ?? 0;
+    coinSpin.onPointerMove(e.movementX ?? 0, e.movementY ?? 0, 16);
   };
 
   const handlePointerUp = () => {
-    dragRef.current.isDragging = false;
+    if (coinSpin.isDragging) {
+      coinSpin.onPointerUp(true, 0);
+    }
   };
 
   return (
@@ -677,7 +729,11 @@ export function Badge({
       onPointerLeave={handlePointerUp}
     >
       {/* Enamel Skin GLB (Home - Pink) */}
-      <group ref={enamelGroupRef} name="EnamelSkin" visible={targetSkin === 'enamel'}>
+      <group
+        ref={enamelGroupRef}
+        name="EnamelSkin"
+        visible={targetSkin === "enamel"}
+      >
         {mountedSkins.enamel && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
@@ -692,7 +748,7 @@ export function Badge({
       </group>
 
       {/* Neon Skin GLB (The Red Room - Red) */}
-      <group ref={neonGroupRef} name="NeonSkin" visible={targetSkin === 'neon'}>
+      <group ref={neonGroupRef} name="NeonSkin" visible={targetSkin === "neon"}>
         {mountedSkins.neon && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
@@ -707,7 +763,11 @@ export function Badge({
       </group>
 
       {/* Jewelled Skin GLB (Diwali - Jewelled Pink & Gold) */}
-      <group ref={jewelledGroupRef} name="JewelledSkin" visible={targetSkin === 'jewelled'}>
+      <group
+        ref={jewelledGroupRef}
+        name="JewelledSkin"
+        visible={targetSkin === "jewelled"}
+      >
         {mountedSkins.jewelled && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
@@ -722,7 +782,7 @@ export function Badge({
       </group>
 
       {/* Directional Sparkle Glints on Pavé Diamond Face for Jewelled Skin */}
-      <SparkleGlints active={activeSkinRef.current === 'jewelled'} />
+      <SparkleGlints active={activeSkinRef.current === "jewelled"} />
     </group>
   );
 }

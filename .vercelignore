@@ -1,5 +1,6 @@
 brand-source/
 GLBs/
-scripts/
+scripts/*
+!scripts/patch-fiber-timer.mjs
 *.md
 !README.md

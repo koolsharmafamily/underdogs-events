@@ -1,22 +1,22 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { usePathname } from 'next/navigation'
-import { site } from '@/content/site'
-import { useStore } from '@/state/store'
-import { UnderdogsBadgeSvg } from './UnderdogsBadgeSvg'
-import { TransitionLink } from './TransitionLink'
-import { MotionToggle } from './MotionToggle'
-import { Menu } from './Menu'
+import React from "react";
+import { usePathname } from "next/navigation";
+import { site } from "@/content/site";
+import { useStore } from "@/state/store";
+import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
+import { TransitionLink } from "./TransitionLink";
+
+import { Menu } from "./Menu";
 
 export function Nav() {
-  const pathname = usePathname()
-  const world = useStore((s) => s.world)
-  const menuOpen = useStore((s) => s.menuOpen)
-  const setMenuOpen = useStore((s) => s.setMenuOpen)
+  const pathname = usePathname();
+  const world = useStore((s) => s.world);
+  const menuOpen = useStore((s) => s.menuOpen);
+  const setMenuOpen = useStore((s) => s.setMenuOpen);
 
-  const isRedRoom = pathname === '/the-red-room'
-  const isDiwali = pathname === '/diwali'
+  const isRedRoom = pathname === "/the-red-room";
+  const isDiwali = pathname === "/diwali";
 
   return (
     <>
@@ -36,7 +36,7 @@ export function Nav() {
             </span>
           </TransitionLink>
 
-          {/* Right (Desktop): "The Red Room" · "Diwali" · Motion toggle */}
+          {/* Right (Desktop): "The Red Room" · "Diwali" */}
           <nav
             aria-label="Primary"
             className="pointer-events-auto hidden md:flex items-center gap-6"
@@ -45,27 +45,26 @@ export function Nav() {
               href="/the-red-room"
               origin="nav"
               rollText={site.home.worlds.one.name}
-              aria-current={isRedRoom ? 'page' : undefined}
+              aria-current={isRedRoom ? "page" : undefined}
               className={`min-h-[44px] inline-flex items-center px-1 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--world-text)] ${
-                isRedRoom ? 'active-page-link' : ''
+                isRedRoom ? "active-page-link" : ""
               }`}
             />
-            <span aria-hidden="true" className="text-[var(--world-muted)] opacity-50">
+            <span
+              aria-hidden="true"
+              className="text-[var(--world-muted)] opacity-50"
+            >
               ·
             </span>
             <TransitionLink
               href="/diwali"
               origin="nav"
               rollText={site.home.worlds.two.name}
-              aria-current={isDiwali ? 'page' : undefined}
+              aria-current={isDiwali ? "page" : undefined}
               className={`min-h-[44px] inline-flex items-center px-1 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--world-text)] ${
-                isDiwali ? 'active-page-link' : ''
+                isDiwali ? "active-page-link" : ""
               }`}
             />
-            <span aria-hidden="true" className="text-[var(--world-muted)] opacity-50">
-              ·
-            </span>
-            <MotionToggle />
           </nav>
 
           {/* Right (Mobile): "Menu" button */}
@@ -84,5 +83,5 @@ export function Nav() {
       </header>
       <Menu />
     </>
-  )
+  );
 }

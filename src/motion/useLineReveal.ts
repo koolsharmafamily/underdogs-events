@@ -27,6 +27,7 @@ export function useLineReveal(
       return
     }
 
+    let unsubscribe: (() => void) | undefined
     let split: SplitText | null = null
     let ctx: gsap.Context | null = null
 
@@ -40,13 +41,12 @@ export function useLineReveal(
       gsap.set(split.lines, { yPercent: 105 })
 
       if (triggerOnMount) {
-        gsap.to(split.lines, {
-          yPercent: 0,
-          duration: 0.65,
-          stagger: 0.05,
-          delay,
-          ease: 'ease.out',
+        const animation = gsap.to(split.lines, {
+          yPercent: 0, duration: 0.65, stagger: 0.05, delay, ease: 'ease.out', paused: true,
         })
+        const reveal = () => { const state=useStore.getState(); if(state.phase==='complete' && !state.isTransitioning) { animation.play(); unsubscribe?.(); } }
+        unsubscribe=useStore.subscribe(reveal)
+        reveal()
       } else {
         gsap.to(split.lines, {
           yPercent: 0,
@@ -64,6 +64,7 @@ export function useLineReveal(
     }, el)
 
     return () => {
+      unsubscribe?.()
       ctx?.revert()
       split?.revert()
     }

@@ -1,99 +1,104 @@
-'use client'
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
-import gsap from 'gsap'
-import { site } from '@/content/site'
-import { frame } from '@/state/frame'
-import { useStore } from '@/state/store'
-import { useSceneProgress } from '@/motion/useSceneProgress'
-import { useEnterTransition } from '@/motion/transitions'
-import { BadgeDomHost } from '@/ui/BadgeDomHost'
-import { Divider } from '@/ui/Divider'
-import { InvitationCard } from '@/ui/InvitationCard'
-import { TransitionLink } from '@/ui/TransitionLink'
-import { Footer } from '@/ui/Footer'
-import { cardOverlayRef } from '@/webgl/tracking/CardProjector'
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+import { site } from "@/content/site";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { useSceneProgress } from "@/motion/useSceneProgress";
+import { useLineReveal } from "@/motion/useLineReveal";
+import { useEnterTransition } from "@/motion/transitions";
+import { BadgeDomHost } from "@/ui/BadgeDomHost";
+import { Divider } from "@/ui/Divider";
+import { InvitationCard } from "@/ui/InvitationCard";
+import { TransitionLink } from "@/ui/TransitionLink";
+import { Footer } from "@/ui/Footer";
+import { cardOverlayRef } from "@/webgl/tracking/CardProjector";
 
 const DRIPS = [
-  { x: '11%', height: 28, delay: 0.1 },
-  { x: '24%', height: 46, delay: 0.35 },
-  { x: '41%', height: 22, delay: 0.2 },
-  { x: '57%', height: 52, delay: 0.5 },
-  { x: '73%', height: 34, delay: 0.25 },
-  { x: '88%', height: 42, delay: 0.45 },
-] as const
+  { x: "11%", height: 28, delay: 0.1 },
+  { x: "24%", height: 46, delay: 0.35 },
+  { x: "41%", height: 22, delay: 0.2 },
+  { x: "57%", height: 52, delay: 0.5 },
+  { x: "73%", height: 34, delay: 0.25 },
+  { x: "88%", height: 42, delay: 0.45 },
+] as const;
 
 export function RedRoomView() {
-  const motionEnabled = useStore((s) => s.motionEnabled)
-  const setWorld = useStore((s) => s.setWorld)
-  const [activeStoryIdx, setActiveStoryIdx] = useState(0)
-  const [dressStep, setDressStep] = useState(4)
-  const [cardStage, setCardStage] = useState<'sealed' | 'opening' | 'open'>('open')
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useLineReveal(titleRef, { triggerOnMount: true, delay: .18 });
+  const motionEnabled = useStore((s) => s.motionEnabled);
+  const setWorld = useStore((s) => s.setWorld);
+  const [activeStoryIdx, setActiveStoryIdx] = useState(0);
+  const [dressStep, setDressStep] = useState(4);
+  const [cardStage, setCardStage] = useState<"sealed" | "opening" | "open">(
+    "open",
+  );
 
-  useEnterTransition('redroom')
+  useEnterTransition("redroom");
 
   useEffect(() => {
-    setWorld('redroom')
-    document.documentElement.setAttribute('data-world', 'redroom')
-  }, [setWorld])
+    setWorld("redroom");
+    document.documentElement.setAttribute("data-world", "redroom");
+  }, [setWorld]);
 
-  const r1Ref = useRef<HTMLElement>(null)
-  const r2Ref = useRef<HTMLElement>(null)
-  const r3Ref = useRef<HTMLElement>(null)
-  const r4Ref = useRef<HTMLElement>(null)
-  const r5Ref = useRef<HTMLElement>(null)
-  const r6Ref = useRef<HTMLElement>(null)
+  const r1Ref = useRef<HTMLElement>(null);
+  const r2Ref = useRef<HTMLElement>(null);
+  const r3Ref = useRef<HTMLElement>(null);
+  const r4Ref = useRef<HTMLElement>(null);
+  const r5Ref = useRef<HTMLElement>(null);
+  const r6Ref = useRef<HTMLElement>(null);
 
-  useSceneProgress('R1', r1Ref)
-  useSceneProgress('R2', r2Ref)
-  useSceneProgress('R3', r3Ref)
-  useSceneProgress('R4', r4Ref)
-  useSceneProgress('R5', r5Ref)
-  useSceneProgress('R6', r6Ref)
+  useSceneProgress("R1", r1Ref);
+  useSceneProgress("R2", r2Ref);
+  useSceneProgress("R3", r3Ref);
+  useSceneProgress("R4", r4Ref);
+  useSceneProgress("R5", r5Ref);
+  useSceneProgress("R6", r6Ref);
 
   useEffect(() => {
     if (!motionEnabled) {
-      setActiveStoryIdx(0)
-      setDressStep(4)
-      setCardStage('open')
-      return
+      setActiveStoryIdx(0);
+      setDressStep(4);
+      setCardStage("open");
+      return;
     }
 
     const prev = {
       story: 0,
       dress: 4,
-      card: 'open' as 'sealed' | 'opening' | 'open',
-    }
+      card: "open" as "sealed" | "opening" | "open",
+    };
 
     const onTick = () => {
-      const p2 = frame.progress.R2 ?? 0
-      const nextStory = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2
+      const p2 = frame.progress.R2 ?? 0;
+      const nextStory = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2;
       if (nextStory !== prev.story) {
-        prev.story = nextStory
-        setActiveStoryIdx(nextStory)
+        prev.story = nextStory;
+        setActiveStoryIdx(nextStory);
       }
 
-      const p3 = frame.progress.R3 ?? 0
-      const nextDress = p3 < 0.22 ? 1 : p3 < 0.48 ? 2 : p3 < 0.72 ? 3 : 4
+      const p3 = frame.progress.R3 ?? 0;
+      const nextDress = p3 < 0.22 ? 1 : p3 < 0.48 ? 2 : p3 < 0.72 ? 3 : 4;
       if (nextDress !== prev.dress) {
-        prev.dress = nextDress
-        setDressStep(nextDress)
+        prev.dress = nextDress;
+        setDressStep(nextDress);
       }
 
-      const p4 = frame.progress.R4 ?? 0
-      const nextCard = p4 < 0.25 ? 'sealed' : p4 < 0.55 ? 'opening' : 'open'
+      const p4 = frame.progress.R4 ?? 0;
+      const nextCard = p4 < 0.25 ? "sealed" : p4 < 0.55 ? "opening" : "open";
       if (nextCard !== prev.card) {
-        prev.card = nextCard
-        setCardStage(nextCard)
+        prev.card = nextCard;
+        setCardStage(nextCard);
       }
-    }
+    };
 
-    gsap.ticker.add(onTick)
+    gsap.ticker.add(onTick);
     return () => {
-      gsap.ticker.remove(onTick)
-    }
-  }, [motionEnabled])
+      gsap.ticker.remove(onTick);
+    };
+  }, [motionEnabled]);
 
   return (
     <main id="main-content" className="relative z-10 text-[var(--rr-bone)]">
@@ -128,7 +133,7 @@ export function RedRoomView() {
 
             {/* Title with SVG blood drips layer underneath (Part 8 R1) */}
             <div className="relative inline-block">
-              <h1 className="font-cinzel-decorative text-[clamp(2rem,4.4vw,3.6rem)] font-black uppercase text-[var(--rr-bone)] leading-none balance-heading drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
+              <h1 ref={titleRef} className="font-cinzel-decorative text-[clamp(2rem,4.4vw,3.6rem)] font-black uppercase text-[var(--rr-bone)] leading-none balance-heading drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
                 {site.redRoom.title}
               </h1>
 
@@ -148,7 +153,7 @@ export function RedRoomView() {
                       animationDelay: `${drip.delay}s`,
                     }}
                     className={`absolute top-0 text-[var(--rr-blood)] origin-top ${
-                      motionEnabled ? 'rr-blood-drip' : ''
+                      motionEnabled ? "rr-blood-drip" : ""
                     }`}
                   >
                     <path
@@ -196,35 +201,37 @@ export function RedRoomView() {
             ) : (
               <div className="relative min-h-[200px] sm:min-h-[240px] w-full max-w-[820px] flex items-center justify-center">
                 {site.redRoom.story.map((line, idx) => {
-                  const isCurrent = idx === activeStoryIdx
-                  const words = line.split(' ')
+                  const isCurrent = idx === activeStoryIdx;
+                  const words = line.split(" ");
                   return (
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
                       className={`font-cormorant italic text-[clamp(24px,3.4vw,52px)] leading-[1.15] font-medium text-[var(--rr-bone)] balance-heading transition-all ${
                         isCurrent
-                          ? 'duration-[650ms] relative opacity-100'
-                          : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0'
+                          ? "duration-[650ms] relative opacity-100"
+                          : "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0"
                       }`}
                     >
                       {words.map((word, wIdx) => (
                         <span
                           key={`${idx}-${wIdx}`}
                           style={{
-                            transitionDelay: isCurrent ? `${wIdx * 25}ms` : '0ms',
+                            transitionDelay: isCurrent
+                              ? `${wIdx * 25}ms`
+                              : "0ms",
                           }}
                           className={`inline-block mr-[0.26em] transition-all ${
                             isCurrent
-                              ? 'duration-[500ms] opacity-100 blur-0 translate-y-0'
-                              : 'duration-[350ms] opacity-0 blur-[8px] translate-y-1'
+                              ? "duration-[500ms] opacity-100 blur-0 translate-y-0"
+                              : "duration-[350ms] opacity-0 blur-[8px] translate-y-1"
                           }`}
                         >
                           {word}
                         </span>
                       ))}
                     </p>
-                  )
+                  );
                 })}
               </div>
             )}
@@ -245,17 +252,19 @@ export function RedRoomView() {
           <div className="site-container flex flex-col items-center md:items-start text-center md:text-left gap-7 max-w-[680px] md:ml-[6vw]">
             <div className="flex flex-col gap-3">
               {site.redRoom.dress.lines.map((line, idx) => {
-                const lit = idx < dressStep
+                const lit = idx < dressStep;
                 return (
                   <p
                     key={line}
                     className={`font-cinzel text-[clamp(24px,3.6vw,54px)] leading-[1.08] font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[650ms] ${
-                      lit ? 'opacity-100 translate-y-0' : 'opacity-20 translate-y-4'
+                      lit
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-75 translate-y-4"
                     }`}
                   >
                     {line}
                   </p>
-                )
+                );
               })}
             </div>
 
@@ -265,7 +274,7 @@ export function RedRoomView() {
 
             <p
               className={`font-cinzel text-[clamp(18px,2.2vw,30px)] leading-[1.2] font-bold uppercase tracking-[0.04em] text-[var(--rr-neon)] balance-heading transition-opacity duration-500 ${
-                dressStep >= 4 ? 'opacity-100 rr-neon-pulse' : 'opacity-25'
+                dressStep >= 4 ? "opacity-100 rr-neon-pulse" : "opacity-90"
               }`}
             >
               {site.redRoom.dress.warning}
@@ -277,7 +286,7 @@ export function RedRoomView() {
       {/* Screen-projected DOM Twin for 3D Invitation Card (Part 8 R4 & Part 14) */}
       <div
         ref={(el) => {
-          cardOverlayRef.current = el
+          cardOverlayRef.current = el;
         }}
         aria-label="Official Red Room Invitation Card Details"
         className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-6 sm:p-8 rounded-xl bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-300"
@@ -300,7 +309,7 @@ export function RedRoomView() {
               <span className="font-manrope text-[13px] sm:text-[15px] font-bold text-[#350505]">
                 {row.value}
               </span>
-              {'sub' in row && Boolean((row as any).sub) && (
+              {"sub" in row && Boolean((row as any).sub) && (
                 <span className="font-manrope text-[11px] text-[#550A0A]/80">
                   {(row as any).sub}
                 </span>
@@ -327,11 +336,11 @@ export function RedRoomView() {
           <div className="site-container flex flex-col items-center gap-6">
             <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--rr-ash)]">
               <span>
-                {cardStage === 'sealed'
-                  ? 'Scroll to break the wax seal'
-                  : cardStage === 'opening'
-                    ? 'Envelope opening'
-                    : 'Official Invitation'}
+                {cardStage === "sealed"
+                  ? "Scroll to break the wax seal"
+                  : cardStage === "opening"
+                    ? "Envelope opening"
+                    : "Official Invitation"}
               </span>
             </div>
 
@@ -443,7 +452,13 @@ export function RedRoomView() {
                 className="group inline-flex min-h-[48px] items-center gap-3 border border-[var(--rr-bone)]/40 bg-[var(--rr-oxblood)] px-6 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--rr-bone)] hover:border-[var(--rr-neon)] hover:text-[var(--rr-neon)] transition-colors"
               >
                 <span>{site.redRoom.outro.next.label}</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="10"
+                  viewBox="0 0 14 10"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path
                     d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
                     stroke="currentColor"
@@ -458,7 +473,13 @@ export function RedRoomView() {
                 origin="gate"
                 className="inline-flex min-h-[48px] items-center gap-3 px-4 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--rr-ash)] hover:text-[var(--rr-bone)] transition-colors"
               >
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="10"
+                  viewBox="0 0 14 10"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path
                     d="M13 5H1.5M1.5 5L5.5 1M1.5 5L5.5 9"
                     stroke="currentColor"
@@ -474,5 +495,5 @@ export function RedRoomView() {
 
       <Footer />
     </main>
-  )
+  );
 }

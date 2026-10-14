@@ -1,26 +1,32 @@
-'use client';
+"use client";
 
-import React, { useRef, useMemo } from 'react';
-import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
+import React, { useRef, useMemo } from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { composition } from "../composition";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
 
 export function DiwaliCard() {
-  const cardGltf = useGLTF('/models/diwali-card.glb');
+  const cardGltf = useGLTF("/models/diwali-card.glb");
   const groupRef = useRef<THREE.Group>(null);
   const cardNodeRef = useRef<THREE.Group>(null);
 
-  const clonedCard = useMemo(() => cardGltf.scene.clone(true), [cardGltf.scene]);
+  const clonedCard = useMemo(
+    () => cardGltf.scene.clone(true),
+    [cardGltf.scene],
+  );
 
   useFrame(() => {
     const st = useStore.getState();
-    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
-    const p3 = frame.dampedProgress['D3'] ?? 0;
-    const p4 = frame.dampedProgress['D4'] ?? 0;
+    if (st.world !== "diwali" && st.previousWorld !== "diwali") return;
+    const p3 = frame.dampedProgress["D3"] ?? 0;
+    const p4 = frame.dampedProgress["D4"] ?? 0;
 
     if (!cardNodeRef.current) return;
+    if (groupRef.current)
+      groupRef.current.visible = composition.scene === "D3" && p3 < 0.48;
 
     // D3: Rises from below on a slow half-turn spiral, trailing gold dust (Part 9 D3)
     // Settle facing camera at 70% vh
@@ -31,9 +37,11 @@ export function DiwaliCard() {
       cardNodeRef.current.position.set(
         0,
         THREE.MathUtils.lerp(1.3, -1.5, easedExit),
-        THREE.MathUtils.lerp(1.2, 0.4, easedExit)
+        THREE.MathUtils.lerp(1.2, 0.4, easedExit),
       );
-      cardNodeRef.current.scale.setScalar(THREE.MathUtils.lerp(0.85, 0.2, easedExit));
+      cardNodeRef.current.scale.setScalar(
+        THREE.MathUtils.lerp(0.85, 0.2, easedExit),
+      );
       cardNodeRef.current.rotation.set(0, Math.PI * easedExit, 0);
     } else if (p3 < 0.1) {
       // Below screen initial rest
@@ -48,14 +56,14 @@ export function DiwaliCard() {
       cardNodeRef.current.position.set(
         Math.sin(eased * Math.PI) * 0.25,
         THREE.MathUtils.lerp(-1.8, 1.3, eased),
-        THREE.MathUtils.lerp(0.2, 1.2, eased)
+        THREE.MathUtils.lerp(0.2, 1.2, eased),
       );
 
       // Half-turn spiral rotation around Y (Math.PI -> 0)
       cardNodeRef.current.rotation.set(
         -0.08 * (1 - eased),
         THREE.MathUtils.lerp(Math.PI, 0.0, eased),
-        Math.sin(eased * Math.PI) * 0.08
+        Math.sin(eased * Math.PI) * 0.08,
       );
 
       const targetScale = THREE.MathUtils.lerp(0.2, 0.85, eased);
@@ -70,7 +78,11 @@ export function DiwaliCard() {
 
   return (
     <group ref={groupRef} name="DiwaliCardHolder">
-      <group ref={cardNodeRef} position={[0, -1.8, 0.2]} scale={[0.2, 0.2, 0.2]}>
+      <group
+        ref={cardNodeRef}
+        position={[0, -1.8, 0.2]}
+        scale={[0.2, 0.2, 0.2]}
+      >
         <primitive object={clonedCard} />
       </group>
     </group>

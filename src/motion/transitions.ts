@@ -1,35 +1,35 @@
-import { useEffect } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { frame, type TransitionType } from '@/state/frame'
-import { useStore } from '@/state/store'
-import type { WorldId } from '@/theme/tokens'
-import { preloadWorldAssets } from '@/webgl/preload'
-import { getLenis } from './clock'
-import { registerMotionEases } from './eases'
+import { useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { frame, type TransitionType } from "@/state/frame";
+import { useStore } from "@/state/store";
+import type { WorldId } from "@/theme/tokens";
+import { preloadWorldAssets } from "@/webgl/preload";
+import { getLenis } from "./clock";
+import { registerMotionEases } from "./eases";
 
 export interface TransitionStageRefs {
-  stageEl: HTMLElement | null
-  veilEl: HTMLElement | null
-  coinEl?: HTMLElement | null
-  washEl: HTMLElement | null
-  curtainWrapEl: HTMLElement | null
-  leftCurtainEl: HTMLElement | null
-  rightCurtainEl: HTMLElement | null
+  stageEl: HTMLElement | null;
+  veilEl: HTMLElement | null;
+  coinEl?: HTMLElement | null;
+  washEl: HTMLElement | null;
+  curtainWrapEl: HTMLElement | null;
+  leftCurtainEl: HTMLElement | null;
+  rightCurtainEl: HTMLElement | null;
 }
 
-let stageRefs: TransitionStageRefs | null = null
-let activeTimeline: gsap.core.Timeline | null = null
-let pendingEnterCallback: (() => void) | null = null
-let pendingEnterFallbackTimer: number | null = null
-let pendingTargetWorld: WorldId | null = null
-let isRouteEntered = false
-let isWorldRendered = false
+let stageRefs: TransitionStageRefs | null = null;
+let activeTimeline: gsap.core.Timeline | null = null;
+let pendingEnterCallback: (() => void) | null = null;
+let pendingEnterFallbackTimer: number | null = null;
+let pendingTargetWorld: WorldId | null = null;
+let isRouteEntered = false;
+let isWorldRendered = false;
 
-const SCROLL_STORAGE_PREFIX = 'underdogs-scroll:'
+const SCROLL_STORAGE_PREFIX = "underdogs-scroll:";
 
 export function registerTransitionStage(refs: TransitionStageRefs | null) {
-  stageRefs = refs
+  stageRefs = refs;
 }
 
 export function registerTransitionVeil(el: HTMLElement | null) {
@@ -42,128 +42,142 @@ export function registerTransitionVeil(el: HTMLElement | null) {
       curtainWrapEl: null,
       leftCurtainEl: null,
       rightCurtainEl: null,
-    }
+    };
   }
 }
 
 export function pathToWorld(pathname: string): WorldId {
-  if (pathname.startsWith('/the-red-room')) return 'redroom'
-  if (pathname.startsWith('/diwali')) return 'diwali'
-  return 'home'
+  if (pathname.startsWith("/the-red-room")) return "redroom";
+  if (pathname.startsWith("/diwali")) return "diwali";
+  return "home";
 }
 
-export function worldToSkin(world: WorldId): 'enamel' | 'neon' | 'jewelled' {
-  if (world === 'redroom') return 'neon'
-  if (world === 'diwali') return 'jewelled'
-  return 'enamel'
+export function worldToSkin(world: WorldId): "enamel" | "neon" | "jewelled" {
+  if (world === "redroom") return "neon";
+  if (world === "diwali") return "jewelled";
+  return "enamel";
 }
 
-export function determineTransitionType(fromPath: string, toPath: string): TransitionType {
-  if (fromPath === '/' && toPath === '/the-red-room') return 'T1'
-  if (fromPath === '/' && toPath === '/diwali') return 'T2'
+export function determineTransitionType(
+  fromPath: string,
+  toPath: string,
+): TransitionType {
+  if (fromPath === "/" && toPath === "/the-red-room") return "T1";
+  if (fromPath === "/" && toPath === "/diwali") return "T2";
   if (
-    (fromPath === '/the-red-room' && toPath === '/diwali') ||
-    (fromPath === '/diwali' && toPath === '/the-red-room')
+    (fromPath === "/the-red-room" && toPath === "/diwali") ||
+    (fromPath === "/diwali" && toPath === "/the-red-room")
   ) {
-    return 'T3'
+    return "T3";
   }
-  if (toPath === '/') return 'T4'
-  return 'T5'
+  if (toPath === "/") return "T4";
+  return "T5";
 }
 
 export function saveRouteScroll(pathname: string, scrollY?: number) {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return;
   try {
-    const val = scrollY ?? window.scrollY ?? 0
-    window.sessionStorage.setItem(`${SCROLL_STORAGE_PREFIX}${pathname}`, String(Math.round(val)))
+    const val = scrollY ?? window.scrollY ?? 0;
+    window.sessionStorage.setItem(
+      `${SCROLL_STORAGE_PREFIX}${pathname}`,
+      String(Math.round(val)),
+    );
   } catch {
     // Ignore storage errors
   }
 }
 
 export function getSavedRouteScroll(pathname: string): number {
-  if (typeof window === 'undefined') return 0
+  if (typeof window === "undefined") return 0;
   try {
-    const raw = window.sessionStorage.getItem(`${SCROLL_STORAGE_PREFIX}${pathname}`)
-    if (!raw) return 0
-    const parsed = Number(raw)
-    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0
+    const raw = window.sessionStorage.getItem(
+      `${SCROLL_STORAGE_PREFIX}${pathname}`,
+    );
+    if (!raw) return 0;
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
   } catch {
-    return 0
+    return 0;
   }
 }
 
 function resetStageComplete() {
-  const store = useStore.getState()
-  const lenis = getLenis()
-  if (lenis) lenis.start()
+  const store = useStore.getState();
+  const lenis = getLenis();
+  if (lenis) lenis.start();
 
-  frame.transition.t = 0
-  frame.transition.elapsed = 0
-  frame.transition.duration = 0
-  frame.transition.coverTime = 0
-  frame.transition.type = 'none'
-  frame.transition.phase = 'idle'
-  frame.transition.doorProgress = 0
-  frame.transition.dollyProgress = 0
-  frame.transition.curtainClose = 0
-  frame.transition.exposureWash = 0
-  frame.transition.chromAb = 0
-  frame.transition.badgeFlip = 0
+  frame.transition.t = 0;
+  frame.transition.elapsed = 0;
+  frame.transition.duration = 0;
+  frame.transition.coverTime = 0;
+  frame.transition.type = "none";
+  frame.transition.phase = "idle";
+  frame.transition.doorProgress = 0;
+  frame.transition.dollyProgress = 0;
+  frame.transition.curtainClose = 0;
+  frame.transition.exposureWash = 0;
+  frame.transition.chromAb = 0;
+  frame.transition.badgeFlip = 0;
 
-  store.setTargetSkinOverride(null)
-  store.setTransition('none', false)
+  store.setTargetSkinOverride(null);
+  store.setTransition("none", false);
 
   if (stageRefs?.stageEl) {
-    stageRefs.stageEl.style.pointerEvents = 'none'
-    gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
+    stageRefs.stageEl.style.pointerEvents = "none";
+    gsap.set(stageRefs.stageEl, { pointerEvents: "none" });
   }
-  if (stageRefs?.veilEl) gsap.set(stageRefs.veilEl, { opacity: 0 })
-  if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 })
+  if (stageRefs?.veilEl) gsap.set(stageRefs.veilEl, { opacity: 0 });
+  if (stageRefs?.washEl) gsap.set(stageRefs.washEl, { opacity: 0 });
+  if (stageRefs?.curtainWrapEl)
+    gsap.set(stageRefs.curtainWrapEl, { visibility: "hidden" });
+  if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 });
 
-  const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
+  const mainEl =
+    typeof document !== "undefined"
+      ? document.getElementById("main-content")
+      : null;
   if (mainEl) {
-    gsap.set(mainEl, { clearProps: 'opacity' })
+    gsap.set(mainEl, { clearProps: "opacity" });
   }
 }
 
 function tryProceedEnter(force = false) {
-  if (!pendingEnterCallback) return
-  if (!force && (!isRouteEntered || !isWorldRendered)) return
+  if (!pendingEnterCallback) return;
+  if (!force && (!isRouteEntered || !isWorldRendered)) return;
 
-  if (pendingEnterFallbackTimer !== null && typeof window !== 'undefined') {
-    window.clearTimeout(pendingEnterFallbackTimer)
-    pendingEnterFallbackTimer = null
+  if (pendingEnterFallbackTimer !== null && typeof window !== "undefined") {
+    window.clearTimeout(pendingEnterFallbackTimer);
+    pendingEnterFallbackTimer = null;
   }
 
-  const fn = pendingEnterCallback
-  pendingEnterCallback = null
-  pendingTargetWorld = null
+  const fn = pendingEnterCallback;
+  pendingEnterCallback = null;
+  pendingTargetWorld = null;
 
   // Wait one animation frame after layout + WebGL settle so frame 1 of the coin dissolve is 100% hitch-free
   requestAnimationFrame(() => {
     try {
-      ScrollTrigger.refresh()
+      ScrollTrigger.refresh();
     } catch {
       // Safe layout refresh catch
     }
     requestAnimationFrame(() => {
       try {
-        fn()
+        fn();
       } catch (e) {
-        console.error('Enter animation error:', e)
-        resetStageComplete()
+        console.error("Enter animation error:", e);
+        resetStageComplete();
       }
-    })
-  })
+    });
+  });
 }
 
 /**
  * Called by destination page's `useEnterTransition` once its DOM is mounted
  */
 export function notifyRouteEntered() {
-  isRouteEntered = true
-  tryProceedEnter(false)
+  isRouteEntered = true;
+  tryProceedEnter(false);
 }
 
 /**
@@ -171,8 +185,8 @@ export function notifyRouteEntered() {
  */
 export function notifyWorldRendered(world: WorldId) {
   if (pendingTargetWorld === world) {
-    isWorldRendered = true
-    tryProceedEnter(false)
+    isWorldRendered = true;
+    tryProceedEnter(false);
   }
 }
 
@@ -181,62 +195,64 @@ export function notifyWorldRendered(world: WorldId) {
  */
 export function useEnterTransition(world: WorldId) {
   useEffect(() => {
-    notifyRouteEntered()
-  }, [world])
+    notifyRouteEntered();
+  }, [world]);
 }
 
 export function runFadeCutJump(target: number | string | HTMLElement) {
-  registerMotionEases()
-  const { motionEnabled } = useStore.getState()
-  const lenis = getLenis()
+  registerMotionEases();
+  const { motionEnabled } = useStore.getState();
+  const lenis = getLenis();
 
   const performScroll = () => {
     if (lenis) {
-      lenis.scrollTo(target, { immediate: true })
-    } else if (typeof target === 'number') {
-      window.scrollTo({ top: target, behavior: 'instant' as ScrollBehavior })
-    } else if (typeof target === 'string') {
-      const node = document.querySelector(target)
-      node?.scrollIntoView({ behavior: 'instant' as ScrollBehavior })
+      lenis.scrollTo(target, { immediate: true });
+    } else if (typeof target === "number") {
+      window.scrollTo({ top: target, behavior: "instant" as ScrollBehavior });
+    } else if (typeof target === "string") {
+      const node = document.querySelector(target);
+      node?.scrollIntoView({ behavior: "instant" as ScrollBehavior });
     } else {
-      target.scrollIntoView({ behavior: 'instant' as ScrollBehavior })
+      target.scrollIntoView({ behavior: "instant" as ScrollBehavior });
     }
-    ScrollTrigger.refresh()
-    frame.snapCamera = true
-  }
+    ScrollTrigger.refresh();
+    frame.snapCamera = true;
+  };
 
-  const veilEl = stageRefs?.veilEl
-  const coinEl = stageRefs?.coinEl
+  const veilEl = stageRefs?.veilEl;
+  const coinEl = stageRefs?.coinEl;
   if (!veilEl) {
-    performScroll()
-    return
+    performScroll();
+    return;
   }
 
-  const outDur = motionEnabled ? 0.28 : 0.14
-  const inDur = motionEnabled ? 0.45 : 0.16
+  const outDur = motionEnabled ? 0.28 : 0.14;
+  const inDur = motionEnabled ? 0.45 : 0.16;
 
-  gsap.killTweensOf(veilEl)
-  if (coinEl) gsap.killTweensOf(coinEl)
-  if (stageRefs?.stageEl) gsap.set(stageRefs.stageEl, { pointerEvents: 'auto' })
-  if (coinEl) gsap.set(coinEl, { opacity: 0, scale: 0.92 })
+  gsap.killTweensOf(veilEl);
+  if (coinEl) gsap.killTweensOf(coinEl);
+  if (stageRefs?.stageEl)
+    gsap.set(stageRefs.stageEl, { pointerEvents: "auto" });
+  if (coinEl) gsap.set(coinEl, { opacity: 0, scale: 0.92 });
 
   const tl = gsap.timeline({
     onComplete: () => {
-      if (stageRefs?.stageEl) gsap.set(stageRefs.stageEl, { pointerEvents: 'none' })
-      if (coinEl) gsap.set(coinEl, { opacity: 1, scale: 1 })
+      if (stageRefs?.stageEl)
+        gsap.set(stageRefs.stageEl, { pointerEvents: "none" });
+      if (coinEl) gsap.set(coinEl, { opacity: 1, scale: 1 });
     },
-  })
+  });
 
   tl.to(
     veilEl,
     {
       opacity: 1,
       duration: outDur,
-      ease: 'power2.inOut',
+      ease: "ease.inOut",
       onComplete: performScroll,
     },
-    0
-  )
+    0,
+  );
   if (coinEl) {
     tl.to(
       coinEl,
@@ -244,292 +260,371 @@ export function runFadeCutJump(target: number | string | HTMLElement) {
         opacity: 1,
         scale: 1,
         duration: outDur,
-        ease: 'power2.out',
+        ease: "ease.out",
         force3D: true,
       },
-      0.03
+      0.03,
     ).to(
       coinEl,
       {
         opacity: 0,
         scale: 0.92,
         duration: inDur * 0.85,
-        ease: 'power2.inOut',
+        ease: "ease.inOut",
         force3D: true,
       },
-      outDur + 0.04
-    )
+      outDur + 0.04,
+    );
   }
   tl.to(
     veilEl,
     {
       opacity: 0,
       duration: inDur,
-      ease: 'power2.out',
+      ease: "ease.out",
     },
-    outDur + 0.14
-  )
+    outDur + 0.14,
+  );
 }
 
 export interface RouteTransitionOptions {
-  fromPath?: string
-  toPath?: string
-  origin?: 'door' | 'gate' | 'nav'
-  isPopState?: boolean
+  fromPath?: string;
+  toPath?: string;
+  origin?: "door" | "gate" | "nav";
+  isPopState?: boolean;
 }
 
 export function runRouteTransition(
   type: TransitionType,
   onCover: () => void,
-  options: RouteTransitionOptions = {}
+  options: RouteTransitionOptions = {},
 ) {
-  registerMotionEases()
-  const store = useStore.getState()
-  const { motionEnabled } = store
+  registerMotionEases();
+  const store = useStore.getState();
+  const { motionEnabled } = store;
 
   const fromPath =
-    options.fromPath ?? (typeof window !== 'undefined' ? window.location.pathname : '/')
+    options.fromPath ??
+    (typeof window !== "undefined" ? window.location.pathname : "/");
   const toPath =
     options.toPath ??
-    (type === 'T1'
-      ? '/the-red-room'
-      : type === 'T2'
-        ? '/diwali'
-        : type === 'T4'
-          ? '/'
-          : '/')
+    (type === "T1"
+      ? "/the-red-room"
+      : type === "T2"
+        ? "/diwali"
+        : type === "T4"
+          ? "/"
+          : "/");
 
-  const fromWorld = pathToWorld(fromPath)
-  const toWorld = pathToWorld(toPath)
-  const destSkin = worldToSkin(toWorld)
+  const fromWorld = pathToWorld(fromPath);
+  const toWorld = pathToWorld(toPath);
+  const destSkin = worldToSkin(toWorld);
 
   // Ensure target world's 3D assets begin preloading immediately
-  preloadWorldAssets(toWorld)
+  preloadWorldAssets(toWorld);
 
   // Save current route's scroll position before leaving (Part 10 T5)
   if (!options.isPopState) {
-    saveRouteScroll(fromPath)
+    saveRouteScroll(fromPath);
   }
 
   // Record navigation origin and Home return target (Part 10 T4)
   store.setLastNavigationOrigin(
     options.isPopState
-      ? 'T5'
-      : (type === 'T1' || type === 'T2' || type === 'T3' || type === 'T4' || type === 'T5'
-          ? type
-          : 'direct')
-  )
+      ? "T5"
+      : type === "T1" ||
+          type === "T2" ||
+          type === "T3" ||
+          type === "T4" ||
+          type === "T5"
+        ? type
+        : "direct",
+  );
 
-  if (fromWorld === 'home') {
-    store.setLastHomeOrigin(options.origin === 'door' ? 'door' : 'nav')
+  if (fromWorld === "home") {
+    store.setLastHomeOrigin(options.origin === "door" ? "door" : "nav");
   }
 
-  if (toWorld === 'home' && type === 'T4') {
+  if (toWorld === "home" && type === "T4") {
     const shouldLandAtH5 =
-      options.origin === 'gate' ||
-      (options.origin !== 'nav' && store.lastHomeOrigin === 'door')
-    store.setT4ScrollTarget(shouldLandAtH5 ? 'H5' : 'top')
+      options.origin === "gate" ||
+      (options.origin !== "nav" && store.lastHomeOrigin === "door");
+    store.setT4ScrollTarget(shouldLandAtH5 ? "H5" : "top");
   }
 
   // Clean up any in-flight timeline
   if (activeTimeline) {
-    activeTimeline.kill()
-    activeTimeline = null
+    activeTimeline.kill();
+    activeTimeline = null;
   }
-  if (pendingEnterFallbackTimer !== null && typeof window !== 'undefined') {
-    window.clearTimeout(pendingEnterFallbackTimer)
-    pendingEnterFallbackTimer = null
+  if (pendingEnterFallbackTimer !== null && typeof window !== "undefined") {
+    window.clearTimeout(pendingEnterFallbackTimer);
+    pendingEnterFallbackTimer = null;
   }
-  pendingEnterCallback = null
-  pendingTargetWorld = null
-  isRouteEntered = false
-  isWorldRendered = false
+  pendingEnterCallback = null;
+  pendingTargetWorld = null;
+  isRouteEntered = false;
+  isWorldRendered = false;
 
   // Stop Lenis during exit to prevent visible scroll jump
-  const lenis = getLenis()
+  const lenis = getLenis();
   if (lenis) {
-    lenis.stop()
+    lenis.stop();
   }
 
   // Initialize frame.transition state
-  store.setTransition(type, true)
-  frame.transition.type = type
-  frame.transition.fromWorld = fromWorld
-  frame.transition.toWorld = toWorld
-  frame.transition.phase = 'exit'
-  frame.transition.t = 0
-  frame.transition.elapsed = 0
-  frame.transition.doorProgress = 0
-  frame.transition.dollyProgress = 0
-  frame.transition.curtainClose = 0
-  frame.transition.exposureWash = 0
-  frame.transition.chromAb = 0
-  frame.transition.badgeFlip = 0
+  store.setTransition(type, true);
+  frame.transition.type = type;
+  frame.transition.fromWorld = fromWorld;
+  frame.transition.toWorld = toWorld;
+  frame.transition.phase = "exit";
+  frame.transition.t = 0;
+  frame.transition.elapsed = 0;
+  frame.transition.doorProgress = 0;
+  frame.transition.dollyProgress = 0;
+  frame.transition.curtainClose = 0;
+  frame.transition.exposureWash = 0;
+  frame.transition.chromAb = 0;
+  frame.transition.badgeFlip = 0;
 
   if (!stageRefs?.veilEl) {
-    store.setTargetSkinOverride(destSkin)
-    onCover()
-    resetStageComplete()
-    return
+    store.setTargetSkinOverride(destSkin);
+    onCover();
+    resetStageComplete();
+    return;
   }
 
-  const { stageEl, veilEl, coinEl } = stageRefs
+  const {
+    stageEl,
+    veilEl,
+    coinEl,
+    washEl,
+    curtainWrapEl,
+    leftCurtainEl,
+    rightCurtainEl,
+  } = stageRefs;
   if (stageEl) {
-    stageEl.style.pointerEvents = 'auto'
-    gsap.set(stageEl, { pointerEvents: 'auto' })
+    stageEl.style.pointerEvents = "auto";
+    gsap.set(stageEl, { pointerEvents: "auto" });
   }
-  gsap.set(veilEl, { opacity: 0 })
+  gsap.set(veilEl, { opacity: options.isPopState ? 1 : 0 });
   if (coinEl) {
-    gsap.set(coinEl, { opacity: 0, scale: 0.92 })
+    gsap.set(coinEl, { opacity: 0, scale: 0.92 });
   }
 
-  const mainEl = typeof document !== 'undefined' ? document.getElementById('main-content') : null
+  const mainEl =
+    typeof document !== "undefined"
+      ? document.getElementById("main-content")
+      : null;
 
   // Helper to await BOTH destination DOM mount AND 3D WebGL frame readiness at cover point
   const triggerCoverAndWaitForMount = (enterFn: () => void) => {
-    frame.transition.phase = 'covered'
+    frame.transition.phase = "covered";
 
     // Scroll to top or restored position with { immediate: true } while covered
     const targetScroll =
-      toWorld === 'home'
-        ? (store.t4ScrollTarget === 'H5' ? getSavedRouteScroll('/') : 0)
-        : 0
+      toWorld === "home"
+        ? store.t4ScrollTarget === "H5"
+          ? getSavedRouteScroll("/")
+          : 0
+        : 0;
     if (lenis) {
-      lenis.scrollTo(targetScroll, { immediate: true })
-    } else if (typeof window !== 'undefined') {
-      window.scrollTo({ top: targetScroll, behavior: 'instant' as ScrollBehavior })
+      lenis.scrollTo(targetScroll, { immediate: true });
+    } else if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: targetScroll,
+        behavior: "instant" as ScrollBehavior,
+      });
     }
 
-    frame.snapCamera = true
+    frame.snapCamera = true;
 
-    const currentStore = useStore.getState()
-    pendingTargetWorld = toWorld
-    isRouteEntered = false
-    isWorldRendered = Boolean(currentStore.renderedWorlds[toWorld] || currentStore.tier === 'T0')
+    const currentStore = useStore.getState();
+    pendingTargetWorld = toWorld;
+    isRouteEntered = Boolean(options.isPopState);
+    isWorldRendered = Boolean(
+      currentStore.tier === "T0" ||
+      (options.isPopState && currentStore.renderedWorlds[toWorld]),
+    );
 
     pendingEnterCallback = () => {
-      if (lenis) lenis.start()
-      enterFn()
-    }
+      if (lenis) lenis.start();
+      enterFn();
+    };
 
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       pendingEnterFallbackTimer = window.setTimeout(() => {
-        tryProceedEnter(true)
-      }, 950)
+        tryProceedEnter(true);
+      }, 10000);
     }
 
-    onCover()
+    onCover();
+    tryProceedEnter(false);
+  };
+
+  // Every URL mutation is behind a fully opaque veil. Each world supplies its
+  // own closing medium; the incoming scene renders before that cover lifts.
+  const outDur = !motionEnabled
+    ? 0.15
+    : type === "T1"
+      ? 0.95
+      : type === "T2"
+        ? 0.65
+        : type === "T4"
+          ? 0.4
+          : options.isPopState
+            ? 0.15
+            : 0.55;
+  const inDur = !motionEnabled
+    ? 0.15
+    : type === "T1"
+      ? 0.65
+      : type === "T2"
+        ? 0.2
+        : type === "T4"
+          ? 0.4
+          : options.isPopState
+            ? 0.15
+            : 0.55;
+  const curtainExit =
+    motionEnabled &&
+    !options.isPopState &&
+    (type === "T1" || (type === "T3" && fromWorld === "redroom"));
+  const goldExit =
+    motionEnabled &&
+    !options.isPopState &&
+    (type === "T2" || (type === "T3" && fromWorld === "diwali"));
+  frame.transition.duration = outDur + inDur;
+  frame.transition.coverTime = outDur;
+  if (curtainWrapEl)
+    gsap.set(curtainWrapEl, { visibility: curtainExit ? "visible" : "hidden" });
+  if (leftCurtainEl && rightCurtainEl) {
+    gsap.set(leftCurtainEl, { xPercent: -101 });
+    gsap.set(rightCurtainEl, { xPercent: 101 });
   }
-
-  // Classy minimalistic two-step transition with centered pink badge on luxury dark vignette
-  const outDur = motionEnabled ? 0.28 : 0.14
-  const coinFadeDur = motionEnabled ? 0.42 : 0.18
-  const veilOverlap = motionEnabled ? 0.14 : 0.04
-  const veilFadeDur = motionEnabled ? 0.48 : 0.2
-  const inDur = veilOverlap + veilFadeDur
-
-  frame.transition.duration = outDur + inDur
-  frame.transition.coverTime = outDur
-
   const exitTl = gsap.timeline({
     onUpdate: function () {
-      const time = this.time()
-      frame.transition.elapsed = time
-      frame.transition.t = time / (outDur + inDur)
+      frame.transition.elapsed = this.time();
+      frame.transition.t = this.time() / (outDur + inDur);
     },
     onComplete: () => {
-      store.setTargetSkinOverride(destSkin)
+      gsap.set(veilEl, { opacity: 1 });
+      if (washEl) gsap.set(washEl, { opacity: 0 });
+      store.setTargetSkinOverride(destSkin);
       triggerCoverAndWaitForMount(() => {
-        frame.transition.phase = 'enter'
+        frame.transition.phase = "enter";
+        frame.transition.dollyProgress = 0;
+        const destination = document.getElementById("main-content");
+        if (destination) gsap.set(destination, { opacity: 1 });
         const enterTl = gsap.timeline({
-          onUpdate: function () {
-            const enterTime = this.time()
-            frame.transition.elapsed = outDur + enterTime
-            frame.transition.t = Math.min(1, (outDur + enterTime) / (outDur + inDur))
-          },
           onComplete: resetStageComplete,
-        })
-
-        // Step 1: Centered pink coin smoothly scales down slightly and melts into the dark vignette
-        if (coinEl) {
+          onUpdate: function () {
+            frame.transition.elapsed = outDur + this.time();
+            frame.transition.t = (outDur + this.time()) / (outDur + inDur);
+          },
+        });
+        if (
+          motionEnabled &&
+          toWorld === "redroom" &&
+          !options.isPopState &&
+          curtainWrapEl &&
+          leftCurtainEl &&
+          rightCurtainEl
+        ) {
+          gsap.set(curtainWrapEl, { visibility: "visible" });
+          gsap.set([leftCurtainEl, rightCurtainEl], { xPercent: 0 });
+          gsap.set(veilEl, { opacity: 0 });
           enterTl.to(
-            coinEl,
-            {
-              opacity: 0,
-              scale: 0.92,
-              duration: coinFadeDur,
-              ease: 'power2.inOut',
-              force3D: true,
-            },
-            0
-          )
+            leftCurtainEl,
+            { xPercent: -101, duration: inDur, ease: "ease.inOut" },
+            0,
+          );
+          enterTl.to(
+            rightCurtainEl,
+            { xPercent: 101, duration: inDur, ease: "ease.inOut" },
+            0,
+          );
+        } else {
+          if (curtainWrapEl) gsap.set(curtainWrapEl, { visibility: "hidden" });
+          enterTl.to(
+            veilEl,
+            { opacity: 0, duration: inDur, ease: "ease.out" },
+            0,
+          );
+          if (motionEnabled && toWorld === "diwali" && washEl) {
+            enterTl.fromTo(
+              washEl,
+              { opacity: 0.28 },
+              { opacity: 0, duration: inDur * 0.7, ease: "ease.out" },
+              0,
+            );
+          }
         }
-
-        // Release pointer-events as soon as the veil begins lifting so user can immediately interact/scroll
-        enterTl.call(
-          () => {
-            if (stageEl) {
-              stageEl.style.pointerEvents = 'none'
-            }
-          },
-          [],
-          veilOverlap
-        )
-
-        // Step 2: Dark vignette smoothly lifts to reveal the warm 3D world
-        enterTl.to(
-          veilEl,
-          {
-            opacity: 0,
-            duration: veilFadeDur,
-            ease: 'power2.out',
-          },
-          veilOverlap
-        )
-
-        activeTimeline = enterTl
-      })
+        activeTimeline = enterTl;
+      });
     },
-  })
-
-  // Fade out current page content
-  if (mainEl) {
+  });
+  if (motionEnabled && (type === "T1" || type === "T2")) {
+    exitTl.to(
+      frame.transition,
+      { doorProgress: 1, duration: outDur * 0.45, ease: "ease.inOut" },
+      0,
+    );
+    exitTl.to(
+      frame.transition,
+      { dollyProgress: 1, duration: outDur * 0.75, ease: "ease.inOut" },
+      outDur * 0.25,
+    );
+  } else if (motionEnabled && type === "T4") {
+    exitTl.to(
+      frame.transition,
+      { dollyProgress: 1, duration: outDur, ease: "ease.inOut" },
+      0,
+    );
+  } else if (motionEnabled && type === "T3") {
+    exitTl.to(
+      frame.transition,
+      { badgeFlip: 1, duration: outDur, ease: "ease.inOut" },
+      0,
+    );
+  }
+  const coverStart = curtainExit
+    ? Math.max(0, outDur - 0.5)
+    : goldExit
+      ? outDur - 0.25
+      : 0;
+  if (mainEl)
     exitTl.to(
       mainEl,
-      {
-        opacity: 0,
-        duration: outDur * 0.72,
-        ease: 'power1.out',
-      },
-      0
-    )
-  }
-
-  // Smoothly fade in the dark vignette veil
-  exitTl.to(
-    veilEl,
-    {
-      opacity: 1,
-      duration: outDur,
-      ease: 'power2.inOut',
-    },
-    0
-  )
-
-  // Materialize the centered pink coin
-  if (coinEl) {
+      { opacity: 0, duration: Math.min(0.39, outDur), ease: "ease.in" },
+      curtainExit ? outDur - 0.39 : 0,
+    );
+  if (curtainExit && leftCurtainEl && rightCurtainEl) {
     exitTl.to(
-      coinEl,
+      leftCurtainEl,
+      { xPercent: 0, duration: 0.5, ease: "ease.inOut" },
+      coverStart,
+    );
+    exitTl.to(
+      rightCurtainEl,
+      { xPercent: 0, duration: 0.5, ease: "ease.inOut" },
+      coverStart,
+    );
+  }
+  if (goldExit && washEl)
+    exitTl.to(
+      washEl,
       {
         opacity: 1,
-        scale: 1,
-        duration: outDur,
-        ease: 'power2.out',
-        force3D: true,
+        duration: Math.max(0.1, outDur - 0.25),
+        ease: "ease.inOut",
       },
-      0.03
-    )
-  }
-
-  activeTimeline = exitTl
+      0.25,
+    );
+  exitTl.to(
+    veilEl,
+    { opacity: 1, duration: outDur - coverStart, ease: "ease.inOut" },
+    coverStart,
+  );
+  activeTimeline = exitTl;
 }

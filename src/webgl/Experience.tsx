@@ -1,19 +1,36 @@
-'use client';
+"use client";
 
-import React, { Component, useEffect, useRef, useState } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { PerformanceMonitor } from '@react-three/drei';
-import * as THREE from 'three';
-import { frame } from '@/state/frame';
-import { QualityProvider, useQuality } from './QualityProvider';
-import { CameraRig } from './CameraRig';
-import { WorldDirector } from './WorldDirector';
-import { Precompile } from './Precompile';
-import { DoorProjector } from './tracking/DoorProjector';
-import { CardProjector } from './tracking/CardProjector';
-import { PostFX } from './PostFX';
-import { FallbackPoster } from './FallbackPoster';
-import { setWebglAdvance } from '@/motion/clock';
+import React, { Component, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { PerformanceMonitor } from "@react-three/drei";
+import * as THREE from "three";
+import { frame } from "@/state/frame";
+import { QualityProvider, useQuality } from "./QualityProvider";
+import { CameraRig } from "./CameraRig";
+import { WorldDirector } from "./WorldDirector";
+import { Precompile } from "./Precompile";
+import { DoorProjector } from "./tracking/DoorProjector";
+import { CardProjector } from "./tracking/CardProjector";
+import { PostFX } from "./PostFX";
+import { FallbackPoster } from "./FallbackPoster";
+import { setWebglAdvance } from "@/motion/clock";
+import { useStore } from "@/state/store";
+
+function RendererGrade() {
+  const { gl } = useThree();
+  const { settings } = useQuality();
+  const world = useStore((s) => s.world);
+  useEffect(() => {
+    // Canvas constructor options are not reapplied when adaptive quality drops.
+    // Keep the non-composer path on AgX as well as the postprocessed path.
+    gl.toneMapping = settings.hasComposer
+      ? THREE.NoToneMapping
+      : THREE.AgXToneMapping;
+    gl.toneMappingExposure =
+      world === "redroom" ? 0.82 : world === "diwali" ? 0.88 : 1;
+  }, [gl, settings.hasComposer, world]);
+  return null;
+}
 
 interface ErrorBoundaryProps {
   onError: () => void;
@@ -24,7 +41,10 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-class AssetErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class AssetErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
@@ -51,8 +71,8 @@ function TransitionTuning({ baseDpr }: { baseDpr: number | [number, number] }) {
   const dprVal = Array.isArray(baseDpr) ? baseDpr[1] : baseDpr;
 
   useFrame(() => {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      if (frame.transition.phase !== 'idle') {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      if (frame.transition.phase !== "idle") {
         const reducedDpr = Math.max(1, dprVal - 0.25);
         if (gl.getPixelRatio() !== reducedDpr) {
           gl.setPixelRatio(reducedDpr);
@@ -80,7 +100,7 @@ function CanvasInner() {
   useEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
-      if (params.get('assetError') === '1') {
+      if (params.get("assetError") === "1") {
         setAssetFailed(true);
       }
     } catch {
@@ -92,15 +112,15 @@ function CanvasInner() {
       setWebglAdvance(() => {});
     };
 
-    window.addEventListener('underdogs:asset-error', onAssetError);
+    window.addEventListener("underdogs:asset-error", onAssetError);
     return () => {
-      window.removeEventListener('underdogs:asset-error', onAssetError);
+      window.removeEventListener("underdogs:asset-error", onAssetError);
     };
   }, []);
 
   // Wire gl.advance into the unified clock ticker
   useEffect(() => {
-    if (advanceRef.current && !contextLost && !assetFailed && tier !== 'T0') {
+    if (advanceRef.current && !contextLost && !assetFailed && tier !== "T0") {
       setWebglAdvance((time) => {
         advanceRef.current?.(time);
       });
@@ -117,7 +137,7 @@ function CanvasInner() {
     };
   }, []);
 
-  if (tier === 'T0' || assetFailed) {
+  if (tier === "T0" || assetFailed) {
     return <FallbackPoster showAssetNotice={assetFailed} />;
   }
 
@@ -134,11 +154,13 @@ function CanvasInner() {
           frameloop="never"
           dpr={settings.dpr}
           gl={{
-            powerPreference: 'high-performance',
-            antialias: settings.tier !== 'T1',
+            powerPreference: "high-performance",
+            antialias: settings.tier !== "T1",
             alpha: true,
             outputColorSpace: THREE.SRGBColorSpace,
-            toneMapping: settings.hasComposer ? THREE.NoToneMapping : THREE.NeutralToneMapping,
+            toneMapping: settings.hasComposer
+              ? THREE.NoToneMapping
+              : THREE.AgXToneMapping,
           }}
           camera={{
             fov: 34,
@@ -149,11 +171,13 @@ function CanvasInner() {
           onCreated={({ gl, advance }) => {
             advanceRef.current = advance;
             setWebglAdvance((time) => advance(time));
-            (window as unknown as { __threeRenderer?: THREE.WebGLRenderer }).__threeRenderer = gl;
+            (
+              window as unknown as { __threeRenderer?: THREE.WebGLRenderer }
+            ).__threeRenderer = gl;
 
             const domEl = gl.domElement;
             const glCtx = gl.getContext();
-            const loseExt = glCtx?.getExtension('WEBGL_lose_context') ?? null;
+            const loseExt = glCtx?.getExtension("WEBGL_lose_context") ?? null;
 
             // Expose helper on window for QA testing of Part 13.8 context-loss recovery
             (
@@ -176,7 +200,7 @@ function CanvasInner() {
               // Part 13.8: On a second loss, drop to T0 permanently
               if (lossCountRef.current >= 2) {
                 setContextLost(false);
-                setTier('T0');
+                setTier("T0");
                 return;
               }
 
@@ -200,23 +224,30 @@ function CanvasInner() {
               }
             };
 
-            domEl.addEventListener('webglcontextlost', onContextLost, false);
-            domEl.addEventListener('webglcontextrestored', onContextRestored, false);
+            domEl.addEventListener("webglcontextlost", onContextLost, false);
+            domEl.addEventListener(
+              "webglcontextrestored",
+              onContextRestored,
+              false,
+            );
 
             cleanupContextListenersRef.current = () => {
-              domEl.removeEventListener('webglcontextlost', onContextLost);
-              domEl.removeEventListener('webglcontextrestored', onContextRestored);
+              domEl.removeEventListener("webglcontextlost", onContextLost);
+              domEl.removeEventListener(
+                "webglcontextrestored",
+                onContextRestored,
+              );
             };
           }}
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
             opacity: contextLost ? 0 : 1,
-            transition: 'opacity 250ms ease-out',
+            transition: "opacity 250ms ease-out",
           }}
         >
           {/* Adaptive degradation (Part 5.5, Part 13.1 & Part 16): steps down on sustained low FPS, never oscillates */}
@@ -227,6 +258,7 @@ function CanvasInner() {
             }}
           />
           <TransitionTuning baseDpr={settings.dpr} />
+          <RendererGrade />
           <CameraRig />
           <WorldDirector />
           <DoorProjector />

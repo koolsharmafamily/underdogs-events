@@ -5,7 +5,7 @@
  * discard logic based on uRole (0: outgoing, 1: incoming), and glowing edge emission.
  */
 
-import * as THREE from 'three';
+import * as THREE from "three";
 
 export interface DissolveUniforms {
   uDissolve: { value: number };
@@ -87,10 +87,10 @@ float snoise(vec3 v){
 export function injectDissolve(
   material: THREE.Material,
   uniforms: DissolveUniforms,
-  cacheKeySuffix: string = ''
 ) {
   material.customProgramCacheKey = function () {
-    return `dissolve_patch_${cacheKeySuffix}`;
+    // All skins use identical shader source; uniforms carry skin differences.
+    return "underdogs_dissolve_v2";
   };
 
   material.onBeforeCompile = (shader) => {
@@ -102,19 +102,19 @@ export function injectDissolve(
 
     // Vertex shader injection: pass object space position
     shader.vertexShader = shader.vertexShader.replace(
-      '#include <common>',
+      "#include <common>",
       `#include <common>
-       varying vec3 vObjPos;`
+       varying vec3 vObjPos;`,
     );
     shader.vertexShader = shader.vertexShader.replace(
-      '#include <begin_vertex>',
+      "#include <begin_vertex>",
       `#include <begin_vertex>
-       vObjPos = position;`
+       vObjPos = position;`,
     );
 
     // Fragment shader injection: noise sampling & discard & edge glow
     shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <common>',
+      "#include <common>",
       `#include <common>
        varying vec3 vObjPos;
        uniform float uDissolve;
@@ -122,11 +122,11 @@ export function injectDissolve(
        uniform vec3 uEdgeColor;
        uniform float uEdgeIntensity;
        uniform float uEdgeWidth;
-       ${NOISE_3D_GLSL}`
+       ${NOISE_3D_GLSL}`,
     );
 
     shader.fragmentShader = shader.fragmentShader.replace(
-      '#include <dithering_fragment>',
+      "#include <dithering_fragment>",
       `#include <dithering_fragment>
        if (uDissolve >= -0.05 && uDissolve <= 1.05) {
          float n = snoise(vObjPos * 3.5) * 0.5 + 0.5;
@@ -138,7 +138,7 @@ export function injectDissolve(
          }
          float edge = 1.0 - smoothstep(0.0, uEdgeWidth, abs(d));
          gl_FragColor.rgb += uEdgeColor * edge * uEdgeIntensity;
-       }`
+       }`,
     );
   };
 }

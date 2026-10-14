@@ -1,19 +1,20 @@
-'use client';
+"use client";
 
-import React, { useRef, useMemo } from 'react';
-import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-import { DiyaField } from './DiyaField';
-import { PetalField } from './PetalField';
-import { DrapesSky } from './DrapesSky';
-import { Fireworks } from './Fireworks';
-import { DiwaliCard } from './DiwaliCard';
-import { DiwaliCardProjector } from '@/webgl/tracking/DiwaliCardProjector';
-import { CinemaLightbox } from './CinemaLightbox';
-import { AnchorFlames, getAnchorOffsetFromRoot } from '../fx/Flame';
+import React, { useRef, useMemo } from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { StageFloor } from "../StageFloor";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { DiyaField } from "./DiyaField";
+import { PetalField } from "./PetalField";
+import { DrapesSky } from "./DrapesSky";
+import { Fireworks } from "./Fireworks";
+import { DiwaliCard } from "./DiwaliCard";
+import { DiwaliCardProjector } from "@/webgl/tracking/DiwaliCardProjector";
+import { CinemaLightbox } from "./CinemaLightbox";
+import { AnchorFlames, getAnchorOffsetFromRoot } from "../fx/Flame";
 
 interface KandilSpec {
   pos: [number, number, number];
@@ -32,7 +33,7 @@ const KANDIL_SPECS: KandilSpec[] = [
 ];
 
 export function DiwaliSet() {
-  const kandilGltf = useGLTF('/models/diwali-kandil.glb');
+  const kandilGltf = useGLTF("/models/diwali-kandil.glb");
 
   // Max 3 real point lights in Diwali (Global Rule 7)
   const diyaLightRef = useRef<THREE.PointLight>(null);
@@ -44,24 +45,30 @@ export function DiwaliSet() {
   const anchorVec = useMemo(() => new THREE.Vector3(), []);
 
   // Extract sub-meshes from diwali-kandil.glb for InstancedMesh rendering + Light_Anchor offset
-  const { kandilSubMeshes, lightAnchorOffset, kandilAnchorNodes, kandilAnchorsGroup } = useMemo(() => {
-    const subs: { geometry: THREE.BufferGeometry; material: THREE.Material }[] = [];
+  const {
+    kandilSubMeshes,
+    lightAnchorOffset,
+    kandilAnchorNodes,
+    kandilAnchorsGroup,
+  } = useMemo(() => {
+    const subs: { geometry: THREE.BufferGeometry; material: THREE.Material }[] =
+      [];
     kandilGltf.scene.traverse((node) => {
       if ((node as THREE.Mesh).isMesh) {
         const m = node as THREE.Mesh;
         const origMat = Array.isArray(m.material) ? m.material[0] : m.material;
         const mat = origMat.clone() as THREE.MeshStandardMaterial;
         // Enhance warm inner lantern glow on Paper_Rani without altering its color
-        if (mat.name === 'Paper_Rani' && mat.emissive) {
+        if (mat.name === "Paper_Rani" && mat.emissive) {
           mat.emissiveIntensity = Math.max(mat.emissiveIntensity ?? 0.5, 0.85);
         }
         subs.push({ geometry: m.geometry, material: mat });
       }
     });
 
-    const offset = getAnchorOffsetFromRoot(kandilGltf.scene, 'Light_Anchor');
+    const offset = getAnchorOffsetFromRoot(kandilGltf.scene, "Light_Anchor");
     const group = new THREE.Group();
-    group.name = 'KandilLightAnchors';
+    group.name = "KandilLightAnchors";
     const anchors: THREE.Object3D[] = KANDIL_SPECS.map((spec, idx) => {
       const obj = new THREE.Object3D();
       obj.name = `Kandil_Light_Anchor_${idx + 1}`;
@@ -80,7 +87,7 @@ export function DiwaliSet() {
 
   useFrame(() => {
     const st = useStore.getState();
-    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
+    if (st.world !== "diwali" && st.previousWorld !== "diwali") return;
     const t = frame.time;
 
     // 1. Diya & Kandil point lights gentle warm breathing (Max 3 real point lights total)
@@ -127,9 +134,17 @@ export function DiwaliSet() {
       <DiwaliCardProjector />
 
       {/* Directional & Ambient Lighting per Part 5.4 */}
-      <ambientLight intensity={0.38} color="#350E22" />
-      <directionalLight position={[-4.0, 5.5, 4.0]} intensity={2.6} color="#FFD9A0" />
-      <directionalLight position={[4.0, 3.0, 3.0]} intensity={1.4} color="#FF6FB0" />
+      <ambientLight intensity={0.18} color="#350E22" />
+      <directionalLight
+        position={[-4.0, 5.5, 4.0]}
+        intensity={1.05}
+        color="#FFD9A0"
+      />
+      <directionalLight
+        position={[4.0, 3.0, 3.0]}
+        intensity={0.22}
+        color="#FF6FB0"
+      />
 
       {/* Max 3 Real Point Lights in Diwali (Global Rule 7) */}
       {/* Point Light 1: Diya floor & badge warm glow */}
@@ -161,10 +176,7 @@ export function DiwaliSet() {
       />
 
       {/* Floor: Ivory-plum marble floor with soft reflections (Part 5.4) */}
-      <mesh name="DiwaliFloor" position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[32, 32]} />
-        <meshStandardMaterial color="#160C14" roughness={0.32} metalness={0.45} />
-      </mesh>
+      <StageFloor world="diwali" />
 
       {/* Single Front Proscenium (curtain-open-diwali.glb) + Lifting back_L/back_R Drapes & Haveli Sky */}
       <DrapesSky />

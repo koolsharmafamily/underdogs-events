@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import React from 'react'
-import { site } from '@/content/site'
-import { useStore } from '@/state/store'
-import { runFadeCutJump } from '@/motion/transitions'
-import { MotionToggle } from './MotionToggle'
-import { UnderdogsBadgeSvg } from './UnderdogsBadgeSvg'
+import React from "react";
+import { site } from "@/content/site";
+import { useStore } from "@/state/store";
+import { runFadeCutJump } from "@/motion/transitions";
+
+import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
 
 /**
  * Part 7 H6 · Footer
@@ -17,17 +17,17 @@ import { UnderdogsBadgeSvg } from './UnderdogsBadgeSvg'
  * - "Back to top ↑", which is internal (fade-cut jump if crossing > 2 scenes)
  */
 export function Footer() {
-  const world = useStore((s) => s.world)
+  const world = useStore((s) => s.world);
 
   const handleBackToTop = () => {
     const crossedMoreThanTwoScenes =
-      typeof window !== 'undefined' && window.scrollY > window.innerHeight * 2
+      typeof window !== "undefined" && window.scrollY > window.innerHeight * 2;
     if (crossedMoreThanTwoScenes) {
-      runFadeCutJump(0)
+      runFadeCutJump(0);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }
+  };
 
   return (
     <footer
@@ -52,8 +52,6 @@ export function Footer() {
             {site.footer.copyright}
           </span>
 
-          <MotionToggle />
-
           <button
             type="button"
             onClick={handleBackToTop}
@@ -65,7 +63,13 @@ export function Footer() {
                 Back to top
               </span>
             </span>
-            <svg width="10" height="12" viewBox="0 0 10 12" fill="none" aria-hidden="true">
+            <svg
+              width="10"
+              height="12"
+              viewBox="0 0 10 12"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
                 d="M5 11V1.5M5 1.5L1.5 5M5 1.5L8.5 5"
                 stroke="currentColor"
@@ -76,5 +80,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

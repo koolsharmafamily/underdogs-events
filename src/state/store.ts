@@ -1,85 +1,85 @@
-import { create } from 'zustand'
-import type { WorldId } from '@/theme/tokens'
-import type { TransitionType } from './frame'
+import { create } from "zustand";
+import type { WorldId } from "@/theme/tokens";
+import type { TransitionType } from "./frame";
 
-export type QualityTier = 'T3' | 'T2' | 'T1' | 'T0'
-export type LoaderPhase = 'loading' | 'ready' | 'complete'
-export type SkinOverride = 'enamel' | 'neon' | 'jewelled' | null
-export type NavigationOrigin = 'direct' | 'T1' | 'T2' | 'T3' | 'T4' | 'T5'
+export type QualityTier = "T3" | "T2" | "T1" | "T0";
+export type LoaderPhase = "loading" | "ready" | "complete";
+export type SkinOverride = "enamel" | "neon" | "jewelled" | null;
+export type NavigationOrigin = "direct" | "T1" | "T2" | "T3" | "T4" | "T5";
 
 export interface AppStore {
-  world: WorldId
-  previousWorld: WorldId | null
-  phase: LoaderPhase
-  tier: QualityTier
-  motionEnabled: boolean
-  prefersReducedMotion: boolean
-  hoverDoor: 'redroom' | 'diwali' | null
-  transitionType: TransitionType
-  isTransitioning: boolean
-  targetSkinOverride: SkinOverride
-  lastNavigationOrigin: NavigationOrigin
-  lastHomeOrigin: 'door' | 'nav'
-  t4ScrollTarget: 'H5' | 'top'
-  menuOpen: boolean
-  hintsSeen: Record<string, boolean>
-  blinkTrigger: number
-  loadingProgress: number
-  isPrecompiled: boolean
-  loaderPopped: boolean
-  renderedWorlds: Record<WorldId, boolean>
+  world: WorldId;
+  previousWorld: WorldId | null;
+  phase: LoaderPhase;
+  tier: QualityTier;
+  motionEnabled: boolean;
+  prefersReducedMotion: boolean;
+  hoverDoor: "redroom" | "diwali" | null;
+  transitionType: TransitionType;
+  isTransitioning: boolean;
+  targetSkinOverride: SkinOverride;
+  lastNavigationOrigin: NavigationOrigin;
+  lastHomeOrigin: "door" | "nav";
+  t4ScrollTarget: "H5" | "top";
+  menuOpen: boolean;
+  hintsSeen: Record<string, boolean>;
+  blinkTrigger: number;
+  loadingProgress: number;
+  isPrecompiled: boolean;
+  loaderPopped: boolean;
+  renderedWorlds: Record<WorldId, boolean>;
 
-  setWorld: (world: WorldId) => void
-  setPhase: (phase: LoaderPhase) => void
-  setTier: (tier: QualityTier) => void
-  setLoadingProgress: (progress: number) => void
-  setPrecompiled: (precompiled: boolean) => void
-  setLoaderPopped: (popped: boolean) => void
-  markWorldRendered: (world: WorldId) => void
-  setMotionEnabled: (enabled: boolean, persist?: boolean) => void
-  toggleMotion: () => void
-  setPrefersReducedMotion: (reduced: boolean) => void
-  setHoverDoor: (door: 'redroom' | 'diwali' | null) => void
-  setTransition: (type: TransitionType, active: boolean) => void
-  setTargetSkinOverride: (skin: SkinOverride) => void
-  setLastNavigationOrigin: (origin: NavigationOrigin) => void
-  setLastHomeOrigin: (origin: 'door' | 'nav') => void
-  setT4ScrollTarget: (target: 'H5' | 'top') => void
-  setMenuOpen: (open: boolean) => void
-  markHintSeen: (id: string) => void
-  triggerBlink: () => void
+  setWorld: (world: WorldId) => void;
+  setPhase: (phase: LoaderPhase) => void;
+  setTier: (tier: QualityTier) => void;
+  setLoadingProgress: (progress: number) => void;
+  setPrecompiled: (precompiled: boolean) => void;
+  setLoaderPopped: (popped: boolean) => void;
+  markWorldRendered: (world: WorldId) => void;
+  setMotionEnabled: (enabled: boolean, persist?: boolean) => void;
+  toggleMotion: () => void;
+  setPrefersReducedMotion: (reduced: boolean) => void;
+  setHoverDoor: (door: "redroom" | "diwali" | null) => void;
+  setTransition: (type: TransitionType, active: boolean) => void;
+  setTargetSkinOverride: (skin: SkinOverride) => void;
+  setLastNavigationOrigin: (origin: NavigationOrigin) => void;
+  setLastHomeOrigin: (origin: "door" | "nav") => void;
+  setT4ScrollTarget: (target: "H5" | "top") => void;
+  setMenuOpen: (open: boolean) => void;
+  markHintSeen: (id: string) => void;
+  triggerBlink: () => void;
 }
 
-const MOTION_STORAGE_KEY = 'underdogs-motion-enabled'
+const MOTION_STORAGE_KEY = "underdogs-motion-enabled";
 
 function syncDocumentDataset(world: WorldId, motionEnabled: boolean) {
-  if (typeof document === 'undefined') return
-  document.documentElement.dataset.world = world
-  document.documentElement.dataset.motion = motionEnabled ? 'on' : 'off'
+  if (typeof document === "undefined") return;
+  document.documentElement.dataset.world = world;
+  document.documentElement.dataset.motion = motionEnabled ? "on" : "off";
 }
 
 function getInitialWorld(): WorldId {
-  if (typeof window === 'undefined') return 'home'
-  const path = window.location.pathname
-  if (path.startsWith('/the-red-room')) return 'redroom'
-  if (path.startsWith('/diwali')) return 'diwali'
-  return 'home'
+  if (typeof window === "undefined") return "home";
+  const path = window.location.pathname;
+  if (path.startsWith("/the-red-room")) return "redroom";
+  if (path.startsWith("/diwali")) return "diwali";
+  return "home";
 }
 
 export const useStore = create<AppStore>((set, get) => ({
   world: getInitialWorld(),
   previousWorld: null,
-  phase: 'loading',
-  tier: 'T3',
+  phase: "loading",
+  tier: "T3",
   motionEnabled: true,
   prefersReducedMotion: false,
   hoverDoor: null,
-  transitionType: 'none',
+  transitionType: "none",
   isTransitioning: false,
   targetSkinOverride: null,
-  lastNavigationOrigin: 'direct',
-  lastHomeOrigin: 'nav',
-  t4ScrollTarget: 'top',
+  lastNavigationOrigin: "direct",
+  lastHomeOrigin: "nav",
+  t4ScrollTarget: "top",
   menuOpen: false,
   hintsSeen: {},
   blinkTrigger: 0,
@@ -89,13 +89,17 @@ export const useStore = create<AppStore>((set, get) => ({
   renderedWorlds: { home: false, redroom: false, diwali: false },
 
   setWorld: (world) => {
-    const cur = get().world
-    const isTr = get().isTransitioning
+    const cur = get().world;
+    const isTr = get().isTransitioning;
     set({
       world,
+      renderedWorlds:
+        cur !== world
+          ? { ...get().renderedWorlds, [world]: false }
+          : get().renderedWorlds,
       previousWorld: cur !== world && isTr ? cur : get().previousWorld,
-    })
-    syncDocumentDataset(world, get().motionEnabled)
+    });
+    syncDocumentDataset(world, get().motionEnabled);
   },
 
   setPhase: (phase) => set({ phase }),
@@ -112,15 +116,15 @@ export const useStore = create<AppStore>((set, get) => ({
     set((state) =>
       state.renderedWorlds[w]
         ? state
-        : { renderedWorlds: { ...state.renderedWorlds, [w]: true } }
+        : { renderedWorlds: { ...state.renderedWorlds, [w]: true } },
     ),
 
   setMotionEnabled: (enabled, persist = true) => {
-    set({ motionEnabled: enabled })
-    syncDocumentDataset(get().world, enabled)
-    if (persist && typeof window !== 'undefined') {
+    set({ motionEnabled: enabled });
+    syncDocumentDataset(get().world, enabled);
+    if (persist && typeof window !== "undefined") {
       try {
-        window.localStorage.setItem(MOTION_STORAGE_KEY, enabled ? '1' : '0')
+        window.localStorage.setItem(MOTION_STORAGE_KEY, enabled ? "1" : "0");
       } catch {
         // Ignore storage errors per Part 12.2
       }
@@ -128,31 +132,13 @@ export const useStore = create<AppStore>((set, get) => ({
   },
 
   toggleMotion: () => {
-    const next = !get().motionEnabled
-    get().setMotionEnabled(next, true)
+    const next = !get().motionEnabled;
+    get().setMotionEnabled(next, true);
   },
 
   setPrefersReducedMotion: (reduced) => {
-    set({ prefersReducedMotion: reduced })
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = window.localStorage.getItem(MOTION_STORAGE_KEY)
-        if (stored === '0') {
-          set({ motionEnabled: false })
-          syncDocumentDataset(get().world, false)
-          return
-        }
-        if (stored === '1') {
-          set({ motionEnabled: true })
-          syncDocumentDataset(get().world, true)
-          return
-        }
-      } catch {
-        // Ignore storage errors
-      }
-    }
-    set({ motionEnabled: true })
-    syncDocumentDataset(get().world, true)
+    set({ prefersReducedMotion: reduced, motionEnabled: !reduced });
+    syncDocumentDataset(get().world, !reduced);
   },
 
   setHoverDoor: (hoverDoor) => set({ hoverDoor }),
@@ -166,7 +152,8 @@ export const useStore = create<AppStore>((set, get) => ({
 
   setTargetSkinOverride: (targetSkinOverride) => set({ targetSkinOverride }),
 
-  setLastNavigationOrigin: (lastNavigationOrigin) => set({ lastNavigationOrigin }),
+  setLastNavigationOrigin: (lastNavigationOrigin) =>
+    set({ lastNavigationOrigin }),
 
   setLastHomeOrigin: (lastHomeOrigin) => set({ lastHomeOrigin }),
 
@@ -179,5 +166,6 @@ export const useStore = create<AppStore>((set, get) => ({
       hintsSeen: { ...state.hintsSeen, [id]: true },
     })),
 
-  triggerBlink: () => set((state) => ({ blinkTrigger: state.blinkTrigger + 1 })),
-}))
+  triggerBlink: () =>
+    set((state) => ({ blinkTrigger: state.blinkTrigger + 1 })),
+}));

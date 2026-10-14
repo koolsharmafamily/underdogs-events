@@ -1,15 +1,17 @@
-'use client';
+"use client";
 
-import React, { useRef, useMemo, useEffect } from 'react';
-import * as THREE from 'three';
-import { useGLTF, useTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-import { AnchorFlames, findAnchorNodes, groundObjectToY } from '../fx/Flame';
-import { SmokeDragon } from './SmokeDragon';
-import { MirrorFog } from './MirrorFog';
-import { InvitationTray } from './InvitationTray';
+import React, { useRef, useMemo, useEffect } from "react";
+import * as THREE from "three";
+import { useGLTF, useTexture } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { StageFloor } from "../StageFloor";
+import { batchStaticSiblings } from "../batchStaticSiblings";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
+import { SmokeDragon } from "./SmokeDragon";
+import { MirrorFog } from "./MirrorFog";
+import { InvitationTray } from "./InvitationTray";
 
 interface CandleClusterItem {
   variant: 0 | 1 | 2; // 0 = Candle_A, 1 = Candle_B, 2 = Candle_C
@@ -50,14 +52,14 @@ const CANDLE_INSTANCES: CandleClusterItem[] = [
 export function RedRoomSet() {
   const world = useStore((s) => s.world);
   const previousWorld = useStore((s) => s.previousWorld);
-  const curtainGltf = useGLTF('/models/curtain-open.glb');
-  const mirrorGltf = useGLTF('/models/redroom-mirror.glb');
-  const chandelierGltf = useGLTF('/models/redroom-chandelier.glb');
-  const candelabraGltf = useGLTF('/models/redroom-candelabra.glb');
-  const candleGltf = useGLTF('/models/redroom-candle.glb');
+  const curtainGltf = useGLTF("/models/curtain-open.glb");
+  const mirrorGltf = useGLTF("/models/redroom-mirror.glb");
+  const chandelierGltf = useGLTF("/models/redroom-chandelier.glb");
+  const candelabraGltf = useGLTF("/models/redroom-candelabra.glb");
+  const candleGltf = useGLTF("/models/redroom-candle.glb");
 
   // Official poster texture for framed display on left wall (Part 8 R5)
-  const posterTex = useTexture('/media/red-room-poster.webp');
+  const posterTex = useTexture("/media/red-room-poster.webp");
 
   const chandelierRef = useRef<THREE.Group>(null);
   const candleLight1Ref = useRef<THREE.PointLight>(null);
@@ -81,27 +83,36 @@ export function RedRoomSet() {
     // 1. ONE instance of curtain-open.glb as static proscenium at z = 2.6, uniform scale 0.85, grounded
     const pCurtain = curtainGltf.scene.clone(true);
     groundObjectToY(pCurtain, 0);
+    batchStaticSiblings(pCurtain, true);
 
     // 2. Gilded mirror grounded at bottom = (0, 0.3, -0.6), scale 1.0
     const mir = mirrorGltf.scene.clone(true);
     groundObjectToY(mir, 0);
+    batchStaticSiblings(mir, true);
 
     // 3. Chandelier hanging from its origin (0, 5.2, 0.4), scale 1.0 (lowest crystals at y ≈ 3.0)
     const chand = chandelierGltf.scene.clone(true);
-    const chandAnchors = findAnchorNodes(chand, 'Flame_Anchor'); // 8 anchors: Flame_Anchor_1..8
+    batchStaticSiblings(chand, true);
+    const chandAnchors = findAnchorNodes(chand, "Flame_Anchor"); // 8 anchors: Flame_Anchor_1..8
 
     // 4. Two candelabras grounded on top of 0.9m plinths at (-2.6, 0.9, 0.2) and (2.6, 0.9, 0.2), scale 1.0
     const candL = candelabraGltf.scene.clone(true);
     const candR = candelabraGltf.scene.clone(true);
     groundObjectToY(candL, 0);
     groundObjectToY(candR, 0);
-    const candLAnchors = findAnchorNodes(candL, 'Flame_Anchor'); // 5 anchors: Flame_Anchor_1..5
-    const candRAnchors = findAnchorNodes(candR, 'Flame_Anchor'); // 5 anchors: Flame_Anchor_1..5
+    batchStaticSiblings(candL, true);
+    batchStaticSiblings(candR, true);
+    const candLAnchors = findAnchorNodes(candL, "Flame_Anchor"); // 5 anchors: Flame_Anchor_1..5
+    const candRAnchors = findAnchorNodes(candR, "Flame_Anchor"); // 5 anchors: Flame_Anchor_1..5
 
     // 5. InstancedMesh data for redroom-candle.glb variants Candle_A, Candle_B, Candle_C
     // Center each variant's local X offset (-0.11 for A, 0 for B, +0.11 for C) and ground to y = 0
-    const variantNames = ['Candle_A', 'Candle_B', 'Candle_C'] as const;
-    const anchorNames = ['Flame_Anchor_A', 'Flame_Anchor_B', 'Flame_Anchor_C'] as const;
+    const variantNames = ["Candle_A", "Candle_B", "Candle_C"] as const;
+    const anchorNames = [
+      "Flame_Anchor_A",
+      "Flame_Anchor_B",
+      "Flame_Anchor_C",
+    ] as const;
 
     const subMeshes: {
       variant: number;
@@ -120,36 +131,30 @@ export function RedRoomSet() {
         variantAnchorHeights[vIdx] = wp.y;
       }
       if (groupNode) {
-        const localX = groupNode.position.x;
+        // Ground the complete variant, preserving the relative wick/wax placement.
+        groupNode.updateWorldMatrix(true, true);
+        const box = new THREE.Box3().setFromObject(groupNode);
+        const center = box.getCenter(new THREE.Vector3());
+        variantAnchorHeights[vIdx] -= box.min.y;
         groupNode.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const mesh = child as THREE.Mesh;
-            const g = mesh.geometry.clone();
-            // Shift by (-localX) if geometry had baked offset so instance centers at (0,0,0)
-            g.computeBoundingBox();
-            if (g.boundingBox) {
-              const cx = (g.boundingBox.min.x + g.boundingBox.max.x) * 0.5;
-              const minY = g.boundingBox.min.y;
-              if (Math.abs(cx + localX) > 0.02) {
-                g.translate(-cx, -minY, 0);
-              } else {
-                g.translate(0, -minY, 0);
-              }
-            }
-            const mat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
-            subMeshes.push({
-              variant: vIdx,
-              geometry: g,
-              material: mat,
-            });
-          }
+          if (!(child as THREE.Mesh).isMesh) return;
+          const mesh = child as THREE.Mesh;
+          const geometry = mesh.geometry.clone().applyMatrix4(mesh.matrixWorld);
+          geometry.translate(-center.x, -box.min.y, -center.z);
+          subMeshes.push({
+            variant: vIdx,
+            geometry,
+            material: Array.isArray(mesh.material)
+              ? mesh.material[0]
+              : mesh.material,
+          });
         });
       }
     });
 
     // Create anchor Object3Ds for the 15 instanced candles using their Flame_Anchor_A/B/C heights
     const sGroup = new THREE.Group();
-    sGroup.name = 'InstancedCandleFlameAnchors';
+    sGroup.name = "InstancedCandleFlameAnchors";
     const candleAnchorNodes: THREE.Object3D[] = [];
     CANDLE_INSTANCES.forEach((item, idx) => {
       const anchorObj = new THREE.Object3D();
@@ -168,7 +173,12 @@ export function RedRoomSet() {
       candelabraRight: candR,
       candleSubMeshes: subMeshes,
       // Order: [0..4] Left candelabra 1..5, [5..9] Right candelabra 1..5, [10..17] Chandelier 1..8, [18..32] 15 floor/table candles
-      allFlameAnchors: [...candLAnchors, ...candRAnchors, ...chandAnchors, ...candleAnchorNodes],
+      allFlameAnchors: [
+        ...candLAnchors,
+        ...candRAnchors,
+        ...chandAnchors,
+        ...candleAnchorNodes,
+      ],
       staticAnchorsGroup: sGroup,
     };
   }, [
@@ -202,16 +212,18 @@ export function RedRoomSet() {
   const flameIntensitiesRef = useRef<number[]>(new Array(33).fill(1.0));
 
   useFrame((_, delta) => {
-    if (world !== 'redroom' && previousWorld !== 'redroom') return;
+    if (world !== "redroom" && previousWorld !== "redroom") return;
     const t = frame.time;
-    const p2 = frame.dampedProgress['R2'] ?? 0;
-    const p3 = frame.dampedProgress['R3'] ?? 0;
-    const p4 = frame.dampedProgress['R4'] ?? 0;
+    const p2 = frame.dampedProgress["R2"] ?? 0;
+    const p3 = frame.dampedProgress["R3"] ?? 0;
+    const p4 = frame.dampedProgress["R4"] ?? 0;
 
     // 1. Chandelier swaying ±1.5° (0.02618 rad) at 0.12 Hz from its origin (0, 5.2, 0.4)
     if (chandelierRef.current) {
-      chandelierRef.current.rotation.z = Math.sin(t * 0.12 * Math.PI * 2) * 0.02618;
-      chandelierRef.current.rotation.x = Math.cos(t * 0.08 * Math.PI * 2) * 0.014;
+      chandelierRef.current.rotation.z =
+        Math.sin(t * 0.12 * Math.PI * 2) * 0.02618;
+      chandelierRef.current.rotation.x =
+        Math.cos(t * 0.08 * Math.PI * 2) * 0.014;
     }
 
     // 3. R2 Story: Candles flare +20% for 300 ms when each line lands
@@ -232,7 +244,7 @@ export function RedRoomSet() {
     const c1 = !inR3 || p3 > 0.02 ? 1.15 + flareBonus : 0.22;
     const c2 = !inR3 || p3 > 0.24 ? 1.15 + flareBonus : 0.22;
     const c3 = !inR3 || p3 > 0.48 ? 1.15 + flareBonus : 0.22;
-    const c45 = !inR3 || p3 > 0.70 ? 1.2 + flareBonus : 0.22;
+    const c45 = !inR3 || p3 > 0.7 ? 1.2 + flareBonus : 0.22;
 
     // Left candelabra Flame_Anchor_1..5 (indices 0..4)
     flameIntensitiesRef.current[0] = c1;
@@ -252,8 +264,10 @@ export function RedRoomSet() {
     }
 
     // 5. Max 3 Real Point Lights with 8–14 Hz candle noise flicker
-    const flicker1 = 1 + (Math.sin(t * 11.2) * 0.1 + Math.cos(t * 13.7) * 0.08) * 0.18;
-    const flicker2 = 1 + (Math.sin(t * 8.6) * 0.1 + Math.cos(t * 12.1) * 0.08) * 0.18;
+    const flicker1 =
+      1 + (Math.sin(t * 11.2) * 0.1 + Math.cos(t * 13.7) * 0.08) * 0.18;
+    const flicker2 =
+      1 + (Math.sin(t * 8.6) * 0.1 + Math.cos(t * 12.1) * 0.08) * 0.18;
 
     if (candleLight1Ref.current) {
       candleLight1Ref.current.intensity = (2.4 + flareBonus) * flicker1;
@@ -269,9 +283,17 @@ export function RedRoomSet() {
   return (
     <group name="RedRoomSet">
       {/* Atmosphere Ambient + angled crimson key & warm fill for gilded frames, velvet & bronze */}
-      <ambientLight intensity={0.32} color="#1C0304" />
-      <directionalLight position={[-4.0, 5.0, 3.5]} intensity={1.35} color="#FF4A36" />
-      <directionalLight position={[3.5, 4.0, 3.0]} intensity={0.95} color="#FFB36B" />
+      <ambientLight intensity={0.12} color="#1C0304" />
+      <directionalLight
+        position={[-4.0, 5.0, 3.5]}
+        intensity={1.8}
+        color="#FFE0B0"
+      />
+      <directionalLight
+        position={[3.5, 4.0, 3.0]}
+        intensity={0.25}
+        color="#FFB36B"
+      />
 
       {/* Real Point Light 1: Left candelabra (#FF9A4A, decay 2) */}
       <pointLight
@@ -304,10 +326,7 @@ export function RedRoomSet() {
       />
 
       {/* Stage Box Floor: Black-red lacquer with reflections (Part 5.4) */}
-      <mesh name="RedRoomFloor" position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[24, 20]} />
-        <meshStandardMaterial color="#060101" roughness={0.12} metalness={0.7} />
-      </mesh>
+      <StageFloor world="redroom" />
 
       {/* Stage Back Wall */}
       <mesh position={[0, 3.0, -1.2]}>
@@ -319,7 +338,11 @@ export function RedRoomSet() {
       <group position={[-4.5, 2.2, 2.0]} rotation={[0, Math.PI * 0.35, 0]}>
         <mesh scale={[1.4, 1.85, 0.08]}>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#8E6A28" metalness={0.8} roughness={0.3} />
+          <meshStandardMaterial
+            color="#8E6A28"
+            metalness={0.8}
+            roughness={0.3}
+          />
         </mesh>
         <mesh position={[0, 0, 0.05]} scale={[1.2, 1.65, 1]}>
           <planeGeometry args={[1, 1]} />
@@ -328,12 +351,20 @@ export function RedRoomSet() {
       </group>
 
       {/* ONE instance of curtain-open.glb as static proscenium at z = 2.6, uniform scale 0.85, grounded */}
-      <group name="StaticProsceniumCurtain" position={[0, 0, 2.6]} scale={[0.85, 0.85, 0.85]}>
+      <group
+        name="StaticProsceniumCurtain"
+        position={[0, 0, 2.6]}
+        scale={[0.85, 0.85, 0.85]}
+      >
         <primitive object={prosceniumCurtain} />
       </group>
 
       {/* Swaying Chandelier hanging from ceiling at (0, 5.75, 0.4), scale 0.95 */}
-      <group ref={chandelierRef} position={[0, 5.75, 0.4]} scale={[0.95, 0.95, 0.95]}>
+      <group
+        ref={chandelierRef}
+        position={[0, 5.75, 0.4]}
+        scale={[0.95, 0.95, 0.95]}
+      >
         <primitive object={chandelier} />
       </group>
 
@@ -349,17 +380,29 @@ export function RedRoomSet() {
         {/* Base gold trim ring */}
         <mesh position={[0, 0.015, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.31, 0.31, 0.03, 32]} />
-          <meshStandardMaterial color="#D4AF6A" metalness={0.85} roughness={0.25} />
+          <meshStandardMaterial
+            color="#D4AF6A"
+            metalness={0.85}
+            roughness={0.25}
+          />
         </mesh>
         {/* Velvet-draped shaft */}
         <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.26, 0.30, 0.87, 32]} />
-          <meshStandardMaterial color="#52060A" roughness={0.76} metalness={0.08} />
+          <cylinderGeometry args={[0.26, 0.3, 0.87, 32]} />
+          <meshStandardMaterial
+            color="#52060A"
+            roughness={0.76}
+            metalness={0.08}
+          />
         </mesh>
         {/* Top gold trim capital */}
         <mesh position={[0, 0.885, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.27, 0.27, 0.03, 32]} />
-          <meshStandardMaterial color="#D4AF6A" metalness={0.85} roughness={0.25} />
+          <meshStandardMaterial
+            color="#D4AF6A"
+            metalness={0.85}
+            roughness={0.25}
+          />
         </mesh>
         <group position={[0, 0.9, 0]} scale={[1, 1, 1]}>
           <primitive object={candelabraLeft} />
@@ -371,17 +414,29 @@ export function RedRoomSet() {
         {/* Base gold trim ring */}
         <mesh position={[0, 0.015, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.31, 0.31, 0.03, 32]} />
-          <meshStandardMaterial color="#D4AF6A" metalness={0.85} roughness={0.25} />
+          <meshStandardMaterial
+            color="#D4AF6A"
+            metalness={0.85}
+            roughness={0.25}
+          />
         </mesh>
         {/* Velvet-draped shaft */}
         <mesh position={[0, 0.45, 0]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.26, 0.30, 0.87, 32]} />
-          <meshStandardMaterial color="#52060A" roughness={0.76} metalness={0.08} />
+          <cylinderGeometry args={[0.26, 0.3, 0.87, 32]} />
+          <meshStandardMaterial
+            color="#52060A"
+            roughness={0.76}
+            metalness={0.08}
+          />
         </mesh>
         {/* Top gold trim capital */}
         <mesh position={[0, 0.885, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.27, 0.27, 0.03, 32]} />
-          <meshStandardMaterial color="#D4AF6A" metalness={0.85} roughness={0.25} />
+          <meshStandardMaterial
+            color="#D4AF6A"
+            metalness={0.85}
+            roughness={0.25}
+          />
         </mesh>
         <group position={[0, 0.9, 0]} scale={[1, 1, 1]}>
           <primitive object={candelabraRight} />

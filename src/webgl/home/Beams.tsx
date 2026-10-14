@@ -1,81 +1,43 @@
-'use client';
+"use client";
+import { useMemo, useRef, useEffect } from "react";
+import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
 
-import React, { useRef } from 'react';
-import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-
+/** Feathered atmospheric shafts behind the subject; no visible cone surfaces. */
 export function Beams() {
-  const world = useStore((s) => s.world);
-  const previousWorld = useStore((s) => s.previousWorld);
-  const beamGroupRef = useRef<THREE.Group>(null);
-  const beam1Ref = useRef<THREE.Mesh>(null);
-  const beam2Ref = useRef<THREE.Mesh>(null);
-  const beam3Ref = useRef<THREE.Mesh>(null);
-
-  // Volumetric beam cones sweeping ±18° at 0.05 Hz per Part 5.4
+  const root = useRef<THREE.Group>(null);
+  const material = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        uniforms: { uTime: { value: 0 } },
+        vertexShader: `varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+        fragmentShader: `varying vec2 vUv; uniform float uTime;
+      void main(){float width=mix(.05,.42,1.-vUv.y); float beam=exp(-pow((vUv.x-.5)/width,2.)*3.);
+      float fade=smoothstep(0.,.25,vUv.y)*(1.-smoothstep(.75,1.,vUv.y));
+      float haze=.85+.15*sin(vUv.y*9.+uTime*.16);
+      gl_FragColor=vec4(vec3(.5,.2,.65),beam*fade*haze*.07);}`,
+      }),
+    [],
+  );
+  useEffect(() => () => material.dispose(), [material]);
   useFrame(() => {
-    if (world !== 'home' && previousWorld !== 'home') return;
-    const t = frame.time;
-    const sweep = Math.sin(t * 0.314) * THREE.MathUtils.degToRad(18); // 0.05 Hz
-
-    if (beam1Ref.current) beam1Ref.current.rotation.z = sweep + 0.15;
-    if (beam2Ref.current) beam2Ref.current.rotation.z = -sweep - 0.2;
-    if (beam3Ref.current) beam3Ref.current.rotation.x = Math.cos(t * 0.25) * 0.12;
+    if (useStore.getState().world !== "home") return;
+    material.uniforms.uTime.value = frame.time;
+    if (root.current)
+      root.current.rotation.z = Math.sin(frame.time * 0.08) * 0.025;
   });
-
   return (
-    <group ref={beamGroupRef} name="VolumetricBeams" position={[0, 4.5, -3.2]}>
-      {/* Beam 1: Magenta (cone) */}
-      <mesh
-        ref={beam1Ref}
-        position={[-1.8, 0, 0]}
-        rotation={[Math.PI / 1.15, 0, 0.2]}
-      >
-        <coneGeometry args={[1.2, 8.0, 32, 1, true]} />
-        <meshBasicMaterial
-          color="#D73EBC"
-          transparent
-          opacity={0.035}
-          side={THREE.FrontSide}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
+    <group ref={root} name="AtmosphericShafts" position={[1.5, 2.8, -4]}>
+      <mesh rotation={[0, 0, -0.22]} material={material}>
+        <planeGeometry args={[3, 9]} />
       </mesh>
-
-      {/* Beam 2: Magenta (cone) */}
-      <mesh
-        ref={beam2Ref}
-        position={[1.8, 0, 0]}
-        rotation={[Math.PI / 1.15, 0, -0.2]}
-      >
-        <coneGeometry args={[1.2, 8.0, 32, 1, true]} />
-        <meshBasicMaterial
-          color="#D73EBC"
-          transparent
-          opacity={0.035}
-          side={THREE.FrontSide}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Beam 3: White center (cone) */}
-      <mesh
-        ref={beam3Ref}
-        position={[0, 0.5, 0]}
-        rotation={[Math.PI / 1.12, 0, 0]}
-      >
-        <coneGeometry args={[0.9, 8.5, 32, 1, true]} />
-        <meshBasicMaterial
-          color="#FFFFFF"
-          transparent
-          opacity={0.02}
-          side={THREE.FrontSide}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
+      <mesh position={[3, 0.5, -1]} rotation={[0, 0, 0.28]} material={material}>
+        <planeGeometry args={[3, 10]} />
       </mesh>
     </group>
   );

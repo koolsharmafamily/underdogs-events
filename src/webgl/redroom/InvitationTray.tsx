@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React, { useRef, useMemo } from 'react';
-import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
-import { groundObjectToY } from '../fx/Flame';
+import React, { useRef, useMemo } from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { composition } from "../composition";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { groundObjectToY } from "../fx/Flame";
 
 /**
  * 3D Invitation Tray & Procedural Round Velvet Side Table at (0, 0, 2.2), top at y = 0.85:
@@ -39,7 +40,8 @@ function captureTransform(node: THREE.Object3D | null): NodeTransform {
 }
 
 export function InvitationTray() {
-  const gltf = useGLTF('/models/redroom-invitation.glb');
+  const stageRef = useRef<THREE.Group>(null);
+  const gltf = useGLTF("/models/redroom-invitation.glb");
   const motionEnabled = useStore((s) => s.motionEnabled);
 
   const shard1Ref = useRef<THREE.Object3D | null>(null);
@@ -54,12 +56,12 @@ export function InvitationTray() {
     // Ground tray so its bottom sits exactly on the table top (y = 0 relative to table top group at y = 0.85)
     groundObjectToY(s, 0);
 
-    const s1 = s.getObjectByName('Seal_Shard_1') ?? null;
-    const s2 = s.getObjectByName('Seal_Shard_2') ?? null;
-    const s3 = s.getObjectByName('Seal_Shard_3') ?? null;
-    const crumbs = s.getObjectByName('Seal_Crumbs') ?? null;
-    const flap = s.getObjectByName('Envelope_Flap') ?? null;
-    const card = s.getObjectByName('Card') ?? null;
+    const s1 = s.getObjectByName("Seal_Shard_1") ?? null;
+    const s2 = s.getObjectByName("Seal_Shard_2") ?? null;
+    const s3 = s.getObjectByName("Seal_Shard_3") ?? null;
+    const crumbs = s.getObjectByName("Seal_Crumbs") ?? null;
+    const flap = s.getObjectByName("Envelope_Flap") ?? null;
+    const card = s.getObjectByName("Card") ?? null;
 
     shard1Ref.current = s1;
     shard2Ref.current = s2;
@@ -91,26 +93,32 @@ export function InvitationTray() {
 
   useFrame(() => {
     const st = useStore.getState();
-    if (st.world !== 'redroom' && st.previousWorld !== 'redroom') return;
-    const p4 = frame.dampedProgress['R4'] ?? 0;
-    const p5 = frame.dampedProgress['R5'] ?? 0;
+    if (st.world !== "redroom" && st.previousWorld !== "redroom") return;
+    const p4 = frame.dampedProgress["R4"] ?? 0;
+    const p5 = frame.dampedProgress["R5"] ?? 0;
+    if (stageRef.current)
+      stageRef.current.visible = composition.scene === "R4" && p4 < 0.48;
 
     // 1. Seal_Shard_1..3 + Seal_Crumbs crack (25% -> 40% of R4)
     const crackP = !motionEnabled
       ? 1.0
-      : THREE.MathUtils.smoothstep(THREE.MathUtils.clamp((p4 - 0.25) / 0.15, 0, 1), 0, 1);
+      : THREE.MathUtils.smoothstep(
+          THREE.MathUtils.clamp((p4 - 0.25) / 0.15, 0, 1),
+          0,
+          1,
+        );
 
     if (shard1Ref.current) {
       const init = initial.shard1;
       shard1Ref.current.position.set(
         init.pos.x - crackP * 0.028,
         init.pos.y + crackP * 0.003,
-        init.pos.z + crackP * 0.016
+        init.pos.z + crackP * 0.016,
       );
       shard1Ref.current.rotation.set(
         init.rot.x + crackP * 0.12,
         init.rot.y - crackP * 0.38,
-        init.rot.z + crackP * 0.15
+        init.rot.z + crackP * 0.15,
       );
     }
     if (shard2Ref.current) {
@@ -118,12 +126,12 @@ export function InvitationTray() {
       shard2Ref.current.position.set(
         init.pos.x + crackP * 0.018,
         init.pos.y + crackP * 0.004,
-        init.pos.z + crackP * 0.026
+        init.pos.z + crackP * 0.026,
       );
       shard2Ref.current.rotation.set(
         init.rot.x - crackP * 0.15,
         init.rot.y + crackP * 0.42,
-        init.rot.z - crackP * 0.12
+        init.rot.z - crackP * 0.12,
       );
     }
     if (shard3Ref.current) {
@@ -131,12 +139,12 @@ export function InvitationTray() {
       shard3Ref.current.position.set(
         init.pos.x + crackP * 0.026,
         init.pos.y + crackP * 0.003,
-        init.pos.z - crackP * 0.018
+        init.pos.z - crackP * 0.018,
       );
       shard3Ref.current.rotation.set(
         init.rot.x + crackP * 0.18,
         init.rot.y + crackP * 0.32,
-        init.rot.z - crackP * 0.16
+        init.rot.z - crackP * 0.16,
       );
     }
     if (crumbsRef.current) {
@@ -144,7 +152,7 @@ export function InvitationTray() {
       crumbsRef.current.position.set(
         init.pos.x,
         init.pos.y - crackP * 0.002,
-        init.pos.z + crackP * 0.008
+        init.pos.z + crackP * 0.008,
       );
       crumbsRef.current.scale.setScalar(1 + crackP * 0.35);
     }
@@ -152,7 +160,11 @@ export function InvitationTray() {
     // 2. Envelope_Flap hinges open 0 -> 170° (2.967 rad) at 40% -> 55% of R4
     const flapP = !motionEnabled
       ? 1.0
-      : THREE.MathUtils.smoothstep(THREE.MathUtils.clamp((p4 - 0.4) / 0.15, 0, 1), 0, 1);
+      : THREE.MathUtils.smoothstep(
+          THREE.MathUtils.clamp((p4 - 0.4) / 0.15, 0, 1),
+          0,
+          1,
+        );
 
     if (flapRef.current) {
       const init = initial.flap;
@@ -160,7 +172,7 @@ export function InvitationTray() {
       flapRef.current.rotation.set(
         init.rot.x + flapP * maxFlapAngle,
         init.rot.y,
-        init.rot.z
+        init.rot.z,
       );
     }
 
@@ -177,12 +189,12 @@ export function InvitationTray() {
       cardRef.current.position.set(
         THREE.MathUtils.lerp(init.pos.x, 0.0, eased),
         THREE.MathUtils.lerp(init.pos.y, 0.24, eased),
-        THREE.MathUtils.lerp(init.pos.z, 0.16, eased)
+        THREE.MathUtils.lerp(init.pos.z, 0.16, eased),
       );
       cardRef.current.rotation.set(
         THREE.MathUtils.lerp(init.rot.x, -0.58, eased),
         THREE.MathUtils.lerp(init.rot.y, 0.0, eased),
-        THREE.MathUtils.lerp(init.rot.z, 0.0, eased)
+        THREE.MathUtils.lerp(init.rot.z, 0.0, eased),
       );
       // Uniform scale only (Global Rule 3)
       const s = THREE.MathUtils.lerp(init.scale.x, init.scale.x * 1.45, eased);
@@ -191,33 +203,53 @@ export function InvitationTray() {
   });
 
   return (
-    <group name="InvitationTableAndTray" position={[0, 0, 2.2]}>
+    <group ref={stageRef} name="InvitationTableAndTray" position={[0, 0, 2.2]}>
       {/* Procedural Round Side Table with Red Velvet Cloth (top at y = 0.85) */}
       <group name="ProceduralSideTable">
         {/* Heavy dark gilt pedestal base foot */}
         <mesh position={[0, 0.025, 0]} receiveShadow>
           <cylinderGeometry args={[0.22, 0.28, 0.05, 32]} />
-          <meshStandardMaterial color="#3B2A14" metalness={0.8} roughness={0.35} />
+          <meshStandardMaterial
+            color="#3B2A14"
+            metalness={0.8}
+            roughness={0.35}
+          />
         </mesh>
         {/* Turned pedestal column */}
         <mesh position={[0, 0.42, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.055, 0.075, 0.78, 24]} />
-          <meshStandardMaterial color="#24180B" metalness={0.75} roughness={0.4} />
+          <meshStandardMaterial
+            color="#24180B"
+            metalness={0.75}
+            roughness={0.4}
+          />
         </mesh>
         {/* Draped red velvet cloth skirt hanging from table edge */}
         <mesh position={[0, 0.73, 0]} castShadow receiveShadow>
           <cylinderGeometry args={[0.45, 0.49, 0.22, 36]} />
-          <meshStandardMaterial color="#3E0507" roughness={0.85} metalness={0.05} />
+          <meshStandardMaterial
+            color="#3E0507"
+            roughness={0.85}
+            metalness={0.05}
+          />
         </mesh>
         {/* Gold bullion trim band around velvet cloth */}
         <mesh position={[0, 0.625, 0]}>
           <cylinderGeometry args={[0.492, 0.492, 0.016, 36]} />
-          <meshStandardMaterial color="#C8A15A" metalness={0.85} roughness={0.28} />
+          <meshStandardMaterial
+            color="#C8A15A"
+            metalness={0.85}
+            roughness={0.28}
+          />
         </mesh>
         {/* Round red velvet tabletop whose upper surface sits at y = 0.85 */}
         <mesh position={[0, 0.835, 0]} receiveShadow>
           <cylinderGeometry args={[0.45, 0.45, 0.03, 36]} />
-          <meshStandardMaterial color="#510805" roughness={0.82} metalness={0.05} />
+          <meshStandardMaterial
+            color="#510805"
+            roughness={0.82}
+            metalness={0.05}
+          />
         </mesh>
       </group>
 

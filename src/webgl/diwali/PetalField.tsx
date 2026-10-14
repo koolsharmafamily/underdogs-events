@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useMemo, useRef, useEffect } from 'react';
-import * as THREE from 'three';
-import { useGLTF } from '@react-three/drei';
-import { useFrame, useThree } from '@react-three/fiber';
-import { frame } from '@/state/frame';
-import { useStore } from '@/state/store';
+import React, { useMemo, useRef, useEffect } from "react";
+import * as THREE from "three";
+import { useGLTF } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
 
 interface PetalFieldProps {
   dustCount?: number;
@@ -14,17 +14,18 @@ interface PetalFieldProps {
 export function PetalField({ dustCount = 240 }: PetalFieldProps) {
   const { size } = useThree();
   const isMobile = size.width < 768;
-  const petalCount = isMobile ? 120 : 400;
-  const headsPerGarland = isMobile ? 50 : 120;
+  const petalCount = isMobile ? 42 : 140;
+  const headsPerGarland = isMobile ? 36 : 72;
 
-  const petalGltf = useGLTF('/models/diwali-rose-petal.glb');
-  const marigoldGltf = useGLTF('/models/diwali-marigold.glb');
+  const petalGltf = useGLTF("/models/diwali-rose-petal.glb");
+  const marigoldGltf = useGLTF("/models/diwali-marigold.glb");
 
   // 1. Extract and center geometries & materials for the 3 rose petal variants (Petal_Rani, Petal_Blush, Petal_Ivory)
   const petalVariants = useMemo(() => {
-    const names = ['Petal_Rani', 'Petal_Blush', 'Petal_Ivory'] as const;
+    const names = ["Petal_Rani", "Petal_Blush", "Petal_Ivory"] as const;
     return names.map((name) => {
-      const node = petalGltf.scene.getObjectByName(name) as THREE.Mesh | undefined;
+      const node = petalGltf.scene.getObjectByName(name) as
+        THREE.Mesh | undefined;
       if (node && node.isMesh) {
         const g = node.geometry.clone();
         g.computeBoundingBox();
@@ -34,12 +35,17 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
           const cz = (g.boundingBox.min.z + g.boundingBox.max.z) * 0.5;
           g.translate(-cx, -cy, -cz);
         }
-        const mat = Array.isArray(node.material) ? node.material[0] : node.material;
+        const mat = Array.isArray(node.material)
+          ? node.material[0]
+          : node.material;
         return { geometry: g, material: mat };
       }
       return {
         geometry: new THREE.PlaneGeometry(0.03, 0.035),
-        material: new THREE.MeshStandardMaterial({ color: '#C5287B', roughness: 0.6 }),
+        material: new THREE.MeshStandardMaterial({
+          color: "#C5287B",
+          roughness: 0.6,
+        }),
       };
     });
   }, [petalGltf.scene]);
@@ -53,8 +59,10 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
     orangeTransforms,
     yellowTransforms,
   } = useMemo(() => {
-    const oNode = marigoldGltf.scene.getObjectByName('Marigold_Orange') as THREE.Mesh | undefined;
-    const yNode = marigoldGltf.scene.getObjectByName('Marigold_Yellow') as THREE.Mesh | undefined;
+    const oNode = marigoldGltf.scene.getObjectByName("Marigold_Orange") as
+      THREE.Mesh | undefined;
+    const yNode = marigoldGltf.scene.getObjectByName("Marigold_Yellow") as
+      THREE.Mesh | undefined;
 
     const prepMarigoldGeo = (mesh?: THREE.Mesh) => {
       if (!mesh || !mesh.isMesh) return new THREE.SphereGeometry(0.035, 12, 10);
@@ -76,13 +84,13 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
         ? Array.isArray(oNode.material)
           ? oNode.material[0]
           : oNode.material
-        : new THREE.MeshStandardMaterial({ color: '#FF7A00', roughness: 0.7 });
+        : new THREE.MeshStandardMaterial({ color: "#FF7A00", roughness: 0.7 });
     const yMat =
       yNode && yNode.material
         ? Array.isArray(yNode.material)
           ? yNode.material[0]
           : yNode.material
-        : new THREE.MeshStandardMaterial({ color: '#FFB800', roughness: 0.7 });
+        : new THREE.MeshStandardMaterial({ color: "#FFB800", roughness: 0.7 });
 
     // Build CatmullRomCurve3 garlands:
     // Garland 1: Toran swag across valance (triple-scalloped festive swag)
@@ -138,9 +146,9 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
         tempObj.rotation.set(
           (globalIdx * 0.7) % Math.PI,
           (globalIdx * 1.3) % (Math.PI * 2),
-          (globalIdx * 0.5) % Math.PI
+          (globalIdx * 0.5) % Math.PI,
         );
-        tempObj.scale.setScalar(2.5); // Uniform scale ×2.5 per spec
+        tempObj.scale.setScalar(1.55); // Uniform scale ×2.5 per spec
         tempObj.updateMatrix();
         if (globalIdx % 2 === 0) {
           oList.push(tempObj.matrix.clone());
@@ -168,7 +176,7 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
       const z = Math.cos(angle) * r - 0.15;
       tempObj.position.set(x, 0.088, z);
       tempObj.rotation.set(0.15 * ((i % 3) - 1), i * 1.1, 0.1 * (i % 2));
-      tempObj.scale.setScalar(2.5);
+      tempObj.scale.setScalar(1.55);
       tempObj.updateMatrix();
       if (globalIdx % 2 === 0) {
         oList.push(tempObj.matrix.clone());
@@ -211,7 +219,7 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
       data.push({
         x: (Math.random() - 0.5) * 7.2,
         y: Math.random() * 5.8 + 0.15,
-        z: -2.5 + Math.random() * 4.8,
+        z: -3.5 + Math.random() * 3.4,
         rotX: Math.random() * Math.PI * 2,
         rotY: Math.random() * Math.PI * 2,
         rotZ: Math.random() * Math.PI * 2,
@@ -220,7 +228,7 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
         rotSpeedY: (Math.random() - 0.5) * 2.5,
         rotSpeedZ: (Math.random() - 0.5) * 1.5,
         flutterPhase: Math.random() * Math.PI * 2,
-        scale: 3.0, // Uniform scale ×3 per spec
+        scale: 1.15, // Uniform scale ×3 per spec
         colorVariant: i % 3, // 0 = Petal_Rani, 1 = Petal_Blush, 2 = Petal_Ivory
       });
     }
@@ -248,11 +256,11 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
       sizes[i] = Math.random() * 0.02 + 0.008;
     }
 
-    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+    geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
 
     const mat = new THREE.PointsMaterial({
-      color: '#FFDF88',
+      color: "#FFDF88",
       size: 0.025,
       transparent: true,
       opacity: 0.65,
@@ -267,14 +275,15 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
 
   useFrame((_, delta) => {
     const st = useStore.getState();
-    if (st.world !== 'diwali' && st.previousWorld !== 'diwali') return;
+    if (st.world !== "diwali" && st.previousWorld !== "diwali") return;
 
-    if (frame.transition.phase !== 'idle' && isMobile) {
+    if (frame.transition.phase !== "idle" && isMobile) {
       return;
     }
 
+    if (!st.motionEnabled) delta = 0;
     const t = frame.time;
-    const p2 = frame.dampedProgress['D2'] ?? 0;
+    const p2 = frame.dampedProgress["D2"] ?? 0;
     const speedMult = 1.0 + p2 * 0.5;
 
     const counts = [0, 0, 0];
@@ -286,7 +295,7 @@ export function PetalField({ dustCount = 240 }: PetalFieldProps) {
       if (p.y < 0.02) {
         p.y = 5.8 + Math.random() * 0.5;
         p.x = (Math.random() - 0.5) * 7.2;
-        p.z = -2.5 + Math.random() * 4.8;
+        p.z = -3.5 + Math.random() * 3.4;
       }
 
       const flutter = Math.sin(t * 2.5 + p.flutterPhase) * 0.08;

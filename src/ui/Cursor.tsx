@@ -1,7 +1,5 @@
-'use client'
+"use client";
 
 export function Cursor() {
-  return null
+  return null;
 }
-
-

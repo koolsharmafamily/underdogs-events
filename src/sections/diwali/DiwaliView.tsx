@@ -1,83 +1,88 @@
-'use client'
+"use client";
 
-import React, { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
-import gsap from 'gsap'
-import { site } from '@/content/site'
-import { frame } from '@/state/frame'
-import { useStore } from '@/state/store'
-import { useSceneProgress } from '@/motion/useSceneProgress'
-import { useEnterTransition } from '@/motion/transitions'
-import { BadgeDomHost } from '@/ui/BadgeDomHost'
-import { Divider } from '@/ui/Divider'
-import { InvitationCard } from '@/ui/InvitationCard'
-import { TransitionLink } from '@/ui/TransitionLink'
-import { Footer } from '@/ui/Footer'
-import { AnnouncingSoon } from '@/ui/AnnouncingSoon'
-import { diwaliCardOverlayRef } from '@/webgl/tracking/DiwaliCardProjector'
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import gsap from "gsap";
+import { DiwaliTitleCard } from "./DiwaliTitleCard";
+import { site } from "@/content/site";
+import { frame } from "@/state/frame";
+import { useStore } from "@/state/store";
+import { useSceneProgress } from "@/motion/useSceneProgress";
+import { useLineReveal } from "@/motion/useLineReveal";
+import { useEnterTransition } from "@/motion/transitions";
+import { BadgeDomHost } from "@/ui/BadgeDomHost";
+import { Divider } from "@/ui/Divider";
+import { InvitationCard } from "@/ui/InvitationCard";
+import { TransitionLink } from "@/ui/TransitionLink";
+import { Footer } from "@/ui/Footer";
+import { AnnouncingSoon } from "@/ui/AnnouncingSoon";
+import { diwaliCardOverlayRef } from "@/webgl/tracking/DiwaliCardProjector";
 
-const BULB_COUNT = 16
+const BULB_COUNT = 16;
 
 export function DiwaliView() {
-  const motionEnabled = useStore((s) => s.motionEnabled)
-  const setWorld = useStore((s) => s.setWorld)
-  const [activeStoryLine, setActiveStoryLine] = useState(0)
-  const [skyRevealed, setSkyRevealed] = useState(false)
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useLineReveal(titleRef, { triggerOnMount: true, delay: .18 });
+  const motionEnabled = useStore((s) => s.motionEnabled);
+  const setWorld = useStore((s) => s.setWorld);
+  const [activeStoryLine, setActiveStoryLine] = useState(0);
+  const [skyRevealed, setSkyRevealed] = useState(false);
 
-  useEnterTransition('diwali')
+  useEnterTransition("diwali");
 
   useEffect(() => {
-    setWorld('diwali')
-    document.documentElement.setAttribute('data-world', 'diwali')
-  }, [setWorld])
+    setWorld("diwali");
+    document.documentElement.setAttribute("data-world", "diwali");
+  }, [setWorld]);
 
-  const d1Ref = useRef<HTMLElement>(null)
-  const d2Ref = useRef<HTMLElement>(null)
-  const d3Ref = useRef<HTMLElement>(null)
-  const d4Ref = useRef<HTMLElement>(null)
-  const d5Ref = useRef<HTMLElement>(null)
+  const d1Ref = useRef<HTMLElement>(null);
+  const d2Ref = useRef<HTMLElement>(null);
+  const d3Ref = useRef<HTMLElement>(null);
+  const d4Ref = useRef<HTMLElement>(null);
+  const d5Ref = useRef<HTMLElement>(null);
 
-  useSceneProgress('D1', d1Ref)
-  useSceneProgress('D2', d2Ref)
-  useSceneProgress('D3', d3Ref)
-  useSceneProgress('D4', d4Ref)
-  useSceneProgress('D5', d5Ref)
+  useSceneProgress("D1", d1Ref);
+  useSceneProgress("D2", d2Ref);
+  useSceneProgress("D3", d3Ref);
+  useSceneProgress("D4", d4Ref);
+  useSceneProgress("D5", d5Ref);
 
   useEffect(() => {
     if (!motionEnabled) {
-      setActiveStoryLine(0)
-      setSkyRevealed(true)
-      return
+      setActiveStoryLine(0);
+      setSkyRevealed(true);
+      return;
     }
 
     const prev = {
       line: 0,
       sky: false,
-    }
+    };
 
     const onTick = () => {
-      const p2 = frame.progress.D2 ?? 0
-      const idx = Math.min(4, Math.floor(p2 * 5))
+      const p2 = frame.progress.D2 ?? 0;
+      const idx = Math.min(4, Math.floor(p2 * 5));
       if (idx !== prev.line) {
-        prev.line = idx
-        setActiveStoryLine(idx)
+        prev.line = idx;
+        setActiveStoryLine(idx);
       }
       // From line 3 (idx >= 2) the back drapes lift to reveal the night sky (Part 9 D2)
-      const nextSky = idx >= 2
+      const nextSky = idx >= 2;
       if (nextSky !== prev.sky) {
-        prev.sky = nextSky
-        setSkyRevealed(nextSky)
+        prev.sky = nextSky;
+        setSkyRevealed(nextSky);
       }
-    }
+    };
 
-    gsap.ticker.add(onTick)
+    gsap.ticker.add(onTick);
     return () => {
-      gsap.ticker.remove(onTick)
-    }
-  }, [motionEnabled])
+      gsap.ticker.remove(onTick);
+    };
+  }, [motionEnabled]);
 
   return (
     <main id="main-content" className="relative z-10 text-[var(--dw-ivory)]">
+      <DiwaliTitleCard />
       {/* D1 · The jewelled badge (110vh, pinned) */}
       <section
         ref={d1Ref}
@@ -107,9 +112,11 @@ export function DiwaliView() {
               >
                 {site.diwali.accent}
               </span>
-              <h1
+              <h1 ref={titleRef}
                 className={`font-bodoni italic text-[clamp(48px,7.5vw,128px)] leading-[0.9] font-medium tracking-tight ${
-                  motionEnabled ? 'diwali-gold-shimmer' : 'text-[var(--dw-ivory)]'
+                  motionEnabled
+                    ? "diwali-gold-shimmer"
+                    : "text-[var(--dw-ivory)]"
                 }`}
               >
                 {site.diwali.title}
@@ -148,29 +155,31 @@ export function DiwaliView() {
             ) : (
               <div className="relative min-h-[180px] sm:min-h-[220px] w-full flex items-center justify-center">
                 {site.diwali.story.map((line, idx) => {
-                  const isCurrent = idx === activeStoryLine
-                  const isPast = idx < activeStoryLine
+                  const isCurrent = idx === activeStoryLine;
+                  const isPast = idx < activeStoryLine;
                   return (
                     <p
                       key={line}
                       aria-hidden={!isCurrent}
                       className={`font-bodoni italic text-[clamp(24px,3.4vw,52px)] leading-[1.15] font-medium text-[var(--dw-ivory)] balance-heading transition-all ${
                         isCurrent
-                          ? 'duration-[650ms] relative opacity-100 translate-y-0'
+                          ? "duration-[650ms] relative opacity-100 translate-y-0"
                           : isPast
-                            ? 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10'
-                            : 'duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10'
+                            ? "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-10"
+                            : "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-10"
                       }`}
                     >
                       {line}
                     </p>
-                  )
+                  );
                 })}
               </div>
             )}
 
             <div className="flex items-center justify-center font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--dw-gold-bright)]">
-              <span>{skyRevealed ? 'Night sky revealed' : 'Velvet chamber'}</span>
+              <span>
+                {skyRevealed ? "Night sky revealed" : "Velvet chamber"}
+              </span>
             </div>
 
             <Divider variant="sparkle" active />
@@ -181,7 +190,7 @@ export function DiwaliView() {
       {/* Zero-State Screen-Projected DOM Twin for 3D Gold Foil Card */}
       <div
         ref={(el) => {
-          diwaliCardOverlayRef.current = el
+          diwaliCardOverlayRef.current = el;
         }}
         aria-label="Official Diwali Invitation Card Details"
         className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-6 sm:p-8 rounded-xl bg-[#FBF6EE] text-[#4A102E] border-2 border-[#D4AF6A] shadow-2xl transition-opacity duration-300"
@@ -330,7 +339,13 @@ export function DiwaliView() {
                 className="group inline-flex min-h-[48px] items-center gap-3 border border-[var(--dw-gold)] bg-[var(--dw-rani-deep)] px-6 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--dw-ivory)] hover:border-[var(--dw-gold-bright)] hover:text-[var(--dw-gold-bright)] transition-colors"
               >
                 <span>{site.diwali.outro.other.label}</span>
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="10"
+                  viewBox="0 0 14 10"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path
                     d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
                     stroke="currentColor"
@@ -345,7 +360,13 @@ export function DiwaliView() {
                 origin="gate"
                 className="inline-flex min-h-[48px] items-center gap-3 px-4 py-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[var(--dw-ivory)]/80 hover:text-[var(--dw-gold-bright)] transition-colors"
               >
-                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="10"
+                  viewBox="0 0 14 10"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path
                     d="M13 5H1.5M1.5 5L5.5 1M1.5 5L5.5 9"
                     stroke="currentColor"
@@ -361,5 +382,5 @@ export function DiwaliView() {
 
       <Footer />
     </main>
-  )
+  );
 }
