@@ -41,10 +41,13 @@ export function PostFX() {
     return null;
   }
 
-  // Tuned parameters per Part 5.4 table
+  // Tuned parameters for vibrant bloom
   const bloomIntensity =
-    world === "redroom" ? 0.35 : world === "diwali" ? 0.28 : 0.22;
-  const bloomThreshold = 1.15;
+    world === "redroom" ? 1.45 : world === "diwali" ? 0.32 : 0.25;
+  const bloomThreshold =
+    world === "redroom" ? 0.28 : 1.15;
+  const luminanceSmoothing =
+    world === "redroom" ? 0.65 : 0.3;
   const vignetteDarkness =
     world === "redroom" ? 0.65 : world === "diwali" ? 0.35 : 0.45;
 
@@ -53,7 +56,7 @@ export function PostFX() {
       <Bloom
         intensity={bloomIntensity}
         luminanceThreshold={bloomThreshold}
-        luminanceSmoothing={0.3}
+        luminanceSmoothing={luminanceSmoothing}
         mipmapBlur
       />
       <ChromaticAberration

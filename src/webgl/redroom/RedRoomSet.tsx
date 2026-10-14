@@ -275,22 +275,22 @@ export function RedRoomSet() {
       candleLight2Ref.current.intensity = (2.2 + flareBonus) * flicker2;
     }
     if (badgePointLightRef.current) {
-      badgePointLightRef.current.intensity = 2.8;
+      badgePointLightRef.current.intensity = 3.8;
     }
   });
 
   return (
     <group name="RedRoomSet">
       {/* Atmosphere Ambient + angled crimson key & warm fill for gilded frames, velvet & bronze */}
-      <ambientLight intensity={0.12} color="#1C0304" />
+      <ambientLight intensity={0.15} color="#1C0304" />
       <directionalLight
         position={[-4.0, 5.0, 3.5]}
-        intensity={1.8}
+        intensity={0.35}
         color="#FFE0B0"
       />
       <directionalLight
         position={[3.5, 4.0, 3.0]}
-        intensity={0.25}
+        intensity={0.15}
         color="#FFB36B"
       />
 
@@ -314,13 +314,13 @@ export function RedRoomSet() {
         decay={2}
       />
 
-      {/* Real Point Light 3: Badge neon & table illumination (#FF2A1F) */}
+      {/* Real Point Light 3: Badge neon & table illumination (#FF1500) */}
       <pointLight
         ref={badgePointLightRef}
-        position={[0, 1.85, 1.1]}
-        color="#FF2A1F"
-        intensity={2.8}
-        distance={9}
+        position={[0, 1.85, 0.8]}
+        color="#FF1500"
+        intensity={4.2}
+        distance={8}
         decay={2}
       />
 
