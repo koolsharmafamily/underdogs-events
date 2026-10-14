@@ -219,21 +219,9 @@ export function HomeView() {
             </div>
           </div>
 
-          {/* Bottom part of Section 2: Previous events from Section 3 */}
-          <div className="w-full flex flex-col gap-3 pt-4 border-t border-[var(--paper)]/15">
-            <div className="site-container flex flex-wrap items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-                <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-[var(--steel)]">
-                  {site.home.nights.label}
-                </span>
-                <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.08em] text-[var(--paper)]/85">
-                  Latest: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
-                </span>
-              </div>
-            </div>
-            <div className="w-full overflow-hidden">
-              <Marquee items={site.home.nights.list} />
-            </div>
+          {/* Bottom part of Section 2: Moving events bar from Section 3 */}
+          <div className="w-full pt-4 border-t border-[var(--paper)]/15 overflow-hidden">
+            <Marquee items={site.home.nights.list} />
           </div>
         </div>
       </section>
