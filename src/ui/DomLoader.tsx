@@ -121,26 +121,6 @@ export function DomLoader() {
               fetchPriority="high"
               className="w-full h-full object-contain"
             />
-            <svg
-              aria-label={`Loading ${Math.round(progress)}%`}
-              role="progressbar"
-              aria-valuenow={Math.round(progress)}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              viewBox="0 0 100 100"
-              className="absolute -inset-3 w-[calc(100%+24px)] h-[calc(100%+24px)] -rotate-90"
-            >
-              <circle
-                cx="50"
-                cy="50"
-                r="48"
-                fill="none"
-                stroke="#D73EBC"
-                strokeWidth=".5"
-                strokeDasharray={302}
-                strokeDashoffset={302 * (1 - progress / 100)}
-              />
-            </svg>
           </div>
           {slow ? (
             <button

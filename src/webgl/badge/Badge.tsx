@@ -78,16 +78,47 @@ function prepareBadgeScene(
           mat.needsUpdate = true;
         }
 
+        // Configure Neon Reference 2 materials for Red Room
+        if (skinName === "neon") {
+          if (origMat.name === "Neon_Glyph_Fill") {
+            mat.color.set("#FFF8F6");
+            mat.emissive.set("#FF2A1F");
+            mat.emissiveIntensity = 4.2;
+            mat.userData.baseEmissiveIntensity = 4.2;
+          } else if (origMat.name === "Neon_Glass_Red") {
+            mat.color.set("#FF1E0C");
+            mat.emissive.set("#FF2414");
+            mat.emissiveIntensity = 4.8;
+            mat.userData.baseEmissiveIntensity = 4.8;
+          } else if (
+            origMat.name === "Black_Glass" ||
+            origMat.name === "Black_Lacquer" ||
+            origMat.name === "Smoked_Black_Glass"
+          ) {
+            mat.color.set("#0A0203");
+            mat.roughness = 0.08;
+            mat.metalness = 0.2;
+          } else if (origMat.name === "Blood_Gloss") {
+            mat.color.set("#9A0610");
+            mat.emissive.set("#5A0208");
+            mat.emissiveIntensity = 1.5;
+            mat.userData.baseEmissiveIntensity = 1.5;
+          }
+          mat.needsUpdate = true;
+        }
+
         // Inject dissolve shader without modifying original material colours or properties
         injectDissolve(mat, uniforms);
         mesh.material = mat;
 
-        // Collect neon emissive materials for dynamic flicker without color replacement
+        // Collect neon emissive materials for dynamic flicker
         if (
           mat.emissive &&
           (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0)
         ) {
-          mat.userData.baseEmissiveIntensity = mat.emissiveIntensity ?? 1.0;
+          if (mat.userData.baseEmissiveIntensity === undefined) {
+            mat.userData.baseEmissiveIntensity = mat.emissiveIntensity ?? 1.0;
+          }
           if (!neonMaterials.includes(mat)) neonMaterials.push(mat);
         }
       }
@@ -420,11 +451,9 @@ export function Badge({
     const isTablet = size.width >= 768 && size.width < 1024;
     const h1 = frame.dampedProgress["H1"] ?? frame.dampedProgress["h1"] ?? 0;
     const h2 = frame.dampedProgress["H2"] ?? frame.dampedProgress["h2"] ?? 0;
-    const h3 = frame.dampedProgress["H3"] ?? frame.dampedProgress["h3"] ?? 0;
-    const h4 = frame.dampedProgress["H4"] ?? frame.dampedProgress["h4"] ?? 0;
     const h5 = frame.dampedProgress["H5"] ?? frame.dampedProgress["h5"] ?? 0;
     const scrollP = THREE.MathUtils.clamp(
-      h1 * 0.2 + h2 * 0.3 + h3 * 0.15 + h4 * 0.2 + h5 * 0.15,
+      h1 * 0.35 + h2 * 0.45 + h5 * 0.2,
       0,
       1,
     );
@@ -445,16 +474,12 @@ export function Badge({
       const h2X = isMobile ? 0 : isTablet ? 1.35 : 1.62;
       const h2Y = isMobile ? (motionEnabled ? 2.15 : 2.35) : 1.55;
 
-      const h3Scale = isMobile ? 0 : 0.36;
-      const h3X = isMobile ? 0 : 2.45;
-      const h3Y = isMobile ? 3.5 : 2.98;
-
       const h5Scale = isMobile ? 0 : 0.38;
       const h5X = 0;
       const h5Y = isMobile ? 3.35 : 2.78; // Floats above and between doors on desktop; fades out on mobile stacked doors
 
-      if (scrollP <= 0.2) {
-        const t = Math.max(0, Math.min(1, scrollP / 0.2));
+      if (scrollP <= 0.25) {
+        const t = Math.max(0, Math.min(1, scrollP / 0.25));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
           THREE.MathUtils.lerp(h0X, h2X, smoothT),
@@ -464,39 +489,23 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
         choreoYaw.current = 0;
         h2SpinDone.current = false;
-      } else if (scrollP <= 0.46) {
+      } else if (scrollP <= 0.65) {
         choreoPos.current.set(h2X, h2Y, 0);
         choreoScale.current = h2Scale;
-        const spinT = (scrollP - 0.2) / 0.26;
+        const spinT = (scrollP - 0.25) / 0.4;
         choreoYaw.current =
           THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
         h2SpinDone.current = spinT >= 0.98;
-      } else if (scrollP <= 0.52) {
-        // Fast, smooth transition from H2 center-right to H3 top-right parking position
-        const t = Math.max(0, Math.min(1, (scrollP - 0.46) / 0.06));
-        const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
-        choreoPos.current.set(
-          THREE.MathUtils.lerp(h2X, h3X, smoothT),
-          THREE.MathUtils.lerp(h2Y, h3Y, smoothT),
-          0,
-        );
-        choreoScale.current = THREE.MathUtils.lerp(h2Scale, h3Scale, smoothT);
-        choreoYaw.current = Math.PI * 2;
-      } else if (scrollP <= 0.66) {
-        // H3: Badge is cleanly and steadily parked at top-right host position, clear of all marquee text
-        choreoPos.current.set(h3X, h3Y, 0);
-        choreoScale.current = h3Scale;
-        choreoYaw.current = Math.PI * 2;
       } else if (scrollP <= 0.82) {
-        // H4: Badge glides along the top from top-right to center (x = 0, y = 2.78), remaining high above text
-        const t = Math.max(0, Math.min(1, (scrollP - 0.66) / 0.16));
+        // Smooth glide from H2 center-right to H5 top-center above the doors
+        const t = Math.max(0, Math.min(1, (scrollP - 0.65) / 0.17));
         const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
         choreoPos.current.set(
-          THREE.MathUtils.lerp(h3X, h5X, smoothT),
-          THREE.MathUtils.lerp(h3Y, h5Y, smoothT),
+          THREE.MathUtils.lerp(h2X, h5X, smoothT),
+          THREE.MathUtils.lerp(h2Y, h5Y, smoothT),
           0,
         );
-        choreoScale.current = THREE.MathUtils.lerp(h3Scale, h5Scale, smoothT);
+        choreoScale.current = THREE.MathUtils.lerp(h2Scale, h5Scale, smoothT);
         choreoYaw.current = Math.PI * 2;
       } else {
         // H5: Badge floats above and between both doors at (0, 2.78, 0)
@@ -679,7 +688,7 @@ export function Badge({
           0.08 *
           (Math.sin(frame.time * 7.3) > 0 ? 1 : 0);
       neonPrep.neonMaterials.forEach((m) => {
-        const base = Math.min(1.75, m.userData.baseEmissiveIntensity ?? 1.0);
+        const base = m.userData.baseEmissiveIntensity ?? 4.0;
         m.emissiveIntensity = base * flicker;
       });
     }

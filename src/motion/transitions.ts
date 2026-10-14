@@ -130,6 +130,10 @@ function resetStageComplete() {
   if (stageRefs?.washEl) gsap.set(stageRefs.washEl, { opacity: 0 });
   if (stageRefs?.curtainWrapEl)
     gsap.set(stageRefs.curtainWrapEl, { visibility: "hidden" });
+  if (stageRefs?.leftCurtainEl && stageRefs?.rightCurtainEl) {
+    stageRefs.leftCurtainEl.classList.remove("transition-curtain-diwali");
+    stageRefs.rightCurtainEl.classList.remove("transition-curtain-diwali");
+  }
   if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 });
 
   const mainEl =
@@ -462,46 +466,51 @@ export function runRouteTransition(
     tryProceedEnter(false);
   };
 
-  // Every URL mutation is behind a fully opaque veil. Each world supplies its
-  // own closing medium; the incoming scene renders before that cover lifts.
+  const isTargetRedRoom = toWorld === "redroom";
+  const isTargetDiwali = toWorld === "diwali";
+  const isCurtainTransition =
+    motionEnabled &&
+    !options.isPopState &&
+    (isTargetRedRoom || isTargetDiwali || type === "T1" || type === "T2" || type === "T3");
+
   const outDur = !motionEnabled
     ? 0.15
-    : type === "T1"
-      ? 0.95
-      : type === "T2"
-        ? 0.65
-        : type === "T4"
-          ? 0.4
-          : options.isPopState
-            ? 0.15
-            : 0.55;
+    : isCurtainTransition
+      ? 0.85
+      : type === "T4"
+        ? 0.4
+        : options.isPopState
+          ? 0.15
+          : 0.55;
   const inDur = !motionEnabled
     ? 0.15
-    : type === "T1"
-      ? 0.65
-      : type === "T2"
-        ? 0.2
-        : type === "T4"
-          ? 0.4
-          : options.isPopState
-            ? 0.15
-            : 0.55;
-  const curtainExit =
-    motionEnabled &&
-    !options.isPopState &&
-    (type === "T1" || (type === "T3" && fromWorld === "redroom"));
-  const goldExit =
-    motionEnabled &&
-    !options.isPopState &&
-    (type === "T2" || (type === "T3" && fromWorld === "diwali"));
+    : isCurtainTransition
+      ? 0.8
+      : type === "T4"
+        ? 0.4
+        : options.isPopState
+          ? 0.15
+          : 0.55;
+
   frame.transition.duration = outDur + inDur;
   frame.transition.coverTime = outDur;
-  if (curtainWrapEl)
-    gsap.set(curtainWrapEl, { visibility: curtainExit ? "visible" : "hidden" });
+
+  // Apply world-specific curtain color: Diwali pink vs Red Room red
   if (leftCurtainEl && rightCurtainEl) {
+    if (isTargetDiwali) {
+      leftCurtainEl.classList.add("transition-curtain-diwali");
+      rightCurtainEl.classList.add("transition-curtain-diwali");
+    } else {
+      leftCurtainEl.classList.remove("transition-curtain-diwali");
+      rightCurtainEl.classList.remove("transition-curtain-diwali");
+    }
     gsap.set(leftCurtainEl, { xPercent: -101 });
     gsap.set(rightCurtainEl, { xPercent: 101 });
   }
+
+  if (curtainWrapEl)
+    gsap.set(curtainWrapEl, { visibility: isCurtainTransition ? "visible" : "hidden" });
+
   const exitTl = gsap.timeline({
     onUpdate: function () {
       frame.transition.elapsed = this.time();
@@ -525,7 +534,7 @@ export function runRouteTransition(
         });
         if (
           motionEnabled &&
-          toWorld === "redroom" &&
+          (isTargetRedRoom || isTargetDiwali) &&
           !options.isPopState &&
           curtainWrapEl &&
           leftCurtainEl &&
@@ -551,14 +560,6 @@ export function runRouteTransition(
             { opacity: 0, duration: inDur, ease: "ease.out" },
             0,
           );
-          if (motionEnabled && toWorld === "diwali" && washEl) {
-            enterTl.fromTo(
-              washEl,
-              { opacity: 0.28 },
-              { opacity: 0, duration: inDur * 0.7, ease: "ease.out" },
-              0,
-            );
-          }
         }
         activeTimeline = enterTl;
       });
@@ -588,18 +589,16 @@ export function runRouteTransition(
       0,
     );
   }
-  const coverStart = curtainExit
-    ? Math.max(0, outDur - 0.5)
-    : goldExit
-      ? outDur - 0.25
-      : 0;
+  const coverStart = isCurtainTransition
+    ? Math.max(0, outDur - 0.55)
+    : 0;
   if (mainEl)
     exitTl.to(
       mainEl,
       { opacity: 0, duration: Math.min(0.39, outDur), ease: "ease.in" },
-      curtainExit ? outDur - 0.39 : 0,
+      isCurtainTransition ? outDur - 0.39 : 0,
     );
-  if (curtainExit && leftCurtainEl && rightCurtainEl) {
+  if (isCurtainTransition && leftCurtainEl && rightCurtainEl) {
     exitTl.to(
       leftCurtainEl,
       { xPercent: 0, duration: 0.5, ease: "ease.inOut" },
@@ -611,19 +610,9 @@ export function runRouteTransition(
       coverStart,
     );
   }
-  if (goldExit && washEl)
-    exitTl.to(
-      washEl,
-      {
-        opacity: 1,
-        duration: Math.max(0.1, outDur - 0.25),
-        ease: "ease.inOut",
-      },
-      0.25,
-    );
   exitTl.to(
     veilEl,
-    { opacity: 1, duration: outDur - coverStart, ease: "ease.inOut" },
+    { opacity: 1, duration: Math.max(0.1, outDur - coverStart), ease: "ease.inOut" },
     coverStart,
   );
   activeTimeline = exitTl;

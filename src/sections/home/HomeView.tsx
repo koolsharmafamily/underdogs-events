@@ -11,7 +11,6 @@ import { useEnterTransition } from "@/motion/transitions";
 import { getLenis } from "@/motion/clock";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { Marquee } from "@/ui/Marquee";
-import { Divider } from "@/ui/Divider";
 import { AnnouncingSoon } from "@/ui/AnnouncingSoon";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
@@ -34,29 +33,21 @@ export function HomeView() {
 
   const h1Ref = useRef<HTMLElement>(null);
   const h2Ref = useRef<HTMLElement>(null);
-  const h3Ref = useRef<HTMLElement>(null);
-  const h4Ref = useRef<HTMLElement>(null);
   const h5Ref = useRef<HTMLElement>(null);
 
   useSceneProgress("H1", h1Ref);
   useSceneProgress("H2", h2Ref);
-  useSceneProgress("H3", h3Ref);
-  useSceneProgress("H4", h4Ref);
   useSceneProgress("H5", h5Ref);
 
   const [heroTextVisible, setHeroTextVisible] = useState(true);
   const [activeStatement, setActiveStatement] = useState(0);
   const [showAboutBody, setShowAboutBody] = useState(false);
-  const [seasonStep, setSeasonStep] = useState(3);
-  const [seasonFade, setSeasonFade] = useState(1);
 
   useEffect(() => {
     if (!motionEnabled) {
       setHeroTextVisible(true);
       setActiveStatement(0);
       setShowAboutBody(true);
-      setSeasonStep(3);
-      setSeasonFade(1);
       return;
     }
 
@@ -64,8 +55,6 @@ export function HomeView() {
       heroText: true,
       stmt: 0,
       about: false,
-      season: 3,
-      fade: 1,
     };
 
     const onTick = () => {
@@ -89,23 +78,6 @@ export function HomeView() {
       if (nextAbout !== prev.about) {
         prev.about = nextAbout;
         setShowAboutBody(nextAbout);
-      }
-
-      const p4 = frame.progress.H4 ?? 0;
-      const nextSeason = p4 < 0.28 ? 1 : p4 < 0.56 ? 2 : 3;
-      if (nextSeason !== prev.season) {
-        prev.season = nextSeason;
-        setSeasonStep(nextSeason);
-      }
-
-      const nextFade = p4 > 0.65 ? Math.max(0, 1 - (p4 - 0.65) / 0.25) : 1;
-      if (
-        Math.abs(nextFade - prev.fade) > 0.05 ||
-        nextFade === 0 ||
-        nextFade === 1
-      ) {
-        prev.fade = nextFade;
-        setSeasonFade(nextFade);
       }
     };
 
@@ -161,14 +133,14 @@ export function HomeView() {
         </div>
       </section>
 
-      {/* H2 · Who we are (150vh desktop, pinned) */}
+      {/* H2 · Who we are + Nights we've thrown (Merged Section 2 & 3) */}
       <section
         ref={h2Ref}
         data-scene="H2"
         aria-labelledby="home-about-label"
-        className="scene-section scene-h2"
+        className="scene-section scene-h2 min-h-screen"
       >
-        <div className="scene-sticky flex flex-col justify-between pt-20 pb-10 md:py-24">
+        <div className="scene-sticky flex flex-col justify-between pt-20 pb-6 md:pt-24 md:pb-8">
           <div className="site-container flex items-center justify-between">
             <h2
               id="home-about-label"
@@ -178,7 +150,7 @@ export function HomeView() {
             </h2>
           </div>
 
-          <div className="site-container site-grid mt-auto md:my-auto items-center pb-4 md:pb-0">
+          <div className="site-container site-grid my-auto items-center pb-4 md:pb-0">
             {/* Strictly left half (columns 1–6, max 560px) so text never crosses into the 3D badge on the right */}
             <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 max-w-[560px] pr-2 lg:pr-6 flex flex-col gap-6">
               {!motionEnabled ? (
@@ -247,97 +219,26 @@ export function HomeView() {
             </div>
           </div>
 
-          <div className="site-container" aria-hidden="true" />
-        </div>
-      </section>
-
-      {/* H3 · Nights we've thrown (90vh, not pinned) */}
-      <section
-        ref={h3Ref}
-        data-scene="H3"
-        aria-labelledby="home-nights-label"
-        className="relative scene-h3 flex flex-col justify-center py-20"
-      >
-        <div className="site-container mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap items-center gap-6">
-            <h2
-              id="home-nights-label"
-              className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--steel)]"
-            >
-              {site.home.nights.label}
-            </h2>
-            <p className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--paper)]">
-              Latest: {site.home.nights.latest.name} —{" "}
-              {site.home.nights.latest.detail}
-            </p>
-          </div>
-
-          {/* Desktop 0.55 scale host badge at top-right */}
-          <div className="hidden md:block">
-            <BadgeDomHost
-              skin="home"
-              sizeClass="w-[96px] h-[96px]"
-              label="Underdogs Host Badge"
-            />
-          </div>
-        </div>
-
-        <Marquee items={site.home.nights.list} />
-      </section>
-
-      {/* H4 · This season (160vh, pinned) */}
-      <section
-        ref={h4Ref}
-        data-scene="H4"
-        aria-labelledby="home-season-label"
-        className="scene-section scene-h4"
-      >
-        <div className="scene-sticky flex flex-col justify-between pt-20 pb-10 md:py-24">
-          <div className="site-container">
-            <h2
-              id="home-season-label"
-              className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--steel)]"
-            >
-              {site.home.season.label}
-            </h2>
-          </div>
-
-          <div
-            className="site-container mt-auto md:my-auto pt-16 md:pt-20 flex flex-col items-center text-center gap-6 pb-4 md:pb-0 transition-opacity duration-300"
-            style={{ opacity: motionEnabled ? seasonFade : 1 }}
-          >
-            <div className="flex flex-col items-center gap-2">
-              {site.home.season.lines.map((line, idx) => {
-                const visible = idx < seasonStep;
-                return (
-                  <p
-                    key={line}
-                    className={`font-unbounded text-[clamp(26px,4.2vw,68px)] leading-[0.96] tracking-[-0.03em] font-black uppercase text-[var(--paper)] balance-heading transition-all duration-700 ${
-                      visible
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-70 translate-y-6"
-                    }`}
-                  >
-                    {line}
-                  </p>
-                );
-              })}
+          {/* Bottom part of Section 2: Previous events from Section 3 */}
+          <div className="w-full flex flex-col gap-3 pt-4 border-t border-[var(--paper)]/15">
+            <div className="site-container flex flex-wrap items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+                <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.12em] text-[var(--steel)]">
+                  {site.home.nights.label}
+                </span>
+                <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.08em] text-[var(--paper)]/85">
+                  Latest: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
+                </span>
+              </div>
             </div>
-
-            <div className="w-full max-w-[560px] flex flex-col items-center gap-4 pt-4">
-              <Divider variant="x" active={seasonStep >= 3} />
-              <p className="font-cinzel text-[13px] uppercase tracking-[0.28em] text-[var(--paper)]">
-                {site.home.season.tagline}
-              </p>
-              <Divider variant="x" active={seasonStep >= 3} />
+            <div className="w-full overflow-hidden">
+              <Marquee items={site.home.nights.list} />
             </div>
           </div>
-
-          <div className="site-container" aria-hidden="true" />
         </div>
       </section>
 
-      {/* H5 · Two worlds: the doors (140vh desktop pinned; mobile unpinned) */}
+      {/* H5 · Two worlds: the doors (Merged Section 4 & 5) */}
       <section
         ref={h5Ref}
         data-scene="H5"
@@ -347,19 +248,23 @@ export function HomeView() {
         {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
         <DomTwins />
 
-        <div className="scene-sticky-desktop flex flex-col justify-between pt-24 pb-12 lg:py-16">
-          <div className="site-container flex items-center justify-between">
+        <div className="scene-sticky-desktop flex flex-col justify-between pt-20 pb-12 lg:py-16">
+          {/* Two-word heading from Section 4 on top of Section 5 */}
+          <div className="site-container flex flex-col items-center text-center gap-2 pt-4 sm:pt-6">
+            <p className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.14em] text-[var(--steel)]">
+              {site.home.season.label}
+            </p>
             <h2
               id="home-worlds-label"
-              className="font-mono text-[12px] uppercase tracking-[0.08em] text-[var(--steel)]"
+              className="font-unbounded text-[clamp(26px,3.6vw,54px)] leading-[1.05] tracking-[-0.025em] font-black uppercase text-[var(--paper)] balance-heading"
             >
-              {site.home.worlds.label}
+              TWO WORLDS
             </h2>
           </div>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
           <div
-            className="w-full flex-1 pointer-events-none min-h-[38vh] lg:min-h-[44vh]"
+            className="w-full flex-1 pointer-events-none min-h-[30vh] lg:min-h-[38vh]"
             aria-hidden="true"
           />
 

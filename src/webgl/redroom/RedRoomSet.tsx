@@ -9,7 +9,6 @@ import { batchStaticSiblings } from "../batchStaticSiblings";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
 import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
-import { SmokeDragon } from "./SmokeDragon";
 import { MirrorFog } from "./MirrorFog";
 import { InvitationTray } from "./InvitationTray";
 
@@ -464,9 +463,6 @@ export function RedRoomSet() {
         scale={0.18}
         intensitiesRef={flameIntensitiesRef}
       />
-
-      {/* The Smoke Dragon (Spline coil, glass head, ember eyes flare, unravel) */}
-      <SmokeDragon />
 
       {/* Interactive Invitation Tray on Procedural Round Velvet Side Table at (0, 0, 2.2) */}
       <InvitationTray />

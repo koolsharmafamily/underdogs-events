@@ -11,9 +11,7 @@ import { composition } from "./composition";
 const SHOTS = {
   home: [
     [0, 1.75, 7],
-    [0, 1.8, 6.9],
-    [0, 1.8, 6.8],
-    [0, 1.8, 6.7],
+    [0, 1.8, 6.85],
     [0, 1.6, 6.6],
   ],
   redroom: [

@@ -90,6 +90,7 @@ export function HomeStage() {
     redLeakMaterials,
     diwaliLeakMaterials,
     doorFlameAnchors,
+    diwaliHeightScale,
   } = useMemo(() => {
     const rScene = redDoorGltf.scene.clone(true);
     const dScene = diwaliDoorGltf.scene.clone(true);
@@ -158,6 +159,13 @@ export function HomeStage() {
     const rAnchors = findAnchorNodes(rScene, "Flame_Anchor");
     const dAnchors = findAnchorNodes(dScene, "Flame_Anchor");
 
+    // Measure exact visual heights to normalize door scales equally (Section 5)
+    const rBox = new THREE.Box3().setFromObject(rScene);
+    const dBox = new THREE.Box3().setFromObject(dScene);
+    const rHeight = rBox.max.y - rBox.min.y;
+    const dHeight = dBox.max.y - dBox.min.y;
+    const diwaliHeightScale = dHeight > 0 ? rHeight / dHeight : 1;
+
     batchStaticSiblings(rScene);
     batchStaticSiblings(dScene);
     return {
@@ -172,6 +180,7 @@ export function HomeStage() {
       redLeakMaterials: rLeakMats,
       diwaliLeakMaterials: dLeakMats,
       doorFlameAnchors: [...rAnchors, ...dAnchors],
+      diwaliHeightScale,
     };
   }, [redDoorGltf.scene, diwaliDoorGltf.scene]);
 
@@ -246,10 +255,10 @@ export function HomeStage() {
     let diwaliTargetY = -8.0;
     let doorsVisible = false;
 
-    const effP4 = Math.max(p4, frame.progress["H4"] ?? 0);
+    const effP2 = Math.max(p2, frame.progress["H2"] ?? 0);
     const effP5 = Math.max(p5, frame.progress["H5"] ?? 0);
 
-    if (composition.scene === "H5" || tr.type === "T1" || tr.type === "T2") {
+    if (composition.scene === "H5" || effP5 > 0.02 || tr.type === "T1" || tr.type === "T2") {
       redTargetY = redOpenY;
       diwaliTargetY = diwaliOpenY;
       doorsVisible = true;
@@ -260,7 +269,7 @@ export function HomeStage() {
       redDoorRef.current.visible = doorsVisible;
       redDoorRef.current.position.x = redTargetX;
       redDoorRef.current.position.y =
-        frame.snapCamera || (wasHidden && effP4 > 0.8)
+        frame.snapCamera || (wasHidden && effP5 > 0.1)
           ? redTargetY
           : isPortrait
             ? redTargetY
@@ -278,7 +287,7 @@ export function HomeStage() {
       diwaliDoorRef.current.visible = doorsVisible;
       diwaliDoorRef.current.position.x = diwaliTargetX;
       diwaliDoorRef.current.position.y =
-        frame.snapCamera || (wasHidden && effP4 > 0.8)
+        frame.snapCamera || (wasHidden && effP5 > 0.1)
           ? diwaliTargetY
           : isPortrait
             ? diwaliTargetY
@@ -288,7 +297,7 @@ export function HomeStage() {
                 10,
                 dt,
               );
-      diwaliDoorRef.current.scale.setScalar(doorTargetScale);
+      diwaliDoorRef.current.scale.setScalar(doorTargetScale * (diwaliHeightScale ?? 1));
     }
 
     // 3. Door Articulation via native Leaf / Leaf_L / Leaf_R nodes with f = 2.2 Hz spring

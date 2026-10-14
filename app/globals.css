@@ -271,13 +271,7 @@ body {
   height: calc(120svh * 0.85);
 }
 .scene-h2 {
-  height: calc(150svh * 0.85);
-}
-.scene-h3 {
-  min-height: calc(110svh * 0.85);
-}
-.scene-h4 {
-  height: calc(160svh * 0.85);
+  min-height: calc(160svh * 0.85);
 }
 .scene-h5 {
   min-height: calc(140svh * 0.85);
@@ -323,13 +317,7 @@ body {
     height: 120svh;
   }
   .scene-h2 {
-    height: 150svh;
-  }
-  .scene-h3 {
-    min-height: 110svh;
-  }
-  .scene-h4 {
-    height: 160svh;
+    height: 165svh;
   }
   .scene-h5 {
     height: 140svh;
@@ -763,6 +751,16 @@ header.fixed::before {
   );
   box-shadow: inset 0 0 100px #080204;
   will-change: transform;
+}
+.transition-curtain-diwali {
+  background: repeating-linear-gradient(
+    90deg,
+    #32041b 0%,
+    #c5287b 7%,
+    #7a1046 12%,
+    #1d020f 17%
+  ) !important;
+  box-shadow: inset 0 0 100px #15010a !important;
 }
 .transition-all,
 .transition-opacity,

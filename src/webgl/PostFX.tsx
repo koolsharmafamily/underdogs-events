@@ -28,7 +28,7 @@ export function PostFX() {
 
   useFrame(() => {
     if (dof.current) {
-      dof.current.bokehScale = composition.hero ? 0.65 : 0;
+      dof.current.bokehScale = 0;
       dof.current.circleOfConfusionMaterial.worldFocusDistance =
         composition.focusDistance;
     }
@@ -49,7 +49,7 @@ export function PostFX() {
     world === "redroom" ? 0.65 : world === "diwali" ? 0.35 : 0.45;
 
   return (
-    <EffectComposer multisampling={0}>
+    <EffectComposer multisampling={4}>
       <Bloom
         intensity={bloomIntensity}
         luminanceThreshold={bloomThreshold}
@@ -62,17 +62,6 @@ export function PostFX() {
         modulationOffset={0}
       />
       <Vignette eskil={false} offset={0.15} darkness={vignetteDarkness} />
-      {size.width >= 1024 ? (
-        <DepthOfField
-          ref={dof}
-          worldFocusDistance={7}
-          worldFocusRange={2.4}
-          bokehScale={0.65}
-          resolutionScale={0.5}
-        />
-      ) : (
-        <></>
-      )}
       <ToneMapping mode={ToneMappingMode.AGX} />
     </EffectComposer>
   );
