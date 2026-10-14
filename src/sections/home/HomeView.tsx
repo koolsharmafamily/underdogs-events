@@ -226,29 +226,18 @@ export function HomeView() {
         </div>
       </section>
 
-      {/* H5 · Two worlds: the doors (Merged Section 4 & 5) */}
+      {/* H5 · The doors */}
       <section
         ref={h5Ref}
         data-scene="H5"
-        aria-labelledby="home-worlds-label"
+        aria-label="Two Worlds — Portals"
         className="scene-section scene-h5"
       >
         {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
         <DomTwins />
 
-        <div className="scene-sticky-desktop flex flex-col justify-between pt-20 pb-12 lg:py-16">
-          {/* Two-word heading from Section 4 on top of Section 5 */}
-          <div className="site-container flex flex-col items-center text-center gap-2 pt-4 sm:pt-6">
-            <p className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.14em] text-[var(--steel)]">
-              {site.home.season.label}
-            </p>
-            <h2
-              id="home-worlds-label"
-              className="font-unbounded text-[clamp(26px,3.6vw,54px)] leading-[1.05] tracking-[-0.025em] font-black uppercase text-[var(--paper)] balance-heading"
-            >
-              TWO WORLDS
-            </h2>
-          </div>
+        <div className="scene-sticky-desktop flex flex-col justify-end pt-20 pb-12 lg:py-16">
+          <h2 className="sr-only">Two Worlds</h2>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
           <div
