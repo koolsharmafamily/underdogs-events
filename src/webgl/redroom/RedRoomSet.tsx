@@ -275,7 +275,7 @@ export function RedRoomSet() {
       candleLight2Ref.current.intensity = (2.2 + flareBonus) * flicker2;
     }
     if (badgePointLightRef.current) {
-      badgePointLightRef.current.intensity = 3.8;
+      badgePointLightRef.current.intensity = 2.4;
     }
   });
 
@@ -285,12 +285,12 @@ export function RedRoomSet() {
       <ambientLight intensity={0.15} color="#1C0304" />
       <directionalLight
         position={[-4.0, 5.0, 3.5]}
-        intensity={0.35}
+        intensity={0.45}
         color="#FFE0B0"
       />
       <directionalLight
         position={[3.5, 4.0, 3.0]}
-        intensity={0.15}
+        intensity={0.2}
         color="#FFB36B"
       />
 
@@ -314,12 +314,12 @@ export function RedRoomSet() {
         decay={2}
       />
 
-      {/* Real Point Light 3: Badge neon & table illumination (#FF1500) */}
+      {/* Real Point Light 3: Badge neon & table illumination (#FF2A1F) */}
       <pointLight
         ref={badgePointLightRef}
-        position={[0, 1.85, 0.8]}
-        color="#FF1500"
-        intensity={4.2}
+        position={[0, 1.85, 0.9]}
+        color="#FF2A1F"
+        intensity={2.4}
         distance={8}
         decay={2}
       />

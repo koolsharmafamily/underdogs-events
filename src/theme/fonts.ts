@@ -7,6 +7,7 @@ import {
   Tiro_Devanagari_Hindi,
   Manrope,
   JetBrains_Mono,
+  Nosifer,
 } from 'next/font/google'
 
 export const unbounded = Unbounded({
@@ -82,16 +83,27 @@ export const jetbrainsMono = JetBrains_Mono({
   adjustFontFallback: true,
 })
 
+export const nosifer = Nosifer({
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
+  variable: '--font-nosifer',
+  preload: false,
+  adjustFontFallback: false,
+})
+
 export const coreFontVariables = [
   unbounded.variable,
   cinzel.variable,
   manrope.variable,
   jetbrainsMono.variable,
+  nosifer.variable,
 ].join(' ')
 
 export const redRoomFontVariables = [
   cinzelDecorative.variable,
   cormorantGaramond.variable,
+  nosifer.variable,
 ].join(' ')
 
 export const diwaliFontVariables = [

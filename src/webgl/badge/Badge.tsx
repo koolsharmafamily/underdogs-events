@@ -78,53 +78,6 @@ function prepareBadgeScene(
           mat.needsUpdate = true;
         }
 
-        // Configure Neon Reference 2 materials for Red Room
-        if (skinName === "neon") {
-          if (mesh.name === "Neon_Tubes" || origMat.name === "Neon_Glass_Red") {
-            mat.color.set("#FF7B4D");
-            mat.emissive.set("#FF1000");
-            mat.emissiveIntensity = 9.5;
-            mat.userData.baseEmissiveIntensity = 9.5;
-            mat.roughness = 0.05;
-          } else if (origMat.name === "Neon_Glyph_Fill") {
-            mat.color.set("#FF8255");
-            mat.emissive.set("#FF1800");
-            mat.emissiveIntensity = 8.5;
-            mat.userData.baseEmissiveIntensity = 8.5;
-            mat.roughness = 0.08;
-          } else if (
-            mesh.name === "Ring" ||
-            origMat.name === "Smoked_Black_Glass"
-          ) {
-            mat.color.set("#040102");
-            mat.emissive.set("#000000");
-            mat.emissiveIntensity = 0;
-            mat.userData.baseEmissiveIntensity = 0;
-            mat.roughness = 0.15;
-            mat.metalness = 0.2;
-          } else if (mesh.name === "Face" || origMat.name === "Black_Glass") {
-            mat.color.set("#080102");
-            mat.emissive.set("#150002");
-            mat.emissiveIntensity = 0.2;
-            mat.userData.baseEmissiveIntensity = 0.2;
-            mat.roughness = 0.12;
-            mat.metalness = 0.1;
-          } else if (origMat.name === "Black_Lacquer") {
-            mat.color.set("#040102");
-            mat.emissive.set("#000000");
-            mat.emissiveIntensity = 0;
-            mat.userData.baseEmissiveIntensity = 0;
-            mat.roughness = 0.2;
-            mat.metalness = 0.3;
-          } else if (origMat.name === "Blood_Gloss") {
-            mat.color.set("#FF1A00");
-            mat.emissive.set("#AA0500");
-            mat.emissiveIntensity = 3.0;
-            mat.userData.baseEmissiveIntensity = 3.0;
-          }
-          mat.needsUpdate = true;
-        }
-
         // Inject dissolve shader without modifying original material colours or properties
         injectDissolve(mat, uniforms);
         mesh.material = mat;
@@ -785,35 +738,6 @@ export function Badge({
               backTexture={backTexture}
               preparedMapRef={preparedMapRef}
             />
-            {/* Atmospheric Red Neon Halo Radiating Outside Badge */}
-            <mesh position={[0, 0, -0.03]}>
-              <planeGeometry args={[2.5, 2.5]} />
-              <shaderMaterial
-                transparent
-                depthWrite={false}
-                blending={THREE.AdditiveBlending}
-                vertexShader={`
-                  varying vec2 vUv;
-                  void main() {
-                    vUv = uv;
-                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-                  }
-                `}
-                fragmentShader={`
-                  varying vec2 vUv;
-                  void main() {
-                    vec2 p = vUv * 2.0 - 1.0;
-                    float r = length(p);
-                    // Badge outer radius is 0.5 in 1.0 badge -> r = 0.5 / 1.25 = 0.40 on 2.5 quad
-                    float halo = exp(-max(0.0, r - 0.38) * 5.5) * smoothstep(0.2, 0.40, r);
-                    float rimGlow = exp(-abs(r - 0.40) * 16.0) * 1.5;
-                    float total = halo * 1.8 + rimGlow;
-                    vec3 col = vec3(1.0, 0.06, 0.01) * total;
-                    gl_FragColor = vec4(col, clamp(total * 0.9, 0.0, 1.0));
-                  }
-                `}
-              />
-            </mesh>
           </Suspense>
         )}
       </group>

@@ -41,13 +41,12 @@ export function PostFX() {
     return null;
   }
 
-  // Tuned parameters for vibrant bloom
+  // Tuned parameters for balanced, authentic bloom
   const bloomIntensity =
-    world === "redroom" ? 1.45 : world === "diwali" ? 0.32 : 0.25;
+    world === "redroom" ? 0.38 : world === "diwali" ? 0.30 : 0.22;
   const bloomThreshold =
-    world === "redroom" ? 0.28 : 1.15;
-  const luminanceSmoothing =
-    world === "redroom" ? 0.65 : 0.3;
+    world === "redroom" ? 1.05 : 1.15;
+  const luminanceSmoothing = 0.3;
   const vignetteDarkness =
     world === "redroom" ? 0.65 : world === "diwali" ? 0.35 : 0.45;
 

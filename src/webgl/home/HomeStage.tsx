@@ -155,9 +155,39 @@ export function HomeStage() {
       });
     }
 
-    // Flame anchors from both doors (Flame_Anchor_L, Flame_Anchor_R on each)
+    // 1. Remove the two golden objects (Diya_L and Diya_R) at the bottom of the Diwali door
+    const diyaL = dScene.getObjectByName("Diya_L");
+    if (diyaL) diyaL.visible = false;
+    const diyaR = dScene.getObjectByName("Diya_R");
+    if (diyaR) diyaR.visible = false;
+
+    // 2. Change the white door outline/frame (carved_ivory_stone) to Diwali theme light pink (#F2B2D0)
+    dScene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const m = child as THREE.Mesh;
+        const orig = Array.isArray(m.material) ? m.material[0] : m.material;
+        if (
+          orig &&
+          (orig.name === "carved_ivory_stone" ||
+            orig.name.includes("stone") ||
+            orig.name.includes("ivory"))
+        ) {
+          const pinkMat = (orig as THREE.MeshStandardMaterial).clone();
+          pinkMat.color.set("#F2B2D0"); // Royal Diwali light pink
+          pinkMat.roughness = 0.45;
+          m.material = pinkMat;
+        }
+      }
+    });
+
+    // Flame anchors: red room sconces only (diwali door diyas removed)
     const rAnchors = findAnchorNodes(rScene, "Flame_Anchor");
-    const dAnchors = findAnchorNodes(dScene, "Flame_Anchor");
+    const dAnchors = findAnchorNodes(dScene, "Flame_Anchor").filter(
+      (a) =>
+        a.parent?.name !== "Diya_L" &&
+        a.parent?.name !== "Diya_R" &&
+        !a.name.includes("Diya"),
+    );
 
     // Measure exact visual heights to normalize door scales equally (Section 5)
     const rBox = new THREE.Box3().setFromObject(rScene);

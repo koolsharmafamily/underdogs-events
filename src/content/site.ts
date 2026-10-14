@@ -54,7 +54,7 @@ export const site = {
       one: { kicker: 'World One', name: 'The Red Room', occasion: 'Halloween',
              date: 'Sat 24 Oct 2026', place: 'Millo, Civil Lines, Nagpur',
              cta: 'Enter World One', href: '/the-red-room' },
-      two: { kicker: 'World Two', name: 'Diwali', occasion: 'Festival of lights',
+      two: { kicker: 'World Two', name: 'Dhamaka', occasion: 'Festival of lights',
              date: 'Sat 7 Nov 2026', place: `Venue: ${ANNOUNCING_SOON}`,
              cta: 'Enter World Two', href: '/diwali' },
     },
@@ -91,6 +91,14 @@ export const site = {
         { label: 'Entry', value: ANNOUNCING_SOON },
       ],
     },
+    dj: {
+      name: 'DJ Mohnish',
+      role: 'Headline Artist · The Red Room Halloween',
+      genre: 'Afro-House · Dark Commercial · High-Energy Club Anthems',
+      bio: "Nagpur's premier nightlife authority and resident crowd-controller at Millo Nagpur. Renowned for electrifying dancefloors with signature high-octane transitions, dark Afro-house grooves, and pulse-pounding commercial anthems, DJ Mohnish takes control of the decks for an unforgettable Halloween descent into The Red Room.",
+      venue: 'Millo — Kitchen & Bar, Civil Lines, Nagpur',
+      date: 'Saturday 24 October 2026',
+    },
     partners: {
       label: 'In association with',
       list: [                                      // (client) poster + caption
@@ -111,19 +119,26 @@ export const site = {
 
   diwali: {
     meta: {
-      title: 'Diwali — World Two · Underdogs Nagpur',
+      title: 'Dhamaka — World Two · Underdogs Nagpur',
       description:
-        'World Two: Diwali with Underdogs — Saturday 7 November 2026, Nagpur. Venue and details announcing soon.',
+        'World Two: Dhamaka with Underdogs — Saturday 7 November 2026, Nagpur. Venue and details announcing soon.',
     },
     titleCard: { presenter: 'Underdogs present', title: ['This year,', 'different.'] },
-    kicker: 'World Two · Diwali',
-    title: 'Diwali',
-    accent: 'दीपावली',
+    kicker: 'World Two · Dhamaka',
+    title: 'Dhamaka',
+    accent: 'दीपावली धमाका',
     sub: 'Saturday 7 November 2026 · Nagpur',
     jump: 'Details',
     story: ['Two worlds.', 'Two occasions.', 'Two very different nights.', 'You’ve seen one.', 'Now meet the other.'], // (client)
+    dj: {
+      name: 'DJ Yogi',
+      role: 'Headline Artist · Diwali Dhamaka',
+      genre: 'Bollywood-EDM · Festival Anthems · Celebrity Remixes',
+      bio: "One of India's most celebrated Bollywood-EDM powerhouses and official remix producer for chart-toppers like Neha Kakkar, Badshah, and Guru Randhawa. Having set stages ablaze across Mumbai, Delhi, Dubai, and New York, DJ Yogi brings festival-grade euphoria and massive celebratory anthems to headline Nagpur's royal Diwali Dhamaka.",
+      date: 'Saturday 7 November 2026',
+    },
     invitation: {
-      heading: 'Diwali with Underdogs',
+      heading: 'Dhamaka with Underdogs',
       rows: [
         { label: 'Date', value: 'Saturday, 7 November 2026' },
         { label: 'Time', value: ANNOUNCING_SOON },
@@ -232,6 +247,14 @@ export const siteSchema = z.object({
       heading: z.string().min(1),
       rows: z.array(invitationRowSchema).length(5),
     }),
+    dj: z.object({
+      name: z.string().min(1),
+      role: z.string().min(1),
+      genre: z.string().min(1),
+      bio: z.string().min(1),
+      venue: z.string().optional(),
+      date: z.string().min(1),
+    }).optional(),
     partners: z.object({
       label: z.string().min(1),
       list: z.array(z.object({ role: z.string().min(1), name: z.string().min(1) })).length(4),
@@ -256,6 +279,13 @@ export const siteSchema = z.object({
     sub: z.string().min(1),
     jump: z.string().min(1),
     story: z.tuple([z.string(), z.string(), z.string(), z.string(), z.string()]),
+    dj: z.object({
+      name: z.string().min(1),
+      role: z.string().min(1),
+      genre: z.string().min(1),
+      bio: z.string().min(1),
+      date: z.string().min(1),
+    }).optional(),
     invitation: z.object({
       heading: z.string().min(1),
       rows: z.array(invitationRowSchema).length(5),

@@ -133,7 +133,10 @@ export function RedRoomView() {
 
             {/* Title with SVG blood drips layer underneath (Part 8 R1) */}
             <div className="relative inline-block">
-              <h1 ref={titleRef} className="font-cinzel-decorative text-[clamp(2rem,4.4vw,3.6rem)] font-black uppercase text-[var(--rr-bone)] leading-none balance-heading drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
+              <h1
+                ref={titleRef}
+                className="font-nosifer text-[clamp(2.2rem,4.6vw,3.8rem)] font-normal uppercase text-[#D20A15] tracking-[0.05em] leading-[1.1] balance-heading drop-shadow-[0_6px_24px_rgba(210,10,21,0.7)]"
+              >
                 {site.redRoom.title}
               </h1>
 
@@ -354,6 +357,79 @@ export function RedRoomView() {
                 />
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* R4.5 · Headline Artist: DJ Mohnish */}
+      <section
+        data-scene="R-DJ"
+        aria-label="Headline Artist — DJ Mohnish"
+        className="relative z-20 py-20 border-t border-[var(--rr-blood)]/30 bg-gradient-to-b from-transparent via-[#100203]/90 to-transparent"
+      >
+        <div className="site-container site-grid items-center gap-y-10">
+          {/* Artist Portrait Placeholder */}
+          <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
+            <div className="relative group w-full max-w-[340px] aspect-[4/5] rounded-sm p-3 bg-gradient-to-b from-[#350505] to-[#120102] border border-[#FF2A1F]/30 shadow-[0_12px_40px_rgba(255,42,31,0.15)] flex flex-col items-center justify-center overflow-hidden">
+              {/* Outer decorative corners */}
+              <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#FF2A1F]/60" />
+              <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#FF2A1F]/60" />
+              <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#FF2A1F]/60" />
+              <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#FF2A1F]/60" />
+
+              {/* Placeholder Inner Frame */}
+              <div className="w-full h-full border border-dashed border-[#FF2A1F]/30 bg-[#0a0102]/80 flex flex-col items-center justify-center p-6 text-center gap-4">
+                <div className="w-20 h-20 rounded-full border border-[#FF2A1F]/40 bg-[#1a0203] flex items-center justify-center shadow-[0_0_20px_rgba(255,42,31,0.2)]">
+                  <svg
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#FF2A1F"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="font-cinzel text-[14px] uppercase tracking-[0.2em] text-[var(--rr-bone)] font-semibold">
+                    DJ MOHNISH
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--rr-ash)]">
+                    Official Artist Photo Placeholder
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Artist Bio & Profile */}
+          <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-7 flex flex-col items-start text-left gap-5">
+            <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[var(--rr-neon)]">
+              {site.redRoom.dj.role}
+            </span>
+            <h2 className="font-nosifer text-[clamp(1.8rem,3.4vw,2.8rem)] font-normal uppercase text-[#D20A15] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.65)] leading-tight">
+              {site.redRoom.dj.name}
+            </h2>
+            <p className="font-cinzel text-[12px] sm:text-[13px] uppercase tracking-[0.18em] text-[var(--rr-bone)]/90">
+              {site.redRoom.dj.genre}
+            </p>
+            <p className="font-manrope text-[15px] sm:text-[16px] leading-[1.7] text-[var(--rr-bone)]/80 max-w-[540px]">
+              {site.redRoom.dj.bio}
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--rr-ash)]">
+              <span className="inline-flex items-center gap-2 border border-[#FF2A1F]/30 bg-[#150203] px-3.5 py-1.5 rounded-sm text-[var(--rr-bone)]">
+                {site.redRoom.dj.date}
+              </span>
+              <span className="inline-flex items-center gap-2 border border-[#FF2A1F]/30 bg-[#150203] px-3.5 py-1.5 rounded-sm text-[var(--rr-bone)]">
+                {site.redRoom.dj.venue}
+              </span>
+            </div>
           </div>
         </div>
       </section>

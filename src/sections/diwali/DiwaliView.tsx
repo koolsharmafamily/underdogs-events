@@ -302,6 +302,79 @@ export function DiwaliView() {
         </div>
       </section>
 
+      {/* D4.5 · Headline Artist: DJ Yogi */}
+      <section
+        data-scene="D-DJ"
+        aria-label="Headline Artist — DJ Yogi"
+        className="relative z-20 py-20 border-t border-[var(--dw-gold)]/25 bg-gradient-to-b from-transparent via-[#250817]/85 to-transparent"
+      >
+        <div className="site-container site-grid items-center gap-y-10">
+          {/* Artist Portrait Placeholder */}
+          <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
+            <div className="relative group w-full max-w-[340px] aspect-[4/5] rounded-sm p-3 bg-gradient-to-b from-[#3d0f28] to-[#1a0511] border border-[var(--dw-gold-bright)]/40 shadow-[0_12px_40px_rgba(242,211,139,0.15)] flex flex-col items-center justify-center overflow-hidden">
+              {/* Outer decorative gold corners */}
+              <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[var(--dw-gold-bright)]" />
+              <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[var(--dw-gold-bright)]" />
+              <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[var(--dw-gold-bright)]" />
+              <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[var(--dw-gold-bright)]" />
+
+              {/* Placeholder Inner Frame */}
+              <div className="w-full h-full border border-dashed border-[var(--dw-gold)]/35 bg-[#14020c]/85 flex flex-col items-center justify-center p-6 text-center gap-4">
+                <div className="w-20 h-20 rounded-full border border-[var(--dw-gold-bright)]/50 bg-[#2a081c] flex items-center justify-center shadow-[0_0_24px_rgba(242,211,139,0.25)]">
+                  <svg
+                    width="36"
+                    height="36"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#F2D38B"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                  </svg>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="font-cinzel text-[14px] uppercase tracking-[0.2em] text-[var(--dw-ivory)] font-semibold">
+                    DJ YOGI
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--dw-gold)]">
+                    Official Artist Photo Placeholder
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Artist Bio & Profile */}
+          <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-7 flex flex-col items-start text-left gap-5">
+            <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[var(--dw-gold-bright)]">
+              {site.diwali.dj.role}
+            </span>
+            <h2 className="font-bodoni italic text-[clamp(2.4rem,4.4vw,3.6rem)] font-medium text-[var(--dw-ivory)] leading-tight">
+              {site.diwali.dj.name}
+            </h2>
+            <p className="font-cinzel text-[12px] sm:text-[13px] uppercase tracking-[0.18em] text-[var(--dw-gold-bright)]/90">
+              {site.diwali.dj.genre}
+            </p>
+            <p className="font-manrope text-[15px] sm:text-[16px] leading-[1.7] text-[var(--dw-ivory)]/85 max-w-[540px]">
+              {site.diwali.dj.bio}
+            </p>
+            <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--dw-gold)]">
+              <span className="inline-flex items-center gap-2 border border-[var(--dw-gold)]/40 bg-[#250817] px-3.5 py-1.5 rounded-sm text-[var(--dw-ivory)]">
+                {site.diwali.dj.date}
+              </span>
+              <span className="inline-flex items-center gap-2 border border-[var(--dw-gold)]/40 bg-[#250817] px-3.5 py-1.5 rounded-sm text-[var(--dw-gold-bright)]">
+                Diwali Dhamaka · Nagpur
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* D5 · Outro (90vh, pinned) */}
       <section
         ref={d5Ref}

@@ -166,6 +166,10 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.font-nosifer {
+  font-family: var(--font-nosifer), cursive, sans-serif;
+}
+
 /* Type scale (Part 4.2) */
 .text-display-xl {
   font-size: clamp(56px, 10vw, 184px);

@@ -3,274 +3,161 @@
 import React, { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
-import { getAnchorOffsetFromRoot, InstancedFlameShader } from "../fx/Flame";
+import { getAnchorOffsetFromRoot } from "../fx/Flame";
 
 interface DiyaInstanceSpec {
   type: "terracotta" | "brass";
   pos: [number, number, number];
   scale: number;
   rotY: number;
-  floating: boolean;
-  speed: number;
   phase: number;
+  hasChain?: boolean;
 }
 
-// 12 terracotta diyas on the floor (y = 0) in a soft arc in front of the badge (uniform scale ×3)
-const FLOOR_TERRACOTTA_DIYAS: DiyaInstanceSpec[] = Array.from(
-  { length: 12 },
-  (_, i) => {
-    const t = i / 11; // 0..1
-    const angle = THREE.MathUtils.lerp(-1.18, 1.18, t);
-    const radius = 1.45 + (i % 2 === 0 ? 0.14 : -0.06);
-    const x = Math.sin(angle) * radius;
-    const z = Math.cos(angle) * radius - 0.15;
-    return {
-      type: "terracotta",
-      pos: [Number(x.toFixed(3)), 0, Number(z.toFixed(3))],
-      scale: 3.0,
-      rotY: -angle * 0.65,
-      floating: false,
-      speed: 0,
-      phase: i * 0.52,
-    };
-  },
-);
+// Authentic luxury Diwali lamp placement:
+// 1. Lower tiered lamps framing the stage and marigold floor (y = 0.42..0.85)
+// 2. Flanking palace hanging brass deepams suspended along the sides (y = 1.1..2.35)
+const DIYA_SPECS: DiyaInstanceSpec[] = [
+  // Flanking Left Hanging Brass & Terracotta Deepams
+  { type: "brass", pos: [-2.25, 1.25, 0.6], scale: 4.2, rotY: 0.35, phase: 0.0, hasChain: true },
+  { type: "terracotta", pos: [-1.65, 0.85, 1.1], scale: 3.8, rotY: 0.25, phase: 0.8 },
+  { type: "brass", pos: [-2.55, 1.95, -0.1], scale: 4.4, rotY: 0.45, phase: 1.5, hasChain: true },
+  { type: "terracotta", pos: [-1.95, 2.35, -0.5], scale: 4.0, rotY: 0.3, phase: 2.3, hasChain: true },
+  { type: "brass", pos: [-2.8, 2.75, -0.8], scale: 4.5, rotY: 0.55, phase: 3.1, hasChain: true },
 
-// 24 floating diyas (mix of brass and terracotta, desktop; 10 mobile) at z = -3..+2, y = 0.4..3.2, scale ×2.5..4
-const FLOATING_DIYAS_24: DiyaInstanceSpec[] = [
-  {
-    type: "brass",
-    pos: [-2.1, 1.15, 0.4],
-    scale: 3.2,
-    rotY: 0.2,
-    floating: true,
-    speed: 0.9,
-    phase: 0.0,
-  },
-  {
-    type: "terracotta",
-    pos: [2.05, 1.25, 0.3],
-    scale: 3.1,
-    rotY: -0.2,
-    floating: true,
-    speed: 0.85,
-    phase: 0.5,
-  },
-  {
-    type: "brass",
-    pos: [-2.6, 2.35, -0.4],
-    scale: 3.6,
-    rotY: 0.35,
-    floating: true,
-    speed: 0.78,
-    phase: 1.1,
-  },
-  {
-    type: "terracotta",
-    pos: [2.55, 2.25, -0.5],
-    scale: 3.5,
-    rotY: -0.3,
-    floating: true,
-    speed: 0.88,
-    phase: 1.6,
-  },
-  {
-    type: "brass",
-    pos: [-1.35, 0.65, 1.45],
-    scale: 2.8,
-    rotY: 0.15,
-    floating: true,
-    speed: 1.02,
-    phase: 2.1,
-  },
-  {
-    type: "terracotta",
-    pos: [1.38, 0.72, 1.4],
-    scale: 2.85,
-    rotY: -0.18,
-    floating: true,
-    speed: 0.94,
-    phase: 2.6,
-  },
-  {
-    type: "brass",
-    pos: [-1.75, 2.85, -1.2],
-    scale: 3.4,
-    rotY: 0.4,
-    floating: true,
-    speed: 0.82,
-    phase: 3.1,
-  },
-  {
-    type: "terracotta",
-    pos: [1.8, 2.75, -1.1],
-    scale: 3.35,
-    rotY: -0.4,
-    floating: true,
-    speed: 0.86,
-    phase: 3.6,
-  },
-  {
-    type: "brass",
-    pos: [-2.85, 1.55, -1.6],
-    scale: 3.8,
-    rotY: 0.5,
-    floating: true,
-    speed: 0.92,
-    phase: 4.1,
-  },
-  {
-    type: "terracotta",
-    pos: [2.8, 1.62, -1.5],
-    scale: 3.7,
-    rotY: -0.45,
-    floating: true,
-    speed: 0.89,
-    phase: 4.6,
-  },
-  // Desktop-only additional 14 floating diyas (depths z = -3..+2, heights y = 0.4..3.2, scale 2.5..4)
-  {
-    type: "brass",
-    pos: [-0.95, 2.95, -1.9],
-    scale: 3.1,
-    rotY: 0.1,
-    floating: true,
-    speed: 0.8,
-    phase: 5.1,
-  },
-  {
-    type: "terracotta",
-    pos: [0.98, 3.05, -1.85],
-    scale: 3.15,
-    rotY: -0.1,
-    floating: true,
-    speed: 0.84,
-    phase: 5.6,
-  },
-  {
-    type: "brass",
-    pos: [-2.2, 0.52, -0.8],
-    scale: 2.7,
-    rotY: 0.3,
-    floating: true,
-    speed: 0.96,
-    phase: 0.3,
-  },
-  {
-    type: "terracotta",
-    pos: [2.25, 0.58, -0.75],
-    scale: 2.75,
-    rotY: -0.28,
-    floating: true,
-    speed: 0.91,
-    phase: 0.8,
-  },
-  {
-    type: "brass",
-    pos: [-3.1, 2.05, 0.85],
-    scale: 3.9,
-    rotY: 0.45,
-    floating: true,
-    speed: 0.76,
-    phase: 1.4,
-  },
-  {
-    type: "terracotta",
-    pos: [3.05, 1.98, 0.8],
-    scale: 3.85,
-    rotY: -0.42,
-    floating: true,
-    speed: 0.79,
-    phase: 1.9,
-  },
-  {
-    type: "brass",
-    pos: [-1.55, 1.85, -2.5],
-    scale: 3.3,
-    rotY: 0.22,
-    floating: true,
-    speed: 0.87,
-    phase: 2.4,
-  },
-  {
-    type: "terracotta",
-    pos: [1.58, 1.92, -2.4],
-    scale: 3.25,
-    rotY: -0.25,
-    floating: true,
-    speed: 0.83,
-    phase: 2.9,
-  },
-  {
-    type: "brass",
-    pos: [-2.45, 3.12, -2.2],
-    scale: 3.7,
-    rotY: 0.38,
-    floating: true,
-    speed: 0.75,
-    phase: 3.4,
-  },
-  {
-    type: "terracotta",
-    pos: [2.42, 3.08, -2.1],
-    scale: 3.65,
-    rotY: -0.36,
-    floating: true,
-    speed: 0.77,
-    phase: 3.9,
-  },
-  {
-    type: "brass",
-    pos: [-2.15, 0.88, 1.75],
-    scale: 2.6,
-    rotY: 0.28,
-    floating: true,
-    speed: 1.04,
-    phase: 4.4,
-  },
-  {
-    type: "terracotta",
-    pos: [2.12, 0.92, 1.7],
-    scale: 2.65,
-    rotY: -0.26,
-    floating: true,
-    speed: 1.0,
-    phase: 4.9,
-  },
-  {
-    type: "brass",
-    pos: [-0.65, 2.55, -2.85],
-    scale: 3.0,
-    rotY: 0.08,
-    floating: true,
-    speed: 0.81,
-    phase: 5.4,
-  },
-  {
-    type: "terracotta",
-    pos: [0.68, 2.62, -2.8],
-    scale: 2.95,
-    rotY: -0.08,
-    floating: true,
-    speed: 0.85,
-    phase: 5.9,
-  },
+  // Flanking Right Hanging Brass & Terracotta Deepams
+  { type: "brass", pos: [2.25, 1.25, 0.6], scale: 4.2, rotY: -0.35, phase: 0.4, hasChain: true },
+  { type: "terracotta", pos: [1.65, 0.85, 1.1], scale: 3.8, rotY: -0.25, phase: 1.2 },
+  { type: "brass", pos: [2.55, 1.95, -0.1], scale: 4.4, rotY: -0.45, phase: 1.9, hasChain: true },
+  { type: "terracotta", pos: [1.95, 2.35, -0.5], scale: 4.0, rotY: -0.3, phase: 2.7, hasChain: true },
+  { type: "brass", pos: [2.8, 2.75, -0.8], scale: 4.5, rotY: -0.55, phase: 3.5, hasChain: true },
+
+  // Lower Crescent Arc Lamps (framing the central space)
+  { type: "brass", pos: [-1.35, 0.58, 1.45], scale: 3.6, rotY: 0.15, phase: 0.5 },
+  { type: "terracotta", pos: [-0.95, 0.46, 1.65], scale: 3.5, rotY: 0.08, phase: 1.4 },
+  { type: "brass", pos: [-0.48, 0.42, 1.78], scale: 3.6, rotY: 0.02, phase: 2.2 },
+  { type: "terracotta", pos: [0.0, 0.40, 1.82], scale: 3.7, rotY: 0.0, phase: 3.0 },
+  { type: "brass", pos: [0.48, 0.42, 1.78], scale: 3.6, rotY: -0.02, phase: 3.8 },
+  { type: "terracotta", pos: [0.95, 0.46, 1.65], scale: 3.5, rotY: -0.08, phase: 4.6 },
+  { type: "brass", pos: [1.35, 0.58, 1.45], scale: 3.6, rotY: -0.15, phase: 5.4 },
 ];
 
-interface SubMeshEntry {
-  geometry: THREE.BufferGeometry;
-  material: THREE.Material;
-}
+// Realistic Diya Flame Shader with authentic ghee flame physics:
+// Incandescent white-hot teardrop, golden-amber core, warm blue wick anchor, soft radial glow
+const RealisticFlameShader = {
+  vertexShader: /* glsl */ `
+    attribute float aPhase;
+    attribute float aIntensity;
+    uniform vec2 uBaseScale;
+    varying vec2 vUv;
+    varying float vPhase;
+    varying float vIntensity;
 
-function extractSubMeshes(root: THREE.Object3D): SubMeshEntry[] {
-  const list: SubMeshEntry[] = [];
+    void main() {
+      vUv = uv;
+      vPhase = aPhase;
+      vIntensity = aIntensity;
+
+      vec4 instOrigin = instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+      float instScale = length(instanceMatrix[0].xyz);
+
+      vec4 mvPosition = modelViewMatrix * instOrigin;
+      // Position quad with flame base right at anchor point
+      vec2 quadOffset = vec2(position.x, position.y + 0.32);
+      mvPosition.xy += quadOffset * uBaseScale * instScale;
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `,
+  fragmentShader: /* glsl */ `
+    uniform float uTime;
+    varying vec2 vUv;
+    varying float vPhase;
+    varying float vIntensity;
+
+    void main() {
+      // 1. Soft radial warm light spill (exponential falloff around flame)
+      vec2 haloCoord = (vUv - vec2(0.5, 0.34)) * vec2(1.8, 1.4);
+      float haloDist = dot(haloCoord, haloCoord);
+      float halo = exp(-haloDist * 5.0) * 0.55;
+
+      // 2. Physical teardrop flame shape
+      vec2 p = vec2((vUv.x - 0.5) * 2.2, (vUv.y - 0.14) * 1.5);
+      float y = clamp(p.y, 0.0, 1.0);
+      float w = sqrt(max(0.0, y)) * (1.0 - y) * 1.6;
+
+      // Organic gentle wave flicker
+      float wave = sin(uTime * 14.0 + vPhase + y * 5.0) * 0.035 * y
+                 + cos(uTime * 9.0 + vPhase * 1.7) * 0.02 * y;
+      float dist = abs(p.x - wave);
+
+      float coreMask = 0.0;
+      if (y > 0.01 && y < 0.98 && dist < w) {
+        float edge = 1.0 - smoothstep(0.0, w, dist);
+        float vert = 1.0 - y * 0.85;
+        coreMask = edge * vert;
+      }
+
+      if (halo < 0.008 && coreMask <= 0.001) discard;
+
+      // Color layers of an authentic ghee flame
+      vec3 colBlueWick = vec3(0.2, 0.45, 0.9);   // Subtle blue at wick root
+      vec3 colAmber = vec3(1.0, 0.40, 0.04);      // Outer warm flame crest
+      vec3 colGold = vec3(1.0, 0.78, 0.16);       // Middle golden ghee flame
+      vec3 colHotCore = vec3(1.0, 0.98, 0.94);    // Incandescent white center
+
+      // Blend based on height y and coreMask
+      vec3 flameCol = mix(colGold, colHotCore, clamp(coreMask * 2.2, 0.0, 1.0));
+      flameCol = mix(colAmber, flameCol, clamp(y * 1.4, 0.0, 1.0));
+      // Base blue tint near y <= 0.14
+      flameCol = mix(colBlueWick, flameCol, smoothstep(0.02, 0.16, y));
+
+      vec3 finalCol = colAmber * halo * 1.8 + flameCol * coreMask * 3.4;
+      float alpha = clamp((halo * 1.1 + coreMask * 2.0) * vIntensity, 0.0, 1.0);
+
+      gl_FragColor = vec4(finalCol * vIntensity, alpha);
+    }
+  `,
+};
+
+function enhanceSubMeshes(root: THREE.Object3D, type: "terracotta" | "brass") {
+  const list: { geometry: THREE.BufferGeometry; material: THREE.Material }[] = [];
   root.traverse((node) => {
     if ((node as THREE.Mesh).isMesh) {
       const m = node as THREE.Mesh;
-      const mat = Array.isArray(m.material) ? m.material[0] : m.material;
+      const orig = Array.isArray(m.material) ? m.material[0] : m.material;
+      const mat = (orig as THREE.MeshStandardMaterial).clone();
+
+      if (type === "brass") {
+        if (mat.name.toLowerCase().includes("brass") || m.name === "Diya") {
+          mat.color.set("#E5AF4D");
+          mat.metalness = 0.94;
+          mat.roughness = 0.22;
+        } else if (mat.name.toLowerCase().includes("oil") || m.name === "Oil") {
+          mat.color.set("#2A1403");
+          mat.metalness = 0.1;
+          mat.roughness = 0.04;
+        } else if (mat.name.toLowerCase().includes("wick") || m.name === "Wick") {
+          mat.color.set("#150C07");
+          mat.roughness = 0.95;
+        }
+      } else {
+        if (mat.name.toLowerCase().includes("terra") || m.name === "Diya") {
+          mat.color.set("#9E4424");
+          mat.metalness = 0.02;
+          mat.roughness = 0.68;
+        } else if (mat.name.toLowerCase().includes("oil") || m.name === "Oil") {
+          mat.color.set("#251102");
+          mat.metalness = 0.1;
+          mat.roughness = 0.04;
+        } else if (mat.name.toLowerCase().includes("wick") || m.name === "Wick") {
+          mat.color.set("#150C07");
+          mat.roughness = 0.95;
+        }
+      }
+
       list.push({ geometry: m.geometry, material: mat });
     }
   });
@@ -278,13 +165,9 @@ function extractSubMeshes(root: THREE.Object3D): SubMeshEntry[] {
 }
 
 export function DiyaField() {
-  const { size } = useThree();
-  const isMobile = size.width < 768;
-
   const brassGltf = useGLTF("/models/diwali-diya-brass.glb");
   const terraGltf = useGLTF("/models/diwali-diya-terracotta.glb");
 
-  // Extract sub-meshes (Diya, Oil, Wick) and Flame_Anchor offset from each GLB (zero clone())
   const {
     terraSubMeshes,
     brassSubMeshes,
@@ -294,15 +177,13 @@ export function DiyaField() {
     brassSpecs,
     allSpecs,
   } = useMemo(() => {
-    const tSubs = extractSubMeshes(terraGltf.scene);
-    const bSubs = extractSubMeshes(brassGltf.scene);
+    const tSubs = enhanceSubMeshes(terraGltf.scene, "terracotta");
+    const bSubs = enhanceSubMeshes(brassGltf.scene, "brass");
     const tAnchor = getAnchorOffsetFromRoot(terraGltf.scene, "Flame_Anchor");
     const bAnchor = getAnchorOffsetFromRoot(brassGltf.scene, "Flame_Anchor");
 
-    const floatingSlice = FLOATING_DIYAS_24.slice(0, isMobile ? 10 : 24);
-    const combined = [...FLOOR_TERRACOTTA_DIYAS, ...floatingSlice];
-    const tSpecs = combined.filter((d) => d.type === "terracotta");
-    const bSpecs = combined.filter((d) => d.type === "brass");
+    const tSpecs = DIYA_SPECS.filter((d) => d.type === "terracotta");
+    const bSpecs = DIYA_SPECS.filter((d) => d.type === "brass");
 
     return {
       terraSubMeshes: tSubs,
@@ -313,7 +194,7 @@ export function DiyaField() {
       brassSpecs: bSpecs,
       allSpecs: [...tSpecs, ...bSpecs],
     };
-  }, [terraGltf.scene, brassGltf.scene, isMobile]);
+  }, [terraGltf.scene, brassGltf.scene]);
 
   const terraMeshRefs = useRef<(THREE.InstancedMesh | null)[]>([]);
   const brassMeshRefs = useRef<(THREE.InstancedMesh | null)[]>([]);
@@ -322,14 +203,14 @@ export function DiyaField() {
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const flameVec = useMemo(() => new THREE.Vector3(), []);
 
-  // Single InstancedMesh for all diya flames + additive halos
+  // Single InstancedMesh for realistic flames
   const { flameGeo, flameMat } = useMemo(() => {
     const total = allSpecs.length;
     const geo = new THREE.PlaneGeometry(1, 1);
     const intensities = new Float32Array(total);
     const phases = new Float32Array(total);
     for (let i = 0; i < total; i++) {
-      intensities[i] = 1.25;
+      intensities[i] = 1.45;
       phases[i] = allSpecs[i].phase;
     }
     geo.setAttribute(
@@ -339,13 +220,11 @@ export function DiyaField() {
     geo.setAttribute("aPhase", new THREE.InstancedBufferAttribute(phases, 1));
 
     const mat = new THREE.ShaderMaterial({
-      vertexShader: InstancedFlameShader.vertexShader,
-      fragmentShader: InstancedFlameShader.fragmentShader,
+      vertexShader: RealisticFlameShader.vertexShader,
+      fragmentShader: RealisticFlameShader.fragmentShader,
       uniforms: {
         uTime: { value: 0 },
-        uBaseScale: { value: new THREE.Vector2(0.075, 0.125) },
-        uColorCore: { value: new THREE.Color("#FFF5D6") },
-        uColorTip: { value: new THREE.Color("#FF8020") },
+        uBaseScale: { value: new THREE.Vector2(0.18, 0.32) },
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -355,7 +234,7 @@ export function DiyaField() {
     return { flameGeo: geo, flameMat: mat };
   }, [allSpecs]);
 
-  // Initialize static/initial matrices
+  // Initialize static matrices
   useEffect(() => {
     terraMeshRefs.current.forEach((im) => {
       if (im) im.frustumCulled = false;
@@ -363,9 +242,7 @@ export function DiyaField() {
     brassMeshRefs.current.forEach((im) => {
       if (im) im.frustumCulled = false;
     });
-    if (flameMeshRef.current) {
-      flameMeshRef.current.frustumCulled = false;
-    }
+    if (flameMeshRef.current) flameMeshRef.current.frustumCulled = false;
   }, [terraSpecs, brassSpecs]);
 
   useFrame(() => {
@@ -377,15 +254,12 @@ export function DiyaField() {
 
     let flameIdx = 0;
 
-    // 1. Update Terracotta Diya InstancedMeshes (12 floor + floating terracotta) & their Flame_Anchor positions
+    // 1. Update Terracotta Diya InstancedMeshes
     for (let i = 0; i < terraSpecs.length; i++) {
       const spec = terraSpecs[i];
-      const bob = spec.floating
-        ? Math.sin(t * spec.speed + spec.phase) * 0.04
-        : 0;
-      const y = spec.pos[1] + bob;
+      const gentleSway = Math.sin(t * 1.5 + spec.phase) * 0.015;
 
-      dummy.position.set(spec.pos[0], y, spec.pos[2]);
+      dummy.position.set(spec.pos[0], spec.pos[1] + gentleSway, spec.pos[2]);
       dummy.rotation.set(0, spec.rotY, 0);
       dummy.scale.setScalar(spec.scale * 0.65);
       dummy.updateMatrix();
@@ -395,7 +269,7 @@ export function DiyaField() {
         if (im) im.setMatrixAt(i, dummy.matrix);
       }
 
-      // Compute exact world position of Flame_Anchor for this diya instance
+      // Flame Anchor
       if (flameMeshRef.current) {
         flameVec.copy(terraAnchorOffset).applyMatrix4(dummy.matrix);
         dummy.position.copy(flameVec);
@@ -407,15 +281,12 @@ export function DiyaField() {
       flameIdx++;
     }
 
-    // 2. Update Brass Diya InstancedMeshes (floating brass) & their Flame_Anchor positions
+    // 2. Update Brass Diya InstancedMeshes
     for (let i = 0; i < brassSpecs.length; i++) {
       const spec = brassSpecs[i];
-      const bob = spec.floating
-        ? Math.sin(t * spec.speed + spec.phase) * 0.04
-        : 0;
-      const y = spec.pos[1] + bob;
+      const gentleSway = Math.sin(t * 1.5 + spec.phase) * 0.015;
 
-      dummy.position.set(spec.pos[0], y, spec.pos[2]);
+      dummy.position.set(spec.pos[0], spec.pos[1] + gentleSway, spec.pos[2]);
       dummy.rotation.set(0, spec.rotY, 0);
       dummy.scale.setScalar(spec.scale * 0.65);
       dummy.updateMatrix();
@@ -425,6 +296,7 @@ export function DiyaField() {
         if (im) im.setMatrixAt(i, dummy.matrix);
       }
 
+      // Flame Anchor
       if (flameMeshRef.current) {
         flameVec.copy(brassAnchorOffset).applyMatrix4(dummy.matrix);
         dummy.position.copy(flameVec);
@@ -475,7 +347,7 @@ export function DiyaField() {
         />
       ))}
 
-      {/* Instanced Diya Flames + Additive Halos on Flame_Anchor */}
+      {/* Instanced Diya Flames with authentic physical teardrop & glow */}
       <instancedMesh
         ref={flameMeshRef}
         args={[flameGeo, flameMat, allSpecs.length]}

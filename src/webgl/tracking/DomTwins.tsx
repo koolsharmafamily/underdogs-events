@@ -62,7 +62,7 @@ export function DomTwins() {
         <span className="sr-only">Enter World One: The Red Room</span>
       </TransitionLink>
 
-      {/* DOM Twin 2: Diwali */}
+      {/* DOM Twin 2: Diwali Dhamaka */}
       <TransitionLink
         ref={(el) => {
           domTwinRefs.diwali = el;
@@ -70,14 +70,14 @@ export function DomTwins() {
         href="/diwali"
         transitionType="T2"
         origin="door"
-        aria-label="Enter World Two: Diwali, Saturday 7 November 2026"
+        aria-label="Enter World Two: Dhamaka, Saturday 7 November 2026"
         onMouseEnter={handleEnterDiwali}
         onMouseLeave={handleLeave}
         onFocus={handleEnterDiwali}
         onBlur={handleLeave}
-        className="fixed top-0 left-0 block opacity-0 pointer-events-none cursor-pointer rounded-t-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--paper)] focus-visible:outline-offset-4 focus-visible:opacity-100 focus-visible:bg-[#F2D38B]/10 transition-colors duration-300"
+        className="fixed top-0 left-0 block opacity-0 pointer-events-none cursor-pointer rounded-t-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2B2D0] focus-visible:outline-offset-4 focus-visible:opacity-100 focus-visible:bg-[#F2B2D0]/15 transition-colors duration-300"
       >
-        <span className="sr-only">Enter World Two: Diwali</span>
+        <span className="sr-only">Enter World Two: Dhamaka</span>
       </TransitionLink>
     </div>
   );

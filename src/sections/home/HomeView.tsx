@@ -269,7 +269,7 @@ export function HomeView() {
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
                     {site.home.worlds.one.kicker}
                   </span>
-                  <span className="font-unbounded text-heading sm:text-display-m font-extrabold uppercase text-[#FCF9FC] tracking-[-0.02em] leading-[1.05]">
+                  <span className="font-nosifer text-heading sm:text-display-m uppercase text-[#D20A15] tracking-[0.05em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.7)] leading-[1.1]">
                     {site.home.worlds.one.name}
                   </span>
                   <span className="font-manrope text-body text-[#FCF9FC]/80">
@@ -312,11 +312,11 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor("diwali")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#F2D38B]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2D38B] transition-all duration-300"
+                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#F2B2D0]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2B2D0] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#F2D38B]">
+                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#F2B2D0]">
                     {site.home.worlds.two.kicker}
                   </span>
                   <span className="font-bodoni italic text-heading sm:text-display-m font-medium text-[#FFF6EE] leading-[1.05]">
@@ -325,14 +325,14 @@ export function HomeView() {
                   <span
                     className="font-manrope text-body text-[#FFF6EE]/85"
                     style={
-                      { "--world-accent": "#F2D38B" } as React.CSSProperties
+                      { "--world-accent": "#F2B2D0" } as React.CSSProperties
                     }
                   >
                     {site.home.worlds.two.occasion} ·{" "}
                     {site.home.worlds.two.date} ·{" "}
                     <AnnouncingSoon value={site.home.worlds.two.place} />
                   </span>
-                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#F2D38B] transition-colors">
+                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#F2B2D0] transition-colors">
                     <span>{site.home.worlds.two.cta}</span>
                     <svg
                       width="14"
