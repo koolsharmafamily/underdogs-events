@@ -176,7 +176,7 @@ export function HomeStage() {
       });
     }
 
-    // Change the white door outline/frame (carved_ivory_stone) to Diwali theme light pink (#F2B2D0)
+    // Change the door outline/frame (carved_ivory_stone) to vibrant Underdogs signature light pink (#FF70DE)
     dScene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const m = child as THREE.Mesh;
@@ -188,8 +188,9 @@ export function HomeStage() {
             orig.name.includes("ivory"))
         ) {
           const pinkMat = (orig as THREE.MeshStandardMaterial).clone();
-          pinkMat.color.set("#F2B2D0"); // Royal Diwali light pink
-          pinkMat.roughness = 0.45;
+          pinkMat.color.set("#FF70DE"); // Vibrant Underdogs signature light pink
+          pinkMat.roughness = 0.35;
+          pinkMat.metalness = 0.05;
           m.material = pinkMat;
         }
       }

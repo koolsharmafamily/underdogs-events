@@ -312,11 +312,11 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor("diwali")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#F2B2D0]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#F2B2D0] transition-all duration-300"
+                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF70DE]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF70DE] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#F2B2D0]">
+                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF70DE]">
                     {site.home.worlds.two.kicker}
                   </span>
                   <span className="font-bodoni italic text-heading sm:text-display-m font-medium text-[#FFF6EE] leading-[1.05]">
@@ -325,14 +325,14 @@ export function HomeView() {
                   <span
                     className="font-manrope text-body text-[#FFF6EE]/85"
                     style={
-                      { "--world-accent": "#F2B2D0" } as React.CSSProperties
+                      { "--world-accent": "#FF70DE" } as React.CSSProperties
                     }
                   >
                     {site.home.worlds.two.occasion} ·{" "}
                     {site.home.worlds.two.date} ·{" "}
                     <AnnouncingSoon value={site.home.worlds.two.place} />
                   </span>
-                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#F2B2D0] transition-colors">
+                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#FF70DE] transition-colors">
                     <span>{site.home.worlds.two.cta}</span>
                     <svg
                       width="14"
