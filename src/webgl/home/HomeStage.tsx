@@ -116,6 +116,51 @@ export function HomeStage() {
       node.removeFromParent();
     });
 
+    // Remove outer rectangular box frame, flat top cornice, and rectangular borders from Red Room
+    const rOuterToRemove = [
+      "Frame_Body",
+      "Gilt_Cornice",
+      "Gilt_Border",
+      "Plinth_L",
+      "Plinth_R",
+    ];
+    rOuterToRemove.forEach((name) => {
+      const obj = rScene.getObjectByName(name);
+      if (obj) obj.removeFromParent();
+    });
+
+    // Remove outer rectangular frame, hood, chhajja, cornice, and finials from Diwali door
+    const dOuterToRemove = [
+      "Frame_Body",
+      "Alfiz_Top",
+      "Alfiz_L",
+      "Alfiz_R",
+      "Chhajja",
+      "Chhajja_Edge",
+      "Bangaldar_Hood",
+      "Hood_Ridge",
+      "Finial_0",
+      "Finial_1",
+      "Finial_2",
+      "Cornice",
+      "Canopy_Bracket_L",
+      "Canopy_Bracket_R",
+      "Pilaster_L",
+      "Pilaster_R",
+      "Pilaster_Base_L",
+      "Pilaster_Base_R",
+      "Pilaster_Capital_L",
+      "Pilaster_Capital_R",
+      "Pilaster_Band_L",
+      "Pilaster_Band_R",
+      "Spandrel_Rosette_L",
+      "Spandrel_Rosette_R",
+    ];
+    dOuterToRemove.forEach((name) => {
+      const obj = dScene.getObjectByName(name);
+      if (obj) obj.removeFromParent();
+    });
+
     // Ground both standing doors using their world-space Box3 so threshold sits at y = 0 (Global Rule 2)
     groundObjectToY(rScene, 0);
     groundObjectToY(dScene, 0);
