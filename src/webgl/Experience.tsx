@@ -73,7 +73,7 @@ function TransitionTuning({ baseDpr }: { baseDpr: number | [number, number] }) {
   useFrame(() => {
     if (typeof window !== "undefined" && window.innerWidth < 768) {
       if (frame.transition.phase !== "idle") {
-        const reducedDpr = Math.max(1, dprVal - 0.25);
+        const reducedDpr = Math.max(1.5, dprVal - 0.25);
         if (gl.getPixelRatio() !== reducedDpr) {
           gl.setPixelRatio(reducedDpr);
         }
@@ -155,7 +155,7 @@ function CanvasInner() {
           dpr={settings.dpr}
           gl={{
             powerPreference: "high-performance",
-            antialias: settings.tier !== "T1",
+            antialias: true,
             alpha: true,
             outputColorSpace: THREE.SRGBColorSpace,
             toneMapping: settings.hasComposer

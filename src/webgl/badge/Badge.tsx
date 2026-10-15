@@ -71,6 +71,14 @@ function prepareBadgeScene(
           ((origMat as THREE.Material).clone() as THREE.MeshStandardMaterial);
         materials.set(key, mat);
 
+        if (mat.map) {
+          mat.map.anisotropy = 4;
+          mat.map.generateMipmaps = true;
+          mat.map.minFilter = THREE.LinearMipmapLinearFilter;
+          mat.map.magFilter = THREE.LinearFilter;
+          mat.map.needsUpdate = true;
+        }
+
         // Apply authentic engraved back texture bump relief (BRIEF.md Part 7 H2)
         if (mesh.name === "Back" && backTexture) {
           mat.bumpMap = backTexture;
@@ -430,59 +438,77 @@ export function Badge({
     );
 
     if (world === "home") {
-      const h0Scale = isMobile ? 0.8 : isTablet ? 0.96 : 1.12;
-      const h0X = isMobile ? 0 : isTablet ? 1.32 : 1.58;
-      const h0Y = isMobile ? (size.height < 700 ? 1.68 : 1.82) : 1.52;
+      if (isMobile) {
+        // Mobile phone home page: keep badge strictly at the beginning of the home page (Hero H1)
+        // Cleanly fades/scales down as H1 scrolls out, completely hidden in H2 and H5 so it NEVER overlaps doors or text!
+        const h0Scale = 0.88;
+        const h0X = 0;
+        const h0Y = size.height < 700 ? 1.72 : 1.88;
 
-      // H2: Keep badge firmly in the right column (x = 1.62 desktop, 1.35 tablet) and upper stage on mobile so it never overlaps text
-      const h2Scale = isMobile
-        ? motionEnabled
-          ? 0.68
-          : 0.56
-        : isTablet
-          ? 0.9
-          : 1.06;
-      const h2X = isMobile ? 0 : isTablet ? 1.35 : 1.62;
-      const h2Y = isMobile ? (motionEnabled ? 2.15 : 2.35) : 1.55;
-
-      const h5Scale = isMobile ? 0 : 0.38;
-      const h5X = 0;
-      const h5Y = isMobile ? 3.35 : 2.78; // Floats above and between doors on desktop; fades out on mobile stacked doors
-
-      if (scrollP <= 0.25) {
-        const t = Math.max(0, Math.min(1, scrollP / 0.25));
-        const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
-        choreoPos.current.set(
-          THREE.MathUtils.lerp(h0X, h2X, smoothT),
-          THREE.MathUtils.lerp(h0Y, h2Y, smoothT),
-          0,
-        );
-        choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
-        choreoYaw.current = 0;
-        h2SpinDone.current = false;
-      } else if (scrollP <= 0.65) {
-        choreoPos.current.set(h2X, h2Y, 0);
-        choreoScale.current = h2Scale;
-        const spinT = (scrollP - 0.25) / 0.4;
-        choreoYaw.current =
-          THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
-        h2SpinDone.current = spinT >= 0.98;
-      } else if (scrollP <= 0.82) {
-        // Smooth glide from H2 center-right to H5 top-center above the doors
-        const t = Math.max(0, Math.min(1, (scrollP - 0.65) / 0.17));
-        const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
-        choreoPos.current.set(
-          THREE.MathUtils.lerp(h2X, h5X, smoothT),
-          THREE.MathUtils.lerp(h2Y, h5Y, smoothT),
-          0,
-        );
-        choreoScale.current = THREE.MathUtils.lerp(h2Scale, h5Scale, smoothT);
-        choreoYaw.current = Math.PI * 2;
+        if (h1 < 0.65 && h2 === 0 && h5 === 0) {
+          // Beginning of the home page (Hero)
+          const exitT = Math.max(0, (h1 - 0.1) / 0.5);
+          const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
+          choreoPos.current.set(h0X, h0Y + exitT * 0.4, 0);
+          choreoScale.current = h0Scale * smoothFade;
+          choreoYaw.current = 0;
+          h2SpinDone.current = false;
+        } else {
+          // Past hero: completely hide badge on mobile home page
+          choreoPos.current.set(0, 4.0, 0);
+          choreoScale.current = 0;
+          choreoYaw.current = 0;
+          h2SpinDone.current = true;
+        }
       } else {
-        // H5: Badge floats above and between both doors at (0, 2.78, 0)
-        choreoPos.current.set(h5X, h5Y, 0);
-        choreoScale.current = h5Scale;
-        choreoYaw.current = Math.PI * 2;
+        const h0Scale = isTablet ? 0.96 : 1.12;
+        const h0X = isTablet ? 1.32 : 1.58;
+        const h0Y = 1.52;
+
+        // H2: Keep badge firmly in the right column (x = 1.62 desktop, 1.35 tablet)
+        const h2Scale = isTablet ? 0.9 : 1.06;
+        const h2X = isTablet ? 1.35 : 1.62;
+        const h2Y = 1.55;
+
+        const h5Scale = 0.38;
+        const h5X = 0;
+        const h5Y = 2.78; // Floats above and between doors on desktop
+
+        if (scrollP <= 0.25) {
+          const t = Math.max(0, Math.min(1, scrollP / 0.25));
+          const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
+          choreoPos.current.set(
+            THREE.MathUtils.lerp(h0X, h2X, smoothT),
+            THREE.MathUtils.lerp(h0Y, h2Y, smoothT),
+            0,
+          );
+          choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
+          choreoYaw.current = 0;
+          h2SpinDone.current = false;
+        } else if (scrollP <= 0.65) {
+          choreoPos.current.set(h2X, h2Y, 0);
+          choreoScale.current = h2Scale;
+          const spinT = (scrollP - 0.25) / 0.4;
+          choreoYaw.current =
+            THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
+          h2SpinDone.current = spinT >= 0.98;
+        } else if (scrollP <= 0.82) {
+          // Smooth glide from H2 center-right to H5 top-center above the doors
+          const t = Math.max(0, Math.min(1, (scrollP - 0.65) / 0.17));
+          const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
+          choreoPos.current.set(
+            THREE.MathUtils.lerp(h2X, h5X, smoothT),
+            THREE.MathUtils.lerp(h2Y, h5Y, smoothT),
+            0,
+          );
+          choreoScale.current = THREE.MathUtils.lerp(h2Scale, h5Scale, smoothT);
+          choreoYaw.current = Math.PI * 2;
+        } else {
+          // H5: Badge floats above and between both doors at (0, 2.78, 0)
+          choreoPos.current.set(h5X, h5Y, 0);
+          choreoScale.current = h5Scale;
+          choreoYaw.current = Math.PI * 2;
+        }
       }
     } else if (world === "redroom") {
       const r1 = frame.dampedProgress["R1"] ?? frame.dampedProgress["r1"] ?? 0;
@@ -552,8 +578,19 @@ export function Badge({
     // Framing changes only transforms, preserving the supplied GLB materials.
     if (composition.hero) {
       if (world === "home") {
-        choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.18 : 1.8, 0);
-        choreoScale.current = isMobile ? 1.0 : isTablet ? 1.35 : 1.9;
+        if (isMobile) {
+          const exitT = Math.max(0, (h1 - 0.1) / 0.5);
+          const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
+          choreoPos.current.set(
+            0,
+            (size.height < 700 ? 1.72 : 1.88) + exitT * 0.4,
+            0,
+          );
+          choreoScale.current = 0.88 * smoothFade;
+        } else {
+          choreoPos.current.set(1.75, 1.8, 0);
+          choreoScale.current = isTablet ? 1.35 : 1.9;
+        }
       } else {
         choreoPos.current.set(
           0,
@@ -563,9 +600,13 @@ export function Badge({
         choreoScale.current = isMobile ? 0.84 : 1.85;
       }
     } else if (composition.scene === "H2") {
-      choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.65 : 1.85, 0);
-      choreoScale.current = isMobile ? 0.7 : 1.6;
-      choreoYaw.current = 0.12;
+      if (world === "home" && isMobile) {
+        choreoScale.current = 0;
+      } else {
+        choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.65 : 1.85, 0);
+        choreoScale.current = isMobile ? 0.7 : 1.6;
+        choreoYaw.current = 0.12;
+      }
     } else if (composition.scene === "R6" || composition.scene === "D5") {
       choreoPos.current.set(0, 2.75, world === "redroom" ? 0.6 : 0);
       choreoScale.current = isMobile ? 0.55 : 0.85;
@@ -595,16 +636,19 @@ export function Badge({
       }
     }
 
-    rootRef.current.scale.setScalar(
+    const targetRootScale = choreoScale.current * popScale;
+    const nextScale =
       frame.snapCamera || phase !== "complete"
-        ? choreoScale.current
+        ? targetRootScale
         : THREE.MathUtils.damp(
             rootRef.current.scale.x,
-            choreoScale.current * popScale,
+            targetRootScale,
             12,
             delta,
-          ),
-    );
+          );
+
+    rootRef.current.scale.setScalar(nextScale);
+    rootRef.current.visible = nextScale > 0.001;
 
     const activePrepared = preparedMapRef.current[activeSkinRef.current];
     const currentNodes = activePrepared
