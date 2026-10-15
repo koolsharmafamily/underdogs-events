@@ -106,6 +106,7 @@ export const site = {
         { role: 'Venue partner', name: 'Millo — Kitchen & Bar' },
         { role: 'Glam partner', name: 'The Makeup Alchemy' },
         { role: 'Creative experience partner', name: 'Layerz' },
+        { role: 'Tech partner', name: 'Kool Korp' },
       ],
     },
     poster: { src: '/media/red-room-poster.webp', alt: 'Official poster: Underdogs present The Red Room, Halloween, save the date 24 October.' },
@@ -257,7 +258,7 @@ export const siteSchema = z.object({
     }).optional(),
     partners: z.object({
       label: z.string().min(1),
-      list: z.array(z.object({ role: z.string().min(1), name: z.string().min(1) })).length(4),
+      list: z.array(z.object({ role: z.string().min(1), name: z.string().min(1) })).min(1),
     }),
     poster: z.object({ src: z.string().startsWith('/'), alt: z.string().min(1) }),
     outro: z.object({

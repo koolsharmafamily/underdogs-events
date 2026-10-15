@@ -466,14 +466,14 @@ export function RedRoomView() {
               {site.redRoom.partners.label}
             </h2>
 
-            <div className="w-full flex flex-col gap-5">
+            <div className="w-full flex flex-col gap-3 sm:gap-3.5">
               {site.redRoom.partners.list.map((partner, idx) => (
                 <React.Fragment key={partner.name}>
-                  <div className="flex flex-col items-center gap-1.5 py-2 candle-flicker-text">
-                    <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[var(--rr-ash)]">
+                  <div className="flex flex-col items-center gap-1 py-1 candle-flicker-text">
+                    <span className="font-cinzel text-[10.5px] uppercase tracking-[0.28em] text-[var(--rr-ash)]">
                       {partner.role}
                     </span>
-                    <span className="font-cormorant text-heading font-medium text-[var(--rr-bone)]">
+                    <span className="font-cormorant text-[clamp(20px,2vw,28px)] font-medium text-[var(--rr-bone)] leading-tight">
                       {partner.name}
                     </span>
                   </div>
