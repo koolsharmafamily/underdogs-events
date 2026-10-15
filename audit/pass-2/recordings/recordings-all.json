@@ -1,0 +1,21 @@
+{
+ "desktop-05-door-to-red-room-T1": {
+  "realSec": 219,
+  "programsStart": 8,
+  "programsEnd": 58,
+  "frames": 130,
+  "callsMax": 169,
+  "callsAvg": 103,
+  "trisMax": 696851,
+  "renderPasses": 24,
+  "programs": 58,
+  "geometries": 108,
+  "textures": 50,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[frames] 200 captured over 210s real"
+  ],
+  "external": []
+ }
+}
