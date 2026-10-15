@@ -75,5 +75,62 @@
   "longTasksOver200": 15,
   "maxEvent": 0,
   "fcp": 2384
+ },
+ "/diwali": {
+  "loadMs": 5375,
+  "transferredKB": 1819,
+  "byTypeKB": {
+   "Document": 23,
+   "Stylesheet": 23,
+   "Image": 361,
+   "Script": 612,
+   "Font": 241,
+   "Other": 5,
+   "Fetch": 555
+  },
+  "lcp": {
+   "t": 14624,
+   "size": 159900,
+   "el": "http://localhost:3100/media/badge-jewelled-still.webp"
+  },
+  "cls": 0,
+  "shifts": [],
+  "longTasksOver200": 10,
+  "maxEvent": 0,
+  "fcp": 4424
+ },
+ "/events": {
+  "loadMs": 5764,
+  "transferredKB": 1762,
+  "byTypeKB": {
+   "Document": 9,
+   "Stylesheet": 23,
+   "Script": 640,
+   "Image": 380,
+   "Font": 136,
+   "Other": 5,
+   "Fetch": 568
+  },
+  "lcp": {
+   "t": 5792,
+   "size": 203598,
+   "el": "DIV.absolute inset-0 bg-cover bg-center pointer-events-none opacity-25 group-hover:o "
+  },
+  "cls": 0.0118,
+  "shifts": [
+   {
+    "v": 0.011775975497590017,
+    "t": 2167.5999999996275,
+    "src": [
+     "A.inline-flex items-center gap-2.5 active:opacity-80 transitio",
+     "undefined.undefined",
+     "DIV.relative z-10 flex flex-col gap-3 pt-6",
+     "DIV.flex flex-col items-end gap-2"
+    ]
+   }
+  ],
+  "longTasksOver200": 10,
+  "maxEvent": 0,
+  "fcp": 2144
  }
 }
