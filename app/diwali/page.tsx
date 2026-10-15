@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: '/media/dhamaaka-flyer.png',
         width: 1080,
         height: 1350,
-        alt: site.diwali.poster?.alt || site.diwali.teaser.alt,
+        alt: site.diwali.poster.alt,
       },
     ],
   },

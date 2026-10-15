@@ -966,3 +966,12 @@ time {
 }
 
 
+
+/* Headline artist portrait slot (src/ui/ArtistPortrait.tsx) */
+.artist-portrait {
+  background-color: var(--world-surface);
+  border: 1px solid color-mix(in srgb, var(--world-accent) 45%, transparent);
+}
+.artist-portrait-empty {
+  border: 1px solid color-mix(in srgb, var(--world-text) 14%, transparent);
+}

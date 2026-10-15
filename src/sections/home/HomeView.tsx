@@ -239,14 +239,14 @@ export function HomeView() {
       <section
         ref={h5Ref}
         data-scene="H5"
-        aria-label="Two Worlds — Portals"
+        aria-label={site.home.worlds.label}
         className="scene-section scene-h5"
       >
         {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
         <DomTwins />
 
         <div className="scene-sticky-desktop flex flex-col justify-end pt-20 pb-12 lg:py-16">
-          <h2 className="sr-only">Two Worlds</h2>
+          <h2 className="sr-only">{site.home.worlds.label}</h2>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
           <div

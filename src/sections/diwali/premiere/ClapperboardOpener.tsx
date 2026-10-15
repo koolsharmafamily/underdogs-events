@@ -90,7 +90,7 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
     <div
       role="status"
       aria-live="polite"
-      aria-label="Scene opener: Lights, camera, Dhamaaka"
+      aria-label={`${site.diwali.presenter} ${site.diwali.title}`}
       onClick={handleFinish}
       className={`fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-[#0A0606] transition-opacity duration-600 ${
         stage === 4 ? "opacity-0 pointer-events-none" : "opacity-100"
@@ -137,38 +137,13 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
               strokeWidth="2"
             />
 
-            {/* Inner Grid / Chalk text lines */}
-            <line x1="20" y1="126" x2="320" y2="126" stroke="#E5B25D" strokeOpacity="0.35" strokeWidth="1" />
-            <line x1="120" y1="74" x2="120" y2="126" stroke="#E5B25D" strokeOpacity="0.35" strokeWidth="1" />
-            <line x1="220" y1="74" x2="220" y2="126" stroke="#E5B25D" strokeOpacity="0.35" strokeWidth="1" />
+            {/* Slate: one rule between the title and the date line */}
             <line x1="20" y1="180" x2="320" y2="180" stroke="#E5B25D" strokeOpacity="0.35" strokeWidth="1" />
-
-            {/* Labels in gold Cinzel */}
-            <text x="32" y="94" fill="#E5B25D" fillOpacity="0.65" fontFamily="Cinzel, serif" fontSize="9" letterSpacing="0.18em">
-              PROD.
-            </text>
-            <text x="32" y="112" fill="#FFF6EE" fontFamily="Cinzel, serif" fontSize="12" fontWeight="600" letterSpacing="0.1em">
-              UNDERDOGS
-            </text>
-
-            <text x="132" y="94" fill="#E5B25D" fillOpacity="0.65" fontFamily="Cinzel, serif" fontSize="9" letterSpacing="0.18em">
-              SCENE
-            </text>
-            <text x="145" y="114" fill="#FFE3A3" fontFamily="Cinzel, serif" fontSize="14" fontWeight="bold">
-              02
-            </text>
-
-            <text x="232" y="94" fill="#E5B25D" fillOpacity="0.65" fontFamily="Cinzel, serif" fontSize="9" letterSpacing="0.18em">
-              TAKE
-            </text>
-            <text x="252" y="114" fill="#FFE3A3" fontFamily="Cinzel, serif" fontSize="14" fontWeight="bold">
-              01
-            </text>
 
             {/* Main Title Chalk Line */}
             <text
               x="170"
-              y="158"
+              y="140"
               textAnchor="middle"
               fill="url(#chalkGold)"
               fontFamily="Cinzel, serif"
@@ -176,7 +151,7 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
               fontWeight="bold"
               letterSpacing="0.32em"
             >
-              DHAMAAKA
+              {site.diwali.title}
             </text>
             <text
               x="170"
@@ -188,7 +163,7 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
               letterSpacing="0.25em"
               fontWeight="600"
             >
-              DIWALI 2026 · CENTRE POINT
+              {`${site.diwali.opener.slate} · ${site.home.worlds.two.place}`.toUpperCase()}
             </text>
 
             {/* Clapperboard Moving Top Arm (Swings from Hinge at x=20, y=70) */}
@@ -248,19 +223,17 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
           </div>
         </div>
 
-        {/* Studio Lighting Reveal cue */}
-        <div
-          className={`mt-4 text-[11px] font-manrope uppercase tracking-[0.22em] text-[#FFF6EE]/60 transition-opacity duration-500 ${
-            stage >= 3 ? "opacity-100" : "opacity-0"
-          }`}
+        {/* Skip: also skipped by any tap, key, wheel or touch */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleFinish();
+          }}
+          className="mt-8 min-h-[44px] px-4 font-cinzel text-[11px] uppercase tracking-[0.25em] text-[#FFE3A3]/70 hover:text-[#FFE3A3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
         >
-          Premiere Night · Nagpur
-        </div>
-
-        {/* Skip hint */}
-        <div className="mt-8 text-[10px] font-cinzel uppercase tracking-[0.25em] text-[#FFE3A3]/40">
-          Click or press any key to enter
-        </div>
+          {site.diwali.opener.skip}
+        </button>
       </div>
 
       {/* Two Studio Fresnel Beam Flares switching on (Left & Right) */}

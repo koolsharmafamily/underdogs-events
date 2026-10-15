@@ -51,12 +51,10 @@ export const diwaliEventSchema = {
   image: [`${BASE_URL}/media/dhamaaka-flyer.png`],
   location: {
     '@type': 'Place',
-    name: 'Centre Point, Nagpur',
+    name: site.diwali.invitation.rows[2].value,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '24 Central Bazar Road, Ramdaspeth',
       addressLocality: site.brand.city,
-      postalCode: '440010',
       addressCountry: 'IN',
     },
   },

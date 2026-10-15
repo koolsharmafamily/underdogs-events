@@ -38,16 +38,16 @@ export function CinemaLightbox() {
   return (
     <section
       ref={containerRef}
-      aria-label="Now Showing — Official Premiere Poster"
+      aria-label={`${site.diwali.nowShowing.kicker}: ${site.diwali.nowShowing.label}`}
       className="relative z-10 w-full max-w-[580px] mx-auto px-4 py-16 sm:py-24 text-center select-none"
     >
       {/* Lightbox Caption */}
       <div className="flex flex-col items-center gap-2 mb-8">
         <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.38em] text-[#E5B25D]">
-          Official Premiere Artwork
+          {site.diwali.nowShowing.label}
         </span>
         <h2 className="font-cinzel font-bold text-[20px] sm:text-[24px] uppercase tracking-[0.26em] text-[#FFF6EE]">
-          NOW SHOWING · DIWALI 2026
+          {site.diwali.nowShowing.kicker}
         </h2>
         <div className="flex items-center gap-2 text-[#E0217A] text-[8px]" aria-hidden="true">
           <span>✦</span>

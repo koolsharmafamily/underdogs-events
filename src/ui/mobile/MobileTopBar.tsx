@@ -66,7 +66,7 @@ export function MobileTopBar() {
             <span className="text-lg leading-none" aria-hidden="true">
               ‹
             </span>
-            <span>Events</span>
+            <span>{site.ui.backToEvents}</span>
           </button>
         ) : null}
 

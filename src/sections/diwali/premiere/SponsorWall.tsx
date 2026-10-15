@@ -13,16 +13,16 @@ export function SponsorWall() {
 
   return (
     <section
-      aria-label="Official Premiere Partners"
+      aria-label={site.diwali.partners.label}
       className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-16 sm:py-24 text-center select-none"
     >
       {/* Section Header: Styled like opening credits */}
       <div className="flex flex-col items-center gap-3 mb-12 sm:mb-16">
         <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.38em] text-[#E5B25D]">
-          Underdogs Entertainment Presents
+          {site.diwali.presenter}
         </span>
         <h2 className="font-cinzel font-bold text-[22px] sm:text-[28px] uppercase tracking-[0.24em] text-[#FFF6EE]">
-          In Association With
+          {site.diwali.partners.label}
         </h2>
         <div className="flex items-center gap-3 w-48 text-[#E5B25D]/60 text-[9px]">
           <span className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-[#E5B25D]" />

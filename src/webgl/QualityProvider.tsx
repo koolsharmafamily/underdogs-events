@@ -79,7 +79,9 @@ export function QualityProvider({ children }: { children: React.ReactNode }) {
     import('detect-gpu')
       .then(async ({ getGPUTier }) => {
         try {
-          const gpuTier = await getGPUTier();
+          // Benchmarks are served from /public (copied from detect-gpu@5.0.70's dist/benchmarks),
+          // so the site never calls a third-party host. Recopy them if detect-gpu is upgraded.
+          const gpuTier = await getGPUTier({ benchmarksURL: '/detect-gpu' });
           if (!active || isExplicitT0Requested()) return;
           if (gpuTier.tier === 0 || (!gpuTier.isMobile && gpuTier.tier < 1)) {
             setTier('T1');

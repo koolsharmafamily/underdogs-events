@@ -58,9 +58,9 @@ export function Footer() {
             className="nav-roll-link inline-flex min-h-[44px] items-center gap-2 px-2 font-cinzel text-[11px] uppercase tracking-[0.28em] text-[var(--world-text)] hover:text-[var(--world-accent)] transition-colors"
           >
             <span className="nav-roll-inner">
-              <span className="nav-roll-line">Back to top</span>
+              <span className="nav-roll-line">{site.ui.backToTop}</span>
               <span className="nav-roll-line" aria-hidden="true">
-                Back to top
+                {site.ui.backToTop}
               </span>
             </span>
             <svg

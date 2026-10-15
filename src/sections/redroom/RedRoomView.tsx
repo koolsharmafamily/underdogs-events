@@ -12,6 +12,7 @@ import { useEnterTransition } from "@/motion/transitions";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { Divider } from "@/ui/Divider";
 import { InvitationCard } from "@/ui/InvitationCard";
+import { ArtistPortrait } from "@/ui/ArtistPortrait";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { cardOverlayRef } from "@/webgl/tracking/CardProjector";
@@ -322,8 +323,8 @@ export function RedRoomView() {
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#4A0808]">
-          <span>UNDERDOGS</span>
-          <span>NAGPUR</span>
+          <span>{site.brand.name}</span>
+          <span>{site.brand.city}</span>
         </div>
       </div>
 
@@ -337,15 +338,15 @@ export function RedRoomView() {
       >
         <div className="scene-sticky flex flex-col items-center justify-center py-20">
           <div className="site-container flex flex-col items-center gap-6">
-            <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--rr-ash)]">
-              <span>
-                {cardStage === "sealed"
-                  ? "Scroll to break the wax seal"
-                  : cardStage === "opening"
-                    ? "Envelope opening"
-                    : "Official Invitation"}
-              </span>
-            </div>
+            {/* One hint while the seal is intact; nothing competes with the card once it opens. */}
+            <p
+              aria-hidden={cardStage !== "sealed"}
+              className={`font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--rr-ash)] transition-opacity duration-300 ${
+                motionEnabled && cardStage === "sealed" ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              {site.redRoom.invitation.hint}
+            </p>
 
             {/* Static fallback for reduced motion or T0 */}
             {!motionEnabled && (
@@ -361,51 +362,15 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* R4.5 · Headline Artist: DJ Mohnish */}
+      {/* R4.5 · Headline artist (client-confirmed) */}
       <section
         data-scene="R-DJ"
-        aria-label="Headline Artist — DJ Mohnish"
+        aria-label={site.redRoom.dj.name}
         className="relative z-20 py-20 border-t border-[var(--rr-blood)]/30 bg-gradient-to-b from-transparent via-[#100203]/90 to-transparent"
       >
         <div className="site-container site-grid items-center gap-y-10">
-          {/* Artist Portrait Placeholder */}
           <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
-            <div className="relative group w-full max-w-[340px] aspect-[4/5] rounded-sm p-3 bg-gradient-to-b from-[#350505] to-[#120102] border border-[#FF2A1F]/30 shadow-[0_12px_40px_rgba(255,42,31,0.15)] flex flex-col items-center justify-center overflow-hidden">
-              {/* Outer decorative corners */}
-              <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#FF2A1F]/60" />
-              <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#FF2A1F]/60" />
-              <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#FF2A1F]/60" />
-              <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#FF2A1F]/60" />
-
-              {/* Placeholder Inner Frame */}
-              <div className="w-full h-full border border-dashed border-[#FF2A1F]/30 bg-[#0a0102]/80 flex flex-col items-center justify-center p-6 text-center gap-4">
-                <div className="w-20 h-20 rounded-full border border-[#FF2A1F]/40 bg-[#1a0203] flex items-center justify-center shadow-[0_0_20px_rgba(255,42,31,0.2)]">
-                  <svg
-                    width="36"
-                    height="36"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#FF2A1F"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="M9 18V5l12-2v13" />
-                    <circle cx="6" cy="18" r="3" />
-                    <circle cx="18" cy="16" r="3" />
-                  </svg>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="font-cinzel text-[14px] uppercase tracking-[0.2em] text-[var(--rr-bone)] font-semibold">
-                    DJ MOHNISH
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--rr-ash)]">
-                    Official Artist Photo Placeholder
-                  </span>
-                </div>
-              </div>
-            </div>
+            <ArtistPortrait name={site.redRoom.dj.name} photo={site.redRoom.dj.photo} />
           </div>
 
           {/* Artist Bio & Profile */}

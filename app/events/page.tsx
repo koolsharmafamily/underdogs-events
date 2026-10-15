@@ -1,10 +1,11 @@
-import React from "react";
 import type { Metadata } from "next";
+import { site } from "@/content/site";
 import { EventsView } from "@/sections/events/EventsView";
 
 export const metadata: Metadata = {
-  title: "Events · Underdogs",
-  description: "Two Worlds. Two Celebrations. One Unforgettable Season.",
+  title: site.events.meta.title,
+  description: site.events.meta.description,
+  alternates: { canonical: "/events" },
 };
 
 export default function EventsPage() {

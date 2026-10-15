@@ -3,26 +3,27 @@
 import React from "react";
 import Link from "next/link";
 import { site } from "@/content/site";
-import { getDaysToGo } from "@/utils/date";
+import { useDaysToGo } from "@/utils/useDaysToGo";
 
 export function EventsView() {
-  const redRoomDays = getDaysToGo("2026-10-24");
-  const diwaliDays = getDaysToGo("2026-11-07");
+  const { one, two } = site.home.worlds;
+  const redRoomDays = useDaysToGo(one.isoDate);
+  const diwaliDays = useDaysToGo(two.isoDate);
 
   return (
     <div className="w-full min-h-[100dvh] bg-[#07090D] text-[#FCF9FC] flex flex-col pt-16 md:pt-24 pb-28 md:pb-16 px-4 sm:px-6 select-none">
       {/* Header */}
       <header className="max-w-[1100px] w-full mx-auto flex flex-col items-center text-center gap-2 mb-8 md:mb-12">
         <h1 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-[0.22em] text-white">
-          Events
+          {site.events.title}
         </h1>
         <div className="flex items-center gap-2 font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.24em] text-white/60">
-          <span>This season</span>
+          <span>{site.events.lines[0]}</span>
           <span className="text-[#EA28C1]">·</span>
-          <span>Two worlds</span>
+          <span>{site.events.lines[1]}</span>
         </div>
         <p className="font-cinzel text-[11px] uppercase tracking-[0.3em] text-[#EA28C1] font-semibold mt-1">
-          This year, different.
+          {site.events.tagline}
         </p>
       </header>
 
@@ -59,11 +60,11 @@ export function EventsView() {
             />
             <div className="flex flex-col items-end gap-2">
               <span className="px-3 py-1 rounded-full bg-[#FF1A35]/15 border border-[#FF1A35]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
-                Halloween
+                {one.occasion}
               </span>
-              {redRoomDays !== null && (
+              {redRoomDays && (
                 <span className="px-3 py-0.5 rounded-full bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
-                  {redRoomDays} days to go
+                  {redRoomDays}
                 </span>
               )}
             </div>
@@ -72,7 +73,7 @@ export function EventsView() {
           {/* Bottom: Title & Event Facts */}
           <div className="relative z-10 flex flex-col gap-3 pt-6">
             <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#FF1A35]/90 font-medium">
-              World One
+              {one.kicker}
             </span>
 
             {/* Title with slow light sweep */}
@@ -85,15 +86,15 @@ export function EventsView() {
             {/* Chips row */}
             <div className="flex flex-wrap items-center gap-2 pt-1 font-manrope text-[13px] text-white/90">
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                Sat 24 Oct 2026
+                {one.date}
               </span>
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                Millo, Civil Lines
+                {one.place}
               </span>
             </div>
 
             <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between font-cinzel text-xs uppercase tracking-[0.26em] text-[#FF1A35] group-hover:text-white transition-colors">
-              <span>Step Inside</span>
+              <span>{site.events.cta}</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
@@ -130,11 +131,11 @@ export function EventsView() {
             />
             <div className="flex flex-col items-end gap-2">
               <span className="px-3 py-1 rounded-full bg-[#E5B25D]/15 border border-[#E5B25D]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
-                Diwali 2026
+                {two.occasion}
               </span>
-              {diwaliDays !== null && (
+              {diwaliDays && (
                 <span className="px-3 py-0.5 rounded-full bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
-                  {diwaliDays} days to go
+                  {diwaliDays}
                 </span>
               )}
             </div>
@@ -144,11 +145,11 @@ export function EventsView() {
           <div className="relative z-10 flex flex-col gap-3 pt-6">
             <div className="flex items-center gap-2">
               <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-[#E5B25D]/90 font-medium">
-                World Two
+                {two.kicker}
               </span>
               <span className="text-[#E5B25D]/50">·</span>
-              <span className="font-tiro text-xs text-[#E5B25D]/90">
-                दीपावली धमाका
+              <span lang="hi" className="font-tiro text-xs text-[#E5B25D]/90">
+                {site.diwali.accent}
               </span>
             </div>
 
@@ -165,18 +166,15 @@ export function EventsView() {
             {/* Chips row */}
             <div className="flex flex-wrap items-center gap-2 pt-1 font-manrope text-[13px] text-white/90">
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                Sat 7 Nov 2026
+                {two.date}
               </span>
               <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
-                Centre Point, Nagpur
-              </span>
-              <span className="px-3 py-1 rounded-full bg-[#E5B25D]/10 border border-[#E5B25D]/30 text-[#FFE3A3] text-xs">
-                Details announcing soon
+                {two.place}
               </span>
             </div>
 
             <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between font-cinzel text-xs uppercase tracking-[0.26em] text-[#E5B25D] group-hover:text-white transition-colors">
-              <span>Step Inside</span>
+              <span>{site.events.cta}</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>

@@ -70,7 +70,7 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </div>
 
           <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.34em] text-[#E5B25D]">
-            Official Premiere Invitation
+            {site.diwali.invitation.kicker}
           </span>
 
           <h2 className="font-playfair font-black text-[24px] sm:text-[30px] uppercase tracking-[0.06em] text-[#FFF6EE] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
@@ -118,9 +118,9 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
                     <span>{row.value}</span>
                   )}
                 </dd>
-                {"sub" in row && Boolean(row.sub) && (
+                {(row as { sub?: string }).sub && (
                   <p className="font-manrope text-[11px] text-[#FFF6EE]/60 mt-0.5">
-                    {row.sub}
+                    {(row as { sub?: string }).sub}
                   </p>
                 )}
               </div>
@@ -130,9 +130,8 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
 
         {/* Footer Note */}
         <div className="mt-8 pt-4 border-t border-[#E5B25D]/20 flex items-center justify-between text-[#FFF6EE]/50 text-[10px] uppercase font-cinzel tracking-[0.2em]">
-          <span>Strictly Ceremonial</span>
-          <span className="text-[#E0217A]">No Outbound Links</span>
           <span>{site.brand.legalName}</span>
+          <span>{site.brand.city}</span>
         </div>
       </div>
     </div>

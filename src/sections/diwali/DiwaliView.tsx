@@ -8,6 +8,7 @@ import { useStore } from "@/state/store";
 import { useSceneProgress } from "@/motion/useSceneProgress";
 import { useEnterTransition } from "@/motion/transitions";
 import { Footer } from "@/ui/Footer";
+import { ArtistPortrait } from "@/ui/ArtistPortrait";
 
 // Premiere Night Components
 import { ClapperboardOpener } from "./premiere/ClapperboardOpener";
@@ -180,12 +181,6 @@ export function DiwaliView() {
                 </div>
               )}
 
-              {/* Scene Progress Indicator */}
-              <div className="mt-4 flex items-center justify-center gap-2 text-[#E5B25D]/60 text-[10px] font-mono tracking-[0.2em]">
-                <span>ACT 02</span>
-                <span className="text-[#E0217A]">·</span>
-                <span>SCENE {activeStoryLine + 1} OF 5</span>
-              </div>
             </div>
           </div>
         </div>
@@ -196,7 +191,7 @@ export function DiwaliView() {
         id="diwali-invitation"
         ref={d3Ref}
         data-scene="D3"
-        aria-label="Official Premiere Invitation"
+        aria-label={site.diwali.invitation.heading}
         className="scene-section scene-d3 relative z-[6]"
       >
         <div className="scene-sticky flex flex-col items-center justify-center py-20">
@@ -204,51 +199,16 @@ export function DiwaliView() {
         </div>
       </section>
 
-      {/* D3.5 · Headline Artist: DJ Yogi */}
+      {/* D3.5 · Headline artist (client-confirmed) */}
       {site.diwali.dj && (
         <section
           data-scene="D-DJ"
-          aria-label="Headline Artist — DJ Yogi"
+          aria-label={site.diwali.dj.name}
           className="relative z-20 py-20 border-t border-[#E5B25D]/25 bg-gradient-to-b from-transparent via-[#18080C]/90 to-transparent"
         >
           <div className="site-container site-grid items-center gap-y-10">
-            {/* Artist Portrait Placeholder Frame */}
             <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
-              <div className="relative group w-full max-w-[340px] aspect-[4/5] rounded-lg p-3 bg-gradient-to-b from-[#2A0812] to-[#0E0407] border border-[#E5B25D]/50 shadow-[0_16px_45px_rgba(0,0,0,0.85)] flex flex-col items-center justify-center overflow-hidden">
-                {/* Gold corner ornaments */}
-                <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[#E5B25D]" />
-                <div className="absolute top-2 right-2 w-3 h-3 border-t-2 border-r-2 border-[#E5B25D]" />
-                <div className="absolute bottom-2 left-2 w-3 h-3 border-b-2 border-l-2 border-[#E5B25D]" />
-                <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[#E5B25D]" />
-
-                <div className="w-full h-full border border-dashed border-[#E5B25D]/35 bg-[#0A0305]/90 flex flex-col items-center justify-center p-6 text-center gap-4">
-                  <div className="w-20 h-20 rounded-full border border-[#E5B25D]/60 bg-[#240A12] flex items-center justify-center shadow-[0_0_24px_rgba(229,178,93,0.3)]">
-                    <svg
-                      width="36"
-                      height="36"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#FFE3A3"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M9 18V5l12-2v13" />
-                      <circle cx="6" cy="18" r="3" />
-                      <circle cx="18" cy="16" r="3" />
-                    </svg>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <span className="font-cinzel text-[15px] uppercase tracking-[0.2em] text-[#FFF6EE] font-bold">
-                      {site.diwali.dj.name}
-                    </span>
-                    <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[#E5B25D]">
-                      Official Artist Photo Placeholder
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <ArtistPortrait name={site.diwali.dj.name} photo={site.diwali.dj.photo} />
             </div>
 
             {/* Artist Bio & Profile */}
@@ -270,7 +230,7 @@ export function DiwaliView() {
                   {site.diwali.dj.date}
                 </span>
                 <span className="inline-flex items-center gap-2 border border-[#E5B25D]/40 bg-[#16080C] px-3.5 py-1.5 rounded-sm text-[#FFE3A3]">
-                  Centre Point · Nagpur
+                  {site.diwali.dj.venue}
                 </span>
               </div>
             </div>

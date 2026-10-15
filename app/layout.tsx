@@ -75,7 +75,7 @@ export default function RootLayout({
       <body>
         {/* Skip link comes first in tab order (Part 11) */}
         <a href="#main-content" className="skip-link">
-          Skip to content
+          {site.ui.skipLink}
         </a>
 
         <Providers>

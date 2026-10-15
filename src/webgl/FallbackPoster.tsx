@@ -23,14 +23,14 @@ export function FallbackPoster({ showAssetNotice = false }: FallbackPosterProps)
   const posterConfig =
     world === 'redroom'
       ? {
-          src: '/media/red-room-poster.webp',
+          src: site.redRoom.poster.src,
           alt: site.redRoom.poster.alt,
           bg: '#060203',
         }
       : world === 'diwali'
         ? {
-            src: '/media/diwali-teaser.webp',
-            alt: site.diwali.teaser.alt,
+            src: site.diwali.poster.src,
+            alt: site.diwali.poster.alt,
             bg: '#140812',
           }
         : {

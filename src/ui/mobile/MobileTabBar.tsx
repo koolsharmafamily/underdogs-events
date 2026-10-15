@@ -4,6 +4,7 @@ import React, { useState, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { saveRouteScroll } from "@/motion/transitions";
+import { site } from "@/content/site";
 
 export function MobileTabBar() {
   const pathname = usePathname();
@@ -185,7 +186,7 @@ export function MobileTabBar() {
           </svg>
 
           <span className="relative font-manrope text-[10px] font-semibold tracking-[0.06em] uppercase">
-            Home
+            {site.ui.tabs.home}
           </span>
         </Link>
 
@@ -238,7 +239,7 @@ export function MobileTabBar() {
           </svg>
 
           <span className="relative font-manrope text-[10px] font-semibold tracking-[0.06em] uppercase">
-            Events
+            {site.ui.tabs.events}
           </span>
         </Link>
       </div>

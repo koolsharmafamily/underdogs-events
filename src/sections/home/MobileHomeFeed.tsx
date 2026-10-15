@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
-import { getDaysToGo } from "@/utils/date";
+import { useDaysToGo } from "@/utils/useDaysToGo";
 
 export function MobileHomeFeed() {
   const [activeDot, setActiveDot] = useState(0);
@@ -19,8 +19,8 @@ export function MobileHomeFeed() {
     setActiveDot(Math.min(2, Math.max(0, index)));
   };
 
-  const redRoomDays = getDaysToGo("2026-10-24");
-  const diwaliDays = getDaysToGo("2026-11-07");
+  const redRoomDays = useDaysToGo(site.home.worlds.one.isoDate);
+  const diwaliDays = useDaysToGo(site.home.worlds.two.isoDate);
 
   return (
     <div className="w-full flex flex-col pt-16 pb-28 text-[#FCF9FC] select-none">
@@ -53,7 +53,7 @@ export function MobileHomeFeed() {
             href="/events"
             className="mt-2 w-full py-3.5 px-6 rounded-full bg-[#EA28C1] text-[#07090D] font-cinzel text-[13px] font-bold uppercase tracking-[0.22em] shadow-[0_8px_24px_rgba(234,40,193,0.35)] active:scale-95 transition-transform text-center"
           >
-            Explore this season →
+            {site.home.hero.seasonCta} →
           </Link>
         </div>
       </section>
@@ -61,9 +61,6 @@ export function MobileHomeFeed() {
       {/* 2. "Who we are" — Swipeable Cards */}
       <section className="py-12 border-t border-white/10 flex flex-col gap-6">
         <div className="px-6 flex flex-col gap-1">
-          <span className="font-cinzel text-[11px] uppercase tracking-[0.3em] text-[#EA28C1]">
-            About Us
-          </span>
           <h2 className="font-cinzel text-xl font-bold uppercase tracking-wider text-white">
             {site.home.about.label}
           </h2>
@@ -80,9 +77,6 @@ export function MobileHomeFeed() {
               key={idx}
               className="snap-center shrink-0 w-[84vw] max-w-[320px] p-6 rounded-2xl bg-[#0F131C] border border-white/10 flex flex-col gap-3 shadow-lg"
             >
-              <span className="font-mono text-xs uppercase tracking-widest text-[#EA28C1]/80 font-bold">
-                0{idx + 1}
-              </span>
               <p className="font-cinzel text-base font-bold leading-snug tracking-wide text-white">
                 {stmt}
               </p>
@@ -117,7 +111,7 @@ export function MobileHomeFeed() {
             {site.home.nights.label}
           </span>
           <span className="font-manrope text-xs text-white/70 font-medium">
-            Latest: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
+            {site.home.nights.latestLabel}: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
           </span>
         </div>
 
@@ -142,10 +136,10 @@ export function MobileHomeFeed() {
       <section className="py-12 border-t border-white/10 px-6 flex flex-col gap-6">
         <div className="flex flex-col gap-2 text-center">
           <span className="font-cinzel text-[11px] uppercase tracking-[0.3em] text-[#EA28C1]">
-            This Season
+            {site.home.season.label}
           </span>
           <h2 className="font-cinzel text-lg font-bold uppercase tracking-wider text-white">
-            Two Worlds · Two Celebrations
+            {site.home.season.lines[0]} {site.home.season.lines[1]}
           </h2>
         </div>
 
@@ -159,9 +153,9 @@ export function MobileHomeFeed() {
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35]">
                 {site.home.worlds.one.occasion}
               </span>
-              {redRoomDays !== null && (
+              {redRoomDays && (
                 <span className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF1A35] font-mono text-[10px] uppercase tracking-wider font-bold">
-                  {redRoomDays} days to go
+                  {redRoomDays}
                 </span>
               )}
             </div>
@@ -185,7 +179,7 @@ export function MobileHomeFeed() {
             </div>
 
             <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
-              <span>Enter The Red Room</span>
+              <span>{site.home.worlds.one.cta}</span>
               <span>→</span>
             </div>
           </Link>
@@ -199,9 +193,9 @@ export function MobileHomeFeed() {
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]">
                 {site.home.worlds.two.occasion}
               </span>
-              {diwaliDays !== null && (
+              {diwaliDays && (
                 <span className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold">
-                  {diwaliDays} days to go
+                  {diwaliDays}
                 </span>
               )}
             </div>
@@ -228,7 +222,7 @@ export function MobileHomeFeed() {
             </div>
 
             <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
-              <span>Enter DHAMAAKA</span>
+              <span>{site.home.worlds.two.cta}</span>
               <span>→</span>
             </div>
           </Link>
@@ -240,14 +234,10 @@ export function MobileHomeFeed() {
         <span className="font-cinzel text-xs uppercase tracking-[0.24em] text-white/60 font-semibold">
           {site.brand.name} · {site.brand.city}
         </span>
-        <a
-          href="https://instagram.com/underdogsnagpur"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-manrope text-xs text-[#EA28C1] tracking-wider hover:underline"
-        >
-          @underdogsnagpur
-        </a>
+        {/* Plain text by rule: the site links nowhere outside itself. */}
+        <span className="font-mono text-[11px] tracking-[0.08em] text-[var(--world-muted)]">
+          {site.footer.instagram}
+        </span>
       </footer>
     </div>
   );

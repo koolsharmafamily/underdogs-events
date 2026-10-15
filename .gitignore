@@ -31,3 +31,6 @@ next-env.d.ts
 
 .vercel
 .env*
+
+# extra build directories (NEXT_DIST_DIR)
+/.next-*/

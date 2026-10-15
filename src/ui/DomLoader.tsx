@@ -6,6 +6,7 @@ import { useStore } from "@/state/store";
 import { registerMotionEases } from "@/motion/eases";
 import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
 import { preloadAllBadges } from "@/webgl/preload";
+import { site } from "@/content/site";
 
 
 export function DomLoader() {
@@ -140,7 +141,7 @@ export function DomLoader() {
                 useStore.getState().setPhase("complete");
               }}
             >
-              Enter anyway →
+              {site.ui.enterAnyway} →
             </button>
           ) : null}
         </div>
