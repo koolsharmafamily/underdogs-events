@@ -4,7 +4,11 @@
  * gyroscopic flutter, and smooth settling.
  */
 
-import * as THREE from "three";
+// Plain math (no three.js), so the DOM badge can use the physics without
+// pulling three into the first bundle.
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const damp = (a: number, b: number, lambda: number, dt: number) =>
+  lerp(a, b, 1 - Math.exp(-lambda * dt));
 
 class CoinPhysicsManager {
   public isDragging = false;
@@ -31,7 +35,7 @@ class CoinPhysicsManager {
 
     if (dt > 0.001) {
       const instantVelocity = radDelta / Math.max(0.008, dt / 1000);
-      this.smoothVx = THREE.MathUtils.lerp(this.smoothVx, instantVelocity, 0.45);
+      this.smoothVx = lerp(this.smoothVx, instantVelocity, 0.45);
     }
   }
 
@@ -69,7 +73,7 @@ class CoinPhysicsManager {
 
     if (this.isDragging) {
       // While dragging, no air friction; wobble is slight
-      this.wobbleX = THREE.MathUtils.damp(this.wobbleX, 0, 8, delta);
+      this.wobbleX = damp(this.wobbleX, 0, 8, delta);
       return;
     }
 
@@ -78,7 +82,7 @@ class CoinPhysicsManager {
       this.angleY += this.velocity * delta;
 
       // Realistic angular air friction (decelerates naturally)
-      this.velocity = THREE.MathUtils.damp(this.velocity, 0, 1.85, delta);
+      this.velocity = damp(this.velocity, 0, 1.85, delta);
 
       // Gyroscopic precession / wobble during fast spin
       const spinSpeed = Math.abs(this.velocity);
@@ -86,14 +90,14 @@ class CoinPhysicsManager {
         const wobbleIntensity = Math.min(0.09, spinSpeed * 0.0065);
         this.wobbleX = Math.sin(time * 22) * wobbleIntensity;
       } else {
-        this.wobbleX = THREE.MathUtils.damp(this.wobbleX, 0, 7, delta);
+        this.wobbleX = damp(this.wobbleX, 0, 7, delta);
       }
 
       // When slowed down near rest, gently settle to the nearest clean full turn (face-forward)
       if (spinSpeed < 0.45) {
         const fullTurn = Math.PI * 2;
         const targetAngle = Math.round(this.angleY / fullTurn) * fullTurn;
-        this.angleY = THREE.MathUtils.damp(this.angleY, targetAngle, 5.5, delta);
+        this.angleY = damp(this.angleY, targetAngle, 5.5, delta);
 
         if (Math.abs(this.angleY - targetAngle) < 0.003 && spinSpeed < 0.05) {
           this.angleY = targetAngle;

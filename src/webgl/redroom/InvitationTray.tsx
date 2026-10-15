@@ -3,6 +3,7 @@
 import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
+import { cheapGlass } from "../glass";
 import { useFrame } from "@react-three/fiber";
 import { composition } from "../composition";
 import { frame } from "@/state/frame";
@@ -52,7 +53,7 @@ export function InvitationTray() {
   const cardRef = useRef<THREE.Object3D | null>(null);
 
   const { scene, initial } = useMemo(() => {
-    const s = gltf.scene.clone(true);
+    const s = cheapGlass(gltf.scene.clone(true));
     // Ground tray so its bottom sits exactly on the table top (y = 0 relative to table top group at y = 0.85)
     groundObjectToY(s, 0);
 

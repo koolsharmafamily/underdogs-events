@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { useProgress } from "@react-three/drei";
 import { useStore } from "@/state/store";
 import { registerMotionEases } from "@/motion/eases";
 import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
@@ -12,7 +11,6 @@ import { site } from "@/content/site";
 export function DomLoader() {
   const phase = useStore((s) => s.phase),
     motion = useStore((s) => s.motionEnabled);
-  const { progress } = useProgress();
   const root = useRef<HTMLDivElement>(null),
     coin = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true),
@@ -59,7 +57,7 @@ export function DomLoader() {
       tl = gsap.timeline({ onComplete: complete });
       if (coin.current)
         tl.to(
-          coin.current.querySelector("svg"),
+          coin.current.querySelector("img, svg"),
           { opacity: 0, duration: 0.15 },
           0,
         );
@@ -88,9 +86,10 @@ export function DomLoader() {
         motion ? 0.3 : 0,
       );
     };
+    // Pages without a 3D world (Events, 404) have nothing to wait for.
     const check = () => {
       const s = useStore.getState();
-      if (s.renderedWorlds[s.world] || s.tier === "T0") finish();
+      if (s.renderedWorlds[s.world] || s.tier === "T0" || !s.sceneRoute) finish();
     };
     const timer = window.setTimeout(() => setSlow(true), 8000);
     const skip = () => {
@@ -136,7 +135,8 @@ export function DomLoader() {
             <button
               className="absolute bottom-8 underline text-sm"
               onClick={() => {
-                useStore.getState().setTier("T0");
+                // Into the page now, with the stills; 3D keeps loading and
+                // replaces them when ready (never locks the visit into T0).
                 setVisible(false);
                 useStore.getState().setPhase("complete");
               }}

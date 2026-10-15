@@ -4,8 +4,8 @@ Working file for `REFINEMENT_BRIEF.md`. Updated as each pass runs.
 
 | Pass | Status |
 |---|---|
-| 1 · Audit (no code changes) | **Done: plan waiting for your approval** (the last recordings are still rendering and land in `audit/pass-1/recordings/` as they finish) |
-| 2 · Stability and smoothness | Not started (needs approval) |
+| 1 · Audit (no code changes) | **Done, plan approved** (the last recordings are still rendering into `audit/pass-1/recordings/`) |
+| 2 · Stability and smoothness | **In progress** (see "Pass 2 progress" below) |
 | 3 · Art direction | — |
 | 4 · Motion and interaction | — |
 | 5 · Finish and QA | — (no deploy without approval) |
@@ -36,6 +36,39 @@ Evidence for Pass 1 is in `audit/pass-1/`:
   - Judge them for choreography, pops, black frames and overlaps, **not** for smoothness.
 - **Pointer artefact.** In the first desktop door shots, the virtual display's resting pointer sat over the DHAMAAKA door and dimmed the Red Room caption. Those shots were retaken with the pointer parked.
 - **No project file was changed by the audit.** Every patch lived only inside the test browser.
+
+---
+
+## Your decisions (Pass 2 kickoff)
+
+| Question | Decision | Done in |
+|---|---|---|
+| Q1 Red Room badge | Use the Halloween logo | 2.2: `badge-halloween.glb` is the Red Room skin; `badge-neon` retired (kept in `brand-source/3d/`) |
+| Q2 Content outside §3 | DJs confirmed (photos to come: empty portrait frames for now). Kool Korp is the tech partner (you). Street address: not confirmed, so removed (one line to restore) | 2.1 |
+| Q3 DHAMAAKA door | Leave it as it is (pink, no diyas) | — |
+| Q4 Ballroom plate | Build it from the flyer, no logos or faces | Pass 3 |
+| Q5 Domain | Leave `underdogsnagpur.com` | — |
+
+## Pass 2 progress
+
+Pass 2 runs in an isolated copy of the tree (own `public/` and build) so the Pass 1 recordings, still rendering against the original build, stay faithful.
+
+- [x] **2.1 Content and links.** Everything invented removed or confirmed; Instagram handle as plain text; every string in `site.ts`; detect-gpu benchmarks self-hosted (no third-party requests).
+- [x] **2.2 GLB pipeline** (`scripts/optimize-models.mjs`, `scripts/prepare-halloween-badge.mjs`, `scripts/generate-badge-stills.mjs`)
+  - Badges Meshopt + WebP: enamel 1.38 → 0.48 MB, jewelled 2.18 → 0.70 MB, Halloween logo 1.28 → 0.83 MB (its face texture kept at 2048).
+  - The dissolve noise now samples badge-root space, so quantised badges dissolve the same as before and the pattern is continuous across parts.
+  - Halloween logo: eyes split into `Eye_L`/`Eye_R` pivots, mouth on a `Tongue` pivot (wags at half swing), only the ring glow flickers. New still `badge-halloween-still.webp`.
+  - Found on the way: blink, wink and wag never ran on any skin (the pivot lookup required `Group`, the GLBs load `Mesh`/`Object3D`). Fixed.
+- [ ] **2.3 Shaders and GPU memory** (code done, being measured)
+  - Every world has the same light rig (3 directional, 3 point; spares at 0), so lit shaders don't recompile between worlds.
+  - Precompile compiles each world on its real output path (composer target vs direct) with its own lights; skins compile for both paths.
+  - One persistent composer (switched off, not unmounted, on DHAMAAKA); one fog object on the scene; three environment maps baked once.
+  - Visited worlds stay mounted and pause while hidden; the others are mounted and compiled at idle (not on Save-Data), or on hover/focus/touch of a link. No more dispose-and-rebuild.
+  - Phone DPR capped at 1.5 (T2) and 1.25 (T1); no DPR swaps during transitions.
+- [ ] **2.4 Transitions** (code done, being measured): the cover always keeps a soft aperture on the badge; the still overlay is hidden mid-transition; Red Room → DHAMAAKA is a three-frame film-reel flicker then the short opener; the opener keeps the badge visible; the phone tab bar, top bar, Events cards and home cards go through the transition system.
+- [ ] **2.5 Scroll and Motion** (code done): Motion toggle in the nav, footer and phone top bar, remembered and read on boot; D4/D5 attached (H4 is the "This season" scene, which has copy but no section: rebuilt in Pass 3); story lines step on linear progress (equal scroll per line).
+- [ ] **2.6 Placement**: phone badge leaves after the hero; the canvas sleeps on Events and the 404; fog on. Doors, outro overlap, R4, R1 phone, floating flames: next.
+- [ ] **2.7 Performance and maintenance**: backdrop blur gone; grain in the post chain (CSS only without a composer); "Enter anyway" no longer locks T0; dead code removed; `npm run lint` (oxlint: ESLint's rules natively, because typescript-eslint can't load TypeScript 7) and `npm run typecheck`. Smoke suite, bundle split, fonts and LCP: next.
 
 ---
 

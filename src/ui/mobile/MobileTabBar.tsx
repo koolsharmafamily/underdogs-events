@@ -1,14 +1,13 @@
 "use client";
 
+import { TransitionLink } from "@/ui/TransitionLink";
 import React, { useState, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { saveRouteScroll } from "@/motion/transitions";
 import { site } from "@/content/site";
 
 export function MobileTabBar() {
   const pathname = usePathname();
-  const router = useRouter();
 
   const isHome = pathname === "/";
   const isRedRoom = pathname.startsWith("/the-red-room");
@@ -28,7 +27,7 @@ export function MobileTabBar() {
   }, []);
 
   // Home icon tap handler with playful 120ms wink animation
-  const handleHomeTap = (e: React.MouseEvent) => {
+  const handleHomeTap = () => {
     triggerHaptic();
     setWinking(true);
     window.setTimeout(() => setWinking(false), 120);
@@ -41,15 +40,13 @@ export function MobileTabBar() {
   };
 
   // Events icon tap handler
-  const handleEventsTap = (e: React.MouseEvent) => {
+  const handleEventsTap = () => {
     triggerHaptic();
     saveRouteScroll(pathname);
 
+    // Elsewhere the link itself goes to /events through the transition system.
     if (isEventsList) {
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (isRedRoom || isDiwali) {
-      // If inside an event detail screen, tapping Events returns to /events
-      router.push("/events");
     }
   };
 
@@ -61,7 +58,7 @@ export function MobileTabBar() {
         activeText: "text-[#EA28C1]",
         glow: "drop-shadow-[0_0_8px_rgba(234,40,193,0.55)]",
         barBorder: "border-white/[0.08]",
-        barBg: "bg-[#090A0E]/88",
+        barBg: "bg-[#090A0E]/[0.96]",
       };
     }
     if (isRedRoom) {
@@ -70,7 +67,7 @@ export function MobileTabBar() {
         activeText: "text-[#FF1A35]",
         glow: "drop-shadow-[0_0_8px_rgba(255,26,53,0.55)]",
         barBorder: "border-[#FF1A35]/20",
-        barBg: "bg-[#0A0406]/90",
+        barBg: "bg-[#0A0406]/[0.96]",
       };
     }
     if (isDiwali) {
@@ -79,7 +76,7 @@ export function MobileTabBar() {
         activeText: "text-[#E5B25D]",
         glow: "drop-shadow-[0_0_8px_rgba(229,178,93,0.55)]",
         barBorder: "border-[#E5B25D]/20",
-        barBg: "bg-[#0C0608]/90",
+        barBg: "bg-[#0C0608]/[0.96]",
       };
     }
     return {
@@ -87,7 +84,7 @@ export function MobileTabBar() {
       activeText: "text-[#FFF1C9]",
       glow: "drop-shadow-[0_0_8px_rgba(255,241,201,0.45)]",
       barBorder: "border-white/[0.08]",
-      barBg: "bg-[#090A0E]/88",
+      barBg: "bg-[#090A0E]/[0.96]",
     };
   };
 
@@ -96,7 +93,7 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary navigation"
-      className={`fixed inset-x-0 bottom-0 z-50 md:hidden select-none ${barBg} ${barBorder} border-t backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.55)] transition-colors duration-300`}
+      className={`fixed inset-x-0 bottom-0 z-50 md:hidden select-none ${barBg} ${barBorder} border-t shadow-[0_-4px_24px_rgba(0,0,0,0.55)] transition-colors duration-300`}
       style={{
         paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
       }}
@@ -121,7 +118,7 @@ export function MobileTabBar() {
         />
 
         {/* Tab 1: Home */}
-        <Link
+        <TransitionLink
           href="/"
           onClick={handleHomeTap}
           aria-current={isHome ? "page" : undefined}
@@ -188,10 +185,10 @@ export function MobileTabBar() {
           <span className="relative font-manrope text-[10px] font-semibold tracking-[0.06em] uppercase">
             {site.ui.tabs.home}
           </span>
-        </Link>
+        </TransitionLink>
 
         {/* Tab 2: Events */}
-        <Link
+        <TransitionLink
           href="/events"
           onClick={handleEventsTap}
           aria-current={isEventsTab ? "page" : undefined}
@@ -241,7 +238,7 @@ export function MobileTabBar() {
           <span className="relative font-manrope text-[10px] font-semibold tracking-[0.06em] uppercase">
             {site.ui.tabs.events}
           </span>
-        </Link>
+        </TransitionLink>
       </div>
     </nav>
   );

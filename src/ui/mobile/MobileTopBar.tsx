@@ -1,14 +1,15 @@
 "use client";
 
+import { TransitionLink, useTransitionNavigate } from "@/ui/TransitionLink";
 import React, { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
+import { MotionToggle } from "@/ui/MotionToggle";
 
 export function MobileTopBar() {
   const pathname = usePathname();
-  const router = useRouter();
+  const navigate = useTransitionNavigate();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export function MobileTopBar() {
                   navigator.vibrate(8);
                 } catch {}
               }
-              router.push("/events");
+              navigate("/events");
             }}
             aria-label="Back to Events list"
             className="absolute left-3 top-1/2 -translate-y-1/2 min-h-[48px] min-w-[48px] flex items-center gap-1 font-manrope text-[13px] font-medium tracking-wide text-white/80 active:text-white active:scale-95 transition-transform"
@@ -71,7 +72,7 @@ export function MobileTopBar() {
         ) : null}
 
         {/* Center: Badge + Brand Wordmark OR Event Name */}
-        <Link
+        <TransitionLink
           href="/"
           className="inline-flex items-center gap-2.5 active:opacity-80 transition-opacity"
         >
@@ -83,7 +84,12 @@ export function MobileTopBar() {
           >
             {titleText}
           </span>
-        </Link>
+        </TransitionLink>
+        {/* Right: Motion on/off, remembered for the visit and the next one */}
+        <MotionToggle
+          className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px]"
+          colorClass="text-white/70 active:text-white"
+        />
       </div>
     </header>
   );

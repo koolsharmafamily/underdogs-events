@@ -6,6 +6,8 @@ import { useGLTF, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { StageFloor } from "../StageFloor";
 import { batchStaticSiblings } from "../batchStaticSiblings";
+import { SpareLights } from "../LightRig";
+import { cheapGlass } from "../glass";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
 import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
@@ -90,7 +92,7 @@ export function RedRoomSet() {
     batchStaticSiblings(mir, true);
 
     // 3. Chandelier hanging from its origin (0, 5.2, 0.4), scale 1.0 (lowest crystals at y ≈ 3.0)
-    const chand = chandelierGltf.scene.clone(true);
+    const chand = cheapGlass(chandelierGltf.scene.clone(true));
     batchStaticSiblings(chand, true);
     const chandAnchors = findAnchorNodes(chand, "Flame_Anchor"); // 8 anchors: Flame_Anchor_1..8
 
@@ -293,6 +295,8 @@ export function RedRoomSet() {
         intensity={0.2}
         color="#FFB36B"
       />
+
+      <SpareLights directional={1} />
 
       {/* Real Point Light 1: Left candelabra (#FF9A4A, decay 2) */}
       <pointLight

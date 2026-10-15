@@ -52,6 +52,7 @@ export function startClock() {
     w.__lenis = lenis;
     w.__ScrollTrigger = ScrollTrigger;
     w.__frame = frame;
+    w.__store = useStore;
   }
 
   lenis.on("scroll", ScrollTrigger.update);

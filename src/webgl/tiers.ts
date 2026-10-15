@@ -29,7 +29,7 @@ export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   },
   T2: {
     tier: 'T2',
-    dpr: [1, 2.0],
+    dpr: [1, 1.5],
     hasComposer: true,
     hasReflector: false,
     shadows: false,
@@ -37,7 +37,7 @@ export const TIER_CONFIG: Record<QualityTier, TierSettings> = {
   },
   T1: {
     tier: 'T1',
-    dpr: [1, 2.0],
+    dpr: [1, 1.25],
     hasComposer: false,
     hasReflector: false,
     shadows: false,
@@ -68,6 +68,20 @@ export function isExplicitT0Requested(): boolean {
 }
 
 /**
+ * A tier pinned from the URL (?tier=T1|T2|T3), for QA and the smoke tests. It
+ * skips GPU detection and adaptive step-down. (?tier=T0 is handled above.)
+ */
+export function getRequestedTier(): QualityTier | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const tier = new URLSearchParams(window.location.search).get('tier')?.toUpperCase();
+    return tier === 'T1' || tier === 'T2' || tier === 'T3' ? tier : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Fast synchronous heuristic + async GPU detection fallback.
  * Per Part 12.1: Never infer quality from screen width alone.
  */
@@ -92,4 +106,13 @@ export function getInitialTier(): QualityTier {
   if (isMobileGPU) return 'T1';
 
   return 'T3';
+}
+
+/**
+ * Worlds drawn straight to the canvas rather than through the composer. DHAMAAKA
+ * keeps its canvas transparent over the page; tiers without a composer draw
+ * everything direct.
+ */
+export function rendersDirect(world: 'home' | 'redroom' | 'diwali', hasComposer: boolean) {
+  return !hasComposer || world === 'diwali';
 }

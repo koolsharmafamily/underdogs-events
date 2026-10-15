@@ -8,10 +8,8 @@ import { useStore } from "@/state/store";
 import { useSceneProgress } from "@/motion/useSceneProgress";
 import { useLineReveal } from "@/motion/useLineReveal";
 import { useEnterTransition } from "@/motion/transitions";
-import { getLenis } from "@/motion/clock";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { Marquee } from "@/ui/Marquee";
-import { AnnouncingSoon } from "@/ui/AnnouncingSoon";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { DomTwins } from "@/webgl/tracking/DomTwins";
@@ -70,7 +68,7 @@ export function HomeView() {
         setHeroTextVisible(true);
       }
 
-      const p2 = frame.progress.H2 ?? 0;
+      const p2 = frame.linearProgress.H2 ?? 0;
       const nextStmt = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2;
       const nextAbout = p2 >= 0.67;
       if (nextStmt !== prev.stmt) {

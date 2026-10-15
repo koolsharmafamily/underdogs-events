@@ -15,7 +15,9 @@ export const unbounded = Unbounded({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-unbounded',
-  preload: true,
+  // Not preloaded: only Home uses it, and a preload on the other routes is a
+  // wasted request plus a "preloaded but not used" console warning.
+  preload: false,
   adjustFontFallback: true,
 })
 

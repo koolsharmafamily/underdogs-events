@@ -1,31 +1,32 @@
 "use client";
 
-import React, { Component, useEffect, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import React, { Component, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { PerformanceMonitor } from "@react-three/drei";
 import * as THREE from "three";
-import { frame } from "@/state/frame";
 import { QualityProvider, useQuality } from "./QualityProvider";
 import { CameraRig } from "./CameraRig";
 import { WorldDirector } from "./WorldDirector";
-import { Precompile } from "./Precompile";
 import { DoorProjector } from "./tracking/DoorProjector";
 import { CardProjector } from "./tracking/CardProjector";
 import { PostFX } from "./PostFX";
 import { FallbackPoster } from "./FallbackPoster";
 import { setWebglAdvance } from "@/motion/clock";
 import { useStore } from "@/state/store";
+import { rendersDirect } from "./pipeline";
 
 function RendererGrade() {
   const { gl } = useThree();
   const { settings } = useQuality();
   const world = useStore((s) => s.world);
-  useEffect(() => {
+  // Layout effect: the output path must switch in the same commit as PostFX's
+  // composer, before the next frame, or that frame compiles a stray variant.
+  useLayoutEffect(() => {
     // Canvas constructor options are not reapplied when adaptive quality drops.
     // Keep the non-composer path on AgX as well as the postprocessed path.
-    gl.toneMapping = settings.hasComposer && world !== "diwali"
-      ? THREE.NoToneMapping
-      : THREE.AgXToneMapping;
+    gl.toneMapping = rendersDirect(world, settings.hasComposer)
+      ? THREE.AgXToneMapping
+      : THREE.NoToneMapping;
     gl.toneMappingExposure =
       world === "redroom" ? 0.82 : world === "diwali" ? 1.05 : 1;
     if (world === "diwali") {
@@ -69,30 +70,9 @@ class AssetErrorBoundary extends Component<
   }
 }
 
-function TransitionTuning({ baseDpr }: { baseDpr: number | [number, number] }) {
-  const { gl } = useThree();
-  const dprVal = Array.isArray(baseDpr) ? baseDpr[1] : baseDpr;
-
-  useFrame(() => {
-    if (typeof window !== "undefined" && window.innerWidth < 768) {
-      if (frame.transition.phase !== "idle") {
-        const reducedDpr = Math.max(1.5, dprVal - 0.25);
-        if (gl.getPixelRatio() !== reducedDpr) {
-          gl.setPixelRatio(reducedDpr);
-        }
-      } else {
-        if (gl.getPixelRatio() !== dprVal) {
-          gl.setPixelRatio(dprVal);
-        }
-      }
-    }
-  });
-
-  return null;
-}
-
 function CanvasInner() {
   const { settings, tier, setTier, downgradeTier } = useQuality();
+  const sceneRoute = useStore((s) => s.sceneRoute);
   const advanceRef = useRef<((time: number) => void) | null>(null);
   const cleanupContextListenersRef = useRef<(() => void) | null>(null);
   const lossCountRef = useRef(0);
@@ -125,7 +105,8 @@ function CanvasInner() {
   useEffect(() => {
     if (advanceRef.current && !contextLost && !assetFailed && tier !== "T0") {
       setWebglAdvance((time) => {
-        advanceRef.current?.(time);
+        // Events and the 404 have no world: draw nothing behind them.
+        if (useStore.getState().sceneRoute) advanceRef.current?.(time);
       });
     }
 
@@ -173,7 +154,9 @@ function CanvasInner() {
           }}
           onCreated={({ gl, advance }) => {
             advanceRef.current = advance;
-            setWebglAdvance((time) => advance(time));
+            setWebglAdvance((time) => {
+              if (useStore.getState().sceneRoute) advance(time);
+            });
             (
               window as unknown as { __threeRenderer?: THREE.WebGLRenderer }
             ).__threeRenderer = gl;
@@ -222,7 +205,9 @@ function CanvasInner() {
               if (lossCountRef.current < 2) {
                 setContextLost(false);
                 if (advanceRef.current) {
-                  setWebglAdvance((time) => advanceRef.current?.(time));
+                  setWebglAdvance((time) => {
+                    if (useStore.getState().sceneRoute) advanceRef.current?.(time);
+                  });
                 }
               }
             };
@@ -250,6 +235,7 @@ function CanvasInner() {
             height: "100%",
             pointerEvents: "none",
             opacity: contextLost ? 0 : 1,
+            visibility: sceneRoute ? "visible" : "hidden",
             transition: "opacity 250ms ease-out",
           }}
         >
@@ -260,7 +246,6 @@ function CanvasInner() {
               downgradeTier();
             }}
           />
-          <TransitionTuning baseDpr={settings.dpr} />
           <RendererGrade />
           <CameraRig />
           <WorldDirector />

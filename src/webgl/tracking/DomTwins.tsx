@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/state/store';
 import { TransitionLink } from '@/ui/TransitionLink';
 import { preloadWorldAssets } from '@/webgl/preload';
-import { domTwinRefs } from './DoorProjector';
+import { domTwinRefs } from './refs';
 
 /**
  * DOM Twins for H5 Doors per BRIEF.md Part 7 H5:

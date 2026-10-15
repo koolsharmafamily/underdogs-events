@@ -34,9 +34,9 @@ export class BadgeBehaviours {
 
   public update(
     root: THREE.Group,
-    eyeL: THREE.Group | null,
-    eyeR: THREE.Group | null,
-    tongue: THREE.Group | null,
+    eyeL: THREE.Object3D | null,
+    eyeR: THREE.Object3D | null,
+    tongue: THREE.Object3D | null,
     state: BadgeBehaviourState,
   ) {
     const {
@@ -202,6 +202,7 @@ export class BadgeBehaviours {
         const swing =
           Math.sin(this.wagProgress * Math.PI * 6) *
           THREE.MathUtils.degToRad(12) *
+          (tongue.userData.wag ?? 1) *
           decay;
         tongue.rotation.z = swing;
       } else {

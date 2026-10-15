@@ -1,12 +1,11 @@
 "use client";
-import { lazy, Suspense, useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useStore } from "@/state/store";
 import { Badge } from "./badge/Badge";
 import { Precompile } from "./Precompile";
 import { preloadWorldAssets } from "./preload";
 import { StudioEnvironment } from "./StudioEnvironment";
 import { ForegroundHaze } from "./ForegroundHaze";
-import { releaseWorldResources } from "./worldResources";
 const HomeStage = lazy(() =>
   import("./home/HomeStage").then((m) => ({ default: m.HomeStage })),
 );
@@ -17,55 +16,40 @@ const DiwaliSet = lazy(() =>
   import("./diwali/DiwaliSet").then((m) => ({ default: m.DiwaliSet })),
 );
 
+/**
+ * Every set stays mounted once it has been visited or warmed (residentWorlds) and
+ * is only hidden when another world is current, so going back never re-uploads
+ * or recompiles anything. Each set pauses its own frame work while hidden.
+ */
 export function WorldDirector() {
   const world = useStore((s) => s.world);
-  const previousWorld = useStore((s) => s.previousWorld);
-  const transitioning = useStore((s) => s.isTransitioning);
+  const resident = useStore((s) => s.residentWorlds);
   useEffect(() => {
     preloadWorldAssets(world);
   }, [world]);
-  const outgoing = useRef(previousWorld);
-  useEffect(() => {
-    if (previousWorld) outgoing.current = previousWorld;
-    if (!transitioning && outgoing.current && outgoing.current !== world) {
-      releaseWorldResources(outgoing.current);
-      outgoing.current = null;
-    }
-  }, [transitioning, previousWorld, world]);
   return (
     <group name="WorldDirector">
       <StudioEnvironment />
       <ForegroundHaze />
-      <fogExp2
-        attach="fog"
-        args={
-          world === "redroom"
-            ? ["#090305", 0.065]
-            : world === "diwali"
-              ? ["#24101F", 0.065]
-              : ["#0B0E14", 0.06]
-        }
-      />
       <Suspense fallback={null}>
         <Badge position={world === "diwali" ? [0, 1.9, 0] : [0, 1.5, 0]} />
       </Suspense>
       <group name="HomeStageGroup" visible={world === "home"}>
-        {world === "home" || (transitioning && previousWorld === "home") ? (
+        {resident.home ? (
           <Suspense fallback={null}>
             <HomeStage />
           </Suspense>
         ) : null}
       </group>
       <group name="RedRoomSetGroup" visible={world === "redroom"}>
-        {world === "redroom" ||
-        (transitioning && previousWorld === "redroom") ? (
+        {resident.redroom ? (
           <Suspense fallback={null}>
             <RedRoomSet />
           </Suspense>
         ) : null}
       </group>
       <group name="DiwaliSetGroup" visible={world === "diwali"}>
-        {world === "diwali" || (transitioning && previousWorld === "diwali") ? (
+        {resident.diwali ? (
           <Suspense fallback={null}>
             <DiwaliSet />
           </Suspense>

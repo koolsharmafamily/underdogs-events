@@ -3,12 +3,13 @@
 import React, { useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Environment, Lightformer } from "@react-three/drei";
+import { SpareLights } from "../LightRig";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
 
 /**
- * DiwaliSet - Pure Jewellery Lighting and Studio Environment for the Jewelled Badge.
+ * DiwaliSet - Pure Jewellery Lighting for the Jewelled Badge (its studio
+ * environment is baked with the others in StudioEnvironment).
  * All other scene elements are rendered in exquisite, crisp 2D DOM/SVG layers.
  * The WebGL canvas on /diwali is completely alpha-transparent.
  */
@@ -35,46 +36,6 @@ export function DiwaliSet() {
 
   return (
     <group name="DiwaliSet">
-      {/* Lightformer Environment for crystal diamond facets and gold beveled edges */}
-      <Environment resolution={128} environmentIntensity={0.95}>
-        {/* Warm gold key strip from top-left */}
-        <Lightformer
-          form="rect"
-          intensity={4.5}
-          color="#FFE3A3"
-          scale={[3, 6, 1]}
-          position={[-3.5, 5.8, 3.5]}
-          target={[0, 2.22, 0.6]}
-        />
-        {/* Soft white top softbox */}
-        <Lightformer
-          form="rect"
-          intensity={3.2}
-          color="#FFF1C9"
-          scale={[6, 3, 1]}
-          position={[0, 6.2, 1.8]}
-          target={[0, 2.22, 0.6]}
-        />
-        {/* Vibrant pink rim strip from behind */}
-        <Lightformer
-          form="rect"
-          intensity={3.8}
-          color="#E0217A"
-          scale={[2, 5, 1]}
-          position={[1.5, 3.2, -2.0]}
-          target={[0, 2.22, 0.6]}
-        />
-        {/* Champagne gold fill */}
-        <Lightformer
-          form="rect"
-          intensity={2.6}
-          color="#E5B25D"
-          scale={[3, 3, 1]}
-          position={[3.5, 3.0, 2.5]}
-          target={[0, 2.22, 0.6]}
-        />
-      </Environment>
-
       {/* 1. Ambient warm crimson foundation */}
       <ambientLight intensity={0.7} color="#42050E" />
 
@@ -110,6 +71,7 @@ export function DiwaliSet() {
         distance={6}
         decay={2}
       />
+      <SpareLights point={2} />
     </group>
   );
 }

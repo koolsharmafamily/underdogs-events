@@ -33,6 +33,8 @@ export interface FrameState {
     lastMoveTime: number
   }
   progress: Record<string, number>
+  /** Linear scene progress (0–1 over the scene's scroll), for line-by-line story steps. */
+  linearProgress: Record<string, number>
   dampedProgress: Record<string, number>
   transition: TransitionFrameState
 }
@@ -51,6 +53,7 @@ export const frame: FrameState = {
     lastMoveTime: 0,
   },
   progress: {},
+  linearProgress: {},
   dampedProgress: {},
   transition: {
     t: 0,

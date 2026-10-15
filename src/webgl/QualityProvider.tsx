@@ -7,6 +7,7 @@ import {
   TIER_CONFIG,
   getInitialTier,
   isExplicitT0Requested,
+  getRequestedTier,
 } from './tiers';
 import { useStore } from '@/state/store';
 
@@ -35,6 +36,7 @@ export function QualityProvider({ children }: { children: React.ReactNode }) {
   const [tier, setTierState] = useState<QualityTier>(getInitialTier);
   const setStoreTier = useStore((s) => s.setTier);
   const lockedCapRef = useRef<QualityTier | null>(null);
+  const pinnedRef = useRef(false);
 
   const setTier = useCallback(
     (newTier: QualityTier) => {
@@ -53,6 +55,7 @@ export function QualityProvider({ children }: { children: React.ReactNode }) {
 
   // Monotonic one-way adaptive degradation (Part 5.5 & Part 16: never oscillates)
   const downgradeTier = useCallback(() => {
+    if (pinnedRef.current) return;
     setTierState((prev) => {
       const next: QualityTier =
         prev === 'T3' ? 'T2' : prev === 'T2' ? 'T1' : prev;
@@ -71,6 +74,13 @@ export function QualityProvider({ children }: { children: React.ReactNode }) {
 
     if (initial === 'T0' || isExplicitT0Requested()) {
       lockedCapRef.current = 'T0';
+      return;
+    }
+    const requested = getRequestedTier();
+    if (requested) {
+      pinnedRef.current = true;
+      setTierState(requested);
+      setStoreTier(requested);
       return;
     }
 

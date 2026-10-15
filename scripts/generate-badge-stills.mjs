@@ -1,26 +1,41 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 
+// Renders transparent 512 px stills of the badge GLBs with the project's own three.js.
+//   node scripts/generate-badge-stills.mjs              # every still
+//   node scripts/generate-badge-stills.mjs halloween    # only stills whose name contains "halloween"
+// CHROMIUM_PATH overrides the browser Playwright launches.
 const rootDir = process.cwd();
 const mediaDir = path.join(rootDir, 'public/media');
+const threeDir = path.join(rootDir, 'node_modules/three');
+const only = process.argv.slice(2);
+const ORIGIN = 'http://stills.local';
 if (!fs.existsSync(mediaDir)) {
   fs.mkdirSync(mediaDir, { recursive: true });
 }
 
 async function renderStill(modelPath, outputName, lightingConfig) {
+  if (only.length && !only.some((o) => outputName.includes(o))) return;
   console.log(`Rendering still for ${modelPath} -> ${outputName}...`);
-  const glbBase64 = fs.readFileSync(path.join(rootDir, modelPath)).toString('base64');
-  const glbDataUri = `data:model/gltf-binary;base64,${glbBase64}`;
-
   const browser = await chromium.launch({
     headless: true,
-    args: ['--enable-webgl', '--use-gl=angle', '--use-angle=swiftshader'],
+    executablePath: process.env.CHROMIUM_PATH || undefined,
+    args: ['--enable-webgl', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
   });
 
   const page = await browser.newPage({
     viewport: { width: 1024, height: 1024, deviceScaleFactor: 1 },
+  });
+  // Serve the page, the model and three.js from disk; nothing leaves the machine.
+  await page.route(`${ORIGIN}/**`, (route) => {
+    const { pathname } = new URL(route.request().url());
+    if (pathname === '/') return route.fulfill({ contentType: 'text/html', body: html });
+    if (pathname === '/model.glb') return route.fulfill({ path: path.join(rootDir, modelPath) });
+    if (pathname.startsWith('/three/')) return route.fulfill({ path: path.join(threeDir, pathname.slice('/three/'.length)) });
+    return route.fulfill({ status: 404 });
   });
 
   const html = `
@@ -35,10 +50,11 @@ async function renderStill(modelPath, outputName, lightingConfig) {
 </head>
 <body>
   <div id="container"></div>
+  <script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/"}}</script>
   <script type="module">
-    import * as THREE from 'https://esm.sh/three@0.186.1';
-    import { GLTFLoader } from 'https://esm.sh/three@0.186.1/examples/jsm/loaders/GLTFLoader.js';
-    import { MeshoptDecoder } from 'https://esm.sh/three@0.186.1/examples/jsm/libs/meshopt_decoder.module.js';
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
     const width = 1024;
     const height = 1024;
@@ -59,7 +75,7 @@ async function renderStill(modelPath, outputName, lightingConfig) {
 
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
-    loader.load('${glbDataUri}', (gltf) => {
+    loader.load('/model.glb', (gltf) => {
       const model = gltf.scene;
       model.position.set(0, 0, 0);
       model.rotation.set(0, 0, 0);
@@ -77,7 +93,7 @@ async function renderStill(modelPath, outputName, lightingConfig) {
 </html>
   `;
 
-  await page.setContent(html);
+  await page.goto(`${ORIGIN}/`);
   await page.waitForFunction(() => window.__READY === true || window.__ERROR !== undefined, { timeout: 20000 });
 
   const error = await page.evaluate(() => window.__ERROR);
@@ -87,7 +103,8 @@ async function renderStill(modelPath, outputName, lightingConfig) {
 
   await page.waitForTimeout(500);
 
-  const pngPath = path.join(mediaDir, `${outputName}.png`);
+  // The full-size PNG is only an intermediate; the site serves the WebP.
+  const pngPath = path.join(os.tmpdir(), `${outputName}.png`);
   await page.screenshot({ path: pngPath, omitBackground: true });
   await browser.close();
 
@@ -127,24 +144,20 @@ async function main() {
     `,
   });
 
-  // 2. Neon Badge (Red Room)
-  await renderStill('public/models/badge-neon.glb', 'badge-neon-still', {
+  // 2. Halloween Badge (Red Room): candle key from upper left, red rim behind right,
+  // as in the Red Room set. The ring and halo carry their own glow.
+  await renderStill('public/models/badge-halloween.glb', 'badge-halloween-still', {
     exposure: 1.0,
     code: `
-      const amb = new THREE.AmbientLight(0x1a0508, 0.5);
-      scene.add(amb);
+      scene.add(new THREE.AmbientLight(0x2a0403, 0.6));
 
-      const key = new THREE.DirectionalLight(0xff2a40, 2.2);
-      key.position.set(-3.0, 4.0, 3.0);
+      const key = new THREE.PointLight(0xff9a4a, 9, 12, 2);
+      key.position.set(-2.0, 1.4, 2.4);
       scene.add(key);
 
-      const rim = new THREE.DirectionalLight(0xff5577, 2.0);
-      rim.position.set(2.0, -2.0, 2.0);
+      const rim = new THREE.PointLight(0xff2a1f, 6, 10, 2);
+      rim.position.set(1.8, 0.6, -1.0);
       scene.add(rim);
-
-      const point = new THREE.PointLight(0xff002b, 2.5, 10);
-      point.position.set(0, 0, 1.8);
-      scene.add(point);
     `,
   });
 

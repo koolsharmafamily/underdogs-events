@@ -57,7 +57,7 @@ export function DiwaliView() {
     let prevLine = 0;
 
     const onTick = () => {
-      const p2 = frame.progress.D2 ?? 0;
+      const p2 = frame.linearProgress.D2 ?? 0;
       setD2Progress(p2);
       const idx = Math.min(4, Math.floor(p2 * 5));
       if (idx !== prevLine) {
@@ -238,14 +238,14 @@ export function DiwaliView() {
         </section>
       )}
 
-      {/* D4 · The Sponsor Wall (Opening credits step-and-repeat) */}
-      <SponsorWall />
+      {/* D4 · The Sponsor Wall (Opening credits step-and-repeat); scroll key D4 */}
+      <SponsorWall ref={d4Ref} />
 
       {/* D5 · Now Showing: The Official Poster (Marquee bulb lightbox) */}
       <CinemaLightbox />
 
-      {/* D6 · Outro */}
-      <DhamaakaOutro />
+      {/* Outro; scroll key D5 (the badge returns here) */}
+      <DhamaakaOutro ref={d5Ref} />
 
       <Footer />
     </main>

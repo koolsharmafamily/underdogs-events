@@ -9,7 +9,6 @@ import {
 import { Providers } from "@/ui/Providers";
 import { DomLoader } from "@/ui/DomLoader";
 import { Nav } from "@/ui/Nav";
-import { Cursor } from "@/ui/Cursor";
 import { FilmGrain } from "@/ui/FilmGrain";
 
 const BASE_URL =
@@ -81,7 +80,6 @@ export default function RootLayout({
         <Providers>
           <DomLoader />
           <Nav />
-          <Cursor />
           <FilmGrain />
           {children}
         </Providers>

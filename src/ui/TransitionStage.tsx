@@ -3,9 +3,7 @@ import { useEffect, useRef } from "react";
 import { registerTransitionStage } from "@/motion/transitions";
 import gsap from "gsap";
 import { frame } from "@/state/frame";
-import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
-import { useStore } from "@/state/store";
-import { pathToWorld, worldToSkin } from "@/motion/transitions";
+import { badgeApertureMask } from "@/webgl/badge/screenBounds";
 
 export function TransitionStage() {
   const stage = useRef<HTMLDivElement>(null),
@@ -23,20 +21,15 @@ export function TransitionStage() {
       leftCurtainEl: left.current,
       rightCurtainEl: right.current,
     });
-    // Only cut the badge aperture when the DESTINATION skin is loaded, compiled
-    // and has rendered at least one frame. Never cut an empty hole.
+    // The badge travels through every cover: cut a soft aperture wherever a
+    // skin is drawn (the outgoing one keeps rendering until the incoming one is
+    // ready). With no badge on screen there is no hole.
     const trackBadge = () => {
       if (!stage.current) return;
-      const b = badgeScreenBounds;
-      const store = useStore.getState();
-      const currentWorld = pathToWorld(typeof window !== "undefined" ? window.location.pathname : "/");
-      const targetSkin = store.targetSkinOverride ?? worldToSkin(currentWorld);
-      const isTargetReady = b.ready && b.readySkin === targetSkin;
-
-      stage.current.style.maskImage =
-        frame.transition.phase !== "idle" && isTargetReady
-          ? `radial-gradient(circle at ${b.x}px ${b.y}px, transparent ${b.size * 0.53}px, #000 ${b.size * 0.53 + 2}px)`
-          : "none";
+      const mask =
+        frame.transition.phase !== "idle" ? badgeApertureMask() : "none";
+      stage.current.style.maskImage = mask;
+      stage.current.style.webkitMaskImage = mask;
     };
     gsap.ticker.add(trackBadge);
     return () => { gsap.ticker.remove(trackBadge); registerTransitionStage(null); };

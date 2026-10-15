@@ -2,7 +2,7 @@
  * Protagonist badge skin types & dissolve edge configurations (BRIEF.md Part 5.2).
  * All surface materials, base colors, and textures come directly from the authentic GLB models:
  *   - /models/badge-enamel.glb (Home - pink enamel ring, white letters, ink face, chrome rim)
- *   - /models/badge-neon.glb   (The Red Room - red neon tubes & glyphs, black lacquer, smoked glass)
+ *   - /models/badge-halloween.glb (The Red Room - the client's Halloween logo: red ring glow, blood drips)
  *   - /models/badge-jewelled.glb (Diwali - rani pink enamel ring, gold zari, diamonds, emeralds, rubies)
  *
  * No hardcoded color overrides in code.
@@ -10,7 +10,7 @@
 
 import * as THREE from 'three';
 
-export type SkinId = 'enamel' | 'neon' | 'jewelled';
+export type SkinId = 'enamel' | 'halloween' | 'jewelled';
 
 export interface DissolveEdgeConfig {
   color: THREE.Color;
@@ -19,7 +19,7 @@ export interface DissolveEdgeConfig {
 }
 
 export const DISSOLVE_EDGES: Record<SkinId, DissolveEdgeConfig> = {
-  neon: {
+  halloween: {
     color: new THREE.Color('#FF4A1F'),
     intensity: 6.0,
     width: 0.06,

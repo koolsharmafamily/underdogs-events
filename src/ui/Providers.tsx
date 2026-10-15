@@ -13,7 +13,7 @@ import {
   pathToWorld,
 } from "@/motion/transitions";
 import { frame } from "@/state/frame";
-import { useStore } from "@/state/store";
+import { isSceneRoute, useStore } from "@/state/store";
 import { preloadWorldAssets } from "@/webgl/preload";
 import { TransitionStage } from "./TransitionStage";
 import { SceneNavigation } from "./SceneNavigation";
@@ -67,6 +67,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // Handle route changes, T4 H5 gate landing, and T5 scroll restoration
   useEffect(() => {
     const world = pathToWorld(pathname);
+    useStore.getState().setSceneRoute(isSceneRoute(pathname));
     preloadWorldAssets(world);
     setWorld(world);
     prevPathnameRef.current = pathname;

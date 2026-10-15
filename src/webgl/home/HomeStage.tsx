@@ -7,6 +7,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { StageFloor } from "../StageFloor";
 import { doorModels } from "../tracking/doorModels";
 import { batchStaticSiblings } from "../batchStaticSiblings";
+import { SpareLights } from "../LightRig";
 import { composition } from "../composition";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
@@ -34,7 +35,11 @@ export function HomeStage() {
   const { size, camera } = useThree();
   const captionTops = useRef({ red: 0, diwali: 0 });
   const projection = useMemo(() => new THREE.Vector3(), []);
+  const world = useStore((s) => s.world);
+  // The stage stays mounted between visits, so measure the captions of each new
+  // Home page rather than the first one.
   useEffect(() => {
+    if (world !== "home") return;
     const measure = () => {
       for (const key of ["red", "diwali"] as const) {
         const el = document.querySelector<HTMLElement>(
@@ -53,11 +58,15 @@ export function HomeStage() {
     return () => {
       observer.disconnect();
       window.removeEventListener("resize", measure);
+    };
+  }, [world]);
+  useEffect(
+    () => () => {
       doorModels.red = null;
       doorModels.diwali = null;
-    };
-  }, []);
-  const world = useStore((s) => s.world);
+    },
+    [],
+  );
   const previousWorld = useStore((s) => s.previousWorld);
   const hoverDoor = useStore((s) => s.hoverDoor);
   const loaderPopped = useStore((s) => s.loaderPopped);
@@ -73,7 +82,20 @@ export function HomeStage() {
   const leftPointLightRef = useRef<THREE.PointLight>(null);
   const rightPointLightRef = useRef<THREE.PointLight>(null);
 
-  // Floor glow cards for light leaks under doors
+  // Floor glow cards for light leaks under doors: a soft radial falloff, so
+  // they read as light on the floor rather than coloured rectangles.
+  const softGlow = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 128;
+    const ctx = canvas.getContext("2d")!;
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "#ffffff");
+    g.addColorStop(0.45, "#7a7a7a");
+    g.addColorStop(1, "#000000");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(canvas);
+  }, []);
   const redLeakMeshRef = useRef<THREE.Mesh>(null);
   const diwaliLeakMeshRef = useRef<THREE.Mesh>(null);
 
@@ -341,7 +363,6 @@ export function HomeStage() {
     let diwaliTargetY = -8.0;
     let doorsVisible = false;
 
-    const effP2 = Math.max(p2, frame.progress["H2"] ?? 0);
     const effP5 = Math.max(p5, frame.progress["H5"] ?? 0);
 
     if (composition.scene === "H5" || effP5 > 0.02 || tr.type === "T1" || tr.type === "T2") {
@@ -584,6 +605,8 @@ export function HomeStage() {
         color="#C5CCEF"
       />
 
+      <SpareLights directional={1} />
+
       {/* Max 3 Real Point Lights in Home (Global Rule 7) */}
       <pointLight
         ref={rimPointLightRef}
@@ -619,7 +642,9 @@ export function HomeStage() {
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#FF2A1F"
+          alphaMap={softGlow}
           transparent
+          depthWrite={false}
           opacity={0}
           blending={THREE.AdditiveBlending}
         />
@@ -633,7 +658,9 @@ export function HomeStage() {
         <planeGeometry args={[1.2, 0.5]} />
         <meshBasicMaterial
           color="#F2D38B"
+          alphaMap={softGlow}
           transparent
+          depthWrite={false}
           opacity={0}
           blending={THREE.AdditiveBlending}
         />

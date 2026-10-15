@@ -1,15 +1,39 @@
 'use client'
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { determineTransitionType, runRouteTransition } from '@/motion/transitions'
 import { preloadRouteWorld } from '@/webgl/preload'
 import type { TransitionType } from '@/state/frame'
 
+export type TransitionHref = '/' | '/the-red-room' | '/diwali' | '/events'
+
+/**
+ * Navigates through the transition system (cover, preload, badge continuity),
+ * for buttons and taps that are not links. Same route: does nothing.
+ */
+export function useTransitionNavigate() {
+  const router = useRouter()
+  const pathname = usePathname()
+  return useCallback(
+    (href: TransitionHref, options: { transitionType?: TransitionType; origin?: 'door' | 'gate' | 'nav' } = {}) => {
+      if (pathname === href) return
+      router.prefetch(href)
+      preloadRouteWorld(href)
+      runRouteTransition(
+        options.transitionType ?? determineTransitionType(pathname, href),
+        () => router.push(href),
+        { fromPath: pathname, toPath: href, origin: options.origin }
+      )
+    },
+    [router, pathname]
+  )
+}
+
 interface TransitionLinkProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> {
-  href: '/' | '/the-red-room' | '/diwali'
+  href: TransitionHref
   transitionType?: TransitionType
   origin?: 'door' | 'gate' | 'nav'
   rollText?: string
@@ -35,7 +59,7 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
     ref
   ) {
     const router = useRouter()
-    const pathname = usePathname()
+    const navigate = useTransitionNavigate()
 
     const handlePrefetch = () => {
       router.prefetch(href)
@@ -59,22 +83,7 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
 
       e.preventDefault()
 
-      if (pathname === href) return
-
-      handlePrefetch()
-      const type = transitionType ?? determineTransitionType(pathname, href)
-
-      runRouteTransition(
-        type,
-        () => {
-          router.push(href)
-        },
-        {
-          fromPath: pathname,
-          toPath: href,
-          origin,
-        }
-      )
+      navigate(href, { transitionType, origin })
     }
 
     return (
@@ -90,6 +99,8 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
           handlePrefetch()
           onFocus?.(e)
         }}
+        // Phones have no hover: start loading the moment a finger lands.
+        onTouchStart={handlePrefetch}
         className={`${rollText ? 'nav-roll-link' : ''} ${underline ? 'draw-underline' : ''} ${className}`}
         {...rest}
       >

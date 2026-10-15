@@ -1,58 +1,80 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import {
   EffectComposer,
   Bloom,
   ChromaticAberration,
   Vignette,
   ToneMapping,
-  DepthOfField,
+  Noise,
 } from "@react-three/postprocessing";
-import { ToneMappingMode, DepthOfFieldEffect } from "postprocessing";
+import {
+  BlendFunction,
+  ToneMappingMode,
+  type BloomEffect,
+  type NoiseEffect,
+  type VignetteEffect,
+} from "postprocessing";
+import { acts } from "@/theme/acts";
 import { useQuality } from "./QualityProvider";
-import { composition } from "./composition";
 import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
+import { rendersDirect } from "./pipeline";
+import type { WorldId } from "@/theme/tokens";
 
+const GRADE: Record<WorldId, { bloom: number; threshold: number; vignette: number }> = {
+  home: { bloom: 0.22, threshold: 1.15, vignette: 0.45 },
+  redroom: { bloom: 0.38, threshold: 1.05, vignette: 0.65 },
+  diwali: { bloom: 0.22, threshold: 1.15, vignette: 0.45 },
+};
+
+/**
+ * One composer for the whole visit. It stays mounted on every route and is only
+ * switched off where the world draws direct (DHAMAAKA keeps a transparent canvas),
+ * so its passes, targets and programs are built once. Per-world values go straight
+ * to the effects: changing their props would rebuild them.
+ */
 export function PostFX() {
   const { settings } = useQuality();
-  const { size } = useThree();
-  const dof = useRef<DepthOfFieldEffect>(null);
   const world = useStore((s) => s.world);
+  const bloom = useRef<BloomEffect>(null);
+  const vignette = useRef<VignetteEffect>(null);
+  const grain = useRef<NoiseEffect>(null);
 
-  // Persistent chromatic aberration vector updated in useFrame (0 in steady state, up to 0.0015 during T1)
+  // Chromatic aberration offset (0 in steady state, up to 0.0015 during T1)
   const chromOffset = useMemo(() => new THREE.Vector2(0, 0), []);
 
   useFrame(() => {
-    if (dof.current) {
-      dof.current.bokehScale = 0;
-      dof.current.circleOfConfusionMaterial.worldFocusDistance =
-        composition.focusDistance;
-    }
     const ca = frame.transition.chromAb;
     chromOffset.set(ca, ca * 0.5);
   });
 
-  // Skip composer on tier 1 and tier 0 per Part 5.5, and on diwali for pure alpha transparency
-  if (!settings.hasComposer || world === "diwali") {
-    return null;
-  }
+  useLayoutEffect(() => {
+    const grade = GRADE[world];
+    if (bloom.current) {
+      bloom.current.intensity = grade.bloom;
+      bloom.current.luminanceMaterial.threshold = grade.threshold;
+    }
+    if (vignette.current) vignette.current.darkness = grade.vignette;
+    // Film grain lives here on composer tiers (FilmGrain draws it in CSS elsewhere).
+    if (grain.current) grain.current.blendMode.opacity.value = acts[world].grainOpacity * 2;
+  }, [world, settings.hasComposer]);
 
-  // Tuned parameters for balanced, authentic bloom
-  const bloomIntensity = world === "redroom" ? 0.38 : 0.22;
-  const bloomThreshold = world === "redroom" ? 1.05 : 1.15;
-  const luminanceSmoothing = 0.3;
-  const vignetteDarkness = world === "redroom" ? 0.65 : 0.45;
+  if (!settings.hasComposer) return null;
 
   return (
-    <EffectComposer multisampling={4}>
+    <EffectComposer
+      multisampling={4}
+      enabled={!rendersDirect(world, settings.hasComposer)}
+    >
       <Bloom
-        intensity={bloomIntensity}
-        luminanceThreshold={bloomThreshold}
-        luminanceSmoothing={luminanceSmoothing}
+        ref={bloom}
+        intensity={GRADE.home.bloom}
+        luminanceThreshold={GRADE.home.threshold}
+        luminanceSmoothing={0.3}
         mipmapBlur
       />
       <ChromaticAberration
@@ -60,8 +82,14 @@ export function PostFX() {
         radialModulation={false}
         modulationOffset={0}
       />
-      <Vignette eskil={false} offset={0.15} darkness={vignetteDarkness} />
+      <Vignette
+        ref={vignette}
+        eskil={false}
+        offset={0.15}
+        darkness={GRADE.home.vignette}
+      />
       <ToneMapping mode={ToneMappingMode.AGX} />
+      <Noise ref={grain} premultiply blendFunction={BlendFunction.SOFT_LIGHT} opacity={0.08} />
     </EffectComposer>
   );
 }

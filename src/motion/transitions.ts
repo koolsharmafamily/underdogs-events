@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { frame, type TransitionType } from "@/state/frame";
-import { useStore } from "@/state/store";
+import { isSceneRoute, useStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
 import { preloadWorldAssets } from "@/webgl/preload";
 import { getLenis } from "./clock";
@@ -52,8 +52,8 @@ export function pathToWorld(pathname: string): WorldId {
   return "home";
 }
 
-export function worldToSkin(world: WorldId): "enamel" | "neon" | "jewelled" {
-  if (world === "redroom") return "neon";
+export function worldToSkin(world: WorldId): "enamel" | "halloween" | "jewelled" {
+  if (world === "redroom") return "halloween";
   if (world === "diwali") return "jewelled";
   return "enamel";
 }
@@ -445,6 +445,7 @@ export function runRouteTransition(
     isRouteEntered = Boolean(options.isPopState);
     isWorldRendered = Boolean(
       currentStore.tier === "T0" ||
+      !isSceneRoute(toPath) ||
       (options.isPopState && currentStore.renderedWorlds[toWorld]),
     );
 
@@ -465,6 +466,11 @@ export function runRouteTransition(
 
   const isTargetRedRoom = toWorld === "redroom";
   const isTargetDiwali = toWorld === "diwali";
+  // §6: Home → DHAMAAKA is a gold studio-light flare (the wash); from the Red
+  // Room it is a three-frame film-reel flicker on the dark veil instead.
+  const isFilmReel =
+    motionEnabled && type === "T3" && isTargetDiwali && !options.isPopState;
+  const useWash = isTargetDiwali && !isFilmReel;
   const isCurtainTransition =
     motionEnabled &&
     !options.isPopState &&
@@ -506,7 +512,7 @@ export function runRouteTransition(
       frame.transition.t = this.time() / (outDur + inDur);
     },
     onComplete: () => {
-      if (isTargetDiwali && washEl) {
+      if (useWash && washEl) {
         gsap.set(washEl, { opacity: 1 });
         gsap.set(veilEl, { opacity: 0 });
       } else {
@@ -549,7 +555,7 @@ export function runRouteTransition(
           );
         } else {
           if (curtainWrapEl) gsap.set(curtainWrapEl, { visibility: "hidden" });
-          if (isTargetDiwali && washEl) {
+          if (useWash && washEl) {
             enterTl.to(
               washEl,
               { opacity: 0, duration: inDur * 0.9, ease: "power2.out" },
@@ -596,12 +602,6 @@ export function runRouteTransition(
       { badgeFlip: 1, duration: outDur, ease: "ease.inOut" },
       0,
     );
-    if (isTargetDiwali && veilEl) {
-      exitTl
-        .to(veilEl, { opacity: 0.85, duration: 0.04 }, 0.08)
-        .to(veilEl, { opacity: 0.25, duration: 0.04 }, 0.12)
-        .to(veilEl, { opacity: 0.9, duration: 0.04 }, 0.16);
-    }
   }
   const coverStart = isCurtainTransition
     ? Math.max(0, outDur - 0.55)
@@ -624,10 +624,20 @@ export function runRouteTransition(
       coverStart,
     );
   }
-  exitTl.to(
-    veilEl,
-    { opacity: 1, duration: Math.max(0.1, outDur - coverStart), ease: "ease.inOut" },
-    coverStart,
-  );
+  if (isFilmReel) {
+    // Dim, then three film frames (1/24 s each): full, flash, full.
+    const f = 1 / 24;
+    exitTl
+      .to(veilEl, { opacity: 0.6, duration: outDur - 3 * f, ease: "ease.in" }, 0)
+      .set(veilEl, { opacity: 1 }, outDur - 3 * f)
+      .set(veilEl, { opacity: 0.35 }, outDur - 2 * f)
+      .set(veilEl, { opacity: 1 }, outDur - f);
+  } else {
+    exitTl.to(
+      veilEl,
+      { opacity: 1, duration: Math.max(0.1, outDur - coverStart), ease: "ease.inOut" },
+      coverStart,
+    );
+  }
   activeTimeline = exitTl;
 }

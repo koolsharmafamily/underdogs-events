@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { site } from "@/content/site";
 import { getSavedRouteScroll } from "@/motion/transitions";
 import { useStore } from "@/state/store";
+import gsap from "gsap";
+import { badgeApertureMask } from "@/webgl/badge/screenBounds";
 
 const CLAPPER_SEEN_KEY = "underdogs-dhamaaka-clapper-seen";
 
@@ -21,6 +23,21 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
   // Stages: 0: entering, 1: clapped, 2: presenter visible, 3: spotlights revealing, 4: done
   const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(0);
   const timersRef = useRef<number[]>([]);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // The badge stays on screen through the opener, in a soft aperture.
+  useEffect(() => {
+    if (dismissed) return;
+    const track = () => {
+      const el = rootRef.current;
+      if (!el) return;
+      const mask = badgeApertureMask();
+      el.style.maskImage = mask;
+      el.style.webkitMaskImage = mask;
+    };
+    gsap.ticker.add(track);
+    return () => gsap.ticker.remove(track);
+  }, [dismissed]);
 
   const handleFinish = useCallback(() => {
     timersRef.current.forEach((t) => clearTimeout(t));
@@ -37,7 +54,6 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
 
     if (
       !motionEnabled ||
-      lastNavigationOrigin === "T3" ||
       (lastNavigationOrigin === "T5" && getSavedRouteScroll("/diwali") > 100)
     ) {
       setDismissed(true);
@@ -45,9 +61,10 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
       return;
     }
 
-    let isRepeat = false;
+    // §6: from the Red Room (after the film-reel flicker) always the short cut.
+    let isRepeat = lastNavigationOrigin === "T3";
     try {
-      isRepeat = window.sessionStorage.getItem(CLAPPER_SEEN_KEY) === "1";
+      isRepeat ||= window.sessionStorage.getItem(CLAPPER_SEEN_KEY) === "1";
       window.sessionStorage.setItem(CLAPPER_SEEN_KEY, "1");
     } catch {
       // storage access error handled
@@ -88,11 +105,12 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
 
   return (
     <div
+      ref={rootRef}
       role="status"
       aria-live="polite"
       aria-label={`${site.diwali.presenter} ${site.diwali.title}`}
       onClick={handleFinish}
-      className={`fixed inset-0 z-[80] flex items-center justify-center overflow-hidden bg-[#0A0606] transition-opacity duration-600 ${
+      className={`fixed inset-0 z-[80] flex items-end justify-center overflow-hidden pb-[max(9vh,88px)] bg-[#0A0606] transition-opacity duration-600 ${
         stage === 4 ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
@@ -105,7 +123,7 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
       {/* Clapperboard Container */}
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-[540px]">
         {/* 2D SVG Clapperboard */}
-        <div className="relative w-[280px] sm:w-[340px] drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)]">
+        <div className="relative w-[220px] sm:w-[300px] drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)]">
           <svg
             viewBox="0 0 340 260"
             fill="none"

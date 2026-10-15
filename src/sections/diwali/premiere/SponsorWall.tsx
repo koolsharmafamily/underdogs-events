@@ -4,7 +4,7 @@ import React from "react";
 import { site } from "@/content/site";
 import { useStore } from "@/state/store";
 
-export function SponsorWall() {
+export function SponsorWall({ ref }: { ref?: React.Ref<HTMLElement> }) {
   const motionEnabled = useStore((s) => s.motionEnabled);
   const partners = site.diwali.partners?.list || [];
 
@@ -13,6 +13,8 @@ export function SponsorWall() {
 
   return (
     <section
+      ref={ref}
+      data-scene="D4"
       aria-label={site.diwali.partners.label}
       className="relative z-10 w-full max-w-[960px] mx-auto px-4 py-16 sm:py-24 text-center select-none"
     >

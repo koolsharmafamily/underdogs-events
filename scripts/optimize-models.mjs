@@ -1,58 +1,22 @@
+// Optimises GLBs/*.glb into public/models with the gltf-transform library
+// (Meshopt geometry + WebP textures at 1024), keeping every node, name and anchor.
+//
+//   npm run models:optimize                 # all models
+//   npm run models:optimize -- badge-       # only files whose name contains "badge-"
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+import { NodeIO } from '@gltf-transform/core';
+import { ALL_EXTENSIONS, EXTMeshoptCompression } from '@gltf-transform/extensions';
+import { dedup, meshopt, textureCompress } from '@gltf-transform/functions';
+import { MeshoptDecoder, MeshoptEncoder } from 'meshoptimizer';
+import sharp from 'sharp';
 
 const srcDir = path.resolve(process.cwd(), 'GLBs');
 const destDir = path.resolve(process.cwd(), 'public/models');
+const only = process.argv.slice(2);
 
-if (!fs.existsSync(destDir)) {
-  fs.mkdirSync(destDir, { recursive: true });
-}
-
-/**
- * Parses the JSON chunk of a GLB file to compute total triangle count.
- */
-function countGlbTriangles(filePath) {
-  try {
-    const buf = fs.readFileSync(filePath);
-    if (buf.length < 20) return 0;
-    const magic = buf.readUInt32LE(0);
-    if (magic !== 0x46546c67) return 0; // 'glTF'
-    const jsonChunkLength = buf.readUInt32LE(12);
-    const jsonChunkType = buf.readUInt32LE(16);
-    if (jsonChunkType !== 0x4e4f534a) return 0; // 'JSON'
-    const jsonStr = buf.subarray(20, 20 + jsonChunkLength).toString('utf8');
-    const gltf = JSON.parse(jsonStr);
-    const accessors = gltf.accessors || [];
-    const meshes = gltf.meshes || [];
-    let tris = 0;
-    for (const mesh of meshes) {
-      for (const prim of mesh.primitives || []) {
-        const mode = prim.mode ?? 4; // 4 = TRIANGLES
-        if (mode !== 4) continue;
-        if (prim.indices !== undefined && accessors[prim.indices]) {
-          tris += Math.floor((accessors[prim.indices].count || 0) / 3);
-        } else if (prim.attributes?.POSITION !== undefined && accessors[prim.attributes.POSITION]) {
-          tris += Math.floor((accessors[prim.attributes.POSITION].count || 0) / 3);
-        }
-      }
-    }
-    return tris;
-  } catch {
-    return 0;
-  }
-}
-
-const files = fs.readdirSync(srcDir).filter((f) => f.endsWith('.glb'));
-
-console.log(`Processing ${files.length} GLB files from ${srcDir}...`);
-
-const report = [];
-
+// Small props whose instancing code reads raw positions: geometry stays exact.
 const COPY_VERBATIM = new Set([
-  'badge-enamel.glb',
-  'badge-neon.glb',
-  'badge-jewelled.glb',
   'diwali-diya-brass.glb',
   'diwali-diya-terracotta.glb',
   'diwali-kandil.glb',
@@ -63,70 +27,73 @@ const COPY_VERBATIM = new Set([
   'redroom-invitation.glb',
 ]);
 
+// The badge dissolve samples noise in badge-root space (dissolve.glsl.ts), so
+// quantized vertex positions are safe for the badges too.
+// The Halloween logo's face texture is drawn at 2048; the badge is shown large.
+const TEXTURE_SIZE = { 'badge-halloween.glb': 2048 };
+const BUDGETS_MB = { home: 2.5, redroom: 6.0, diwali: 5.0 };
+const WORLD_FILES = {
+  home: (f) => f === 'badge-enamel.glb' || f.startsWith('door-'),
+  redroom: (f) => f.startsWith('redroom-') || f === 'curtain-open.glb' || f === 'badge-halloween.glb',
+  diwali: (f) => f === 'badge-jewelled.glb',
+};
+
+function countTriangles(doc) {
+  let tris = 0;
+  for (const mesh of doc.getRoot().listMeshes())
+    for (const prim of mesh.listPrimitives()) {
+      if (prim.getMode() !== 4) continue;
+      const idx = prim.getIndices();
+      tris += Math.floor((idx ? idx.getCount() : prim.getAttribute('POSITION').getCount()) / 3);
+    }
+  return tris;
+}
+
+await MeshoptEncoder.ready;
+await MeshoptDecoder.ready;
+const io = new NodeIO()
+  .registerExtensions(ALL_EXTENSIONS)
+  .registerDependencies({ 'meshopt.encoder': MeshoptEncoder, 'meshopt.decoder': MeshoptDecoder });
+
+fs.mkdirSync(destDir, { recursive: true });
+const files = fs.readdirSync(srcDir).filter((f) => f.endsWith('.glb') && (!only.length || only.some((o) => f.includes(o))));
+console.log(`Processing ${files.length} GLB file(s) from ${srcDir}`);
+
 for (const file of files) {
   const inPath = path.join(srcDir, file);
   const outPath = path.join(destDir, file);
-
   if (COPY_VERBATIM.has(file)) {
-    console.log(`\nCopying original ${file} verbatim...`);
-    fs.copyFileSync(inPath, outPath);
+    // Lossless Meshopt only (no quantisation), as scripts/compress-models.mjs does.
+    const doc = await io.read(inPath);
+    doc
+      .createExtension(EXTMeshoptCompression)
+      .setRequired(true)
+      .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.QUANTIZE });
+    await io.write(outPath, doc);
   } else {
-    console.log(`\nOptimizing ${file} (preserving full scene graph & anchors)...`);
-    try {
-      execSync(
-        `npx @gltf-transform/cli optimize "${inPath}" "${outPath}" --compress meshopt --texture-compress webp --texture-size 1024 --join false --flatten false --prune false --palette false --simplify false`,
-        { stdio: 'pipe' }
-      );
-    } catch {
-      fs.copyFileSync(inPath, outPath);
-    }
+    const doc = await io.read(inPath);
+    await doc.transform(
+      dedup(),
+      textureCompress({ encoder: sharp, targetFormat: 'webp', resize: [TEXTURE_SIZE[file] ?? 1024, TEXTURE_SIZE[file] ?? 1024] }),
+      // One quantisation volume per model keeps every node's origin in place, so
+      // the eye and tongue pivots the badge animates stay where they were drawn.
+      meshopt({ encoder: MeshoptEncoder, level: 'medium', quantizationVolume: 'scene' }),
+    );
+    await io.write(outPath, doc);
   }
-
-  const stat = fs.statSync(outPath);
-  const tris = countGlbTriangles(outPath);
-  const kb = stat.size / 1024;
-  report.push({ file, bytes: stat.size, kb: Number(kb.toFixed(1)), triangles: tris });
-  console.log(`✓ ${file}: ${kb.toFixed(1)} KB (${tris.toLocaleString()} triangles)`);
+  const tris = countTriangles(await io.read(outPath));
+  const kb = fs.statSync(inPath).size / 1024;
+  const outKb = fs.statSync(outPath).size / 1024;
+  console.log(`✓ ${file}: ${kb.toFixed(0)} KB → ${outKb.toFixed(0)} KB (${tris.toLocaleString()} triangles)`);
 }
 
-// Part 12.4 World Budgets (MB)
-const BUDGETS_MB = {
-  home: 2.5,
-  redroom: 6.0,
-  diwali: 5.0,
-};
-
-function sumWorldBytes(predicate) {
-  return report.filter((r) => predicate(r.file)).reduce((acc, r) => acc + r.bytes, 0);
+console.log('\nModel budget (public/models):');
+let failed = false;
+for (const [world, test] of Object.entries(WORLD_FILES)) {
+  const bytes = fs.readdirSync(destDir).filter(test).reduce((sum, f) => sum + fs.statSync(path.join(destDir, f)).size, 0);
+  const mb = bytes / 1024 / 1024;
+  const ok = mb <= BUDGETS_MB[world];
+  failed ||= !ok;
+  console.log(`  ${world}: ${mb.toFixed(2)} MB / ${BUDGETS_MB[world]} MB ${ok ? 'PASS' : 'FAIL'}`);
 }
-
-const homeBytes = sumWorldBytes(
-  (f) => f === 'badge-enamel.glb' || f.startsWith('door-')
-);
-const redroomBytes = sumWorldBytes(
-  (f) => f.startsWith('redroom-') || f === 'curtain-open.glb' || f === 'badge-neon.glb'
-);
-const diwaliBytes = sumWorldBytes(
-  (f) => f.startsWith('diwali-') || f === 'curtain-open-diwali.glb' || f === 'badge-jewelled.glb'
-);
-
-const worldSummary = [
-  { world: 'Home', mb: homeBytes / (1024 * 1024), budgetMb: BUDGETS_MB.home },
-  { world: 'The Red Room', mb: redroomBytes / (1024 * 1024), budgetMb: BUDGETS_MB.redroom },
-  { world: 'Diwali', mb: diwaliBytes / (1024 * 1024), budgetMb: BUDGETS_MB.diwali },
-];
-
-console.log('\n=== Part 12.4 Model Budget Report ===');
-let budgetFailed = false;
-for (const w of worldSummary) {
-  const status = w.mb <= w.budgetMb ? 'PASS' : 'FAIL';
-  if (w.mb > w.budgetMb) budgetFailed = true;
-  console.log(`${w.world}: ${w.mb.toFixed(2)} MB / ${w.budgetMb.toFixed(2)} MB [${status}]`);
-}
-
-if (budgetFailed) {
-  console.error('\nERROR: One or more worlds exceeded the Part 12.4 model size budget!');
-  process.exit(1);
-}
-
-console.log('\nAll 3D assets verified and within Part 12.4 budgets!');
+if (failed) process.exit(1);

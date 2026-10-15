@@ -7,13 +7,8 @@ import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
 
 /** A screen-space reading surface, revealed after the invitation entrance. */
-export const cardOverlayRef: {
-  current: HTMLDivElement | null;
-  cardMeshWorldMatrix: THREE.Matrix4 | null;
-} = {
-  current: null,
-  cardMeshWorldMatrix: null,
-};
+import { cardOverlayRef } from "./refs";
+export { cardOverlayRef };
 
 export function CardProjector() {
   useFrame(() => {

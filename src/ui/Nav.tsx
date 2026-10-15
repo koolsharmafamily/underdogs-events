@@ -6,15 +6,13 @@ import { site } from "@/content/site";
 import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
 import { TransitionLink } from "./TransitionLink";
-import { Menu } from "./Menu";
 import { MobileTopBar } from "./mobile/MobileTopBar";
 import { MobileTabBar } from "./mobile/MobileTabBar";
+import { MotionToggle } from "./MotionToggle";
 
 export function Nav() {
   const pathname = usePathname();
   const world = useStore((s) => s.world);
-  const menuOpen = useStore((s) => s.menuOpen);
-  const setMenuOpen = useStore((s) => s.setMenuOpen);
 
   const isRedRoom = pathname === "/the-red-room";
   const isDiwali = pathname === "/diwali";
@@ -77,12 +75,18 @@ export function Nav() {
                 isDiwali
                   ? "text-[#D9BC7E] border-b-2 border-[#D9BC7E] pb-0.5"
                   : "text-[#ea28c1] hover:brightness-125"
-              } ${!isDiwali && isDiwali ? "active-page-link" : ""}`}
+              }`}
+            />
+            <MotionToggle
+              colorClass={
+                isDiwali
+                  ? "text-[#FFF6EE]/85 hover:text-[#D9BC7E]"
+                  : "text-[#ea28c1] hover:brightness-125"
+              }
             />
           </nav>
         </div>
       </header>
-      <Menu />
     </>
   );
 }

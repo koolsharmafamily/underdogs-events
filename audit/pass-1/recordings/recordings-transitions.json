@@ -64,5 +64,248 @@
   "external": [
    "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
   ]
+ },
+ "desktop-07-red-room-to-dhamaaka-T3": {
+  "realSec": 276,
+  "programsStart": 3,
+  "programsEnd": 41,
+  "frames": 247,
+  "callsMax": 369,
+  "callsAvg": 50,
+  "trisMax": 1480173,
+  "renderPasses": 1,
+  "programs": 41,
+  "geometries": 62,
+  "textures": 19,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 263 captured over 269s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-08-dhamaaka-to-red-room-T3": {
+  "realSec": 264,
+  "programsStart": 8,
+  "programsEnd": 93,
+  "frames": 575,
+  "callsMax": 369,
+  "callsAvg": 19,
+  "trisMax": 1480173,
+  "renderPasses": 24,
+  "programs": 93,
+  "geometries": 122,
+  "textures": 39,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 594 captured over 253s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-09-back-to-gate-T4": {
+  "realSec": 214,
+  "programsStart": 3,
+  "programsEnd": 65,
+  "frames": 82,
+  "callsMax": 369,
+  "callsAvg": 130,
+  "trisMax": 1480173,
+  "renderPasses": 24,
+  "programs": 65,
+  "geometries": 82,
+  "textures": 41,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 104 captured over 209s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-10-nav-logo-from-dhamaaka-T4": {
+  "realSec": 254,
+  "programsStart": 8,
+  "programsEnd": 75,
+  "frames": 521,
+  "callsMax": 81,
+  "callsAvg": 20,
+  "trisMax": 79302,
+  "renderPasses": 24,
+  "programs": 75,
+  "geometries": 58,
+  "textures": 32,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 542 captured over 247s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-11-nav-links-and-back-forward-T5": {
+  "realSec": 572,
+  "programsStart": 4,
+  "programsEnd": 92,
+  "frames": 363,
+  "callsMax": 388,
+  "callsAvg": 59,
+  "trisMax": 1480401,
+  "renderPasses": 24,
+  "programs": 92,
+  "geometries": 131,
+  "textures": 75,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 424 captured over 555s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-12-direct-dhamaaka-and-refresh": {
+  "realSec": 284,
+  "programsStart": 8,
+  "programsEnd": 33,
+  "frames": 206,
+  "callsMax": 48,
+  "callsAvg": 28,
+  "trisMax": 79302,
+  "renderPasses": 1,
+  "programs": 33,
+  "geometries": 48,
+  "textures": 8,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 474 captured over 275s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-13-motion-off-door-and-wheel": {
+  "realSec": 305,
+  "programsStart": 4,
+  "programsEnd": 43,
+  "frames": 122,
+  "callsMax": 369,
+  "callsAvg": 71,
+  "trisMax": 1480173,
+  "renderPasses": 1,
+  "programs": 43,
+  "geometries": 63,
+  "textures": 26,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "motion-off wheel: scrollY 0 -> 720",
+   "[frames] 155 captured over 298s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "phone-01-cold-load-home": {
+  "realSec": 124,
+  "programsStart": 4,
+  "programsEnd": 60,
+  "frames": 101,
+  "callsMax": 88,
+  "callsAvg": 44,
+  "trisMax": 147643,
+  "renderPasses": 18,
+  "programs": 60,
+  "geometries": 50,
+  "textures": 25,
+  "dpr": 2,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 121 captured over 121s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/m-apple.json"
+  ]
+ },
+ "phone-05-tabs-and-event-cards": {
+  "realSec": 688,
+  "programsStart": 4,
+  "programsEnd": 90,
+  "frames": 503,
+  "callsMax": 181,
+  "callsAvg": 36,
+  "trisMax": 778077,
+  "renderPasses": 18,
+  "programs": 90,
+  "geometries": 146,
+  "textures": 40,
+  "dpr": 2,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 585 captured over 680s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/m-apple.json"
+  ]
+ },
+ "phone-06-home-season-card-to-red-room": {
+  "realSec": 270,
+  "programsStart": 4,
+  "programsEnd": 61,
+  "frames": 88,
+  "callsMax": 181,
+  "callsAvg": 52,
+  "trisMax": 778077,
+  "renderPasses": 18,
+  "programs": 61,
+  "geometries": 70,
+  "textures": 33,
+  "dpr": 2,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 120 captured over 265s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/m-apple.json"
+  ]
+ },
+ "phone-07-direct-dhamaaka": {
+  "realSec": 156,
+  "programsStart": 8,
+  "programsEnd": 29,
+  "frames": 189,
+  "callsMax": 48,
+  "callsAvg": 28,
+  "trisMax": 79302,
+  "renderPasses": 1,
+  "programs": 29,
+  "geometries": 48,
+  "textures": 8,
+  "dpr": 2,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 230 captured over 152s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/m-apple.json"
+  ]
  }
 }

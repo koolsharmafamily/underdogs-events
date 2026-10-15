@@ -6,6 +6,7 @@ import { useStore } from "@/state/store";
 import { runFadeCutJump } from "@/motion/transitions";
 
 import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
+import { MotionToggle } from "./MotionToggle";
 
 /**
  * Part 7 H6 · Footer
@@ -51,6 +52,8 @@ export function Footer() {
           <span className="font-mono text-[11px] tracking-[0.08em] text-[var(--world-muted)]">
             {site.footer.copyright}
           </span>
+
+          <MotionToggle />
 
           <button
             type="button"

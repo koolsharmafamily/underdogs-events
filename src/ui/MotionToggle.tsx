@@ -6,9 +6,12 @@ import { useStore } from '@/state/store'
 
 interface MotionToggleProps {
   className?: string
+  /** Text colour classes; defaults to the world's text colour. */
+  colorClass?: string
 }
 
-export function MotionToggle({ className = '' }: MotionToggleProps) {
+/** Turns motion on or off for the visit and remembers it (store + localStorage). */
+export function MotionToggle({ className = '', colorClass = 'text-[var(--world-text)] hover:text-[var(--world-accent)]' }: MotionToggleProps) {
   const motionEnabled = useStore((s) => s.motionEnabled)
   const toggleMotion = useStore((s) => s.toggleMotion)
 
@@ -19,7 +22,7 @@ export function MotionToggle({ className = '' }: MotionToggleProps) {
       type="button"
       onClick={toggleMotion}
       aria-pressed={motionEnabled}
-      className={`nav-roll-link inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--world-text)] transition-colors duration-200 hover:text-[var(--world-accent)] ${className}`}
+      className={`nav-roll-link inline-flex min-h-[44px] min-w-[44px] items-center justify-center px-2 font-mono text-[11px] uppercase tracking-[0.08em] transition-colors duration-200 ${colorClass} ${className}`}
     >
       <span className="nav-roll-inner">
         <span className="nav-roll-line">{label}</span>

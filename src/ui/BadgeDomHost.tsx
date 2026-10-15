@@ -29,6 +29,9 @@ export function BadgeDomHost({
   const tier = useStore((s) => s.tier);
   const isT0 = tier === "T0";
   const isVisible = Boolean(showSvgPreview) || isT0;
+  // During a transition the 3D badge is travelling through the cover; a still
+  // here would be a second badge in the wrong place.
+  const transitioning = useStore((s) => s.isTransitioning);
 
   const [blinkL, setBlinkL] = useState(false);
   const [blinkR, setBlinkR] = useState(false);
@@ -37,7 +40,7 @@ export function BadgeDomHost({
   const blinkCountRef = useRef(0);
 
   useEffect(() => {
-    const target = skin === "diwali" ? "jewelled" : skin === "redroom" ? "neon" : "enamel";
+    const target = skin === "diwali" ? "jewelled" : skin === "redroom" ? "halloween" : "enamel";
     const check = () => {
       if (badgeScreenBounds.ready && badgeScreenBounds.readySkin === target) {
         setBadge3DReady(true);
@@ -196,7 +199,7 @@ export function BadgeDomHost({
       }}
     >
       {/* 2D Fallback Stills when 3D WebGL is compiling or when tier === T0 */}
-      {(!badge3DReady || isVisible) && (
+      {((!badge3DReady && !transitioning) || isVisible) && (
         <div
           className={`absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
             badge3DReady && !isVisible ? "opacity-0" : "opacity-100"
@@ -212,8 +215,8 @@ export function BadgeDomHost({
             />
           ) : skin === "redroom" ? (
             <img
-              src="/media/badge-neon-still.webp"
-              alt="Underdogs Neon Badge"
+              src="/media/badge-halloween-still.webp"
+              alt="Underdogs Halloween badge"
               width={512}
               height={512}
               className="w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43,0.35)]"

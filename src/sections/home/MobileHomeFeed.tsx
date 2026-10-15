@@ -1,7 +1,7 @@
 "use client";
 
+import { TransitionLink } from "@/ui/TransitionLink";
 import React, { useRef, useState } from "react";
-import Link from "next/link";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { useDaysToGo } from "@/utils/useDaysToGo";
@@ -49,12 +49,12 @@ export function MobileHomeFeed() {
             {site.home.hero.lead}
           </p>
 
-          <Link
+          <TransitionLink
             href="/events"
             className="mt-2 w-full py-3.5 px-6 rounded-full bg-[#EA28C1] text-[#07090D] font-cinzel text-[13px] font-bold uppercase tracking-[0.22em] shadow-[0_8px_24px_rgba(234,40,193,0.35)] active:scale-95 transition-transform text-center"
           >
             {site.home.hero.seasonCta} →
-          </Link>
+          </TransitionLink>
         </div>
       </section>
 
@@ -145,7 +145,7 @@ export function MobileHomeFeed() {
 
         <div className="flex flex-col gap-5">
           {/* Compact Card 1: The Red Room */}
-          <Link
+          <TransitionLink
             href="/the-red-room"
             className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/30 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.98] transition-transform"
           >
@@ -162,8 +162,8 @@ export function MobileHomeFeed() {
 
             <div className="flex items-center gap-4">
               <img
-                src="/media/badge-neon-still.webp"
-                alt="The Red Room Neon Badge"
+                src="/media/badge-halloween-still.webp"
+                alt="The Red Room badge"
                 width={64}
                 height={64}
                 className="w-16 h-16 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(255,26,53,0.5)]"
@@ -182,10 +182,10 @@ export function MobileHomeFeed() {
               <span>{site.home.worlds.one.cta}</span>
               <span>→</span>
             </div>
-          </Link>
+          </TransitionLink>
 
           {/* Compact Card 2: DHAMAAKA */}
-          <Link
+          <TransitionLink
             href="/diwali"
             className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.98] transition-transform"
           >
@@ -225,7 +225,7 @@ export function MobileHomeFeed() {
               <span>{site.home.worlds.two.cta}</span>
               <span>→</span>
             </div>
-          </Link>
+          </TransitionLink>
         </div>
       </section>
 

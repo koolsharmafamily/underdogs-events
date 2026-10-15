@@ -1,7 +1,7 @@
 "use client";
 
+import { TransitionLink } from "@/ui/TransitionLink";
 import React from "react";
-import Link from "next/link";
 import { site } from "@/content/site";
 import { useDaysToGo } from "@/utils/useDaysToGo";
 
@@ -33,7 +33,7 @@ export function EventsView() {
         className="max-w-[1100px] w-full mx-auto flex flex-col md:grid md:grid-cols-2 gap-6 md:gap-8 snap-y snap-mandatory md:snap-none"
       >
         {/* CARD 1: THE RED ROOM */}
-        <Link
+        <TransitionLink
           href="/the-red-room"
           className="group relative snap-start w-full min-h-[68svh] md:min-h-[580px] rounded-[20px] overflow-hidden border border-[#FF1A35]/35 bg-[#140205] shadow-[0_16px_48px_rgba(255,26,53,0.15)] flex flex-col justify-between p-6 sm:p-8 active:scale-[0.98] transition-all duration-300 hover:border-[#FF1A35]/70"
         >
@@ -52,8 +52,8 @@ export function EventsView() {
           {/* Top: Glowing Neon Badge Still + Occasion Chip */}
           <div className="relative z-10 flex items-start justify-between">
             <img
-              src="/media/badge-neon-still.webp"
-              alt="The Red Room Neon Badge"
+              src="/media/badge-halloween-still.webp"
+              alt="The Red Room badge"
               width={72}
               height={72}
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_24px_rgba(255,26,53,0.7)] group-hover:scale-105 transition-transform duration-300"
@@ -98,10 +98,10 @@ export function EventsView() {
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
-        </Link>
+        </TransitionLink>
 
         {/* CARD 2: DHAMAAKA */}
-        <Link
+        <TransitionLink
           href="/diwali"
           className="group relative snap-start w-full min-h-[68svh] md:min-h-[580px] rounded-[20px] overflow-hidden border border-[#E5B25D]/35 bg-[#170511] shadow-[0_16px_48px_rgba(229,178,93,0.15)] flex flex-col justify-between p-6 sm:p-8 active:scale-[0.98] transition-all duration-300 hover:border-[#E5B25D]/75"
         >
@@ -178,7 +178,7 @@ export function EventsView() {
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
           </div>
-        </Link>
+        </TransitionLink>
       </main>
     </div>
   );

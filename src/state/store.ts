@@ -4,7 +4,7 @@ import type { TransitionType } from "./frame";
 
 export type QualityTier = "T3" | "T2" | "T1" | "T0";
 export type LoaderPhase = "loading" | "ready" | "complete";
-export type SkinOverride = "enamel" | "neon" | "jewelled" | null;
+export type SkinOverride = "enamel" | "halloween" | "jewelled" | null;
 export type NavigationOrigin = "direct" | "T1" | "T2" | "T3" | "T4" | "T5";
 
 export interface AppStore {
@@ -28,6 +28,10 @@ export interface AppStore {
   isPrecompiled: boolean;
   loaderPopped: boolean;
   renderedWorlds: Record<WorldId, boolean>;
+  /** The page is one of the three worlds. Elsewhere (Events, 404) the canvas sleeps. */
+  sceneRoute: boolean;
+  /** Worlds whose 3D set is mounted (hidden unless current). Once in, a world stays: no re-upload, no recompile. */
+  residentWorlds: Record<WorldId, boolean>;
 
   setWorld: (world: WorldId) => void;
   setPhase: (phase: LoaderPhase) => void;
@@ -36,6 +40,9 @@ export interface AppStore {
   setPrecompiled: (precompiled: boolean) => void;
   setLoaderPopped: (popped: boolean) => void;
   markWorldRendered: (world: WorldId) => void;
+  setSceneRoute: (sceneRoute: boolean) => void;
+  /** Mount a world's set and badge skin in the background so visiting it compiles nothing. */
+  warmWorld: (world: WorldId) => void;
   setMotionEnabled: (enabled: boolean, persist?: boolean) => void;
   toggleMotion: () => void;
   setPrefersReducedMotion: (reduced: boolean) => void;
@@ -56,6 +63,10 @@ function syncDocumentDataset(world: WorldId, motionEnabled: boolean) {
   if (typeof document === "undefined") return;
   document.documentElement.dataset.world = world;
   document.documentElement.dataset.motion = motionEnabled ? "on" : "off";
+}
+
+export function isSceneRoute(pathname: string) {
+  return pathname === "/" || pathname === "/the-red-room" || pathname === "/diwali";
 }
 
 function getInitialWorld(): WorldId {
@@ -87,12 +98,21 @@ export const useStore = create<AppStore>((set, get) => ({
   isPrecompiled: false,
   loaderPopped: false,
   renderedWorlds: { home: false, redroom: false, diwali: false },
+  sceneRoute: typeof window === "undefined" || isSceneRoute(window.location.pathname),
+  residentWorlds: {
+    home: getInitialWorld() === "home",
+    redroom: getInitialWorld() === "redroom",
+    diwali: getInitialWorld() === "diwali",
+  },
 
   setWorld: (world) => {
     const cur = get().world;
     const isTr = get().isTransitioning;
     set({
       world,
+      residentWorlds: get().residentWorlds[world]
+        ? get().residentWorlds
+        : { ...get().residentWorlds, [world]: true },
       renderedWorlds:
         cur !== world
           ? { ...get().renderedWorlds, [world]: false }
@@ -119,6 +139,15 @@ export const useStore = create<AppStore>((set, get) => ({
         : { renderedWorlds: { ...state.renderedWorlds, [w]: true } },
     ),
 
+  setSceneRoute: (sceneRoute) => set({ sceneRoute }),
+
+  warmWorld: (w) =>
+    set((state) =>
+      state.residentWorlds[w]
+        ? state
+        : { residentWorlds: { ...state.residentWorlds, [w]: true } },
+    ),
+
   setMotionEnabled: (enabled, persist = true) => {
     set({ motionEnabled: enabled });
     syncDocumentDataset(get().world, enabled);
@@ -137,8 +166,16 @@ export const useStore = create<AppStore>((set, get) => ({
   },
 
   setPrefersReducedMotion: (reduced) => {
-    set({ prefersReducedMotion: reduced, motionEnabled: !reduced });
-    syncDocumentDataset(get().world, !reduced);
+    // The visitor's own choice (the Motion toggle) wins over the OS setting.
+    let stored: string | null = null;
+    try {
+      stored = window.localStorage.getItem(MOTION_STORAGE_KEY);
+    } catch {
+      // Storage blocked: fall back to the OS setting
+    }
+    const enabled = stored === null ? !reduced : stored === "1";
+    set({ prefersReducedMotion: reduced, motionEnabled: enabled });
+    syncDocumentDataset(get().world, enabled);
   },
 
   setHoverDoor: (hoverDoor) => set({ hoverDoor }),

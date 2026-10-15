@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useRef, useMemo, useEffect, useState } from "react";
+import React, { Suspense, useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
@@ -21,22 +21,23 @@ interface BadgeProps {
   scale?: number;
 }
 
-interface PreparedScene {
-  clone: THREE.Group;
-  animatedNodes: {
-    eyeL: THREE.Group | null;
-    eyeR: THREE.Group | null;
-    tongue: THREE.Group | null;
-    drips: THREE.Mesh | null;
-  };
-  neonMaterials: THREE.MeshStandardMaterial[];
+interface AnimatedNodes {
+  eyeL: THREE.Object3D | null;
+  eyeR: THREE.Object3D | null;
+  tongue: THREE.Object3D | null;
 }
 
-const EMPTY_ANIMATED_NODES = {
-  eyeL: null as THREE.Group | null,
-  eyeR: null as THREE.Group | null,
-  tongue: null as THREE.Group | null,
-  drips: null as THREE.Mesh | null,
+interface PreparedScene {
+  clone: THREE.Group;
+  animatedNodes: AnimatedNodes;
+  /** The Halloween ring glow: the one material lit by an emissive texture above 1×. */
+  flickerMaterials: THREE.MeshStandardMaterial[];
+}
+
+const EMPTY_ANIMATED_NODES: AnimatedNodes = {
+  eyeL: null,
+  eyeR: null,
+  tongue: null,
 };
 
 function prepareBadgeScene(
@@ -46,13 +47,8 @@ function prepareBadgeScene(
   skinName: SkinId,
 ): PreparedScene {
   const clone = sourceScene.clone(true);
-  const animatedNodes = {
-    eyeL: null as THREE.Group | null,
-    eyeR: null as THREE.Group | null,
-    tongue: null as THREE.Group | null,
-    drips: null as THREE.Mesh | null,
-  };
-  const neonMaterials: THREE.MeshStandardMaterial[] = [];
+  const animatedNodes: AnimatedNodes = { ...EMPTY_ANIMATED_NODES };
+  const flickerMaterials: THREE.MeshStandardMaterial[] = [];
   const materials = new Map<string, THREE.MeshStandardMaterial>();
 
   clone.traverse((child) => {
@@ -86,35 +82,32 @@ function prepareBadgeScene(
           mat.needsUpdate = true;
         }
 
+        // The badge is the subject, not scenery: keep it out of the depth fog.
+        mat.fog = false;
         // Inject dissolve shader without modifying original material colours or properties
         injectDissolve(mat, uniforms);
         mesh.material = mat;
 
-        // Collect neon emissive materials for dynamic flicker
         if (
-          mat.emissive &&
-          (mat.emissive.r > 0 || mat.emissive.g > 0 || mat.emissive.b > 0)
+          skinName === "halloween" &&
+          mat.emissiveMap &&
+          mat.emissiveIntensity > 1 &&
+          !flickerMaterials.includes(mat)
         ) {
-          if (mat.userData.baseEmissiveIntensity === undefined) {
-            mat.userData.baseEmissiveIntensity = mat.emissiveIntensity ?? 1.0;
-          }
-          if (!neonMaterials.includes(mat)) neonMaterials.push(mat);
+          mat.userData.baseEmissiveIntensity = mat.emissiveIntensity;
+          flickerMaterials.push(mat);
         }
       }
     }
 
-    if (child.name === "Eye_L" && (child as THREE.Group).isGroup)
-      animatedNodes.eyeL = child as THREE.Group;
-    if (child.name === "Eye_R" && (child as THREE.Group).isGroup)
-      animatedNodes.eyeR = child as THREE.Group;
-    if (child.name === "Tongue" && (child as THREE.Group).isGroup)
-      animatedNodes.tongue = child as THREE.Group;
-    if (child.name === "Drips" && (child as THREE.Mesh).isMesh)
-      animatedNodes.drips = child as THREE.Mesh;
+    // Pivots load as Mesh or Object3D depending on the file, so match by name.
+    if (child.name === "Eye_L") animatedNodes.eyeL = child;
+    if (child.name === "Eye_R") animatedNodes.eyeR = child;
+    if (child.name === "Tongue") animatedNodes.tongue = child;
   });
 
   batchStaticSiblings(clone);
-  return { clone, animatedNodes, neonMaterials };
+  return { clone, animatedNodes, flickerMaterials };
 }
 
 function BadgeSkinMesh({
@@ -123,28 +116,21 @@ function BadgeSkinMesh({
   uniforms,
   backTexture,
   preparedMapRef,
-  onCompiled,
 }: {
   url: string;
   skinName: SkinId;
   uniforms: DissolveUniforms;
   backTexture: THREE.CanvasTexture | null;
   preparedMapRef: React.MutableRefObject<Record<SkinId, PreparedScene | null>>;
-  onCompiled?: (skin: SkinId) => void;
 }) {
-  const { gl, camera } = useThree();
   const gltf = useGLTF(url);
   const prepared = useMemo(() => {
     const p = prepareBadgeScene(gltf.scene, uniforms, backTexture, skinName);
     preparedMapRef.current[skinName] = p;
-    if (gl && p.clone) {
-      gl.compileAsync(p.clone, camera)
-        .then(() => onCompiled?.(skinName))
-        .catch(() => onCompiled?.(skinName));
-    }
     return p;
-  }, [gltf.scene, uniforms, backTexture, skinName, gl, camera, onCompiled, preparedMapRef]);
+  }, [gltf.scene, uniforms, backTexture, skinName, preparedMapRef]);
 
+  // Compiled by Precompile with each world, once that world's lights exist.
   return <primitive object={prepared.clone} />;
 }
 
@@ -158,12 +144,12 @@ export function Badge({
 
   // Groups for each skin
   const enamelGroupRef = useRef<THREE.Group>(null);
-  const neonGroupRef = useRef<THREE.Group>(null);
+  const halloweenGroupRef = useRef<THREE.Group>(null);
   const jewelledGroupRef = useRef<THREE.Group>(null);
 
   const preparedMapRef = useRef<Record<SkinId, PreparedScene | null>>({
     enamel: null,
-    neon: null,
+    halloween: null,
     jewelled: null,
   });
 
@@ -177,38 +163,23 @@ export function Badge({
 
   // Initial and target skin mapping
   const worldSkin: SkinId =
-    world === "redroom" ? "neon" : world === "diwali" ? "jewelled" : "enamel";
+    world === "redroom" ? "halloween" : world === "diwali" ? "jewelled" : "enamel";
   const targetSkin: SkinId = targetSkinOverride ?? worldSkin;
 
-  // Mount the active skin immediately on initial load.
-  // Then background/idle mounts all three skins so switching is instant with no shader compile.
-  const [mountedSkins, setMountedSkins] = useState<Record<SkinId, boolean>>(
-    () => ({
-      enamel: targetSkin === "enamel",
-      neon: targetSkin === "neon",
-      jewelled: targetSkin === "jewelled",
-    }),
-  );
+  // A skin mounts with its world (current, warmed at idle, or pointed at) or as
+  // a transition's target, and then stays: switching never loads or compiles.
+  // (Resident worlds never leave; an unmounted skin keeps its programs, since
+  // its materials are not disposed.)
+  const resident = useStore((s) => s.residentWorlds);
+  const mountedSkins: Record<SkinId, boolean> = {
+    enamel: resident.home || targetSkin === "enamel",
+    halloween: resident.redroom || targetSkin === "halloween",
+    jewelled: resident.diwali || targetSkin === "jewelled",
+  };
 
   useEffect(() => {
-    setMountedSkins((prev) =>
-      prev[targetSkin] ? prev : { ...prev, [targetSkin]: true },
-    );
     badgeScreenBounds.readySkin = null;
   }, [targetSkin]);
-
-  useEffect(() => {
-    const mountAll = () => {
-      setMountedSkins({ enamel: true, neon: true, jewelled: true });
-    };
-    if (typeof window !== "undefined") {
-      if ("requestIdleCallback" in window) {
-        (window as any).requestIdleCallback(mountAll);
-      } else {
-        setTimeout(mountAll, 300);
-      }
-    }
-  }, []);
 
   // Lifecycle state tracking via REFS ONLY (zero React re-renders mid-transition)
   const activeSkinRef = useRef<SkinId>(targetSkin);
@@ -217,38 +188,44 @@ export function Badge({
   const dissolveProgress = useRef(-0.1);
   const dissolveDuration = useRef(0.8);
 
+  // Badge-root space for the dissolve noise, shared by every skin (dissolve.glsl.ts).
+  const badgeInverse = useMemo(() => ({ value: new THREE.Matrix4() }), []);
+
   // Shared dissolve uniforms per skin created ONCE at mount
   const enamelUniforms: DissolveUniforms = useMemo(
     () => ({
+      uBadgeInverse: badgeInverse,
       uDissolve: { value: -0.1 },
       uRole: { value: 1.0 },
       uEdgeColor: { value: DISSOLVE_EDGES.enamel.color.clone() },
       uEdgeIntensity: { value: DISSOLVE_EDGES.enamel.intensity },
       uEdgeWidth: { value: DISSOLVE_EDGES.enamel.width },
     }),
-    [],
+    [badgeInverse],
   );
 
-  const neonUniforms: DissolveUniforms = useMemo(
+  const halloweenUniforms: DissolveUniforms = useMemo(
     () => ({
+      uBadgeInverse: badgeInverse,
       uDissolve: { value: -0.1 },
       uRole: { value: 1.0 },
-      uEdgeColor: { value: DISSOLVE_EDGES.neon.color.clone() },
-      uEdgeIntensity: { value: DISSOLVE_EDGES.neon.intensity },
-      uEdgeWidth: { value: DISSOLVE_EDGES.neon.width },
+      uEdgeColor: { value: DISSOLVE_EDGES.halloween.color.clone() },
+      uEdgeIntensity: { value: DISSOLVE_EDGES.halloween.intensity },
+      uEdgeWidth: { value: DISSOLVE_EDGES.halloween.width },
     }),
-    [],
+    [badgeInverse],
   );
 
   const jewelledUniforms: DissolveUniforms = useMemo(
     () => ({
+      uBadgeInverse: badgeInverse,
       uDissolve: { value: -0.1 },
       uRole: { value: 1.0 },
       uEdgeColor: { value: DISSOLVE_EDGES.jewelled.color.clone() },
       uEdgeIntensity: { value: DISSOLVE_EDGES.jewelled.intensity },
       uEdgeWidth: { value: DISSOLVE_EDGES.jewelled.width },
     }),
-    [],
+    [badgeInverse],
   );
 
   // Engraved Back Canvas Texture (512x512 for 4x faster generation & GPU upload)
@@ -318,13 +295,13 @@ export function Badge({
   }, []);
 
   const getSkinGroup = (skin: SkinId) => {
-    if (skin === "neon") return neonGroupRef.current;
+    if (skin === "halloween") return halloweenGroupRef.current;
     if (skin === "jewelled") return jewelledGroupRef.current;
     return enamelGroupRef.current;
   };
 
   const getSkinUniforms = (skin: SkinId) => {
-    if (skin === "neon") return neonUniforms;
+    if (skin === "halloween") return halloweenUniforms;
     if (skin === "jewelled") return jewelledUniforms;
     return enamelUniforms;
   };
@@ -335,7 +312,8 @@ export function Badge({
     activeSkinRef.current = active;
     if (enamelGroupRef.current)
       enamelGroupRef.current.visible = active === "enamel";
-    if (neonGroupRef.current) neonGroupRef.current.visible = active === "neon";
+    if (halloweenGroupRef.current)
+      halloweenGroupRef.current.visible = active === "halloween";
     if (jewelledGroupRef.current)
       jewelledGroupRef.current.visible = active === "jewelled";
   }, [targetSkin]);
@@ -450,11 +428,18 @@ export function Badge({
     // 4. Multi-section choreography per Part 7 H0-H5, Part 8 R0-R6, Part 9 D0-D5
     const isMobile = size.width < 768;
     const isTablet = size.width >= 768 && size.width < 1024;
-    const h1 = frame.dampedProgress["H1"] ?? frame.dampedProgress["h1"] ?? 0;
-    const h2 = frame.dampedProgress["H2"] ?? frame.dampedProgress["h2"] ?? 0;
-    const h5 = frame.dampedProgress["H5"] ?? frame.dampedProgress["h5"] ?? 0;
+    const h1 = frame.dampedProgress["H1"] ?? 0;
+    const h2 = frame.dampedProgress["H2"] ?? 0;
+    const h5 = frame.dampedProgress["H5"] ?? 0;
     const scrollP = THREE.MathUtils.clamp(
       h1 * 0.35 + h2 * 0.45 + h5 * 0.2,
+      0,
+      1,
+    );
+    // Phones show the mobile feed instead of the H1–H5 scenes (those are
+    // display:none), so the hero exit follows the page scroll directly.
+    const phoneHeroExit = THREE.MathUtils.clamp(
+      (window.scrollY - size.height * 0.08) / (size.height * 0.45),
       0,
       1,
     );
@@ -467,9 +452,9 @@ export function Badge({
         const h0X = 0;
         const h0Y = size.height < 700 ? 1.72 : 1.88;
 
-        if (h1 < 0.65 && h2 === 0 && h5 === 0) {
+        if (phoneHeroExit < 1) {
           // Beginning of the home page (Hero)
-          const exitT = Math.max(0, (h1 - 0.1) / 0.5);
+          const exitT = phoneHeroExit;
           const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
           choreoPos.current.set(h0X, h0Y + exitT * 0.4, 0);
           choreoScale.current = h0Scale * smoothFade;
@@ -533,12 +518,12 @@ export function Badge({
         }
       }
     } else if (world === "redroom") {
-      const r1 = frame.dampedProgress["R1"] ?? frame.dampedProgress["r1"] ?? 0;
-      const r2 = frame.dampedProgress["R2"] ?? frame.dampedProgress["r2"] ?? 0;
-      const r3 = frame.dampedProgress["R3"] ?? frame.dampedProgress["r3"] ?? 0;
-      const r4 = frame.dampedProgress["R4"] ?? frame.dampedProgress["r4"] ?? 0;
-      const r5 = frame.dampedProgress["R5"] ?? frame.dampedProgress["r5"] ?? 0;
-      const r6 = frame.dampedProgress["R6"] ?? frame.dampedProgress["r6"] ?? 0;
+      const r1 = frame.dampedProgress["R1"] ?? 0;
+      const r2 = frame.dampedProgress["R2"] ?? 0;
+      const r3 = frame.dampedProgress["R3"] ?? 0;
+      const r4 = frame.dampedProgress["R4"] ?? 0;
+      const r5 = frame.dampedProgress["R5"] ?? 0;
+      const r6 = frame.dampedProgress["R6"] ?? 0;
       const targetScale = isMobile ? 0.68 : 0.82;
 
       if (r6 > 0.05) {
@@ -555,7 +540,7 @@ export function Badge({
         choreoPos.current.set(0, THREE.MathUtils.lerp(1.92, 3.8, t), 0.6);
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       } else {
-        // R1: Hero neon badge positioned in upper half above the lower-half "THE RED ROOM" title
+        // R1: Hero badge positioned in upper half above the lower-half "THE RED ROOM" title
         choreoPos.current.set(0, 1.92, 0.6);
         choreoScale.current = THREE.MathUtils.damp(
           choreoScale.current,
@@ -566,11 +551,11 @@ export function Badge({
       }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
     } else if (world === "diwali") {
-      const d1 = frame.dampedProgress["D1"] ?? frame.dampedProgress["d1"] ?? 0;
-      const d2 = frame.dampedProgress["D2"] ?? frame.dampedProgress["d2"] ?? 0;
-      const d3 = frame.dampedProgress["D3"] ?? frame.dampedProgress["d3"] ?? 0;
-      const d4 = frame.dampedProgress["D4"] ?? frame.dampedProgress["d4"] ?? 0;
-      const d5 = frame.dampedProgress["D5"] ?? frame.dampedProgress["d5"] ?? 0;
+      const d1 = frame.dampedProgress["D1"] ?? 0;
+      const d2 = frame.dampedProgress["D2"] ?? 0;
+      const d3 = frame.dampedProgress["D3"] ?? 0;
+      const d4 = frame.dampedProgress["D4"] ?? 0;
+      const d5 = frame.dampedProgress["D5"] ?? 0;
 
       // Prominent crown above DHAMAAKA: 0.88 on desktop, 0.72 on mobile
       const targetScale = isMobile ? 0.72 : 0.88;
@@ -602,7 +587,7 @@ export function Badge({
     if (composition.hero) {
       if (world === "home") {
         if (isMobile) {
-          const exitT = Math.max(0, (h1 - 0.1) / 0.5);
+          const exitT = phoneHeroExit;
           const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
           choreoPos.current.set(
             0,
@@ -631,8 +616,9 @@ export function Badge({
         choreoYaw.current = 0.12;
       }
     } else if (composition.scene === "R6") {
-      choreoPos.current.set(0, 2.75, 0.6);
-      choreoScale.current = isMobile ? 0.55 : 0.85;
+      // Above "Enter the world of Red Room." — never on the outro text.
+      choreoPos.current.set(0, isMobile ? 3.25 : 3.65, 0.6);
+      choreoScale.current = isMobile ? 0.5 : 0.75;
     } else if (composition.scene === "D5") {
       choreoPos.current.set(0, 2.35, 0.6);
       choreoScale.current = isMobile ? 0.45 : 0.55;
@@ -718,35 +704,32 @@ export function Badge({
       badgeScreenBounds.ready = true;
       badgeScreenBounds.readySkin = activeSkinRef.current;
     }
-    // 7. Neon emissive flicker (Red Room) preserving original GLB emissiveIntensity ratio without white-clipping
-    const neonPrep = preparedMapRef.current.neon;
+    // While the incoming skin loads, the outgoing one keeps rendering (its
+    // dissolve waits for the destination), so the badge is still on screen.
+    const outgoingPrepared = outgoingSkinRef.current
+      ? preparedMapRef.current[outgoingSkinRef.current]
+      : null;
+    badgeScreenBounds.drawn =
+      rootRef.current.visible && Boolean(activePrepared || outgoingPrepared);
+    // 7. Halloween ring glow flicker, scaled from the GLB's own emissive strength.
+    const halloweenPrep = preparedMapRef.current.halloween;
     if (
-      (activeSkinRef.current === "neon" ||
-        outgoingSkinRef.current === "neon") &&
-      neonPrep &&
-      neonPrep.neonMaterials.length > 0
+      halloweenPrep &&
+      (activeSkinRef.current === "halloween" ||
+        outgoingSkinRef.current === "halloween")
     ) {
       const flicker =
         1.0 +
         Math.sin(frame.time * 24.0) *
           0.08 *
           (Math.sin(frame.time * 7.3) > 0 ? 1 : 0);
-      neonPrep.neonMaterials.forEach((m) => {
-        const base = m.userData.baseEmissiveIntensity ?? 4.0;
-        m.emissiveIntensity = base * flicker;
-      });
+      for (const m of halloweenPrep.flickerMaterials)
+        m.emissiveIntensity = m.userData.baseEmissiveIntensity * flicker;
     }
 
-    // 8. Neon drips extension animation per Part 5.2
-    if (
-      (activeSkinRef.current === "neon" ||
-        outgoingSkinRef.current === "neon") &&
-      neonPrep?.animatedNodes.drips
-    ) {
-      const cycle = (frame.time % 8.0) / 8.0;
-      neonPrep.animatedNodes.drips.scale.y =
-        1.0 + Math.sin(cycle * Math.PI * 2) * 0.06 + 0.06;
-    }
+    // 8. Dissolve noise follows the badge: world → badge-root space.
+    rootRef.current.updateWorldMatrix(true, false);
+    badgeInverse.value.copy(rootRef.current.matrixWorld).invert();
   }, -30);
 
   // Pointer drag listeners for drag-to-spin
@@ -798,14 +781,18 @@ export function Badge({
         )}
       </group>
 
-      {/* Neon Skin GLB (The Red Room - Red) */}
-      <group ref={neonGroupRef} name="NeonSkin" visible={targetSkin === "neon"}>
-        {mountedSkins.neon && (
+      {/* Halloween Skin GLB (The Red Room - the client's Halloween logo) */}
+      <group
+        ref={halloweenGroupRef}
+        name="HalloweenSkin"
+        visible={targetSkin === "halloween"}
+      >
+        {mountedSkins.halloween && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
-              url="/models/badge-neon.glb"
-              skinName="neon"
-              uniforms={neonUniforms}
+              url="/models/badge-halloween.glb"
+              skinName="halloween"
+              uniforms={halloweenUniforms}
               backTexture={backTexture}
               preparedMapRef={preparedMapRef}
             />

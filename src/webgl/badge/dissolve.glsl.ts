@@ -1,13 +1,17 @@
 /**
  * Dissolve shader chunk per BRIEF.md Part 5.2
  *
- * Implements 3D simplex noise in object-space (so the pattern sticks to the badge),
+ * Implements 3D simplex noise in badge-root space (so the pattern sticks to the badge
+ * and stays continuous across its meshes, whatever their node transforms or Meshopt
+ * quantisation),
  * discard logic based on uRole (0: outgoing, 1: incoming), and glowing edge emission.
  */
 
 import * as THREE from "three";
 
 export interface DissolveUniforms {
+  /** Inverse world matrix of the badge root, shared by every skin and updated each frame. */
+  uBadgeInverse: { value: THREE.Matrix4 };
   uDissolve: { value: number };
   uRole: { value: number };
   uEdgeColor: { value: THREE.Color };
@@ -90,26 +94,35 @@ export function injectDissolve(
 ) {
   material.customProgramCacheKey = function () {
     // All skins use identical shader source; uniforms carry skin differences.
-    return "underdogs_dissolve_v2";
+    return "underdogs_dissolve_v3";
   };
 
   material.onBeforeCompile = (shader) => {
+    shader.uniforms.uBadgeInverse = uniforms.uBadgeInverse;
     shader.uniforms.uDissolve = uniforms.uDissolve;
     shader.uniforms.uRole = uniforms.uRole;
     shader.uniforms.uEdgeColor = uniforms.uEdgeColor;
     shader.uniforms.uEdgeIntensity = uniforms.uEdgeIntensity;
     shader.uniforms.uEdgeWidth = uniforms.uEdgeWidth;
 
-    // Vertex shader injection: pass object space position
+    // Vertex shader injection: pass the badge-root space position
     shader.vertexShader = shader.vertexShader.replace(
       "#include <common>",
       `#include <common>
+       uniform mat4 uBadgeInverse;
        varying vec3 vObjPos;`,
     );
     shader.vertexShader = shader.vertexShader.replace(
-      "#include <begin_vertex>",
-      `#include <begin_vertex>
-       vObjPos = position;`,
+      "#include <project_vertex>",
+      `#include <project_vertex>
+       vec4 dissolvePosition = vec4(transformed, 1.0);
+       #ifdef USE_BATCHING
+         dissolvePosition = batchingMatrix * dissolvePosition;
+       #endif
+       #ifdef USE_INSTANCING
+         dissolvePosition = instanceMatrix * dissolvePosition;
+       #endif
+       vObjPos = (uBadgeInverse * modelMatrix * dissolvePosition).xyz;`,
     );
 
     // Fragment shader injection: noise sampling & discard & edge glow

@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "typescript",
+    "nextjs",
+    "import"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-unused-vars": "warn",
+    "react/immutability": "off",
+    "react/refs": "warn",
+    "react/set-state-in-effect": "warn",
+    "nextjs/no-img-element": "warn"
+  },
+  "ignorePatterns": [
+    ".next*/**",
+    "node_modules/**",
+    "public/**",
+    "audit/**",
+    "brand-source/**",
+    "GLBs/**"
+  ]
+}

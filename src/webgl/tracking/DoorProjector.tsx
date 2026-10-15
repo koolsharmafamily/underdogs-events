@@ -3,10 +3,8 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { composition } from "../composition";
 import { doorModels } from "./doorModels";
-export const domTwinRefs: {
-  red: HTMLAnchorElement | null;
-  diwali: HTMLAnchorElement | null;
-} = { red: null, diwali: null };
+import { domTwinRefs } from "./refs";
+export { domTwinRefs };
 const box = new THREE.Box3(),
   point = new THREE.Vector3();
 export function DoorProjector() {

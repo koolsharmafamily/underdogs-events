@@ -15,7 +15,7 @@ import { InvitationCard } from "@/ui/InvitationCard";
 import { ArtistPortrait } from "@/ui/ArtistPortrait";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
-import { cardOverlayRef } from "@/webgl/tracking/CardProjector";
+import { cardOverlayRef } from "@/webgl/tracking/refs";
 
 const DRIPS = [
   { x: "11%", height: 28, delay: 0.1 },
@@ -73,21 +73,21 @@ export function RedRoomView() {
     };
 
     const onTick = () => {
-      const p2 = frame.progress.R2 ?? 0;
+      const p2 = frame.linearProgress.R2 ?? 0;
       const nextStory = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2;
       if (nextStory !== prev.story) {
         prev.story = nextStory;
         setActiveStoryIdx(nextStory);
       }
 
-      const p3 = frame.progress.R3 ?? 0;
+      const p3 = frame.linearProgress.R3 ?? 0;
       const nextDress = p3 < 0.22 ? 1 : p3 < 0.48 ? 2 : p3 < 0.72 ? 3 : 4;
       if (nextDress !== prev.dress) {
         prev.dress = nextDress;
         setDressStep(nextDress);
       }
 
-      const p4 = frame.progress.R4 ?? 0;
+      const p4 = frame.linearProgress.R4 ?? 0;
       const nextCard = p4 < 0.25 ? "sealed" : p4 < 0.55 ? "opening" : "open";
       if (nextCard !== prev.card) {
         prev.card = nextCard;
@@ -110,7 +110,7 @@ export function RedRoomView() {
         aria-label={site.redRoom.title}
         className="scene-section scene-r1"
       >
-        <div className="scene-sticky flex flex-col justify-between items-center pt-20 sm:pt-24 pb-8 sm:pb-12 text-center pointer-events-none">
+        <div className="scene-sticky flex flex-col justify-between items-center pt-20 sm:pt-24 pb-[calc(76px+env(safe-area-inset-bottom))] md:pb-12 text-center pointer-events-none">
           {/* Upper Stage: Presenter and Interactive 3D Badge Host */}
           <div className="site-container flex flex-col items-center gap-3 pointer-events-auto">
             <p className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[var(--rr-ash)]">
@@ -121,7 +121,7 @@ export function RedRoomView() {
               <BadgeDomHost
                 skin="redroom"
                 sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
-                label="Underdogs Neon Badge — click or press Enter to blink"
+                label="Underdogs Halloween badge — click or press Enter to blink"
               />
             </div>
           </div>
@@ -459,12 +459,12 @@ export function RedRoomView() {
         aria-label="The Red Room Outro"
         className="scene-section scene-r6"
       >
-        <div className="scene-sticky flex flex-col items-center justify-between pt-16 pb-12 sm:py-20 text-center">
+        <div className="scene-sticky flex flex-col items-center justify-between pt-16 pb-[calc(76px+env(safe-area-inset-bottom))] sm:py-20 text-center">
           <div className="site-container flex flex-col items-center justify-between h-full max-w-[780px]">
             <BadgeDomHost
               skin="redroom"
               sizeClass="w-[140px] h-[140px]"
-              label="Underdogs Neon Badge"
+              label="Underdogs Halloween badge"
             />
 
             <div className="flex flex-col items-center gap-2.5">
