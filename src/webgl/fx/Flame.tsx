@@ -13,7 +13,12 @@ import { useStore } from '@/state/store';
  */
 export function groundObjectToY(obj: THREE.Object3D, targetMinY = 0): number {
   obj.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(obj);
+  // Only what is drawn: hidden helpers or parts below the floor would leave the
+  // visible model floating (the Red Room curtain sat 13 cm up).
+  const box = new THREE.Box3();
+  obj.traverseVisible((node) => {
+    if ((node as THREE.Mesh).isMesh) box.expandByObject(node);
+  });
   if (!box.isEmpty() && Number.isFinite(box.min.y)) {
     const offset = targetMinY - box.min.y;
     obj.position.y += offset;

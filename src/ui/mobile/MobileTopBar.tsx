@@ -87,7 +87,8 @@ export function MobileTopBar() {
         </TransitionLink>
         {/* Right: Motion on/off, remembered for the visit and the next one */}
         <MotionToggle
-          className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px]"
+          compact
+          className="absolute right-1 top-1/2 -translate-y-1/2"
           colorClass="text-white/70 active:text-white"
         />
       </div>

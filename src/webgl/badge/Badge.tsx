@@ -618,7 +618,7 @@ export function Badge({
     } else if (composition.scene === "R6") {
       // Above "Enter the world of Red Room." — never on the outro text.
       // Measured at 1440×900: y 2.15 sat on the text, 3.65 behind the nav.
-      choreoPos.current.set(0, isMobile ? 2.9 : 2.95, 0.6);
+      choreoPos.current.set(0, isMobile ? 3.0 : 2.95, 0.6);
       choreoScale.current = isMobile ? 0.5 : 0.7;
     } else if (composition.scene === "D5") {
       choreoPos.current.set(0, 2.35, 0.6);
