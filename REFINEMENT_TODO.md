@@ -88,8 +88,8 @@ Scores are for the frame as a visitor sees it today. "Top problems" are the ones
 
 | Path | Cover | Badge visible throughout? | Shader compiles during it | Score |
 |---|---|---|---|---|
-| Home → Red Room (door, T1) | Curtains close and part (correct per §6) | **No**: 8 solid frames with no badge aperture | 84 → 104 programs | 4 |
-| Home → DHAMAAKA (door or nav) | A white-gold radial wash, then the opener on first visit | **No**: 2 solid gold frames | 50 → 67 | 4 |
+| Home → Red Room (door, T1) | Curtains close and part (correct per §6), but they are flat striped gradients | **No**: 8 solid frames with no badge aperture. When the aperture opens it is offset from the badge, so a ghost double badge shows (`recordings/desktop-05-…mp4`) | 84 → 104 programs | 4 |
+| Home → DHAMAAKA (door or nav) | A white-gold radial wash, then the opener on first visit | **No**: solid gold frames, then a black hole in the wash showing the clapperboard instead of the badge | 50 → 67 | 3 |
 | Red Room → DHAMAAKA (outro link) | Gold wash; §6 wants a 3-frame film-reel flicker and the short opener | **No**: 10 solid frames | 96 → 54 (the post chain is torn down) | 3 |
 | DHAMAAKA → Red Room (nav or link) | Veil flicker, then the curtains | **No**: 4 solid frames | 49 → 96 | 4 |
 | World → Home (logo or "Back to the gate", T4) | Fade to black | **No**: 6 solid frames | 96 → 102 | 4 |
@@ -157,7 +157,7 @@ Copy that is hard-coded outside `site.ts` (Events and the phone home: "Explore t
 
 | §2 item | Status | What I saw |
 |---|---|---|
-| `/diwali` routed through the Red Room curtains; striped curtains with an empty black circle | **Fixed** | Curtains now appear only when the destination is the Red Room (`transitions.ts:468`). Measured on all 5 transition paths: curtains only on → Red Room. |
+| `/diwali` routed through the Red Room curtains; striped curtains with an empty black circle | **Half fixed** | Curtains now appear only when the destination is the Red Room (`transitions.ts:468`); measured on all 5 paths. But the door → DHAMAAKA recording still shows the same fault in gold: a full-screen gold wash with a **black circle** cut into it that reveals the opener's clapperboard instead of the badge (`recordings/desktop-06-door-to-dhamaaka-T2.mp4`, about 0:07). The Red Room curtains are themselves flat vertical-stripe gradients, so entering the Red Room still shows full-screen striped frames with no badge. |
 | `TransitionStage` cuts a badge-shaped hole before the skin has loaded | **Fixed, but the cure causes a new fault** | The hole now waits for the destination skin (`TransitionStage.tsx:34-38`), so until then the cover is a **solid black or gold screen with no badge**. Measured: 2–10 such frames on every transition (Home→DHAMAAKA 2, DHAMAAKA→Red Room 4, Red Room→Home 6, Home→Red Room door 8, Red Room→DHAMAAKA 10). This breaks §6 "the badge stays visible and moving through every transition". |
 | Badge skins mount lazily at cover time | **Partly fixed** | All skins now mount on `requestIdleCallback` (`Badge.tsx:200-211`), and the GLBs preload when the loader finishes (`DomLoader.tsx:44`). But neither call has a timeout, so on a busy main thread they can wait indefinitely. Measured on a cold Home load: the neon and jewelled GLBs are requested only when the loader finishes (47.7 s here, at Ready). In one of two runs they were still not requested 6 s after Ready (idle callback starved). Until then a door click races the download. Nothing preloads on touch. |
 | Cover can wait 10 s; max should be 1.2 s | **Fixed in code** | Fallback is 1200 ms (`transitions.ts:459`), then 2 rAFs. Real-time timing can't be measured on this software GPU; the recordings show it at world speed. |
@@ -177,6 +177,7 @@ Copy that is hard-coded outside `site.ts` (Events and the phone home: "Explore t
 - **R2 · The smoke dragon is gone.** `SmokeDragon.tsx` exists but nothing imports it (unwired in `e7e7352`, 14 Oct). §5.2's signature moment is missing.
 - **R3 · Phone home: the 3D badge never leaves.** After the hero it stays behind the "Who we are" card, the body copy and the event cards. The home choreography reads `H1/H2/H5` progress, but those sections are `display:none` on phones (`Badge.tsx:462-485`, `HomeView.tsx:96-101`).
 - **R4 · Doors scene.**
+  - As the badge glides into this scene it shows for a moment as a **black disc** over the DHAMAAKA door (both door recordings, about 0:03).
   - The caption panels sit over the lower halves of both doors.
   - The DOM captions scroll while the 3D doors stay fixed, so at the footer they slide across the doors.
   - The hover light leak is a hard-edged card (see the §2 table), not a soft glow.

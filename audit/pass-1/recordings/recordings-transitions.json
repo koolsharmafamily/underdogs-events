@@ -42,5 +42,27 @@
   "external": [
    "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
   ]
+ },
+ "desktop-06-door-to-dhamaaka-T2": {
+  "realSec": 259,
+  "programsStart": 4,
+  "programsEnd": 50,
+  "frames": 167,
+  "callsMax": 196,
+  "callsAvg": 51,
+  "trisMax": 276794,
+  "renderPasses": 1,
+  "programs": 50,
+  "geometries": 54,
+  "textures": 16,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 194 captured over 250s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
  }
 }
