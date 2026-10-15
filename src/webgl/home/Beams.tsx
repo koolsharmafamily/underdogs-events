@@ -28,8 +28,13 @@ export function Beams() {
   useFrame(() => {
     if (useStore.getState().world !== "home") return;
     material.uniforms.uTime.value = frame.time;
-    if (root.current)
+    if (root.current) {
       root.current.rotation.z = Math.sin(frame.time * 0.08) * 0.025;
+      // Hero: both shafts behind the badge on the right. Doors (H5): one shaft
+      // over each door (±1.5), so both are lit the same.
+      const doors = Math.min(1, (frame.dampedProgress["H5"] ?? 0) * 3);
+      root.current.position.x = 1.5 - 3 * doors;
+    }
   });
   return (
     <group ref={root} name="AtmosphericShafts" position={[1.5, 2.8, -4]}>

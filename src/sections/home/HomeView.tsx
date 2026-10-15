@@ -243,7 +243,9 @@ export function HomeView() {
         {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
         <DomTwins />
 
-        <div className="scene-sticky-desktop flex flex-col justify-end pt-20 pb-12 lg:py-16">
+        {/* Above the door twins (sticky makes its own stacking context), but
+            click-through except for the captions themselves. */}
+        <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-end pt-20 pb-12 lg:py-16">
           <h2 className="sr-only">{site.home.worlds.label}</h2>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
@@ -269,7 +271,7 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor("redroom")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
+                className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">
@@ -319,7 +321,7 @@ export function HomeView() {
                 onMouseLeave={() => setHoverDoor(null)}
                 onFocus={() => setHoverDoor("diwali")}
                 onBlur={() => setHoverDoor(null)}
-                className="group flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF70DE]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF70DE] transition-all duration-300"
+                className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF70DE]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF70DE] transition-all duration-300"
               >
                 {/* Label Block (Part 7 H5) */}
                 <div className="flex flex-col gap-2 text-left">

@@ -8,11 +8,13 @@ import { composition } from "./composition";
 
 // Authored level-camera shots. Distances move forward monotonically; smoothstep
 // joins stop at both ends and remain C1 continuous when scrolling backwards.
-const SHOTS = {
+// [x, y, z, picture shift (fraction of the viewport height, default 0.015)]
+const SHOTS: Record<string, number[][]> = {
   home: [
     [0, 1.75, 7],
     [0, 1.8, 6.85],
-    [0, 1.6, 6.6],
+    // Doors: pulled back and raised so both doors end above their captions.
+    [0, 1.6, 8.6, 0.125],
   ],
   redroom: [
     [0, 1.85, 7.8],
@@ -43,7 +45,7 @@ export function CameraRig() {
       sections.current = Array.from(
         document.querySelectorAll<HTMLElement>(`[data-scene^="${prefix}"]`),
       )
-        .filter((el) => el.dataset.scene !== "H6")
+        .filter((el) => el.dataset.scene !== "H6" && el.offsetHeight > 0)
         .map((el) => ({
           id: el.dataset.scene!,
           top: el.getBoundingClientRect().top + window.scrollY,
@@ -116,12 +118,24 @@ export function CameraRig() {
     // Shift the projection instead of tilting: architectural verticals stay parallel.
     camera.rotation.set(0, 0, 0);
     camera.fov = portrait ? 36 : 34;
-    const shiftY = portrait && index === 0 ? 0.045 : 0.015;
+    const shiftY =
+      portrait && index === 0
+        ? 0.045
+        : portrait
+          ? 0.015
+          : THREE.MathUtils.lerp(from[3] ?? 0.015, to[3] ?? 0.015, blend);
+    // Past the last scene the footer scrolls in: move the picture up by the
+    // same pixels, so the 3D (the doors under their captions) scrolls with the
+    // page instead of staying put while the DOM slides over it.
+    const last = sections.current[sections.current.length - 1];
+    const overscroll = last
+      ? Math.max(0, scroll - (last.top + last.height - size.height))
+      : 0;
     camera.setViewOffset(
       size.width,
       size.height,
       0,
-      shiftY * size.height,
+      shiftY * size.height + overscroll,
       size.width,
       size.height,
     );
