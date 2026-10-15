@@ -1,0 +1,244 @@
+{
+ "coldLoadHome": {
+  "readyMs": 47196,
+  "requests": [
+   "146ms /media/badge-enamel-still-512.webp",
+   "146ms /media/badge-enamel-still.webp",
+   "146ms /media/badge-neon-still.webp",
+   "146ms /media/badge-jewelled-still.webp",
+   "1027ms /models/badge-enamel.glb",
+   "1027ms /models/door-redroom.glb",
+   "1027ms /models/door-diwali.glb",
+   "47698ms /models/badge-neon.glb",
+   "47698ms /models/badge-jewelled.glb"
+  ]
+ },
+ "homeTop": {
+  "mismatches": [
+   {
+    "mesh": "Arch_Moulding",
+    "material": "carved_ivory_stone",
+    "now": [
+     1,
+     0.162,
+     0.73
+    ],
+    "glb": [
+     "door-diwali.glb:0.905,0.823,0.708"
+    ]
+   }
+  ],
+  "ground": [
+   {
+    "name": "AtmosphericShafts",
+    "minY": -1.919,
+    "maxY": 8.522,
+    "meshes": 2
+   },
+   {
+    "name": "home-grounding",
+    "minY": -0.025,
+    "maxY": -0.012,
+    "meshes": 2
+   },
+   {
+    "name": "Mesh",
+    "minY": 0.01,
+    "maxY": 0.01,
+    "meshes": 1
+   },
+   {
+    "name": "Mesh",
+    "minY": 0.01,
+    "maxY": 0.01,
+    "meshes": 1
+   }
+  ],
+  "lights": [
+   "AmbientLight:0.35",
+   "DirectionalLight:2.40",
+   "DirectionalLight:0.35",
+   "PointLight:0.10",
+   "PointLight:0.00",
+   "PointLight:0.00"
+  ],
+  "toneMapping": 0,
+  "exposure": 1,
+  "envSet": true,
+  "sceneFog": null,
+  "badges": [
+   "EnamelSkin:true:1",
+   "NeonSkin:false:1",
+   "JewelledSkin:false:1"
+  ],
+  "programs": 50
+ },
+ "homeH5": {
+  "mismatches": [
+   {
+    "mesh": "Arch_Moulding",
+    "material": "carved_ivory_stone",
+    "now": [
+     1,
+     0.162,
+     0.73
+    ],
+    "glb": [
+     "door-diwali.glb:0.905,0.823,0.708"
+    ]
+   }
+  ],
+  "ground": [
+   {
+    "name": "AtmosphericShafts",
+    "minY": -1.918,
+    "maxY": 8.524,
+    "meshes": 2
+   },
+   {
+    "name": "home-grounding",
+    "minY": -0.025,
+    "maxY": -0.012,
+    "meshes": 2
+   },
+   {
+    "name": "Mesh",
+    "minY": 0.01,
+    "maxY": 0.01,
+    "meshes": 1
+   },
+   {
+    "name": "Mesh",
+    "minY": 0.01,
+    "maxY": 0.01,
+    "meshes": 1
+   },
+   {
+    "name": "Group",
+    "minY": 0,
+    "maxY": 2.466,
+    "meshes": 17
+   },
+   {
+    "name": "Group",
+    "minY": 0,
+    "maxY": 2.463,
+    "meshes": 16
+   }
+  ],
+  "lights": [
+   "AmbientLight:0.35",
+   "DirectionalLight:2.40",
+   "DirectionalLight:0.35",
+   "PointLight:0.82",
+   "PointLight:0.99",
+   "PointLight:4.14"
+  ],
+  "toneMapping": 0,
+  "exposure": 1,
+  "envSet": true,
+  "sceneFog": null,
+  "badges": [
+   "EnamelSkin:true:1",
+   "NeonSkin:false:1",
+   "JewelledSkin:false:1"
+  ],
+  "programs": 58
+ },
+ "redroom": {
+  "mismatches": [],
+  "ground": [
+   {
+    "name": "redroom-grounding",
+    "minY": -0.025,
+    "maxY": -0.012,
+    "meshes": 2
+   },
+   {
+    "name": "Mesh",
+    "minY": -1,
+    "maxY": 7,
+    "meshes": 1
+   },
+   {
+    "name": "Group",
+    "minY": 1.275,
+    "maxY": 3.125,
+    "meshes": 2
+   },
+   {
+    "name": "StaticProsceniumCurtain",
+    "minY": 0.132,
+    "maxY": 4.084,
+    "meshes": 1
+   },
+   {
+    "name": "Group",
+    "minY": 3.657,
+    "maxY": 5.775,
+    "meshes": 3
+   },
+   {
+    "name": "Group",
+    "minY": 0.3,
+    "maxY": 2.5,
+    "meshes": 4
+   },
+   {
+    "name": "LeftCandelabraPlinth",
+    "minY": 0,
+    "maxY": 2.015,
+    "meshes": 7
+   },
+   {
+    "name": "RightCandelabraPlinth",
+    "minY": 0,
+    "maxY": 2.015,
+    "meshes": 7
+   }
+  ],
+  "lights": [
+   "AmbientLight:0.15",
+   "DirectionalLight:0.45",
+   "DirectionalLight:0.20",
+   "PointLight:2.38",
+   "PointLight:2.19",
+   "PointLight:2.40"
+  ],
+  "toneMapping": 0,
+  "exposure": 0.82,
+  "envSet": true,
+  "sceneFog": null,
+  "badges": [
+   "EnamelSkin:false:0",
+   "NeonSkin:true:1",
+   "JewelledSkin:false:0"
+  ],
+  "programs": 61
+ },
+ "diwali": {
+  "mismatches": [],
+  "ground": [],
+  "lights": [
+   "AmbientLight:0.70",
+   "DirectionalLight:2.80",
+   "DirectionalLight:3.20",
+   "DirectionalLight:1.60",
+   "PointLight:2.05"
+  ],
+  "toneMapping": 6,
+  "exposure": 1.05,
+  "envSet": true,
+  "sceneFog": null,
+  "badges": [
+   "EnamelSkin:false:1",
+   "NeonSkin:false:1",
+   "JewelledSkin:true:1"
+  ],
+  "programs": 32
+ },
+ "sceneLogs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[warning] GSAP target null not found. https://gsap.com"
+ ]
+}

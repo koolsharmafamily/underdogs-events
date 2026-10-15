@@ -1,0 +1,932 @@
+{
+ "device": "desktop",
+ "reduced": false,
+ "pages": {
+  "home": {
+   "shots": [
+    {
+     "name": "H1-25",
+     "y": 45,
+     "file": "audit/pass-1/screens/desktop/home-H1-25.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H1-50",
+     "y": 90,
+     "file": "audit/pass-1/screens/desktop/home-H1-50.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H1-75",
+     "y": 135,
+     "file": "audit/pass-1/screens/desktop/home-H1-75.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H2-25",
+     "y": 1226,
+     "file": "audit/pass-1/screens/desktop/home-H2-25.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H2-50",
+     "y": 1373,
+     "file": "audit/pass-1/screens/desktop/home-H2-50.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H2-75",
+     "y": 1519,
+     "file": "audit/pass-1/screens/desktop/home-H2-75.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H5-25",
+     "y": 2655,
+     "file": "audit/pass-1/screens/desktop/home-H5-25.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H5-50",
+     "y": 2745,
+     "file": "audit/pass-1/screens/desktop/home-H5-50.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H5-75",
+     "y": 2835,
+     "file": "audit/pass-1/screens/desktop/home-H5-75.jpg",
+     "resumed": true
+    },
+    {
+     "name": "H6-mid",
+     "y": 3050,
+     "file": "audit/pass-1/screens/desktop/home-H6-mid.jpg",
+     "resumed": true
+    }
+   ],
+   "readyMs": 19538,
+   "loadMs": 19837,
+   "scenes": [
+    {
+     "id": "H1",
+     "top": 0,
+     "h": 1080,
+     "label": "Gate to Rage."
+    },
+    {
+     "id": "H2",
+     "top": 1080,
+     "h": 1485,
+     "label": ""
+    },
+    {
+     "id": "H5",
+     "top": 2565,
+     "h": 1260,
+     "label": "Two Worlds — Portals"
+    },
+    {
+     "id": "H6",
+     "top": 3825,
+     "h": 125,
+     "label": ""
+    }
+   ],
+   "docH": 3950,
+   "vitals": {
+    "lcp": {
+     "t": 1236,
+     "size": 462400,
+     "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,12 "
+    },
+    "cls": 0.00015239739378725392,
+    "shifts": [
+     {
+      "v": 1.554001554001554e-7,
+      "t": 9153.600000000093,
+      "src": [
+       "SPAN."
+      ]
+     },
+     {
+      "v": 0.00015224199363185375,
+      "t": 18664.700000000186,
+      "src": [
+       "DIV.relative w-[210px] h-[210px] sm:w-[280px] sm:h-[280px]"
+      ]
+     }
+    ]
+   }
+  },
+  "the-red-room": {
+   "shots": [
+    {
+     "name": "R1-25",
+     "y": 23,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R1-25.jpg",
+     "resumed": true
+    },
+    {
+     "name": "R1-50",
+     "y": 45,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R1-50.jpg",
+     "frames": 6,
+     "callsMax": 156,
+     "callsAvg": 156,
+     "trisMax": 686744,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R1-75",
+     "y": 68,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R1-75.jpg",
+     "frames": 6,
+     "callsMax": 156,
+     "callsAvg": 156,
+     "trisMax": 686744,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R2-25",
+     "y": 1080,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R2-25.jpg",
+     "frames": 7,
+     "callsMax": 156,
+     "callsAvg": 134,
+     "trisMax": 686744,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R2-50",
+     "y": 1170,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R2-50.jpg",
+     "frames": 8,
+     "callsMax": 130,
+     "callsAvg": 130,
+     "trisMax": 591556,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R2-75",
+     "y": 1260,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R2-75.jpg",
+     "frames": 8,
+     "callsMax": 130,
+     "callsAvg": 130,
+     "trisMax": 591556,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R3-25",
+     "y": 2273,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R3-25.jpg",
+     "frames": 8,
+     "callsMax": 130,
+     "callsAvg": 130,
+     "trisMax": 591556,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R3-50",
+     "y": 2295,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R3-50.jpg",
+     "frames": 8,
+     "callsMax": 130,
+     "callsAvg": 130,
+     "trisMax": 591556,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R3-75",
+     "y": 2318,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R3-75.jpg",
+     "frames": 8,
+     "callsMax": 130,
+     "callsAvg": 130,
+     "trisMax": 591556,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R4-25",
+     "y": 3353,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R4-25.jpg",
+     "frames": 10,
+     "callsMax": 170,
+     "callsAvg": 166,
+     "trisMax": 610336,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R4-50",
+     "y": 3465,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R4-50.jpg",
+     "frames": 11,
+     "callsMax": 170,
+     "callsAvg": 128,
+     "trisMax": 610336,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R4-75",
+     "y": 3578,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R4-75.jpg",
+     "frames": 10,
+     "callsMax": 124,
+     "callsAvg": 124,
+     "trisMax": 542680,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R-DJ-mid",
+     "y": 4433,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R-DJ-mid.jpg",
+     "frames": 11,
+     "callsMax": 124,
+     "callsAvg": 122,
+     "trisMax": 542680,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R5-25",
+     "y": 5199,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R5-25.jpg",
+     "frames": 11,
+     "callsMax": 124,
+     "callsAvg": 124,
+     "trisMax": 581080,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R5-50",
+     "y": 5221,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R5-50.jpg",
+     "frames": 11,
+     "callsMax": 124,
+     "callsAvg": 124,
+     "trisMax": 581080,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R5-75",
+     "y": 5244,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R5-75.jpg",
+     "frames": 11,
+     "callsMax": 124,
+     "callsAvg": 124,
+     "trisMax": 581080,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R6-25",
+     "y": 6189,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R6-25.jpg",
+     "frames": 10,
+     "callsMax": 150,
+     "callsAvg": 147,
+     "trisMax": 676268,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R6-50",
+     "y": 6211,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R6-50.jpg",
+     "frames": 10,
+     "callsMax": 150,
+     "callsAvg": 150,
+     "trisMax": 676268,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "R6-75",
+     "y": 6234,
+     "file": "audit/pass-1/screens/desktop/the-red-room-R6-75.jpg",
+     "frames": 9,
+     "callsMax": 150,
+     "callsAvg": 150,
+     "trisMax": 676268,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    },
+    {
+     "name": "H6-mid",
+     "y": 6381,
+     "file": "audit/pass-1/screens/desktop/the-red-room-H6-mid.jpg",
+     "frames": 10,
+     "callsMax": 150,
+     "callsAvg": 150,
+     "trisMax": 676268,
+     "renderPasses": 24,
+     "programs": 67,
+     "geometries": 93,
+     "textures": 36,
+     "dpr": 1
+    }
+   ],
+   "readyMs": 28497,
+   "loadMs": 31620,
+   "scenes": [
+    {
+     "id": "R1",
+     "top": 0,
+     "h": 990,
+     "label": "The Red Room"
+    },
+    {
+     "id": "R2",
+     "top": 990,
+     "h": 1260,
+     "label": "The Red Room story"
+    },
+    {
+     "id": "R3",
+     "top": 2250,
+     "h": 990,
+     "label": "Dress code"
+    },
+    {
+     "id": "R4",
+     "top": 3240,
+     "h": 1350,
+     "label": "The Red Room Invitation Details"
+    },
+    {
+     "id": "R-DJ",
+     "top": 4590,
+     "h": 586,
+     "label": "Headline Artist — DJ Mohnish"
+    },
+    {
+     "id": "R5",
+     "top": 5176,
+     "h": 990,
+     "label": ""
+    },
+    {
+     "id": "R6",
+     "top": 6166,
+     "h": 990,
+     "label": "The Red Room Outro"
+    },
+    {
+     "id": "H6",
+     "top": 7156,
+     "h": 125,
+     "label": ""
+    }
+   ],
+   "docH": 7281,
+   "vitals": {
+    "lcp": {
+     "t": 3648,
+     "size": 211600,
+     "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43, "
+    },
+    "cls": 0.003536685371737819,
+    "shifts": [
+     {
+      "v": 0.0032117276517189108,
+      "t": 2998.1999999999534,
+      "src": [
+       "DIV.relative inline-block",
+       "undefined.undefined",
+       "svg.[object SVGAnimatedString]",
+       "svg.[object SVGAnimatedString]",
+       "svg.[object SVGAnimatedString]"
+      ]
+     },
+     {
+      "v": 1.554001554001554e-7,
+      "t": 6150,
+      "src": [
+       "SPAN."
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 133298.30000000005,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 235192.5,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     },
+     {
+      "v": 0.0002737718089990817,
+      "t": 329258.09999999986,
+      "src": [
+       "DIV.flex items-center gap-3 font-mono text-[11px] uppercase trac"
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 334515.8999999999,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     },
+     {
+      "v": 0.000049631909465825545,
+      "t": 398184.69999999995,
+      "src": [
+       "DIV.flex items-center gap-3 font-mono text-[11px] uppercase trac"
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 433599.19999999995,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     }
+    ]
+   }
+  },
+  "diwali": {
+   "shots": [
+    {
+     "name": "D1-25",
+     "y": 23,
+     "file": "audit/pass-1/screens/desktop/diwali-D1-25.jpg",
+     "frames": 16,
+     "callsMax": 28,
+     "callsAvg": 27,
+     "trisMax": 79062,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D1-50",
+     "y": 45,
+     "file": "audit/pass-1/screens/desktop/diwali-D1-50.jpg",
+     "frames": 16,
+     "callsMax": 29,
+     "callsAvg": 29,
+     "trisMax": 79064,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D1-75",
+     "y": 68,
+     "file": "audit/pass-1/screens/desktop/diwali-D1-75.jpg",
+     "frames": 15,
+     "callsMax": 29,
+     "callsAvg": 27,
+     "trisMax": 79064,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D2-25",
+     "y": 1170,
+     "file": "audit/pass-1/screens/desktop/diwali-D2-25.jpg",
+     "frames": 19,
+     "callsMax": 26,
+     "callsAvg": 3,
+     "trisMax": 79058,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D2-50",
+     "y": 1350,
+     "file": "audit/pass-1/screens/desktop/diwali-D2-50.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D2-75",
+     "y": 1530,
+     "file": "audit/pass-1/screens/desktop/diwali-D2-75.jpg",
+     "frames": 18,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D3-25",
+     "y": 2678,
+     "file": "audit/pass-1/screens/desktop/diwali-D3-25.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D3-50",
+     "y": 2745,
+     "file": "audit/pass-1/screens/desktop/diwali-D3-50.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D3-75",
+     "y": 2813,
+     "file": "audit/pass-1/screens/desktop/diwali-D3-75.jpg",
+     "frames": 18,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "D-DJ-mid",
+     "y": 3623,
+     "file": "audit/pass-1/screens/desktop/diwali-D-DJ-mid.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "gap-4366",
+     "y": 4366,
+     "file": "audit/pass-1/screens/desktop/diwali-gap-4366.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "gap-5086",
+     "y": 5086,
+     "file": "audit/pass-1/screens/desktop/diwali-gap-5086.jpg",
+     "frames": 20,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "gap-5806",
+     "y": 5806,
+     "file": "audit/pass-1/screens/desktop/diwali-gap-5806.jpg",
+     "frames": 18,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "H6-mid",
+     "y": 6077,
+     "file": "audit/pass-1/screens/desktop/diwali-H6-mid.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    },
+    {
+     "name": "gap-6526",
+     "y": 6077,
+     "file": "audit/pass-1/screens/desktop/diwali-gap-6526.jpg",
+     "frames": 19,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 32,
+     "geometries": 48,
+     "textures": 8,
+     "dpr": 1
+    }
+   ],
+   "readyMs": 27,
+   "loadMs": 39006,
+   "scenes": [
+    {
+     "id": "D1",
+     "top": 0,
+     "h": 990,
+     "label": "DHAMAAKA — The Karan Johar Edition"
+    },
+    {
+     "id": "D2",
+     "top": 990,
+     "h": 1620,
+     "label": "Diwali story film cards"
+    },
+    {
+     "id": "D3",
+     "top": 2610,
+     "h": 1170,
+     "label": "Official Premiere Invitation"
+    },
+    {
+     "id": "D-DJ",
+     "top": 3780,
+     "h": 586,
+     "label": "Headline Artist — DJ Yogi"
+    },
+    {
+     "id": "H6",
+     "top": 6852,
+     "h": 125,
+     "label": ""
+    }
+   ],
+   "docH": 6977,
+   "vitals": {
+    "lcp": {
+     "t": 9596,
+     "size": 329952,
+     "el": "text.[object SVGAnimatedString] DHAMAAKA"
+    },
+    "cls": 0.009026132517686277,
+    "shifts": [
+     {
+      "v": 0.000022526918254628043,
+      "t": 7993.200000000186,
+      "src": [
+       "P.font-manrope text-[14px] sm:text-[16px] text-[#FFF6EE]/90 tr",
+       "undefined.undefined"
+      ]
+     },
+     {
+      "v": 1.554001554001554e-7,
+      "t": 20235.80000000028,
+      "src": [
+       "SPAN."
+      ]
+     },
+     {
+      "v": 0.00900275482093664,
+      "t": 64931.89999999991,
+      "src": [
+       "DIV.relative w-full max-w-[680px] p-8 sm:p-12 rounded-xl bg-grad"
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 65409.200000000186,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     },
+     {
+      "v": 2.3310023310023308e-7,
+      "t": 76874.70000000019,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     },
+     {
+      "v": 2.2917787340864263e-7,
+      "t": 87970.20000000019,
+      "src": [
+       "SPAN.",
+       "SPAN."
+      ]
+     }
+    ]
+   }
+  },
+  "events": {
+   "shots": [
+    {
+     "name": "gap-0",
+     "y": 0,
+     "file": "audit/pass-1/screens/desktop/events-gap-0.jpg",
+     "frames": 14,
+     "callsMax": 44,
+     "callsAvg": 44,
+     "trisMax": 28588,
+     "renderPasses": 24,
+     "programs": 50,
+     "geometries": 29,
+     "textures": 29,
+     "dpr": 1
+    }
+   ],
+   "readyMs": 21771,
+   "loadMs": 22394,
+   "scenes": [],
+   "docH": 900,
+   "vitals": {
+    "lcp": {
+     "t": 1492,
+     "size": 307496,
+     "el": "DIV.absolute inset-0 bg-cover bg-center pointer-events-none opacity-30 group-hover:o "
+    },
+    "cls": 0,
+    "shifts": []
+   }
+  },
+  "no-such-door": {
+   "shots": [
+    {
+     "name": "gap-0",
+     "y": 0,
+     "file": "audit/pass-1/screens/desktop/no-such-door-gap-0.jpg",
+     "frames": 14,
+     "callsMax": 44,
+     "callsAvg": 44,
+     "trisMax": 28588,
+     "renderPasses": 24,
+     "programs": 50,
+     "geometries": 29,
+     "textures": 29,
+     "dpr": 1
+    },
+    {
+     "name": "H6-mid",
+     "y": 0,
+     "file": "audit/pass-1/screens/desktop/no-such-door-H6-mid.jpg",
+     "frames": 14,
+     "callsMax": 44,
+     "callsAvg": 44,
+     "trisMax": 28588,
+     "renderPasses": 24,
+     "programs": 50,
+     "geometries": 29,
+     "textures": 29,
+     "dpr": 1
+    }
+   ],
+   "readyMs": 16816,
+   "loadMs": 20365,
+   "scenes": [
+    {
+     "id": "H6",
+     "top": 775,
+     "h": 125,
+     "label": ""
+    }
+   ],
+   "docH": 900,
+   "vitals": {
+    "lcp": {
+     "t": 4188,
+     "size": 109632,
+     "el": "H1.font-unbounded text-display-l font-extrabold uppercase text-[var(--paper)] balan This door doesn’t open."
+    },
+    "cls": 0.15835944733796295,
+    "shifts": [
+     {
+      "v": 0.15835944733796295,
+      "t": 3522.1999999997206,
+      "src": [
+       "SECTION.my-auto site-container flex flex-col items-center justify-ce"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "logs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[warning] GSAP target null not found. https://gsap.com",
+  "[http 404] http://localhost:3100/no-such-door",
+  "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+  "[warning] The resource http://localhost:3100/_next/static/media/b59689b1142d37ce-s.p.1bk8_xp319hr4.woff2 was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally."
+ ],
+ "external": [
+  "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+ ]
+}

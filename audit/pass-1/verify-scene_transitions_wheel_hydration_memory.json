@@ -1,0 +1,621 @@
+{
+ "coldLoadHome": {
+  "readyMs": 45996,
+  "requests": [
+   "78ms /media/badge-enamel-still-512.webp",
+   "78ms /media/badge-enamel-still.webp",
+   "84ms /media/badge-neon-still.webp",
+   "84ms /media/badge-jewelled-still.webp",
+   "896ms /models/badge-enamel.glb",
+   "896ms /models/door-redroom.glb",
+   "897ms /models/door-diwali.glb"
+  ]
+ },
+ "homeTop": {
+  "error": "no scene"
+ },
+ "homeH5": {
+  "error": "no scene"
+ },
+ "redroom": {
+  "error": "no scene"
+ },
+ "diwali": {
+  "error": "no scene"
+ },
+ "sceneLogs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[warning] GSAP target null not found. https://gsap.com"
+ ],
+ "transitions": [
+  {
+   "name": "home→dhamaaka (nav, T2-type)",
+   "phasesMs": {
+    "idle": 17191,
+    "covered": 31135
+   },
+   "coveredMs": 18065,
+   "framesFullyCoveredWithoutBadgeHole": 2,
+   "framesTotal": 6,
+   "curtainsShown": false,
+   "washShown": true,
+   "holeCut": true,
+   "programs": [
+    50,
+    49
+   ],
+   "route": [
+    "/",
+    "/diwali"
+   ],
+   "programsBefore": 50,
+   "programsAfter": 49,
+   "timeline": [
+    {
+     "t": 1278,
+     "phase": "idle",
+     "type": "none",
+     "path": "/",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 1,
+     "programs": 50
+    },
+    {
+     "t": 18469,
+     "phase": "covered",
+     "type": "T2",
+     "path": "/",
+     "mask": "none",
+     "veil": 0,
+     "wash": 1,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 58
+    },
+    {
+     "t": 36534,
+     "phase": "covered",
+     "type": "T2",
+     "path": "/diwali",
+     "mask": "radial-gradient(circle a",
+     "veil": 0,
+     "wash": 1,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 67
+    },
+    {
+     "t": 49604,
+     "phase": "idle",
+     "type": "none",
+     "path": "/diwali",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 49
+    }
+   ]
+  },
+  {
+   "name": "dhamaaka→red room (nav)",
+   "phasesMs": {
+    "idle": 3412,
+    "exit": 268
+   },
+   "coveredMs": -9631,
+   "framesFullyCoveredWithoutBadgeHole": 4,
+   "framesTotal": 28,
+   "curtainsShown": true,
+   "washShown": false,
+   "holeCut": true,
+   "programs": [
+    49,
+    96
+   ],
+   "route": [
+    "/diwali",
+    "/the-red-room"
+   ],
+   "programsBefore": 49,
+   "programsAfter": 96,
+   "timeline": [
+    {
+     "t": 49766,
+     "phase": "idle",
+     "type": "none",
+     "path": "/diwali",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 49
+    },
+    {
+     "t": 53178,
+     "phase": "exit",
+     "type": "T3",
+     "path": "/diwali",
+     "mask": "radial-gradient(circle a",
+     "veil": 0.8774,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 49
+    },
+    {
+     "t": 53446,
+     "phase": "covered",
+     "type": "T3",
+     "path": "/diwali",
+     "mask": "none",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 49
+    },
+    {
+     "t": 92126,
+     "phase": "covered",
+     "type": "T3",
+     "path": "/the-red-room",
+     "mask": "radial-gradient(circle a",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 96
+    }
+   ]
+  },
+  {
+   "name": "red room→home (logo, T4)",
+   "phasesMs": {
+    "idle": 17372,
+    "covered": 34383,
+    "enter": 732
+   },
+   "coveredMs": -59270,
+   "framesFullyCoveredWithoutBadgeHole": 6,
+   "framesTotal": 27,
+   "curtainsShown": false,
+   "washShown": false,
+   "holeCut": true,
+   "programs": [
+    96,
+    76
+   ],
+   "route": [
+    "/the-red-room",
+    "/"
+   ],
+   "programsBefore": 96,
+   "programsAfter": 76,
+   "timeline": [
+    {
+     "t": 102036,
+     "phase": "idle",
+     "type": "none",
+     "path": "/the-red-room",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 96
+    },
+    {
+     "t": 119408,
+     "phase": "covered",
+     "type": "T4",
+     "path": "/the-red-room",
+     "mask": "none",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 96
+    },
+    {
+     "t": 153749,
+     "phase": "covered",
+     "type": "T4",
+     "path": "/",
+     "mask": "radial-gradient(circle a",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 102
+    },
+    {
+     "t": 153791,
+     "phase": "enter",
+     "type": "T4",
+     "path": "/",
+     "mask": "radial-gradient(circle a",
+     "veil": 0.6151,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 102
+    },
+    {
+     "t": 154523,
+     "phase": "idle",
+     "type": "none",
+     "path": "/",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 76
+    }
+   ]
+  },
+  {
+   "name": "home→red room (door, T1)",
+   "phasesMs": {
+    "covered": 31709,
+    "enter": 864
+   },
+   "coveredMs": -168253,
+   "framesFullyCoveredWithoutBadgeHole": 8,
+   "framesTotal": 20,
+   "curtainsShown": true,
+   "washShown": false,
+   "holeCut": true,
+   "programs": [
+    84,
+    96
+   ],
+   "route": [
+    "/",
+    "/the-red-room"
+   ],
+   "programsBefore": 84,
+   "programsAfter": 96,
+   "timeline": [
+    {
+     "t": 201104,
+     "phase": "covered",
+     "type": "T1",
+     "path": "/",
+     "mask": "none",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 84
+    },
+    {
+     "t": 232517,
+     "phase": "covered",
+     "type": "T1",
+     "path": "/the-red-room",
+     "mask": "radial-gradient(circle a",
+     "veil": 1,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 104
+    },
+    {
+     "t": 232813,
+     "phase": "enter",
+     "type": "T1",
+     "path": "/the-red-room",
+     "mask": "radial-gradient(circle a",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "visible",
+     "main": 0,
+     "programs": 104
+    },
+    {
+     "t": 233677,
+     "phase": "idle",
+     "type": "none",
+     "path": "/the-red-room",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 96
+    }
+   ]
+  },
+  {
+   "name": "red room→dhamaaka (outro, T3)",
+   "phasesMs": {
+    "idle": 10322,
+    "covered": 18290,
+    "enter": 1417
+   },
+   "coveredMs": -241613,
+   "framesFullyCoveredWithoutBadgeHole": 10,
+   "framesTotal": 45,
+   "curtainsShown": false,
+   "washShown": true,
+   "holeCut": true,
+   "programs": [
+    96,
+    54
+   ],
+   "route": [
+    "/the-red-room",
+    "/diwali"
+   ],
+   "programsBefore": 96,
+   "programsAfter": 54,
+   "timeline": [
+    {
+     "t": 260020,
+     "phase": "idle",
+     "type": "none",
+     "path": "/the-red-room",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 96
+    },
+    {
+     "t": 270342,
+     "phase": "covered",
+     "type": "T3",
+     "path": "/the-red-room",
+     "mask": "none",
+     "veil": 0,
+     "wash": 1,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 96
+    },
+    {
+     "t": 288484,
+     "phase": "covered",
+     "type": "T3",
+     "path": "/diwali",
+     "mask": "radial-gradient(circle a",
+     "veil": 0,
+     "wash": 1,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 105
+    },
+    {
+     "t": 288632,
+     "phase": "enter",
+     "type": "T3",
+     "path": "/diwali",
+     "mask": "radial-gradient(circle a",
+     "veil": 0,
+     "wash": 0.3298,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 105
+    },
+    {
+     "t": 290049,
+     "phase": "idle",
+     "type": "none",
+     "path": "/diwali",
+     "mask": "none",
+     "veil": 0,
+     "wash": 0,
+     "curtains": "hidden",
+     "main": 0,
+     "programs": 54
+    }
+   ]
+  }
+ ],
+ "transitionLogs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[warning] GSAP target null not found. https://gsap.com"
+ ],
+ "memory": [
+  {
+   "label": "start",
+   "geo": 29,
+   "tex": 29,
+   "programs": 45,
+   "heapMB": 22,
+   "path": "/"
+  },
+  {
+   "label": "#1 Red Room",
+   "geo": 99,
+   "tex": 44,
+   "programs": 76,
+   "heapMB": 49,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#2 DHAMAAKA",
+   "geo": 63,
+   "tex": 26,
+   "programs": 45,
+   "heapMB": 50,
+   "path": "/diwali"
+  },
+  {
+   "label": "#3 Underdogs",
+   "geo": 68,
+   "tex": 50,
+   "programs": 67,
+   "heapMB": 49,
+   "path": "/"
+  },
+  {
+   "label": "#4 Red Room",
+   "geo": 125,
+   "tex": 64,
+   "programs": 86,
+   "heapMB": 58,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#5 DHAMAAKA",
+   "geo": 65,
+   "tex": 45,
+   "programs": 45,
+   "heapMB": 51,
+   "path": "/diwali"
+  },
+  {
+   "label": "#6 Underdogs",
+   "geo": 70,
+   "tex": 69,
+   "programs": 67,
+   "heapMB": 50,
+   "path": "/"
+  },
+  {
+   "label": "#7 Red Room",
+   "geo": 127,
+   "tex": 83,
+   "programs": 86,
+   "heapMB": 53,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#8 DHAMAAKA",
+   "geo": 70,
+   "tex": 64,
+   "programs": 45,
+   "heapMB": 52,
+   "path": "/diwali"
+  },
+  {
+   "label": "#9 Underdogs",
+   "geo": 75,
+   "tex": 87,
+   "programs": 67,
+   "heapMB": 51,
+   "path": "/"
+  },
+  {
+   "label": "#10 Red Room",
+   "geo": 132,
+   "tex": 102,
+   "programs": 86,
+   "heapMB": 55,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#11 DHAMAAKA",
+   "geo": 74,
+   "tex": 83,
+   "programs": 45,
+   "heapMB": 52,
+   "path": "/diwali"
+  },
+  {
+   "label": "#12 Underdogs",
+   "geo": 79,
+   "tex": 107,
+   "programs": 67,
+   "heapMB": 51,
+   "path": "/"
+  },
+  {
+   "label": "#13 Red Room",
+   "geo": 136,
+   "tex": 121,
+   "programs": 86,
+   "heapMB": 60,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#14 DHAMAAKA",
+   "geo": 76,
+   "tex": 102,
+   "programs": 45,
+   "heapMB": 52,
+   "path": "/diwali"
+  },
+  {
+   "label": "#15 Underdogs",
+   "geo": 81,
+   "tex": 125,
+   "programs": 67,
+   "heapMB": 51,
+   "path": "/"
+  },
+  {
+   "label": "#16 Red Room",
+   "geo": 138,
+   "tex": 140,
+   "programs": 86,
+   "heapMB": 54,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#17 DHAMAAKA",
+   "geo": 78,
+   "tex": 121,
+   "programs": 45,
+   "heapMB": 53,
+   "path": "/diwali"
+  },
+  {
+   "label": "#18 Underdogs",
+   "geo": 83,
+   "tex": 145,
+   "programs": 67,
+   "heapMB": 51,
+   "path": "/"
+  },
+  {
+   "label": "#19 Red Room",
+   "geo": 140,
+   "tex": 159,
+   "programs": 86,
+   "heapMB": 55,
+   "path": "/the-red-room"
+  },
+  {
+   "label": "#20 DHAMAAKA",
+   "geo": 80,
+   "tex": 140,
+   "programs": 45,
+   "heapMB": 53,
+   "path": "/diwali"
+  }
+ ],
+ "wheel": [
+  {
+   "reducedMotion": "reduce",
+   "dataMotion": "off",
+   "scrollBefore": 0,
+   "scrollAfter": 800
+  },
+  {
+   "reducedMotion": "no-preference",
+   "dataMotion": "on",
+   "scrollBefore": 0,
+   "scrollAfter": 920
+  }
+ ],
+ "hydrationLaterDay": {
+  "logs": [
+   "[pageerror] Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful warnings.",
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported."
+  ],
+  "chips": [
+   "7 days to go",
+   "21 days to go"
+  ]
+ }
+}

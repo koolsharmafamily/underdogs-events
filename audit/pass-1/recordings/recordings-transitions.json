@@ -1,0 +1,46 @@
+{
+ "desktop-01-cold-load-home": {
+  "realSec": 139,
+  "programsStart": 4,
+  "programsEnd": 50,
+  "frames": 41,
+  "callsMax": 66,
+  "callsAvg": 44,
+  "trisMax": 66476,
+  "renderPasses": 24,
+  "programs": 50,
+  "geometries": 29,
+  "textures": 29,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 57 captured over 130s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ },
+ "desktop-05-door-to-red-room-T1": {
+  "realSec": 242,
+  "programsStart": 4,
+  "programsEnd": 77,
+  "frames": 60,
+  "callsMax": 369,
+  "callsAvg": 111,
+  "trisMax": 1480173,
+  "renderPasses": 24,
+  "programs": 77,
+  "geometries": 99,
+  "textures": 44,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[warning] GSAP target null not found. https://gsap.com",
+   "[frames] 73 captured over 226s real"
+  ],
+  "external": [
+   "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/d-apple.json"
+  ]
+ }
+}

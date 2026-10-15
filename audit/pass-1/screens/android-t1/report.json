@@ -1,0 +1,77 @@
+{
+ "rep": {
+  "home-hero": {
+   "frames": 14,
+   "callsMax": 28,
+   "callsAvg": 28,
+   "trisMax": 69412,
+   "renderPasses": 1,
+   "programs": 36,
+   "geometries": 49,
+   "textures": 8,
+   "dpr": 2
+  },
+  "the-red-room-hero": {
+   "frames": 4,
+   "callsMax": 79,
+   "callsAvg": 79,
+   "trisMax": 461141,
+   "renderPasses": 1,
+   "programs": 41,
+   "geometries": 91,
+   "textures": 10,
+   "dpr": 2
+  },
+  "the-red-room-R4": {
+   "frames": 5,
+   "callsMax": 79,
+   "callsAvg": 56,
+   "trisMax": 461141,
+   "renderPasses": 1,
+   "programs": 41,
+   "geometries": 91,
+   "textures": 10,
+   "dpr": 2
+  },
+  "diwali-hero": {
+   "frames": 15,
+   "callsMax": 29,
+   "callsAvg": 28,
+   "trisMax": 79064,
+   "renderPasses": 1,
+   "programs": 29,
+   "geometries": 48,
+   "textures": 8,
+   "dpr": 2
+  },
+  "diwali-D3": {
+   "frames": 21,
+   "callsMax": 26,
+   "callsAvg": 2,
+   "trisMax": 79058,
+   "renderPasses": 1,
+   "programs": 29,
+   "geometries": 48,
+   "textures": 8,
+   "dpr": 2
+  },
+  "events-hero": {
+   "frames": 15,
+   "callsMax": 13,
+   "callsAvg": 13,
+   "trisMax": 22148,
+   "renderPasses": 1,
+   "programs": 36,
+   "geometries": 27,
+   "textures": 7,
+   "dpr": 2
+  }
+ },
+ "logs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[warning] GSAP target null not found. https://gsap.com"
+ ],
+ "external": [
+  "https://unpkg.com/detect-gpu@5.0.70/dist/benchmarks/m-adreno.json"
+ ]
+}
