@@ -67,10 +67,22 @@ Pass 2 runs in an isolated copy of the tree (own `public/` and build) so the Pas
   - Phone DPR capped at 1.5 (T2) and 1.25 (T1); no DPR swaps during transitions.
 - [x] **2.4 Transitions.** Measured: **0** covered frames without the badge across 6 route changes (Pass 1: 2–10 per transition). the cover always keeps a soft aperture on the badge; the still overlay is hidden mid-transition; Red Room → DHAMAAKA is a three-frame film-reel flicker then the short opener; the opener keeps the badge visible; the phone tab bar, top bar, Events cards and home cards go through the transition system.
 - [ ] **2.5 Scroll and Motion** (code done): Motion toggle in the nav, footer and phone top bar, remembered and read on boot; D4/D5 attached (H4 is the "This season" scene, which has copy but no section: rebuilt in Pass 3); story lines step on linear progress (equal scroll per line).
-- [ ] **2.6 Placement and budgets**: phone badge leaves after the hero; the canvas sleeps on Events and the 404; fog on; Red Room hero and outro clear the phone tab bar; outro badge lifted above the text; door light leaks are soft glows.
-  - Draw calls per frame (desktop T3): Home hero 66, Red Room ~100 (Pass 1: 156; transmission glass and the hidden world's reflector were the extra), DHAMAAKA 29.
-  - Next: doors (captions, hover parity), R4 double exposure, floating floor flames, curtain float.
-- [ ] **2.7 Performance and maintenance**: backdrop blur gone; grain in the post chain (CSS only without a composer); "Enter anyway" no longer locks T0; dead code removed; `npm run lint` (oxlint: ESLint's rules natively, because typescript-eslint can't load TypeScript 7) and `npm run typecheck`. Smoke suite, bundle split, fonts and LCP: next.
+- [x] **2.6 Placement and budgets**
+  - Phone: the badge leaves after the hero; the Red Room hero and outro clear the tab bar; DPR capped (T2 1.5, T1 1.25).
+  - Doors: framed above their captions; both lit by the beams; captions take hover again (they sat under the door twins); the 3D scrolls with the page into the footer; light leaks are soft glows.
+  - Red Room: the outro badge sits between the nav and the text (the camera rig mis-numbered scenes after the DJ section, so the R6 and D5 compositions never ran); R4 card and 3D tray crossfade quickly instead of double-exposing; models ground on their visible meshes (the curtain floated 13 cm).
+  - Events and 404: the canvas sleeps (no Home world behind them).
+  - Draw calls per frame, desktop T3: Home hero 66, Red Room ~100 (Pass 1: 156), DHAMAAKA 29. Fixes: contact shadows render once, transmission glass swapped for transparency, a hidden world's reflector no longer renders.
+  - Moved to Pass 3 (art direction, needs a before/after): the floor-candle flames over dark candles (R8).
+- [x] **2.7 Performance and maintenance**
+  - No backdrop blur; grain in the post chain (CSS grain only without a composer).
+  - three.js and drei out of the first bundle (preloads are lazy; DOM helpers are three-free).
+  - Only Home's display font was preloaded on every route: no longer.
+  - The DHAMAAKA title paints with the HTML (CSS entrance, no JS gate); the ballroom parallax no longer re-renders the page every scroll frame.
+  - "Enter anyway" keeps 3D loading; no console warnings or hydration errors on any route (smoke suite).
+  - Dead code removed (6 unused DHAMAAKA 3D effects, the card projector, the badge placeholder, Menu, Cursor, the resource releaser).
+  - `npm run lint` (oxlint), `typecheck`, `check:scenes` (orphan scroll keys) and `smoke` (routes, console, no outbound requests, programs/textures/geometry constant across route changes, draw-call budgets, badge aperture in every cover).
+- [ ] **2.8 Verify and report** (running)
 
 ---
 
