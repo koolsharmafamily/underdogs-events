@@ -32,10 +32,15 @@ await context.addInitScript(() => {
     if (r && !r.__wrapped) {
       r.__wrapped = true;
       const render = r.render.bind(r);
+      // A frame ends with the render to the screen (the composer's last pass,
+      // or the scene itself on the direct path); offscreen passes add to it.
       let acc = 0;
-      r.render = (s, c) => { render(s, c); acc += r.info.render.calls; };
-      const frame = () => { window.__calls.push(acc); acc = 0; if (window.__calls.length > 600) window.__calls.shift(); requestAnimationFrame(frame); };
-      requestAnimationFrame(frame);
+      r.render = (s, c) => {
+        const toScreen = r.getRenderTarget() === null;
+        render(s, c);
+        acc += r.info.render.calls;
+        if (toScreen) { window.__calls.push(acc); acc = 0; if (window.__calls.length > 600) window.__calls.shift(); }
+      };
     }
     if (!r?.__wrapped) requestAnimationFrame(tick);
   };
@@ -72,7 +77,9 @@ for (const route of ['/', '/the-red-room', '/diwali', '/events', '/no-such-door'
   await page.waitForTimeout(1500);
   const expected = route === '/no-such-door' ? 404 : 200;
   check(`${route} responds ${expected}`, res?.status() === expected, String(res?.status()));
-  check(`${route} logs nothing`, logs.length === 0, logs.slice(0, 3).join(' | '));
+  // The 404 page's own document response is expected.
+  const unexpected = logs.filter((l) => !(expected === 404 && l.includes('status of 404')));
+  check(`${route} logs nothing`, unexpected.length === 0, unexpected.slice(0, 3).join(' | '));
   if (route === '/diwali' || route === '/' || route === '/the-red-room') {
     await page.waitForTimeout(1000);
     const calls = await page.evaluate(() => Math.max(0, ...window.__calls.slice(-30)));

@@ -1,6 +1,7 @@
 "use client";
 import { memo, useEffect, useState } from "react";
-import { ContactShadows, MeshReflectorMaterial } from "@react-three/drei";
+import { ContactShadows } from "@react-three/drei";
+import { Reflector } from "./Reflector";
 import { useQuality } from "./QualityProvider";
 import { useStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
@@ -60,7 +61,7 @@ export function StageFloor({ world }: { world: WorldId }) {
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.025, 0]}>
         <planeGeometry args={[100, 100]} />
         {settings.hasReflector ? (
-          <MeshReflectorMaterial
+          <Reflector
             resolution={128}
             blur={[160, 64]}
             mixBlur={1}

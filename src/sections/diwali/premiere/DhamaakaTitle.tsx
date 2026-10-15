@@ -1,24 +1,14 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { site } from "@/content/site";
 import { useStore } from "@/state/store";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 
 export function DhamaakaTitle() {
   const motionEnabled = useStore((s) => s.motionEnabled);
-  const [entered, setEntered] = useState(!motionEnabled);
-
-  useEffect(() => {
-    if (!motionEnabled) {
-      setEntered(true);
-      return;
-    }
-    const timer = setTimeout(() => {
-      setEntered(true);
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [motionEnabled]);
+  // The entrance is a CSS animation (.hero-enter), so the title paints with the
+  // HTML and never waits for JavaScript (LCP).
 
   // Letters for staggered reveal: D - H - A - M - A - A - K - A
   const letters = ["D", "H", "A", "M", "A", "A", "K", "A"];
@@ -32,9 +22,7 @@ export function DhamaakaTitle() {
 
       {/* Presenter Line */}
       <div
-        className={`flex items-center justify-center gap-3 transition-all duration-700 ${
-          entered ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"
-        }`}
+        className="hero-enter flex items-center justify-center gap-3 [--hero-from:translateY(-8px)]"
       >
         <span className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-[#E5B25D]" />
         <span className="font-cinzel text-[11px] sm:text-[13px] font-semibold uppercase tracking-[0.38em] text-[#E5B25D] drop-shadow-[0_2px_10px_rgba(229,178,93,0.35)]">
@@ -45,9 +33,7 @@ export function DhamaakaTitle() {
 
       {/* Prominent 3D Jewelled Badge Host (above DHAMAAKA) */}
       <div
-        className={`relative my-2 sm:my-3 transition-all duration-700 delay-100 ${
-          entered ? "opacity-100 scale-100" : "opacity-0 scale-95"
-        }`}
+        className="hero-enter relative my-2 sm:my-3 [--hero-from:scale(0.95)] [animation-delay:350ms]"
       >
         {/* Soft Warm Halo Glow */}
         <div
@@ -305,9 +291,7 @@ export function DhamaakaTitle() {
 
       {/* Devanagari Accent & Ceremony Line */}
       <div
-        className={`mt-1 flex items-center justify-center gap-3 transition-all duration-700 delay-200 ${
-          entered ? "opacity-90 translate-y-0" : "opacity-0 translate-y-2"
-        }`}
+        className="hero-enter mt-1 flex items-center justify-center gap-3 opacity-90 [--hero-from:translateY(8px)] [animation-delay:450ms]"
       >
         <span className="font-devanagari text-[13px] sm:text-[14px] text-[#E5B25D] tracking-[0.2em] font-normal">
           {site.diwali.accent}

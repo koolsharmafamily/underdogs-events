@@ -7,12 +7,10 @@ import { StudioSpotlights } from "./StudioSpotlights";
 import { DhamaakaParticlesCanvas } from "./DhamaakaParticlesCanvas";
 
 interface DhamaakaStageProps {
-  d2Progress?: number;
   activeStoryLine?: number;
 }
 
 export function DhamaakaStage({
-  d2Progress = 0,
   activeStoryLine = 0,
 }: DhamaakaStageProps) {
   return (
@@ -21,7 +19,7 @@ export function DhamaakaStage({
       className="fixed inset-0 z-0 pointer-events-none overflow-hidden select-none"
     >
       {/* Layer 1: Ballroom Atmosphere Plate */}
-      <BallroomAtmosphere parallaxY={-d2Progress * 25} />
+      <BallroomAtmosphere />
 
       {/* Layer 2: Crystal Chandeliers */}
       <Chandeliers />
@@ -31,7 +29,6 @@ export function DhamaakaStage({
 
       {/* Layer 4: Particle Canvas (Bokeh, gold dust, flashes, fireworks) */}
       <DhamaakaParticlesCanvas
-        d2Progress={d2Progress}
         activeStoryLine={activeStoryLine}
       />
 

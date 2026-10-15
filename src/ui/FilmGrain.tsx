@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '@/state/store'
 import { acts } from '@/theme/acts'
 import { TIER_CONFIG, rendersDirect } from '@/webgl/tiers'
@@ -15,6 +15,10 @@ export function FilmGrain() {
   const tier = useStore((s) => s.tier)
   const sceneRoute = useStore((s) => s.sceneRoute)
   const opacity = acts[world]?.grainOpacity ?? 0.04
+  // The server can't know the route's world or tier: decide after hydration.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
   if (sceneRoute && tier !== 'T0' && !rendersDirect(world, TIER_CONFIG[tier].hasComposer)) return null
 
   return (

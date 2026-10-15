@@ -24,7 +24,6 @@ export function DiwaliView() {
   const setWorld = useStore((s) => s.setWorld);
 
   const [activeStoryLine, setActiveStoryLine] = useState(0);
-  const [d2Progress, setD2Progress] = useState(0);
   const [d3Active, setD3Active] = useState(false);
 
   useEnterTransition("diwali");
@@ -49,7 +48,6 @@ export function DiwaliView() {
   useEffect(() => {
     if (!motionEnabled) {
       setActiveStoryLine(0);
-      setD2Progress(1);
       setD3Active(true);
       return;
     }
@@ -58,7 +56,6 @@ export function DiwaliView() {
 
     const onTick = () => {
       const p2 = frame.linearProgress.D2 ?? 0;
-      setD2Progress(p2);
       const idx = Math.min(4, Math.floor(p2 * 5));
       if (idx !== prevLine) {
         prevLine = idx;
@@ -82,7 +79,6 @@ export function DiwaliView() {
 
       {/* 2D/2.5D Composite Stage (Atmosphere plate, chandeliers, spotlights, particles, fireworks) */}
       <DhamaakaStage
-        d2Progress={d2Progress}
         activeStoryLine={activeStoryLine}
       />
 

@@ -4,7 +4,6 @@ import React, { useEffect, useRef } from "react";
 import { useStore } from "@/state/store";
 
 interface DhamaakaParticlesCanvasProps {
-  d2Progress?: number;
   activeStoryLine?: number;
 }
 
@@ -51,7 +50,6 @@ interface FireworkParticle {
 }
 
 export function DhamaakaParticlesCanvas({
-  d2Progress = 0,
   activeStoryLine = 0,
 }: DhamaakaParticlesCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);

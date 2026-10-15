@@ -2,29 +2,41 @@
 
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import gsap from "gsap";
 import { useStore } from "@/state/store";
+import { frame } from "@/state/frame";
 
-interface BallroomAtmosphereProps {
-  parallaxY?: number;
-}
-
-export function BallroomAtmosphere({ parallaxY = 0 }: BallroomAtmosphereProps) {
+/**
+ * The ballroom plate drifts with the pointer and rises 25 px over the story
+ * (D2). Both go straight to the element from the shared ticker, never through
+ * React state.
+ */
+export function BallroomAtmosphere() {
   const motionEnabled = useStore((s) => s.motionEnabled);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!motionEnabled) return;
-
-    const handlePointerMove = (e: PointerEvent) => {
-      if (!containerRef.current) return;
-      const xRatio = (e.clientX / window.innerWidth - 0.5) * 16;
-      const yRatio = (e.clientY / window.innerHeight - 0.5) * 12;
-      containerRef.current.style.transform = `translate3d(${xRatio}px, ${yRatio + parallaxY}px, 0) scale(1.04)`;
+    const pointer = { x: 0, y: 0 };
+    const onPointerMove = (e: PointerEvent) => {
+      pointer.x = (e.clientX / window.innerWidth - 0.5) * 16;
+      pointer.y = (e.clientY / window.innerHeight - 0.5) * 12;
     };
-
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
-    return () => window.removeEventListener("pointermove", handlePointerMove);
-  }, [motionEnabled, parallaxY]);
+    let last = "";
+    const tick = () => {
+      const el = containerRef.current;
+      if (!el) return;
+      const parallaxY = -(frame.linearProgress.D2 ?? 0) * 25;
+      const next = `translate3d(${pointer.x.toFixed(1)}px, ${(pointer.y + parallaxY).toFixed(1)}px, 0) scale(1.04)`;
+      if (next !== last) el.style.transform = last = next;
+    };
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    gsap.ticker.add(tick);
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      gsap.ticker.remove(tick);
+    };
+  }, [motionEnabled]);
 
   return (
     <div
@@ -35,9 +47,7 @@ export function BallroomAtmosphere({ parallaxY = 0 }: BallroomAtmosphereProps) {
       <div
         ref={containerRef}
         className="absolute -inset-[5%] w-[110%] h-[110%] transition-transform duration-500 ease-out"
-        style={{
-          transform: `translate3d(0, ${parallaxY}px, 0) scale(1.04)`,
-        }}
+        style={{ transform: "translate3d(0, 0, 0) scale(1.04)" }}
       >
         <Image
           src="/media/dhamaaka-ballroom-plate.webp"
