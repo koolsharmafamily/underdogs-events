@@ -121,7 +121,14 @@ Other measurements:
 - **GPU memory over 20 route changes:** textures 29 → 145, geometries 29 → 83 at Home. JS heap flat at about 50–55 MB.
 - **CLS** (load + scroll): Home 0.0002, Red Room 0.004 desktop and 0.026 phone, DHAMAAKA 0.009, Events 0.012, **404 0.158** (budget 0.05).
 - **Bytes:** about 540 KB gz of JS requested up front on every route. Badge GLBs 5.6 MB raw (about 1.9 MB compressed). Models in `public/models` total 9.9 MB, media 9.1 MB (the DHAMAAKA OG image alone is a 3.7 MB PNG).
-- **Slow 4G + 4× CPU cold loads (phone):** `vitals-phone-slow4g.json` (LCP element and time, CLS, bytes by type) is rendering after this write-up and will be added.
+- **Slow 4G + 4× CPU cold loads (phone)** (`vitals-phone-slow4g.json`; DHAMAAKA and Events still rendering):
+
+  | Route | LCP | FCP | CLS | Transferred | Notes |
+  |---|---|---|---|---|---|
+  | Home | **5.4 s** (budget 2.5 s) | 4.0 s | 0.016 | 1.4 MB (JS 604 KB, GLB 556 KB) | The LCP element is the badge still image. |
+  | Red Room | **2.8 s** | 2.4 s | 0.023 | 3.6 MB (JS 622 KB, GLB 2.4 MB) | Fails the budget. |
+
+  On both routes, 15–17 main-thread tasks run longer than 200 ms during load, which puts INP at risk.
 - **Console:** every page warns `GSAP target null not found`, and a `font preloaded but not used` warning also appears. `/events` throws **React error #418** (hydration mismatch) on any day after the build (measured by moving the clock forward 2 days).
 - **Frame rate:** not measurable here (software GPU). Pass 5 measures it on a real iPhone and a mid-range Android.
 

@@ -1,0 +1,79 @@
+{
+ "/": {
+  "loadMs": 4427,
+  "transferredKB": 1439,
+  "byTypeKB": {
+   "Document": 16,
+   "Stylesheet": 23,
+   "Script": 604,
+   "Image": 99,
+   "Font": 136,
+   "Other": 5,
+   "Fetch": 556
+  },
+  "lcp": {
+   "t": 5356,
+   "size": 175500,
+   "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,12 "
+  },
+  "cls": 0.0161,
+  "shifts": [
+   {
+    "v": 0.01608793786596818,
+    "t": 4141,
+    "src": [
+     "A.inline-flex items-center gap-2.5 active:opacity-80 transitio",
+     "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px",
+     "DIV.w-full flex flex-col items-center gap-4 max-w-[340px] mx-aut",
+     "undefined.undefined"
+    ]
+   }
+  ],
+  "longTasksOver200": 17,
+  "maxEvent": 0,
+  "fcp": 3980
+ },
+ "/the-red-room": {
+  "loadMs": 4696,
+  "transferredKB": 3608,
+  "byTypeKB": {
+   "Document": 15,
+   "Stylesheet": 23,
+   "Script": 622,
+   "Image": 316,
+   "Font": 226,
+   "Other": 5,
+   "Fetch": 2401
+  },
+  "lcp": {
+   "t": 2804,
+   "size": 163800,
+   "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43, "
+  },
+  "cls": 0.0234,
+  "shifts": [
+   {
+    "v": 0.012320024251016085,
+    "t": 2487.5999999996275,
+    "src": [
+     "SPAN.",
+     "DIV.site-container flex flex-col items-center gap-2.5 sm:gap-3.5"
+    ]
+   },
+   {
+    "v": 0.011127593462448434,
+    "t": 5736,
+    "src": [
+     "DIV.relative inline-block",
+     "H1.font-nosifer text-[clamp(2.2rem,4.6vw,3.8rem)] font-normal u",
+     "svg.[object SVGAnimatedString]",
+     "svg.[object SVGAnimatedString]",
+     "svg.[object SVGAnimatedString]"
+    ]
+   }
+  ],
+  "longTasksOver200": 15,
+  "maxEvent": 0,
+  "fcp": 2384
+ }
+}
