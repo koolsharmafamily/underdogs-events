@@ -95,6 +95,27 @@ export function HomeStage() {
     const rScene = redDoorGltf.scene.clone(true);
     const dScene = diwaliDoorGltf.scene.clone(true);
 
+    // Completely remove the two golden objects (Diya_L, Diya_R, bowls, wicks) and flame anchors from the Diwali door
+    const dNodesToRemove: THREE.Object3D[] = [];
+    dScene.traverse((child) => {
+      const lower = child.name.toLowerCase();
+      if (lower.includes("diya") || lower.includes("flame_anchor")) {
+        dNodesToRemove.push(child);
+      }
+    });
+    dNodesToRemove.forEach((node) => {
+      if ((node as THREE.Mesh).isMesh) {
+        const mesh = node as THREE.Mesh;
+        mesh.geometry?.dispose();
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((m) => m.dispose());
+        } else {
+          mesh.material?.dispose();
+        }
+      }
+      node.removeFromParent();
+    });
+
     // Ground both standing doors using their world-space Box3 so threshold sits at y = 0 (Global Rule 2)
     groundObjectToY(rScene, 0);
     groundObjectToY(dScene, 0);
@@ -155,13 +176,7 @@ export function HomeStage() {
       });
     }
 
-    // 1. Remove the two golden objects (Diya_L and Diya_R) at the bottom of the Diwali door
-    const diyaL = dScene.getObjectByName("Diya_L");
-    if (diyaL) diyaL.visible = false;
-    const diyaR = dScene.getObjectByName("Diya_R");
-    if (diyaR) diyaR.visible = false;
-
-    // 2. Change the white door outline/frame (carved_ivory_stone) to Diwali theme light pink (#F2B2D0)
+    // Change the white door outline/frame (carved_ivory_stone) to Diwali theme light pink (#F2B2D0)
     dScene.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         const m = child as THREE.Mesh;
@@ -180,14 +195,9 @@ export function HomeStage() {
       }
     });
 
-    // Flame anchors: red room sconces only (diwali door diyas removed)
+    // Flame anchors: red room sconces only (diwali door diyas and flame anchors completely removed)
     const rAnchors = findAnchorNodes(rScene, "Flame_Anchor");
-    const dAnchors = findAnchorNodes(dScene, "Flame_Anchor").filter(
-      (a) =>
-        a.parent?.name !== "Diya_L" &&
-        a.parent?.name !== "Diya_R" &&
-        !a.name.includes("Diya"),
-    );
+    const dAnchors = findAnchorNodes(dScene, "Flame_Anchor");
 
     // Measure exact visual heights to normalize door scales equally (Section 5)
     const rBox = new THREE.Box3().setFromObject(rScene);

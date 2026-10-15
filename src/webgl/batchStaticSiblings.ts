@@ -21,6 +21,7 @@ export function batchStaticSiblings(root: THREE.Object3D, flatten = false) {
       const mesh = child as THREE.Mesh;
       if (
         !mesh.isMesh ||
+        (mesh as THREE.InstancedMesh).isInstancedMesh ||
         !mesh.visible ||
         Array.isArray(mesh.material) ||
         mesh.children.length ||
