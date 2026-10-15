@@ -59,15 +59,17 @@ Pass 2 runs in an isolated copy of the tree (own `public/` and build) so the Pas
   - The dissolve noise now samples badge-root space, so quantised badges dissolve the same as before and the pattern is continuous across parts.
   - Halloween logo: eyes split into `Eye_L`/`Eye_R` pivots, mouth on a `Tongue` pivot (wags at half swing), only the ring glow flickers. New still `badge-halloween-still.webp`.
   - Found on the way: blink, wink and wag never ran on any skin (the pivot lookup required `Group`, the GLBs load `Mesh`/`Object3D`). Fixed.
-- [ ] **2.3 Shaders and GPU memory** (code done, being measured)
+- [x] **2.3 Shaders and GPU memory.** Measured with `npm run smoke` (desktop T3, after the idle warm-up): programs **58 → 58** and textures **51 → 51** across 6 route changes (Pass 1: programs churned 45–86, textures grew +19 per cycle). Geometries +3 (being traced).
   - Every world has the same light rig (3 directional, 3 point; spares at 0), so lit shaders don't recompile between worlds.
   - Precompile compiles each world on its real output path (composer target vs direct) with its own lights; skins compile for both paths.
   - One persistent composer (switched off, not unmounted, on DHAMAAKA); one fog object on the scene; three environment maps baked once.
   - Visited worlds stay mounted and pause while hidden; the others are mounted and compiled at idle (not on Save-Data), or on hover/focus/touch of a link. No more dispose-and-rebuild.
   - Phone DPR capped at 1.5 (T2) and 1.25 (T1); no DPR swaps during transitions.
-- [ ] **2.4 Transitions** (code done, being measured): the cover always keeps a soft aperture on the badge; the still overlay is hidden mid-transition; Red Room → DHAMAAKA is a three-frame film-reel flicker then the short opener; the opener keeps the badge visible; the phone tab bar, top bar, Events cards and home cards go through the transition system.
+- [x] **2.4 Transitions.** Measured: **0** covered frames without the badge across 6 route changes (Pass 1: 2–10 per transition). the cover always keeps a soft aperture on the badge; the still overlay is hidden mid-transition; Red Room → DHAMAAKA is a three-frame film-reel flicker then the short opener; the opener keeps the badge visible; the phone tab bar, top bar, Events cards and home cards go through the transition system.
 - [ ] **2.5 Scroll and Motion** (code done): Motion toggle in the nav, footer and phone top bar, remembered and read on boot; D4/D5 attached (H4 is the "This season" scene, which has copy but no section: rebuilt in Pass 3); story lines step on linear progress (equal scroll per line).
-- [ ] **2.6 Placement**: phone badge leaves after the hero; the canvas sleeps on Events and the 404; fog on. Doors, outro overlap, R4, R1 phone, floating flames: next.
+- [ ] **2.6 Placement and budgets**: phone badge leaves after the hero; the canvas sleeps on Events and the 404; fog on; Red Room hero and outro clear the phone tab bar; outro badge lifted above the text; door light leaks are soft glows.
+  - Draw calls per frame (desktop T3): Home hero 66, Red Room ~100 (Pass 1: 156; transmission glass and the hidden world's reflector were the extra), DHAMAAKA 29.
+  - Next: doors (captions, hover parity), R4 double exposure, floating floor flames, curtain float.
 - [ ] **2.7 Performance and maintenance**: backdrop blur gone; grain in the post chain (CSS only without a composer); "Enter anyway" no longer locks T0; dead code removed; `npm run lint` (oxlint: ESLint's rules natively, because typescript-eslint can't load TypeScript 7) and `npm run typecheck`. Smoke suite, bundle split, fonts and LCP: next.
 
 ---

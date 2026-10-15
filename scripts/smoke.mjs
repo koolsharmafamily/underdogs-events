@@ -6,7 +6,8 @@
 // Checks:
 //  1. Every route loads; no console errors or warnings; no request leaves the site.
 //  2. Shader programs and GPU textures stay flat across repeated route changes,
-//     once every world has been warmed (no compiles, no leaks).
+//     once every world has been warmed, and no geometry is rebuilt (no compiles,
+//     no leaks).
 //  3. Draw calls per frame stay within budget (desktop 120, DHAMAAKA 30).
 //  4. During a transition the cover always shows the badge (an aperture), never a solid frame.
 import { chromium } from 'playwright';
@@ -66,7 +67,12 @@ const ready = (timeout = 180000) =>
   }, null, { timeout, polling: 250 });
 const gpu = () => page.evaluate(() => {
   const r = window.__threeRenderer;
-  return r ? { programs: r.info.programs.length, textures: r.info.memory.textures, geometries: r.info.memory.geometries } : null;
+  if (!r) return null;
+  // Geometry objects in the scene (the GPU count also rises the first time a
+  // rarely-shown object draws, so it converges rather than staying flat).
+  const geometries = new Set();
+  window.__scene?.traverse((o) => { if (o.geometry) geometries.add(o.geometry.uuid); });
+  return { programs: r.info.programs.length, textures: r.info.memory.textures, geometries: [...geometries].sort().join() , geometryCount: geometries.size };
 });
 
 // 1. Routes
@@ -125,7 +131,7 @@ for (let i = 0; i < 2; i++) for (const href of loop) solid += await nav(href);
 const after = await gpu();
 check('shader programs constant across 6 route changes', after.programs === before.programs, `${before.programs} → ${after.programs}`);
 check('GPU textures constant across 6 route changes', after.textures === before.textures, `${before.textures} → ${after.textures}`);
-check('geometries constant across 6 route changes', after.geometries === before.geometries, `${before.geometries} → ${after.geometries}`);
+check('no geometry rebuilt across 6 route changes', after.geometries === before.geometries, `${before.geometryCount} → ${after.geometryCount} objects`);
 check('every covered frame keeps the badge aperture', solid === 0, `${solid} solid frames`);
 
 await browser.close();
