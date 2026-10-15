@@ -18,10 +18,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/media/og-diwali.png',
-        width: 1200,
-        height: 630,
-        alt: site.diwali.teaser.alt,
+        url: '/media/dhamaaka-flyer.png',
+        width: 1080,
+        height: 1350,
+        alt: site.diwali.poster?.alt || site.diwali.teaser.alt,
       },
     ],
   },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: site.diwali.meta.title,
     description: site.diwali.meta.description,
-    images: ['/media/og-diwali.png'],
+    images: ['/media/dhamaaka-flyer.png'],
   },
 }
 

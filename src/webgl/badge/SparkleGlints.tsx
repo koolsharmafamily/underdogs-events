@@ -71,15 +71,31 @@ export function SparkleGlints({ active }: SparkleGlintsProps) {
     if (!active || !groupRef.current) return;
     const t = frame.time;
 
+    // Calculate raw intensity for each glint
+    const intensities = glintPoints.map((p) => {
+      const wave = Math.sin(t * (p.speed * 0.75) + p.phase);
+      return Math.pow(Math.max(0, wave), 6);
+    });
+
+    // Ensure max 3 visible at once
+    const sortedIndices = intensities
+      .map((val, idx) => ({ val, idx }))
+      .sort((a, b) => b.val - a.val);
+    const activeSet = new Set(
+      sortedIndices.slice(0, 3).filter((item) => item.val > 0.15).map((item) => item.idx)
+    );
+
     for (let i = 0; i < glintPoints.length; i++) {
-      const p = glintPoints[i];
       const m = glintMeshes.current[i];
       if (m) {
-        // Twinkle pulse: mostly subtle, spikes sharply
-        const wave = Math.sin(t * p.speed + p.phase);
-        const intensity = Math.pow(Math.max(0, wave), 4);
-        m.scale.setScalar(0.03 + intensity * 0.09);
-        m.rotation.z = t * 0.5 + p.phase;
+        if (activeSet.has(i)) {
+          m.visible = true;
+          const intensity = intensities[i];
+          m.scale.setScalar(0.015 + intensity * 0.045);
+          m.rotation.z = t * 0.4 + glintPoints[i].phase;
+        } else {
+          m.visible = false;
+        }
       }
     }
   });

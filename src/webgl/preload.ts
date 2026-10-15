@@ -23,13 +23,6 @@ export function preloadWorldAssets(world: WorldId) {
   } else if (world === "diwali") {
     void import("./diwali/DiwaliSet");
     useGLTF.preload("/models/badge-jewelled.glb");
-    useGLTF.preload("/models/curtain-open-diwali.glb");
-    useGLTF.preload("/models/diwali-kandil.glb");
-    useGLTF.preload("/models/diwali-diya-brass.glb");
-    useGLTF.preload("/models/diwali-diya-terracotta.glb");
-    useGLTF.preload("/models/diwali-rose-petal.glb");
-    useGLTF.preload("/models/diwali-marigold.glb");
-    useGLTF.preload("/models/diwali-card.glb");
     useTexture.preload("/media/diwali-teaser.webp");
   } else if (world === "home") {
     void import("./home/HomeStage");
@@ -39,12 +32,23 @@ export function preloadWorldAssets(world: WorldId) {
   }
 }
 
+export function preloadAllBadges() {
+  if (typeof window === "undefined") return;
+  useGLTF.preload("/models/badge-enamel.glb");
+  useGLTF.preload("/models/badge-neon.glb");
+  useGLTF.preload("/models/badge-jewelled.glb");
+}
+
 export function preloadRouteWorld(href: string) {
   if (href.startsWith("/the-red-room")) {
     preloadWorldAssets("redroom");
+    useGLTF.preload("/models/badge-neon.glb");
   } else if (href.startsWith("/diwali")) {
     preloadWorldAssets("diwali");
+    useGLTF.preload("/models/badge-jewelled.glb");
   } else {
     preloadWorldAssets("home");
+    useGLTF.preload("/models/badge-enamel.glb");
   }
 }
+

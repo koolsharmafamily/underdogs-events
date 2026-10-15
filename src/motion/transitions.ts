@@ -130,10 +130,7 @@ function resetStageComplete() {
   if (stageRefs?.washEl) gsap.set(stageRefs.washEl, { opacity: 0 });
   if (stageRefs?.curtainWrapEl)
     gsap.set(stageRefs.curtainWrapEl, { visibility: "hidden" });
-  if (stageRefs?.leftCurtainEl && stageRefs?.rightCurtainEl) {
-    stageRefs.leftCurtainEl.classList.remove("transition-curtain-diwali");
-    stageRefs.rightCurtainEl.classList.remove("transition-curtain-diwali");
-  }
+
   if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 });
 
   const mainEl =
@@ -459,7 +456,7 @@ export function runRouteTransition(
     if (typeof window !== "undefined") {
       pendingEnterFallbackTimer = window.setTimeout(() => {
         tryProceedEnter(true);
-      }, 10000);
+      }, 1200);
     }
 
     onCover();
@@ -471,7 +468,7 @@ export function runRouteTransition(
   const isCurtainTransition =
     motionEnabled &&
     !options.isPopState &&
-    (isTargetRedRoom || isTargetDiwali || type === "T1" || type === "T2" || type === "T3");
+    (isTargetRedRoom || type === "T1");
 
   const outDur = !motionEnabled
     ? 0.15
@@ -495,15 +492,7 @@ export function runRouteTransition(
   frame.transition.duration = outDur + inDur;
   frame.transition.coverTime = outDur;
 
-  // Apply world-specific curtain color: Diwali pink vs Red Room red
   if (leftCurtainEl && rightCurtainEl) {
-    if (isTargetDiwali) {
-      leftCurtainEl.classList.add("transition-curtain-diwali");
-      rightCurtainEl.classList.add("transition-curtain-diwali");
-    } else {
-      leftCurtainEl.classList.remove("transition-curtain-diwali");
-      rightCurtainEl.classList.remove("transition-curtain-diwali");
-    }
     gsap.set(leftCurtainEl, { xPercent: -101 });
     gsap.set(rightCurtainEl, { xPercent: 101 });
   }
@@ -517,8 +506,13 @@ export function runRouteTransition(
       frame.transition.t = this.time() / (outDur + inDur);
     },
     onComplete: () => {
-      gsap.set(veilEl, { opacity: 1 });
-      if (washEl) gsap.set(washEl, { opacity: 0 });
+      if (isTargetDiwali && washEl) {
+        gsap.set(washEl, { opacity: 1 });
+        gsap.set(veilEl, { opacity: 0 });
+      } else {
+        gsap.set(veilEl, { opacity: 1 });
+        if (washEl) gsap.set(washEl, { opacity: 0 });
+      }
       store.setTargetSkinOverride(destSkin);
       triggerCoverAndWaitForMount(() => {
         frame.transition.phase = "enter";
@@ -534,7 +528,7 @@ export function runRouteTransition(
         });
         if (
           motionEnabled &&
-          (isTargetRedRoom || isTargetDiwali) &&
+          isTargetRedRoom &&
           !options.isPopState &&
           curtainWrapEl &&
           leftCurtainEl &&
@@ -555,6 +549,13 @@ export function runRouteTransition(
           );
         } else {
           if (curtainWrapEl) gsap.set(curtainWrapEl, { visibility: "hidden" });
+          if (isTargetDiwali && washEl) {
+            enterTl.to(
+              washEl,
+              { opacity: 0, duration: inDur * 0.9, ease: "power2.out" },
+              0,
+            );
+          }
           enterTl.to(
             veilEl,
             { opacity: 0, duration: inDur, ease: "ease.out" },
@@ -576,6 +577,13 @@ export function runRouteTransition(
       { dollyProgress: 1, duration: outDur * 0.75, ease: "ease.inOut" },
       outDur * 0.25,
     );
+    if (type === "T2" && washEl) {
+      exitTl.to(
+        washEl,
+        { opacity: 1, duration: outDur * 0.45, ease: "power2.in" },
+        outDur * 0.35,
+      );
+    }
   } else if (motionEnabled && type === "T4") {
     exitTl.to(
       frame.transition,
@@ -588,6 +596,12 @@ export function runRouteTransition(
       { badgeFlip: 1, duration: outDur, ease: "ease.inOut" },
       0,
     );
+    if (isTargetDiwali && veilEl) {
+      exitTl
+        .to(veilEl, { opacity: 0.85, duration: 0.04 }, 0.08)
+        .to(veilEl, { opacity: 0.25, duration: 0.04 }, 0.12)
+        .to(veilEl, { opacity: 0.9, duration: 0.04 }, 0.16);
+    }
   }
   const coverStart = isCurtainTransition
     ? Math.max(0, outDur - 0.55)

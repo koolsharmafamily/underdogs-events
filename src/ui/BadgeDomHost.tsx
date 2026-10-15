@@ -5,6 +5,7 @@ import { useStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
 import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
 import { coinSpin } from "@/webgl/badge/coinPhysics";
+import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
 
 interface BadgeDomHostProps {
   skin: WorldId;
@@ -32,7 +33,20 @@ export function BadgeDomHost({
   const [blinkL, setBlinkL] = useState(false);
   const [blinkR, setBlinkR] = useState(false);
   const [tongueAngle, setTongueAngle] = useState(0);
+  const [badge3DReady, setBadge3DReady] = useState(false);
   const blinkCountRef = useRef(0);
+
+  useEffect(() => {
+    const target = skin === "diwali" ? "jewelled" : skin === "redroom" ? "neon" : "enamel";
+    const check = () => {
+      if (badgeScreenBounds.ready && badgeScreenBounds.readySkin === target) {
+        setBadge3DReady(true);
+      }
+    };
+    check();
+    const interval = setInterval(check, 50);
+    return () => clearInterval(interval);
+  }, [skin]);
 
   // Pointer drag/swipe tracking refs
   const pointerActiveRef = useRef(false);
@@ -181,33 +195,57 @@ export function BadgeDomHost({
           : undefined,
       }}
     >
-      {isVisible &&
-        (skin === "home" && !showSvgPreview ? (
-          <picture className="w-full h-full flex items-center justify-center pointer-events-none">
-            <source
-              srcSet="/media/badge-enamel-still.webp"
-              media="(min-width: 769px)"
-            />
-            <source
-              srcSet="/media/badge-enamel-still-512.webp"
-              media="(max-width: 768px)"
-            />
+      {/* 2D Fallback Stills when 3D WebGL is compiling or when tier === T0 */}
+      {(!badge3DReady || isVisible) && (
+        <div
+          className={`absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
+            badge3DReady && !isVisible ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          {skin === "diwali" ? (
             <img
-              src="/media/badge-enamel-still.webp"
-              alt="Underdogs Enamel Badge"
-              className="w-full h-full object-contain select-none pointer-events-none drop-shadow-[0_12px_40px_rgba(173,12,128,0.25)]"
+              src="/media/badge-jewelled-still.webp"
+              alt="Underdogs Jewelled Badge"
+              width={512}
+              height={512}
+              className="w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(224,33,122,0.35)]"
             />
-          </picture>
-        ) : (
-          <UnderdogsBadgeSvg
-            skin={skin}
-            size="100%"
-            blinkingLeft={blinkL}
-            blinkingRight={blinkR}
-            tongueAngle={tongueAngle}
-            className="drop-shadow-[0_0_48px_rgba(255,255,255,0.08)] pointer-events-none"
-          />
-        ))}
+          ) : skin === "redroom" ? (
+            <img
+              src="/media/badge-neon-still.webp"
+              alt="Underdogs Neon Badge"
+              width={512}
+              height={512}
+              className="w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43,0.35)]"
+            />
+          ) : !showSvgPreview ? (
+            <picture className="w-full h-full flex items-center justify-center">
+              <source
+                srcSet="/media/badge-enamel-still.webp"
+                media="(min-width: 769px)"
+              />
+              <source
+                srcSet="/media/badge-enamel-still-512.webp"
+                media="(max-width: 768px)"
+              />
+              <img
+                src="/media/badge-enamel-still.webp"
+                alt="Underdogs Enamel Badge"
+                className="w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,128,0.25)]"
+              />
+            </picture>
+          ) : (
+            <UnderdogsBadgeSvg
+              skin={skin}
+              size="100%"
+              blinkingLeft={blinkL}
+              blinkingRight={blinkR}
+              tongueAngle={tongueAngle}
+              className="drop-shadow-[0_0_48px_rgba(255,255,255,0.08)] pointer-events-none"
+            />
+          )}
+        </div>
+      )}
     </button>
   );
 }

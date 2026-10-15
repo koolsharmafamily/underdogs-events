@@ -36,19 +36,16 @@ export function PostFX() {
     chromOffset.set(ca, ca * 0.5);
   });
 
-  // Skip composer on tier 1 and tier 0 per Part 5.5
-  if (!settings.hasComposer) {
+  // Skip composer on tier 1 and tier 0 per Part 5.5, and on diwali for pure alpha transparency
+  if (!settings.hasComposer || world === "diwali") {
     return null;
   }
 
   // Tuned parameters for balanced, authentic bloom
-  const bloomIntensity =
-    world === "redroom" ? 0.38 : world === "diwali" ? 0.30 : 0.22;
-  const bloomThreshold =
-    world === "redroom" ? 1.05 : 1.15;
+  const bloomIntensity = world === "redroom" ? 0.38 : 0.22;
+  const bloomThreshold = world === "redroom" ? 1.05 : 1.15;
   const luminanceSmoothing = 0.3;
-  const vignetteDarkness =
-    world === "redroom" ? 0.65 : world === "diwali" ? 0.35 : 0.45;
+  const vignetteDarkness = world === "redroom" ? 0.65 : 0.45;
 
   return (
     <EffectComposer multisampling={4}>

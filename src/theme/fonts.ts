@@ -8,6 +8,7 @@ import {
   Manrope,
   JetBrains_Mono,
   Nosifer,
+  Playfair_Display,
 } from 'next/font/google'
 
 export const unbounded = Unbounded({
@@ -92,6 +93,15 @@ export const nosifer = Nosifer({
   adjustFontFallback: false,
 })
 
+export const playfairDisplay = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['700', '900'],
+  display: 'swap',
+  variable: '--font-playfair',
+  preload: false,
+  adjustFontFallback: true,
+})
+
 export const coreFontVariables = [
   unbounded.variable,
   cinzel.variable,
@@ -109,4 +119,5 @@ export const redRoomFontVariables = [
 export const diwaliFontVariables = [
   bodoniModa.variable,
   tiroDevanagari.variable,
+  playfairDisplay.variable,
 ].join(' ')

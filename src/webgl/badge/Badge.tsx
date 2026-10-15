@@ -123,20 +123,27 @@ function BadgeSkinMesh({
   uniforms,
   backTexture,
   preparedMapRef,
+  onCompiled,
 }: {
   url: string;
   skinName: SkinId;
   uniforms: DissolveUniforms;
   backTexture: THREE.CanvasTexture | null;
   preparedMapRef: React.MutableRefObject<Record<SkinId, PreparedScene | null>>;
+  onCompiled?: (skin: SkinId) => void;
 }) {
+  const { gl, camera } = useThree();
   const gltf = useGLTF(url);
-  const prepared = useMemo(
-    () => prepareBadgeScene(gltf.scene, uniforms, backTexture, skinName),
-    [gltf.scene, uniforms, backTexture, skinName],
-  );
-
-  preparedMapRef.current[skinName] = prepared;
+  const prepared = useMemo(() => {
+    const p = prepareBadgeScene(gltf.scene, uniforms, backTexture, skinName);
+    preparedMapRef.current[skinName] = p;
+    if (gl && p.clone) {
+      gl.compileAsync(p.clone, camera)
+        .then(() => onCompiled?.(skinName))
+        .catch(() => onCompiled?.(skinName));
+    }
+    return p;
+  }, [gltf.scene, uniforms, backTexture, skinName, gl, camera, onCompiled, preparedMapRef]);
 
   return <primitive object={prepared.clone} />;
 }
@@ -173,7 +180,8 @@ export function Badge({
     world === "redroom" ? "neon" : world === "diwali" ? "jewelled" : "enamel";
   const targetSkin: SkinId = targetSkinOverride ?? worldSkin;
 
-  // Only mount the active skin on initial load so we don't block on 4.2MB of other worlds' badges
+  // Mount the active skin immediately on initial load.
+  // Then background/idle mounts all three skins so switching is instant with no shader compile.
   const [mountedSkins, setMountedSkins] = useState<Record<SkinId, boolean>>(
     () => ({
       enamel: targetSkin === "enamel",
@@ -186,7 +194,21 @@ export function Badge({
     setMountedSkins((prev) =>
       prev[targetSkin] ? prev : { ...prev, [targetSkin]: true },
     );
+    badgeScreenBounds.readySkin = null;
   }, [targetSkin]);
+
+  useEffect(() => {
+    const mountAll = () => {
+      setMountedSkins({ enamel: true, neon: true, jewelled: true });
+    };
+    if (typeof window !== "undefined") {
+      if ("requestIdleCallback" in window) {
+        (window as any).requestIdleCallback(mountAll);
+      } else {
+        setTimeout(mountAll, 300);
+      }
+    }
+  }, []);
 
   // Lifecycle state tracking via REFS ONLY (zero React re-renders mid-transition)
   const activeSkinRef = useRef<SkinId>(targetSkin);
@@ -550,16 +572,17 @@ export function Badge({
       const d4 = frame.dampedProgress["D4"] ?? frame.dampedProgress["d4"] ?? 0;
       const d5 = frame.dampedProgress["D5"] ?? frame.dampedProgress["d5"] ?? 0;
 
-      const targetScale = isMobile ? 0.66 : 0.8;
+      // Prominent crown above DHAMAAKA: 0.88 on desktop, 0.72 on mobile
+      const targetScale = isMobile ? 0.72 : 0.88;
 
       if (d5 > 0.05) {
         // D5: Outro — badge returns in upper stage above outro text
-        const t = THREE.MathUtils.smoothstep(d5, 0, 0.5);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(0.3, 2.35, t), 0);
-        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.7, t);
+        const t = THREE.MathUtils.smoothstep(d5, 0.05, 0.45);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(1.2, 2.35, t), 0.6);
+        choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.75, t);
       } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
-        // D1: Hero jewelled badge in upper stage (y = 2.28, above camera lookAt y = 1.9) so it sits cleanly above the "Diwali" title
-        choreoPos.current.set(0, 2.28, 0);
+        // D1: Hero jewelled badge prominent above DHAMAAKA title
+        choreoPos.current.set(0, isMobile ? 2.05 : 2.22, 0.6);
         choreoScale.current = THREE.MathUtils.damp(
           choreoScale.current,
           targetScale,
@@ -567,9 +590,9 @@ export function Badge({
           delta,
         );
       } else {
-        // D2, D3, D4: Descend & hide badge to clear stage for story text, sky fireworks, and 3D card
+        // D2, D3, D4: Lift badge out of frame to clear stage for story cards and invitation
         const t = d2 > 0 ? 1 : THREE.MathUtils.smoothstep(d1, 0.7, 0.95);
-        choreoPos.current.set(0, THREE.MathUtils.lerp(2.28, 0.3, t), 0);
+        choreoPos.current.set(0, THREE.MathUtils.lerp(2.22, 4.0, t), 0.6);
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       }
       choreoYaw.current = THREE.MathUtils.damp(choreoYaw.current, 0, 8, delta);
@@ -591,13 +614,13 @@ export function Badge({
           choreoPos.current.set(1.75, 1.8, 0);
           choreoScale.current = isTablet ? 1.35 : 1.9;
         }
-      } else {
-        choreoPos.current.set(
-          0,
-          world === "redroom" ? 2.22 : 2.38,
-          world === "redroom" ? 0.6 : 0,
-        );
+      } else if (world === "redroom") {
+        choreoPos.current.set(0, 2.22, 0.6);
         choreoScale.current = isMobile ? 0.84 : 1.85;
+      } else {
+        // Diwali: Prominent jewelled badge positioned above DHAMAAKA in D1
+        choreoPos.current.set(0, isMobile ? 2.05 : 2.22, 0.6);
+        choreoScale.current = isMobile ? 0.72 : 0.88;
       }
     } else if (composition.scene === "H2") {
       if (world === "home" && isMobile) {
@@ -607,9 +630,12 @@ export function Badge({
         choreoScale.current = isMobile ? 0.7 : 1.6;
         choreoYaw.current = 0.12;
       }
-    } else if (composition.scene === "R6" || composition.scene === "D5") {
-      choreoPos.current.set(0, 2.75, world === "redroom" ? 0.6 : 0);
+    } else if (composition.scene === "R6") {
+      choreoPos.current.set(0, 2.75, 0.6);
       choreoScale.current = isMobile ? 0.55 : 0.85;
+    } else if (composition.scene === "D5") {
+      choreoPos.current.set(0, 2.35, 0.6);
+      choreoScale.current = isMobile ? 0.45 : 0.55;
     }
 
     // One continuous badge move: exit to the centre, hold while assets prepare,
@@ -688,7 +714,10 @@ export function Badge({
     badgeScreenBounds.y = (-screenCenter.y * 0.5 + 0.5) * size.height;
     badgeScreenBounds.size =
       Math.abs(screenEdge.x - screenCenter.x) * size.width;
-    badgeScreenBounds.ready = true;
+    if (activePrepared && rootRef.current.visible) {
+      badgeScreenBounds.ready = true;
+      badgeScreenBounds.readySkin = activeSkinRef.current;
+    }
     // 7. Neon emissive flicker (Red Room) preserving original GLB emissiveIntensity ratio without white-clipping
     const neonPrep = preparedMapRef.current.neon;
     if (
@@ -729,8 +758,6 @@ export function Badge({
 
   const handlePointerMove = (e: any) => {
     if (!coinSpin.isDragging) return;
-    const clientX = e.clientX ?? 0;
-    const clientY = e.clientY ?? 0;
     coinSpin.onPointerMove(e.movementX ?? 0, e.movementY ?? 0, 16);
   };
 

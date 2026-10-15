@@ -15,6 +15,8 @@ import { AnnouncingSoon } from "@/ui/AnnouncingSoon";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { DomTwins } from "@/webgl/tracking/DomTwins";
+import { MobileHomeFeed } from "./MobileHomeFeed";
+
 
 export function HomeView() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -89,13 +91,20 @@ export function HomeView() {
 
   return (
     <main id="main-content" className="relative z-10">
-      {/* H1 · Hero, "Gate to Rage" (120vh desktop, ×0.85 mobile, pinned) */}
-      <section
-        ref={h1Ref}
-        data-scene="H1"
-        aria-label={site.home.hero.title}
-        className="scene-section scene-h1"
-      >
+      {/* Mobile App Feed (< 768px) */}
+      <div className="block md:hidden">
+        <MobileHomeFeed />
+      </div>
+
+      {/* Desktop & Tablet Stages (≥ 768px) — Untouched */}
+      <div className="hidden md:block">
+        {/* H1 · Hero, "Gate to Rage" (120vh desktop, ×0.85 mobile, pinned) */}
+        <section
+          ref={h1Ref}
+          data-scene="H1"
+          aria-label={site.home.hero.title}
+          className="scene-section scene-h1"
+        >
         <div className="scene-sticky flex items-center">
           <div className="site-container site-grid w-full h-full items-center">
             {/* Mobile badge in upper 55%, Desktop badge on right centred at 62% width */}
@@ -319,18 +328,16 @@ export function HomeView() {
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF70DE]">
                     {site.home.worlds.two.kicker}
                   </span>
-                  <span className="font-bodoni italic text-heading sm:text-display-m font-medium text-[#FFF6EE] leading-[1.05]">
+                  <span className="font-playfair font-black text-heading sm:text-display-m uppercase text-[#FFF6EE] leading-[1.05] tracking-wide drop-shadow-[0_2px_12px_rgba(224,33,122,0.4)]">
                     {site.home.worlds.two.name}
                   </span>
-                  <span
-                    className="font-manrope text-body text-[#FFF6EE]/85"
-                    style={
-                      { "--world-accent": "#FF70DE" } as React.CSSProperties
-                    }
-                  >
-                    {site.home.worlds.two.occasion} ·{" "}
-                    {site.home.worlds.two.date} ·{" "}
-                    <AnnouncingSoon value={site.home.worlds.two.place} />
+                  {site.home.worlds.two.subtitle && (
+                    <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#FFE3A3]/90">
+                      {site.home.worlds.two.subtitle}
+                    </span>
+                  )}
+                  <span className="font-manrope text-body text-[#FFF6EE]/85">
+                    {site.home.worlds.two.occasion} · {site.home.worlds.two.date} · {site.home.worlds.two.place}
                   </span>
                   <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#FF70DE] transition-colors">
                     <span>{site.home.worlds.two.cta}</span>
@@ -359,6 +366,7 @@ export function HomeView() {
 
       {/* H6 · Footer */}
       <Footer />
+      </div>
     </main>
   );
 }

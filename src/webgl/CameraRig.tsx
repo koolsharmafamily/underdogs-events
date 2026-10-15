@@ -126,7 +126,7 @@ export function CameraRig() {
       size.height,
     );
     composition.focusDistance =
-      camera.position.z - (world === "redroom" ? 0.6 : 0);
+      camera.position.z - (world === "redroom" || world === "diwali" ? 0.6 : 0);
   }, -40);
   return null;
 }

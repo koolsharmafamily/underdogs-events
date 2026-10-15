@@ -48,13 +48,15 @@ export const diwaliEventSchema = {
   startDate: '2026-11-07',
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  image: [`${BASE_URL}/media/og-diwali.png`],
+  image: [`${BASE_URL}/media/dhamaaka-flyer.png`],
   location: {
     '@type': 'Place',
-    name: site.brand.city,
+    name: 'Centre Point, Nagpur',
     address: {
       '@type': 'PostalAddress',
+      streetAddress: '24 Central Bazar Road, Ramdaspeth',
       addressLocality: site.brand.city,
+      postalCode: '440010',
       addressCountry: 'IN',
     },
   },

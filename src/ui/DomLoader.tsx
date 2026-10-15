@@ -5,6 +5,8 @@ import { useProgress } from "@react-three/drei";
 import { useStore } from "@/state/store";
 import { registerMotionEases } from "@/motion/eases";
 import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
+import { preloadAllBadges } from "@/webgl/preload";
+
 
 export function DomLoader() {
   const phase = useStore((s) => s.phase),
@@ -38,6 +40,13 @@ export function DomLoader() {
       } catch {}
       const store = useStore.getState();
       store.setLoaderPopped(true);
+      if (typeof window !== "undefined") {
+        if ("requestIdleCallback" in window) {
+          (window as any).requestIdleCallback(() => preloadAllBadges());
+        } else {
+          setTimeout(preloadAllBadges, 200);
+        }
+      }
       const complete = () => {
         setVisible(false);
         store.setPhase("complete");

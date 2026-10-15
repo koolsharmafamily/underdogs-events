@@ -59,6 +59,11 @@ export default function RootLayout({
       className={`${coreFontVariables} ${redRoomFontVariables} ${diwaliFontVariables}`}
     >
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#07090D" />
         <link
           rel="preload"
           as="image"

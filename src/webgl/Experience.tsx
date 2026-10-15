@@ -23,11 +23,14 @@ function RendererGrade() {
   useEffect(() => {
     // Canvas constructor options are not reapplied when adaptive quality drops.
     // Keep the non-composer path on AgX as well as the postprocessed path.
-    gl.toneMapping = settings.hasComposer
+    gl.toneMapping = settings.hasComposer && world !== "diwali"
       ? THREE.NoToneMapping
       : THREE.AgXToneMapping;
     gl.toneMappingExposure =
-      world === "redroom" ? 0.82 : world === "diwali" ? 0.88 : 1;
+      world === "redroom" ? 0.82 : world === "diwali" ? 1.05 : 1;
+    if (world === "diwali") {
+      gl.setClearColor(0x000000, 0);
+    }
   }, [gl, settings.hasComposer, world]);
   return null;
 }
@@ -271,10 +274,13 @@ function CanvasInner() {
 }
 
 export function Experience() {
+  const world = useStore((s) => s.world);
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden"
+      className={`fixed inset-0 pointer-events-none overflow-hidden ${
+        world === "diwali" ? "z-[3]" : "z-0"
+      }`}
     >
       <QualityProvider>
         <CanvasInner />
