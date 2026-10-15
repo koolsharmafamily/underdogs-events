@@ -4,7 +4,7 @@ Working file for `REFINEMENT_BRIEF.md`. Updated as each pass runs.
 
 | Pass | Status |
 |---|---|
-| 1 · Audit (no code changes) | **Done, plan approved** (the last recordings are still rendering into `audit/pass-1/recordings/`) |
+| 1 · Audit (no code changes) | **Done, plan approved.** All transition and phone recordings are in `audit/pass-1/recordings/`. The full-scroll recordings hung on the software renderer and were stopped; Pass 1 has screenshots of every scene, and full scrolls are recorded on the Pass 2 build instead. |
 | 2 · Stability and smoothness | **In progress** (see "Pass 2 progress" below) |
 | 3 · Art direction | — |
 | 4 · Motion and interaction | — |
@@ -79,7 +79,7 @@ Pass 2 runs in an isolated copy of the tree (own `public/` and build) so the Pas
 - [x] Read REFINEMENT_BRIEF.md, BRIEF.md, `src/content/site.ts` and the code behind every §2 item
 - [x] Production build: `next build` and `tsc --noEmit` pass. The project has **no lint script and no tests**.
 - [x] Desktop (1440×900) and phone (390×844) screenshots of every scene; Android T1 spot checks
-- [ ] Recordings: transitions, tab switches and full scrolls (rendering; each lands in `recordings/` when done)
+- [x] Recordings: transitions, tab switches, phone flows (full scrolls stopped: see the status table)
 - [x] §2 known issues verified one by one, plus a live scene probe (materials, fog, grounding, lights)
 - [x] Metrics: draw calls, programs, triangles, textures and geometries over 20 route changes, CLS, bytes (Slow 4G phone vitals rendering)
 - [x] Scene scores and prioritised plan

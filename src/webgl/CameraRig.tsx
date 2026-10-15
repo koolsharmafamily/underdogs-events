@@ -14,7 +14,7 @@ const SHOTS: Record<string, number[][]> = {
     [0, 1.75, 7],
     [0, 1.8, 6.85],
     // Doors: pulled back and raised so both doors end above their captions.
-    [0, 1.6, 8.6, 0.125],
+    [0, 1.6, 8.6, 0.14],
   ],
   redroom: [
     [0, 1.85, 7.8],
