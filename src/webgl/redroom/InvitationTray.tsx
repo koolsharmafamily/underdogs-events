@@ -98,7 +98,7 @@ export function InvitationTray() {
     const p4 = frame.dampedProgress["R4"] ?? 0;
     const p5 = frame.dampedProgress["R5"] ?? 0;
     if (stageRef.current)
-      stageRef.current.visible = composition.scene === "R4" && p4 < 0.48;
+      stageRef.current.visible = composition.scene === "R4" && p4 < 0.44;
 
     // 1. Seal_Shard_1..3 + Seal_Crumbs crack (25% -> 40% of R4)
     const crackP = !motionEnabled

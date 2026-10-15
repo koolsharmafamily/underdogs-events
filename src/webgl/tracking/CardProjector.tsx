@@ -60,8 +60,9 @@ export function CardProjector() {
       THREE.MathUtils.lerp(startTop, endTop, easedRise) + exitShiftY;
     const currentLeft = (width - targetCardWidth) * 0.5;
 
-    // Fade in overlay text between 48% and 62% so card is 100% solid for the entire open stage
-    const fadeP = THREE.MathUtils.clamp((p4 - 0.38) / 0.1, 0, 1);
+    // A quick crossfade (38–43%): the card is opaque before the 3D tray goes
+    // (InvitationTray hides at 44%), so the two never double-expose.
+    const fadeP = THREE.MathUtils.clamp((p4 - 0.38) / 0.05, 0, 1);
     const r5Fade = 1 - THREE.MathUtils.clamp(p5 / 0.2, 0, 1);
     const finalOpacity = fadeP * r5Fade * exitFade;
     const isHeld = p4 > 0.6 && p5 < 0.05 && exitFade > 0.5;

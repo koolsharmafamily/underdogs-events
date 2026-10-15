@@ -36,7 +36,10 @@ export function CameraRig() {
   const { camera, size } = useThree();
   const world = useStore((s) => s.world);
   const motionEnabled = useStore((s) => s.motionEnabled);
-  const sections = useRef<{ id: string; top: number; height: number }[]>([]);
+  // shot: index into SHOTS. Numbered scenes take the next shot; extra sections
+  // (the DJ sections, R-DJ / D-DJ) keep the shot of the scene before them, so
+  // they never shift which shot (and which composition.scene) a scene gets.
+  const sections = useRef<{ id: string; top: number; height: number; shot: number }[]>([]);
   const position = useRef(new THREE.Vector3(0, 1.75, 7));
   const target = useRef(new THREE.Vector3());
   useEffect(() => {
@@ -50,7 +53,13 @@ export function CameraRig() {
           id: el.dataset.scene!,
           top: el.getBoundingClientRect().top + window.scrollY,
           height: el.offsetHeight,
+          shot: 0,
         }));
+      let shot = -1;
+      for (const section of sections.current) {
+        if (/\d$/.test(section.id) || shot < 0) shot++;
+        section.shot = shot;
+      }
     };
     measure();
     const observer = new ResizeObserver(measure);
@@ -72,8 +81,9 @@ export function CameraRig() {
     for (let i = 1; i < sections.current.length; i++) {
       if (scroll >= sections.current[i].top - size.height * 0.25) index = i;
     }
-    index = Math.min(index, shots.length - 1);
     const section = sections.current[index];
+    const shotOf = (i: number) =>
+      Math.min(sections.current[i]?.shot ?? 0, shots.length - 1);
     const blend =
       index === 0 || !section
         ? 1
@@ -82,8 +92,8 @@ export function CameraRig() {
             section.top - size.height * 0.25,
             section.top,
           );
-    const from = shots[Math.max(0, index - 1)];
-    const to = shots[index];
+    const from = shots[shotOf(Math.max(0, index - 1))];
+    const to = shots[shotOf(index)];
     target.current.set(
       THREE.MathUtils.lerp(from[0], to[0], blend),
       THREE.MathUtils.lerp(from[1], to[1], blend),
