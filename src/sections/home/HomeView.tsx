@@ -15,7 +15,7 @@ import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { DomTwins } from "@/webgl/tracking/DomTwins";
 import { MobileHomeFeed } from "./MobileHomeFeed";
-
+import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
 
 export function HomeView() {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -24,6 +24,8 @@ export function HomeView() {
   const hoverDoor = useStore((s) => s.hoverDoor);
   const setHoverDoor = useStore((s) => s.setHoverDoor);
   const setWorld = useStore((s) => s.setWorld);
+  const tier = useStore((s) => s.tier);
+  const isFallbackTier = tier === "T0" || tier === "T1";
 
   useEnterTransition("home");
 
@@ -34,13 +36,13 @@ export function HomeView() {
 
   const h1Ref = useRef<HTMLElement>(null);
   const h2Ref = useRef<HTMLElement>(null);
-  const h4Ref = useRef<HTMLElement>(null);
   const h5Ref = useRef<HTMLElement>(null);
 
   useSceneProgress("H1", h1Ref);
   useSceneProgress("H2", h2Ref);
-  useSceneProgress("H4", h4Ref);
   useSceneProgress("H5", h5Ref);
+
+  const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
 
   const [heroTextVisible, setHeroTextVisible] = useState(true);
   const [activeStatement, setActiveStatement] = useState(0);
@@ -236,235 +238,241 @@ export function HomeView() {
         </div>
       </section>
 
-      {/* H4 · This season: Framed Diptych of the Two Official Posters */}
-      <section
-        ref={h4Ref}
-        data-scene="H4"
-        aria-label={site.home.season.label}
-        className="scene-section scene-h4 py-24 sm:py-32 relative z-20"
-      >
-        <div className="site-container flex flex-col items-center gap-10 sm:gap-14">
-          <div className="flex flex-col items-center text-center gap-3 max-w-[700px]">
-            <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.24em] text-[var(--steel)]">
-              {site.home.season.label}
-            </span>
-            <h2 className="font-unbounded text-[clamp(24px,3.2vw,48px)] leading-[1.08] font-extrabold uppercase text-[var(--paper)] balance-heading">
-              {site.home.season.lines.join(" ")}
-            </h2>
-            <p className="font-cinzel text-[13px] sm:text-[14px] uppercase tracking-[0.26em] text-[var(--world-accent)]">
-              {site.home.season.tagline}
-            </p>
-          </div>
-
-          {/* Framed Diptych: Left = The Red Room, Right = DHAMAAKA */}
-          <div className="site-grid w-full gap-8 lg:gap-12 items-stretch max-w-[1080px]">
-            {/* World One Card / Framed Poster */}
-            <div className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col">
-              <TransitionLink
-                href={site.home.worlds.one.href}
-                transitionType="T1"
-                origin="door"
-                aria-label={`Explore ${site.home.worlds.one.name} — ${site.home.worlds.one.occasion}`}
-                className="group relative flex flex-col h-full rounded-sm border border-[#8B1414]/60 bg-[#0A0203]/90 p-4 sm:p-6 transition-all duration-500 hover:border-[#FF2A1F] hover:shadow-[0_12px_40px_rgba(255,42,31,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F]"
-              >
-                <div className="relative aspect-[4/5] w-full overflow-hidden border border-[#8B1414]/40 bg-[#060101]">
-                  <Image
-                    src="/media/red-room-poster.webp"
-                    alt="The Red Room — Official Halloween Poster"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 500px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#060101] via-transparent to-transparent opacity-60" />
-                </div>
-                <div className="flex flex-col gap-2 pt-5">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
-                    {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
-                  </span>
-                  <h3 className="font-cinzel font-black text-[clamp(20px,2vw,28px)] uppercase text-[#FCF9FC] tracking-[0.04em] group-hover:text-[#FF2A1F] transition-colors">
-                    {site.home.worlds.one.name}
-                  </h3>
-                  <span className="font-manrope text-[13px] sm:text-[14px] text-[#FCF9FC]/75">
-                    {site.home.worlds.one.date} · {site.home.worlds.one.place}
-                  </span>
-                  <div className="mt-2 inline-flex items-center gap-2 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF2A1F]">
-                    <span>{site.home.worlds.one.cta}</span>
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </div>
-                </div>
-              </TransitionLink>
-            </div>
-
-            {/* World Two Card / Framed Poster */}
-            <div className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col">
-              <TransitionLink
-                href={site.home.worlds.two.href}
-                transitionType="T2"
-                origin="door"
-                aria-label={`Explore ${site.home.worlds.two.name} — ${site.home.worlds.two.subtitle}`}
-                className="group relative flex flex-col h-full rounded-sm border border-[#E5B25D]/50 bg-[#0E0608]/90 p-4 sm:p-6 transition-all duration-500 hover:border-[#FFE3A3] hover:shadow-[0_12px_40px_rgba(229,178,93,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
-              >
-                <div className="relative aspect-[4/5] w-full overflow-hidden border border-[#E5B25D]/40 bg-[#0A0305]">
-                  <Image
-                    src="/media/dhamaaka-flyer.webp"
-                    alt="DHAMAAKA — Official Premiere Flyer"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 500px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0305] via-transparent to-transparent opacity-60" />
-                </div>
-                <div className="flex flex-col gap-2 pt-5">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#E5B25D]">
-                    {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
-                  </span>
-                  <h3 className="font-playfair font-black text-[clamp(20px,2vw,28px)] uppercase bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(224,33,122,0.6)] tracking-wide">
-                    {site.home.worlds.two.name}
-                  </h3>
-                  <span className="font-manrope text-[13px] sm:text-[14px] text-[#FFF6EE]/75">
-                    {site.home.worlds.two.date} · {site.home.worlds.two.place}
-                  </span>
-                  <div className="mt-2 inline-flex items-center gap-2 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]">
-                    <span>{site.home.worlds.two.cta}</span>
-                    <span className="transition-transform group-hover:translate-x-1">→</span>
-                  </div>
-                </div>
-              </TransitionLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* H5 · The doors */}
+      {/* H5 · The doors (Hero Climax: Doors with Ghosted Flyer Backdrops) */}
       <section
         ref={h5Ref}
         data-scene="H5"
         aria-label={site.home.worlds.label}
         className="scene-section scene-h5"
       >
-        {/* DOM Twins for screen-projected keyboard & hover interaction (Part 7 H5) */}
+        {/* DOM Twins for screen-projected keyboard & hover interaction */}
         <DomTwins />
 
-        {/* Above the door twins (sticky makes its own stacking context), but
-            click-through except for the captions themselves. */}
-        <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-end pt-20 pb-12 lg:py-16">
+        {/* Sticky viewport container: Season Intro at top, Doors in center, Captions at bottom */}
+        <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-between pt-12 pb-8 lg:pt-12 lg:pb-10">
           <h2 className="sr-only">{site.home.worlds.label}</h2>
+
+          {/* Season intro header moved from H4 */}
+          <div className="site-container flex flex-col items-center text-center gap-1.5 max-w-[720px] mx-auto pointer-events-auto">
+            <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.24em] text-[var(--steel)]">
+              {site.home.season.label}
+            </span>
+            <h2 className="font-unbounded text-[clamp(20px,2.4vw,34px)] leading-[1.1] font-extrabold uppercase text-[var(--paper)] balance-heading">
+              {site.home.season.lines.join(" ")}
+            </h2>
+            <p className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.26em] text-[var(--world-accent)]">
+              {site.home.season.tagline}
+            </p>
+          </div>
 
           {/* Spacer allowing full view of 3D doors rendered in WebGL */}
           <div
-            className="w-full flex-1 pointer-events-none min-h-[30vh] lg:min-h-[38vh]"
+            className="w-full flex-1 pointer-events-none min-h-[14vh] lg:min-h-[18vh]"
             aria-hidden="true"
           />
 
-          <div className="site-container site-grid relative z-30 items-end gap-y-8 pt-4 pb-8 lg:pb-12">
+          <div className="site-container site-grid relative z-30 items-end gap-y-6 pt-2 pb-2 lg:pb-4">
             {/* Door 1: The Red Room */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
+              className={`col-span-4 md:col-span-4 lg:col-span-4 min-[1200px]:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
                 hoverDoor === "diwali" ? "opacity-40" : "opacity-100"
               }`}
             >
-              <TransitionLink
-                data-door-caption="red"
-                href={site.home.worlds.one.href}
-                transitionType="T1"
-                origin="door"
-                aria-label={`Enter ${site.home.worlds.one.kicker}: ${site.home.worlds.one.name}, ${site.home.worlds.one.occasion}, Saturday 24 October 2026`}
-                onMouseEnter={() => setHoverDoor("redroom")}
-                onMouseLeave={() => setHoverDoor(null)}
-                onFocus={() => setHoverDoor("redroom")}
-                onBlur={() => setHoverDoor(null)}
-                className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
-              >
-                {/* Label Block (Part 7 H5) */}
-                <div className="flex flex-col gap-2 text-left">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
-                    {site.home.worlds.one.kicker}
-                  </span>
-                  <span className="font-cinzel font-black text-heading sm:text-display-m uppercase text-[#D20A15] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.7)] leading-[1.1]">
-                    {site.home.worlds.one.name}
-                  </span>
-                  <span className="font-manrope text-body text-[#FCF9FC]/80">
-                    {site.home.worlds.one.occasion} ·{" "}
-                    {site.home.worlds.one.date} · {site.home.worlds.one.place}
-                  </span>
-                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FCF9FC] group-hover:text-[#FF2A1F] transition-colors">
-                    <span>{site.home.worlds.one.cta}</span>
-                    <svg
-                      width="14"
-                      height="10"
-                      viewBox="0 0 14 10"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </span>
+              <div className="relative flex flex-col gap-2">
+                {/* Fallback flyer backdrop for T0/T1 or WebGL off */}
+                {isFallbackTier && (
+                  <div
+                    className="pointer-events-none absolute -inset-x-2 -top-24 bottom-0 -z-10 overflow-hidden opacity-14"
+                    style={{
+                      maskImage:
+                        "radial-gradient(ellipse 70% 60% at 50% 30%, black 50%, transparent 95%), linear-gradient(to bottom, black 70%, transparent 100%)",
+                      WebkitMaskImage:
+                        "radial-gradient(ellipse 70% 60% at 50% 30%, black 50%, transparent 95%), linear-gradient(to bottom, black 70%, transparent 100%)",
+                    }}
+                  >
+                    <Image
+                      src="/media/red-room-poster-1024.webp"
+                      alt=""
+                      fill
+                      className="object-cover object-top blur-[2px]"
+                    />
+                    <div className="absolute inset-0 bg-[#3A0504] mix-blend-color opacity-50" />
+                  </div>
+                )}
+
+                <TransitionLink
+                  data-door-caption="red"
+                  href={site.home.worlds.one.href}
+                  transitionType="T1"
+                  origin="door"
+                  aria-label={`Enter ${site.home.worlds.one.kicker}: ${site.home.worlds.one.name}, ${site.home.worlds.one.occasion}, Saturday 24 October 2026`}
+                  onMouseEnter={() => setHoverDoor("redroom")}
+                  onMouseLeave={() => setHoverDoor(null)}
+                  onFocus={() => setHoverDoor("redroom")}
+                  onBlur={() => setHoverDoor(null)}
+                  className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF2A1F]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F] transition-all duration-300"
+                >
+                  {/* Label Block (Part 7 H5) */}
+                  <div className="flex flex-col gap-2 text-left">
+                    <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
+                      {site.home.worlds.one.kicker}
+                    </span>
+                    <span className="font-cinzel font-black text-heading sm:text-display-m uppercase text-[#D20A15] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.7)] leading-[1.1]">
+                      {site.home.worlds.one.name}
+                    </span>
+                    <span className="font-manrope text-body text-[#FCF9FC]/80">
+                      {site.home.worlds.one.occasion} ·{" "}
+                      {site.home.worlds.one.date} · {site.home.worlds.one.place}
+                    </span>
+                    <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FCF9FC] group-hover:text-[#FF2A1F] transition-colors">
+                      <span>{site.home.worlds.one.cta}</span>
+                      <svg
+                        width="14"
+                        height="10"
+                        viewBox="0 0 14 10"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </TransitionLink>
+
+                {/* Official flyer modal trigger button */}
+                <div className="pt-1 px-1 text-left">
+                  <button
+                    type="button"
+                    onClick={() => setActiveFlyer("redroom")}
+                    className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF2A1F]/70 hover:text-[#FF2A1F] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF2A1F]"
+                  >
+                    View official flyer
+                  </button>
                 </div>
-              </TransitionLink>
+              </div>
             </div>
 
             {/* Door 2: Diwali */}
             <div
-              className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
+              className={`col-span-4 md:col-span-4 lg:col-span-4 min-[1200px]:col-span-6 flex flex-col justify-end transition-opacity duration-500 ${
                 hoverDoor === "redroom" ? "opacity-40" : "opacity-100"
               }`}
             >
-              <TransitionLink
-                data-door-caption="diwali"
-                href={site.home.worlds.two.href}
-                transitionType="T2"
-                origin="door"
-                aria-label={`Enter ${site.home.worlds.two.kicker}: ${site.home.worlds.two.name}, ${site.home.worlds.two.occasion}, Saturday 7 November 2026`}
-                onMouseEnter={() => setHoverDoor("diwali")}
-                onMouseLeave={() => setHoverDoor(null)}
-                onFocus={() => setHoverDoor("diwali")}
-                onBlur={() => setHoverDoor(null)}
-                className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF70DE]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF70DE] transition-all duration-300"
-              >
-                {/* Label Block (Part 7 H5) */}
-                <div className="flex flex-col gap-2 text-left">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF70DE]">
-                    {site.home.worlds.two.kicker}
-                  </span>
-                  <span className="font-playfair font-black text-heading sm:text-display-m uppercase bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent leading-[1.05] tracking-wide drop-shadow-[0_4px_20px_rgba(224,33,122,0.75)]">
-                    {site.home.worlds.two.name}
-                  </span>
-                  {site.home.worlds.two.subtitle && (
-                    <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#FFE3A3]/90">
-                      {site.home.worlds.two.subtitle}
+              <div className="relative flex flex-col gap-2">
+                {/* Fallback flyer backdrop for T0/T1 or WebGL off */}
+                {isFallbackTier && (
+                  <div
+                    className="pointer-events-none absolute -inset-x-2 -top-24 bottom-0 -z-10 overflow-hidden opacity-14"
+                    style={{
+                      maskImage:
+                        "radial-gradient(ellipse 70% 60% at 50% 30%, black 50%, transparent 95%), linear-gradient(to bottom, black 70%, transparent 100%)",
+                      WebkitMaskImage:
+                        "radial-gradient(ellipse 70% 60% at 50% 30%, black 50%, transparent 95%), linear-gradient(to bottom, black 70%, transparent 100%)",
+                    }}
+                  >
+                    <Image
+                      src="/media/dhamaaka-flyer-1024.webp"
+                      alt=""
+                      fill
+                      className="object-cover object-top blur-[2px]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#E0217A] to-[#E5B25D] mix-blend-color opacity-50" />
+                  </div>
+                )}
+
+                <TransitionLink
+                  data-door-caption="diwali"
+                  href={site.home.worlds.two.href}
+                  transitionType="T2"
+                  origin="door"
+                  aria-label={`Enter ${site.home.worlds.two.kicker}: ${site.home.worlds.two.name}, ${site.home.worlds.two.occasion}, Saturday 7 November 2026`}
+                  onMouseEnter={() => setHoverDoor("diwali")}
+                  onMouseLeave={() => setHoverDoor(null)}
+                  onFocus={() => setHoverDoor("diwali")}
+                  onBlur={() => setHoverDoor(null)}
+                  className="group pointer-events-auto flex flex-col gap-3 p-5 sm:p-6 bg-[#06080C]/90 border-t border-[var(--paper)]/25 hover:border-[#FF70DE]/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF70DE] transition-all duration-300"
+                >
+                  {/* Label Block (Part 7 H5) */}
+                  <div className="flex flex-col gap-2 text-left">
+                    <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF70DE]">
+                      {site.home.worlds.two.kicker}
                     </span>
-                  )}
-                  <span className="font-manrope text-body text-[#FFF6EE]/85">
-                    {site.home.worlds.two.occasion} · {site.home.worlds.two.date} · {site.home.worlds.two.place}
-                  </span>
-                  <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#FF70DE] transition-colors">
-                    <span>{site.home.worlds.two.cta}</span>
-                    <svg
-                      width="14"
-                      height="10"
-                      viewBox="0 0 14 10"
-                      fill="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                      />
-                    </svg>
-                  </span>
+                    <span className="font-playfair font-black text-heading sm:text-display-m uppercase bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent leading-[1.05] tracking-wide drop-shadow-[0_4px_20px_rgba(224,33,122,0.75)]">
+                      {site.home.worlds.two.name}
+                    </span>
+                    {site.home.worlds.two.subtitle && (
+                      <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#FFE3A3]/90">
+                        {site.home.worlds.two.subtitle}
+                      </span>
+                    )}
+                    <span className="font-manrope text-body text-[#FFF6EE]/85">
+                      {site.home.worlds.two.occasion} · {site.home.worlds.two.date} · {site.home.worlds.two.place}
+                    </span>
+                    <span className="mt-3 inline-flex items-center gap-3 font-cinzel text-[12px] uppercase tracking-[0.28em] text-[#FFF6EE] group-hover:text-[#FF70DE] transition-colors">
+                      <span>{site.home.worlds.two.cta}</span>
+                      <svg
+                        width="14"
+                        height="10"
+                        viewBox="0 0 14 10"
+                        fill="none"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M1 5H12.5M12.5 5L8.5 1M12.5 5L8.5 9"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </TransitionLink>
+
+                {/* Official flyer modal trigger button */}
+                <div className="pt-1 px-1 text-left">
+                  <button
+                    type="button"
+                    onClick={() => setActiveFlyer("diwali")}
+                    className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]/70 hover:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
+                  >
+                    View official flyer
+                  </button>
                 </div>
-              </TransitionLink>
+              </div>
             </div>
           </div>
 
           <div className="site-container" aria-hidden="true" />
         </div>
       </section>
+
+      {/* Official Flyer Lightbox Modal */}
+      <OfficialFlyerLightbox
+        isOpen={activeFlyer !== null}
+        onClose={() => setActiveFlyer(null)}
+        flyer={
+          activeFlyer === "redroom"
+            ? {
+                src: "/media/red-room-poster.webp",
+                alt: "The Red Room — Official Halloween Poster",
+                title: site.home.worlds.one.name,
+                subtitle: `${site.home.worlds.one.occasion} · ${site.home.worlds.one.date}`,
+                world: "redroom",
+              }
+            : activeFlyer === "diwali"
+              ? {
+                  src: "/media/dhamaaka-flyer.webp",
+                  alt: "DHAMAAKA — Official Premiere Flyer",
+                  title: site.home.worlds.two.name,
+                  subtitle: `${site.home.worlds.two.occasion} · ${site.home.worlds.two.date}`,
+                  world: "diwali",
+                }
+              : null
+        }
+      />
 
       {/* H6 · Footer */}
       <Footer />

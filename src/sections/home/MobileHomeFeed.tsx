@@ -5,9 +5,11 @@ import React, { useRef, useState } from "react";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { useDaysToGo } from "@/utils/useDaysToGo";
+import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
 
 export function MobileHomeFeed() {
   const [activeDot, setActiveDot] = useState(0);
+  const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
   const swipeContainerRef = useRef<HTMLDivElement>(null);
 
   // Track swipe card position for dot indicators
@@ -146,12 +148,35 @@ export function MobileHomeFeed() {
         </div>
 
         <div className="flex flex-col gap-5">
-          {/* Compact Card 1: The Red Room */}
-          <TransitionLink
-            href="/the-red-room"
-            className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/30 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.98] transition-transform"
-          >
-            <div className="flex items-center justify-between">
+          {/* World 1: The Red Room */}
+          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/30 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
+            {/* CSS Flyer Backdrop behind artwork */}
+            <div
+              className="pointer-events-none absolute -inset-2 -z-0 opacity-14 overflow-hidden"
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+              }}
+            >
+              <img
+                src="/media/red-room-poster-1024.webp"
+                alt=""
+                className="w-full h-full object-cover object-top blur-[2px]"
+              />
+              <div className="absolute inset-0 bg-[#3A0504] mix-blend-color opacity-60" />
+            </div>
+
+            {/* Whole tile link */}
+            <TransitionLink
+              href="/the-red-room"
+              className="absolute inset-0 z-10"
+              aria-label={`Explore ${site.home.worlds.one.name} — ${site.home.worlds.one.occasion}`}
+            />
+
+            {/* Header info */}
+            <div className="relative z-10 pointer-events-none flex items-center justify-between">
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35]">
                 {site.home.worlds.one.occasion}
               </span>
@@ -162,7 +187,8 @@ export function MobileHomeFeed() {
               )}
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Artwork + Name in front */}
+            <div className="relative z-10 pointer-events-none flex items-center gap-4">
               <img
                 src="/media/badge-halloween-still.webp"
                 alt="The Red Room badge"
@@ -180,18 +206,55 @@ export function MobileHomeFeed() {
               </div>
             </div>
 
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
-              <span>{site.home.worlds.one.cta}</span>
-              <span>→</span>
+            {/* Bottom Row: Quiet "View official flyer" + CTA */}
+            <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFlyer("redroom");
+                }}
+                className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35]/70 hover:text-[#FF1A35] active:text-[#FF1A35] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF1A35]"
+              >
+                View official flyer
+              </button>
+              <div className="pointer-events-none flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
+                <span>{site.home.worlds.one.cta}</span>
+                <span>→</span>
+              </div>
             </div>
-          </TransitionLink>
+          </div>
 
-          {/* Compact Card 2: DHAMAAKA */}
-          <TransitionLink
-            href="/diwali"
-            className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.98] transition-transform"
-          >
-            <div className="flex items-center justify-between">
+          {/* World 2: DHAMAAKA */}
+          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
+            {/* CSS Flyer Backdrop behind artwork */}
+            <div
+              className="pointer-events-none absolute -inset-2 -z-0 opacity-14 overflow-hidden"
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+              }}
+            >
+              <img
+                src="/media/dhamaaka-flyer-1024.webp"
+                alt=""
+                className="w-full h-full object-cover object-top blur-[2px]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#E0217A] to-[#E5B25D] mix-blend-color opacity-50" />
+            </div>
+
+            {/* Whole tile link */}
+            <TransitionLink
+              href="/diwali"
+              className="absolute inset-0 z-10"
+              aria-label={`Explore ${site.home.worlds.two.name} — ${site.home.worlds.two.subtitle}`}
+            />
+
+            {/* Header info */}
+            <div className="relative z-10 pointer-events-none flex items-center justify-between">
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]">
                 {site.home.worlds.two.occasion}
               </span>
@@ -202,7 +265,8 @@ export function MobileHomeFeed() {
               )}
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Artwork + Name in front */}
+            <div className="relative z-10 pointer-events-none flex items-center gap-4">
               <img
                 src="/media/badge-jewelled-still.webp"
                 alt="DHAMAAKA Jewelled Badge"
@@ -223,13 +287,52 @@ export function MobileHomeFeed() {
               </div>
             </div>
 
-            <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
-              <span>{site.home.worlds.two.cta}</span>
-              <span>→</span>
+            {/* Bottom Row: Quiet "View official flyer" + CTA */}
+            <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveFlyer("diwali");
+                }}
+                className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]/70 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
+              >
+                View official flyer
+              </button>
+              <div className="pointer-events-none flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
+                <span>{site.home.worlds.two.cta}</span>
+                <span>→</span>
+              </div>
             </div>
-          </TransitionLink>
+          </div>
         </div>
       </section>
+
+      {/* Official Flyer Lightbox Modal (Full-screen sheet on mobile) */}
+      <OfficialFlyerLightbox
+        isOpen={activeFlyer !== null}
+        onClose={() => setActiveFlyer(null)}
+        flyer={
+          activeFlyer === "redroom"
+            ? {
+                src: "/media/red-room-poster.webp",
+                alt: "The Red Room — Official Halloween Poster",
+                title: site.home.worlds.one.name,
+                subtitle: `${site.home.worlds.one.occasion} · ${site.home.worlds.one.date}`,
+                world: "redroom",
+              }
+            : activeFlyer === "diwali"
+              ? {
+                  src: "/media/dhamaaka-flyer.webp",
+                  alt: "DHAMAAKA — Official Premiere Flyer",
+                  title: site.home.worlds.two.name,
+                  subtitle: `${site.home.worlds.two.occasion} · ${site.home.worlds.two.date}`,
+                  world: "diwali",
+                }
+              : null
+        }
+      />
 
       {/* 5. Footer Line & Social */}
       <footer className="pt-8 pb-4 text-center border-t border-white/10 px-6 flex flex-col items-center gap-2">

@@ -13,6 +13,7 @@ import { frame } from "@/state/frame";
 import { useStore } from "@/state/store";
 import { Beams } from "./Beams";
 import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
+import { DoorFlyerBackdrops } from "./DoorFlyerBackdrops";
 
 const SPRING_OMEGA = 2 * Math.PI * 2.2; // f = 2.2 Hz
 const SPRING_ZETA = 0.6;
@@ -309,14 +310,13 @@ export function HomeStage() {
     const dt = Math.min(delta, 1 / 30);
     const t = frame.time;
     const p2 = frame.dampedProgress["H2"] ?? 0;
-    const p4 = frame.dampedProgress["H4"] ?? 0;
     const p5 = frame.dampedProgress["H5"] ?? 0;
     const tr = frame.transition;
 
     // 1. Point Light 1: Rim light behind badge (rises over 900 ms on loader handoff)
     if (loaderPopped) {
       rimRiseTimer.current += dt;
-      const targetRim = p4 > 0.05 ? THREE.MathUtils.lerp(2.8, 0.8, p4) : 2.8;
+      const targetRim = p5 > 0.05 ? THREE.MathUtils.lerp(2.8, 0.8, p5) : 2.8;
       const tNorm = Math.min(1, rimRiseTimer.current / 0.9);
       rimIntensity.current = THREE.MathUtils.damp(
         rimIntensity.current,
@@ -536,11 +536,11 @@ export function HomeStage() {
         : 0;
     }
 
+    const splitAmt = Math.min(1, Math.max(p5 * 2.0, doorsActive ? 0.8 : 0));
     if (leftPointLightRef.current) {
       leftPointLightRef.current.position.set(redTargetX, redOpenY + 0.5, 0.45);
-      const splitAmt = Math.min(1, Math.max(p4 * 1.4, doorsActive ? 0.8 : 0));
       leftPointLightRef.current.intensity =
-        p4 > 0.05 || doorsActive
+        p5 > 0.02 || doorsActive
           ? 1.8 * splitAmt * leakBreathe * redSpill * redDim
           : 0;
     }
@@ -550,9 +550,8 @@ export function HomeStage() {
         diwaliOpenY + 0.5,
         0.45,
       );
-      const splitAmt = Math.min(1, Math.max(p4 * 1.4, doorsActive ? 0.8 : 0));
       rightPointLightRef.current.intensity =
-        p4 > 0.05 || doorsActive
+        p5 > 0.02 || doorsActive
           ? 1.8 * splitAmt * leakBreathe * diwaliSpill * diwaliDim
           : 0;
     }
@@ -665,6 +664,12 @@ export function HomeStage() {
           blending={THREE.AdditiveBlending}
         />
       </mesh>
+
+      {/* Ghosted Flyer Backdrops (desktop WebGL): ~0.6m behind doors, feathered arch mask, soft focus */}
+      <DoorFlyerBackdrops
+        redDoorRef={redDoorRef}
+        diwaliDoorRef={diwaliDoorRef}
+      />
 
       {/* Door 1: Red Room GLB at (-1.65, 0, 0), uniform scale 0.78, grounded */}
       <group

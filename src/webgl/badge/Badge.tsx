@@ -430,7 +430,6 @@ export function Badge({
     const isTablet = size.width >= 768 && size.width < 1024;
     const h1 = frame.dampedProgress["H1"] ?? 0;
     const h2 = frame.dampedProgress["H2"] ?? 0;
-    const h4 = frame.dampedProgress["H4"] ?? 0;
     const h5 = frame.dampedProgress["H5"] ?? 0;
     // Phones show the mobile feed instead of the H1–H5 scenes (those are
     // display:none), so the hero exit follows the page scroll directly.
@@ -473,26 +472,20 @@ export function Badge({
         const h2X = isTablet ? 1.35 : 1.62;
         const h2Y = 1.55;
 
-        const h4Scale = 0.52;
         const h5Scale = 0.38;
         const h5X = 0;
         const h5Y = 2.78; // Floats above and between doors on desktop
 
-        if (h5 > 0.05) {
-          // H5: Badge floats above and between both doors at (0, 2.78, 0)
-          choreoPos.current.set(h5X, h5Y, 0);
-          choreoScale.current = h5Scale;
-          choreoYaw.current = Math.PI * 2;
-        } else if (h4 > 0.05) {
-          // H4: "This season" diptych — badge glides to upper center
-          const t = Math.min(1, h4 * 1.5);
+        if (h5 > 0.01) {
+          // H5: Badge glides smoothly from H2's right column to upper center above and between doors
+          const t = Math.min(1, h5 * 2.5);
           const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
           choreoPos.current.set(
-            THREE.MathUtils.lerp(h2X, 0, smoothT),
-            THREE.MathUtils.lerp(h2Y, 2.5, smoothT),
+            THREE.MathUtils.lerp(h2X, h5X, smoothT),
+            THREE.MathUtils.lerp(h2Y, h5Y, smoothT),
             0,
           );
-          choreoScale.current = THREE.MathUtils.lerp(h2Scale, h4Scale, smoothT);
+          choreoScale.current = THREE.MathUtils.lerp(h2Scale, h5Scale, smoothT);
           choreoYaw.current = Math.PI * 2;
         } else if (h2 > 0.02) {
           // H2: Three statements, each with its own badge turn:
