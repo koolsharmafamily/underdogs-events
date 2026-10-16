@@ -1,0 +1,63 @@
+{
+  "frameSize": 256,
+  "frames": [
+    {
+      "i": 0,
+      "mouth": "Closed",
+      "eyes": "open"
+    },
+    {
+      "i": 1,
+      "mouth": "Small",
+      "eyes": "open"
+    },
+    {
+      "i": 2,
+      "mouth": "Open",
+      "eyes": "open"
+    },
+    {
+      "i": 3,
+      "mouth": "Round",
+      "eyes": "open"
+    },
+    {
+      "i": 4,
+      "mouth": "Open",
+      "eyes": "open"
+    },
+    {
+      "i": 5,
+      "mouth": "Small",
+      "eyes": "open"
+    },
+    {
+      "i": 6,
+      "mouth": "Closed",
+      "eyes": "half"
+    },
+    {
+      "i": 7,
+      "mouth": "Closed",
+      "eyes": "blink"
+    },
+    {
+      "i": 8,
+      "mouth": "Closed",
+      "eyes": "half"
+    }
+  ],
+  "talkLoop": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "blink": [
+    6,
+    7,
+    8
+  ]
+}
