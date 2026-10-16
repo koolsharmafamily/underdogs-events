@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
-import { MotionToggle } from "@/ui/MotionToggle";
 
 export function MobileTopBar() {
   const pathname = usePathname();
@@ -85,12 +84,6 @@ export function MobileTopBar() {
             {titleText}
           </span>
         </TransitionLink>
-        {/* Right: Motion on/off, remembered for the visit and the next one */}
-        <MotionToggle
-          compact
-          className="absolute right-1 top-1/2 -translate-y-1/2"
-          colorClass="text-white/70 active:text-white"
-        />
       </div>
     </header>
   );

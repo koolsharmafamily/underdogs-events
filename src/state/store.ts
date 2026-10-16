@@ -171,9 +171,9 @@ export const useStore = create<AppStore>((set, get) => ({
     try {
       stored = window.localStorage.getItem(MOTION_STORAGE_KEY);
     } catch {
-      // Storage blocked: fall back to the OS setting
+      // Storage blocked: fall back to the default
     }
-    const enabled = stored === null ? !reduced : stored === "1";
+    const enabled = stored === "0" ? false : true;
     set({ prefersReducedMotion: reduced, motionEnabled: enabled });
     syncDocumentDataset(get().world, enabled);
   },

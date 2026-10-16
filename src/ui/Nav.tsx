@@ -8,7 +8,6 @@ import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
 import { TransitionLink } from "./TransitionLink";
 import { MobileTopBar } from "./mobile/MobileTopBar";
 import { MobileTabBar } from "./mobile/MobileTabBar";
-import { MotionToggle } from "./MotionToggle";
 
 export function Nav() {
   const pathname = usePathname();
@@ -96,15 +95,6 @@ export function Nav() {
               className={`min-h-[44px] inline-flex items-center px-1 font-cinzel text-[14px] sm:text-[15px] font-semibold uppercase tracking-[0.22em] transition-all ${navItemClass(
                 isDiwali,
               )}`}
-            />
-            <MotionToggle
-              colorClass={
-                isRedRoom
-                  ? "text-[#EFD9CD]/80 hover:text-[#FF2A1F]"
-                  : isDiwali
-                    ? "text-[#FFF6EE]/80 hover:text-[#E5B25D]"
-                    : "text-[#FCF9FC]/85 hover:text-[#D73EBC]"
-              }
             />
           </nav>
         </div>

@@ -49,11 +49,9 @@ Built to celebrate **Two Worlds, Two Celebrations, One Unforgettable Season**, t
 
 ---
 
-### 5. Signature Zero-Latency Cursors
-Desktop visitors experience custom hardware-accelerated SVG cursors running on the compositor thread with zero frame lag:
-- **Home**: Underdogs ✕ in signature neon magenta `#EA28C1`.
-- **The Red Room**: Gothic ember droplet in `#FF2A1F` with warm gold core.
-- **DHAMAAKA**: Four-point ceremonial sparkle ✦ in champagne gold `#FFE3A3` with rani jewel accent.
+### 5. Native Cursors & Motion Experience
+- **Native Browser Cursors**: The desktop experience utilizes clean, responsive native browser cursors with standard hover pointer feedback, avoiding intrusive custom cursor icons.
+- **Motion On by Default**: Cinematic motion, camera choreography, and 3D interactions are enabled by default for all visitors without cluttering the top navigation bars.
 
 ---
 

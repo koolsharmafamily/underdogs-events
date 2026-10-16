@@ -875,38 +875,6 @@ time {
   outline: 2px solid var(--world-accent);
   outline-offset: 5px;
 }
-/* Zero-latency CSS cursors per world (Pass 4: ✕ on Home, ember in Red Room, gold sparkle on DHAMAAKA) */
-@media (hover: hover) and (pointer: fine) {
-  html[data-world="home"],
-  html[data-world="home"] body {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M5 5L15 15M15 5L5 15' stroke='%23000' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M5 5L15 15M15 5L5 15' stroke='%23EA28C1' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 10 10, auto;
-  }
-  html[data-world="home"] a,
-  html[data-world="home"] button,
-  html[data-world="home"] [role="button"] {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='11' cy='11' r='9' fill='%23EA28C1' fill-opacity='0.25' stroke='%23EA28C1' stroke-width='1.5'/%3E%3Cpath d='M7 7L15 15M15 7L7 15' stroke='%23FCF9FC' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 11 11, pointer;
-  }
-
-  html[data-world="redroom"],
-  html[data-world="redroom"] body {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10 2 C10 6 5 9 5 13 C5 16 7 18 10 18 C13 18 15 16 15 13 C15 9 10 6 10 2 Z' fill='%23FF2A1F' stroke='%23350505' stroke-width='1'/%3E%3Ccircle cx='10' cy='13' r='2' fill='%23FFC46B'/%3E%3C/svg%3E") 10 10, auto;
-  }
-  html[data-world="redroom"] a,
-  html[data-world="redroom"] button,
-  html[data-world="redroom"] [role="button"] {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='11' cy='11' r='9' fill='%2395120E' fill-opacity='0.3' stroke='%23FF2A1F' stroke-width='1.5'/%3E%3Cpath d='M11 4 C11 7 7 10 7 13 C7 15.5 9 17 11 17 C13 17 15 15.5 15 13 C15 10 11 7 11 4 Z' fill='%23FF2A1F'/%3E%3Ccircle cx='11' cy='13' r='2' fill='%23FFE3A3'/%3E%3C/svg%3E") 11 11, pointer;
-  }
-
-  html[data-world="diwali"],
-  html[data-world="diwali"] body {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M10 2 Q10 10 2 10 Q10 10 10 18 Q10 10 18 10 Q10 10 10 2 Z' fill='%23FFE3A3' stroke='%23C69442' stroke-width='0.8'/%3E%3Ccircle cx='10' cy='10' r='1.5' fill='%23E0217A'/%3E%3C/svg%3E") 10 10, auto;
-  }
-  html[data-world="diwali"] a,
-  html[data-world="diwali"] button,
-  html[data-world="diwali"] [role="button"] {
-    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'%3E%3Ccircle cx='11' cy='11' r='9' fill='%238B0F22' fill-opacity='0.35' stroke='%23E5B25D' stroke-width='1.5'/%3E%3Cpath d='M11 3 Q11 11 3 11 Q11 11 11 19 Q11 11 19 11 Q11 11 11 3 Z' fill='%23FFF1C9' stroke='%23E5B25D' stroke-width='0.8'/%3E%3Ccircle cx='11' cy='11' r='2' fill='%23E0217A'/%3E%3C/svg%3E") 11 11, pointer;
-  }
-}
 
 .drawn-underline {
   position: relative;
