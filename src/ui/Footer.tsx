@@ -33,7 +33,7 @@ export function Footer() {
   return (
     <footer
       data-scene="H6"
-      className="relative z-10 border-t border-current/20 py-10 text-[var(--world-text)]"
+      className="relative z-10 border-t border-current/20 pt-10 pb-[calc(108px+env(safe-area-inset-bottom,0px))] md:pb-10 text-[var(--world-text)]"
     >
       <div className="site-container flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">

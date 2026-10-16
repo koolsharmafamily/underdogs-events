@@ -23,7 +23,7 @@ export function MobileHomeFeed() {
   const diwaliDays = useDaysToGo(site.home.worlds.two.isoDate);
 
   return (
-    <div className="w-full flex flex-col pt-16 pb-28 text-[#FCF9FC] select-none">
+    <div className="w-full flex flex-col pt-16 pb-[calc(108px+env(safe-area-inset-bottom,0px))] text-[#FCF9FC] select-none">
       {/* 1. Hero: 3D Enamel Badge + Gate to Rage */}
       <section className="min-h-[82svh] flex flex-col items-center justify-between px-6 pt-4 pb-10 text-center">
         {/* Badge centered in upper half */}

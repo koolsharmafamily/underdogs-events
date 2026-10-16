@@ -12,7 +12,7 @@ export function EventsView() {
   const diwaliDays = useDaysToGo(two.isoDate);
 
   return (
-    <div className="w-full min-h-[100dvh] bg-[#07090D] text-[#FCF9FC] flex flex-col pt-16 md:pt-24 pb-28 md:pb-16 px-4 sm:px-6 select-none">
+    <div className="w-full min-h-[100dvh] bg-[#07090D] text-[#FCF9FC] flex flex-col pt-16 md:pt-24 pb-[calc(108px+env(safe-area-inset-bottom,0px))] md:pb-16 px-4 sm:px-6 select-none">
       {/* Header */}
       <header className="max-w-[1100px] w-full mx-auto flex flex-col items-center text-center gap-2 mb-8 md:mb-12">
         <h1 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-[0.22em] text-white">

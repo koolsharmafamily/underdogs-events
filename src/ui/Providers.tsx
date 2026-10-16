@@ -17,6 +17,12 @@ import { isSceneRoute, useStore } from "@/state/store";
 import { preloadWorldAssets } from "@/webgl/preload";
 import { TransitionStage } from "./TransitionStage";
 import { SceneNavigation } from "./SceneNavigation";
+import { useMrDogStore } from "@/features/mrdog/store";
+
+const MrDogSheet = dynamic(
+  () => import("@/features/mrdog/MrDogSheet").then((m) => m.MrDogSheet),
+  { ssr: false },
+);
 
 const Experience = dynamic(
   () => import("@/webgl/Experience").then((mod) => mod.Experience),
@@ -49,6 +55,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   // Listen to browser back and forward (Part 10 T5)
   useEffect(() => {
     const onPopState = () => {
+      // Guard: do not trigger full T5 transition or scroll restore if popstate was from Mr. Dog sheet
+      if (window.history.state?.mrDog || useMrDogStore.getState().isOpen) {
+        useMrDogStore.getState().closeMrDog();
+        return;
+      }
+
       isPopStateRef.current = true;
       restoringScrollRef.current = true;
       const fromPath = prevPathnameRef.current;
@@ -154,6 +166,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <TransitionStage />
       <SceneNavigation />
       <PointerDetails />
+      <MrDogSheet />
     </>
   );
 }
