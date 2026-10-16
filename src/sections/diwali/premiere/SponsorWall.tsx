@@ -33,32 +33,30 @@ export function SponsorWall({ ref }: { ref?: React.Ref<HTMLElement> }) {
         </div>
       </div>
 
-      {/* 1. Top Row: Powered By (Prominent, Larger Treatment) */}
+      {/* 1. Top Row: Powered By (Film Credits Lead) */}
       {poweredBy && (
-        <div className="mb-12 sm:mb-16 p-6 sm:p-8 rounded-xl bg-gradient-to-b from-[#18080C] to-[#0D0507] border border-[#E5B25D]/40 shadow-[0_12px_32px_rgba(0,0,0,0.8)]">
-          <span className="font-cinzel text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.35em] text-[#FFE3A3]">
+        <div className="mb-14 sm:mb-18 flex flex-col items-center">
+          <span className="font-cinzel text-[11px] sm:text-[13px] font-semibold uppercase tracking-[0.38em] text-[#E5B25D]">
             {poweredBy.role}
           </span>
-          <p className="mt-2 font-cinzel text-[20px] sm:text-[26px] font-bold uppercase tracking-[0.18em] text-[#FFF6EE] drop-shadow-[0_2px_12px_rgba(229,178,93,0.35)]">
+          <p className="mt-2 font-cinzel text-[22px] sm:text-[30px] font-bold uppercase tracking-[0.2em] text-[#FFF6EE] drop-shadow-[0_2px_14px_rgba(229,178,93,0.4)]">
             {poweredBy.name}
           </p>
+          <div className="mt-6 w-36 h-[1px] bg-gradient-to-r from-transparent via-[#E5B25D]/40 to-transparent" />
         </div>
       )}
 
-      {/* 2. Grid: 3 columns desktop, 2 columns mobile */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
-        {otherPartners.map((partner, idx) => (
+      {/* 2. Opening Credits Roles (Clean elegant film-credits typography, no boxes) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-10 sm:gap-y-12">
+        {otherPartners.map((partner) => (
           <div
             key={partner.role}
-            className="flex flex-col items-center justify-center p-5 sm:p-6 rounded-lg bg-[#11070A]/80 border border-[#E5B25D]/20 hover:border-[#E5B25D]/50 transition-all duration-300"
+            className="flex flex-col items-center text-center gap-1.5"
           >
-            <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.28em] text-[#E5B25D]/80">
+            <span className="font-cinzel text-[10.5px] sm:text-[11.5px] uppercase tracking-[0.3em] text-[#E5B25D]/80">
               {partner.role}
             </span>
-            <div className="my-2 flex items-center gap-1.5 text-[#E0217A] text-[7px]" aria-hidden="true">
-              <span>✦</span>
-            </div>
-            <p className="font-cinzel text-[14px] sm:text-[16px] font-semibold uppercase tracking-[0.14em] text-[#FFF6EE]">
+            <p className="font-cinzel text-[15px] sm:text-[17px] font-semibold uppercase tracking-[0.16em] text-[#FFF6EE]">
               {partner.name}
             </p>
           </div>

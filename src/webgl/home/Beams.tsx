@@ -20,7 +20,7 @@ export function Beams() {
       void main(){float width=mix(.05,.42,1.-vUv.y); float beam=exp(-pow((vUv.x-.5)/width,2.)*3.);
       float fade=smoothstep(0.,.25,vUv.y)*(1.-smoothstep(.75,1.,vUv.y));
       float haze=.85+.15*sin(vUv.y*9.+uTime*.16);
-      gl_FragColor=vec4(vec3(.5,.2,.65),beam*fade*haze*.07);}`,
+      gl_FragColor=vec4(vec3(.84,.18,.68),beam*fade*haze*.14);}`,
       }),
     [],
   );

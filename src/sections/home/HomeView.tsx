@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { site } from "@/content/site";
 import { frame } from "@/state/frame";
@@ -33,10 +34,12 @@ export function HomeView() {
 
   const h1Ref = useRef<HTMLElement>(null);
   const h2Ref = useRef<HTMLElement>(null);
+  const h4Ref = useRef<HTMLElement>(null);
   const h5Ref = useRef<HTMLElement>(null);
 
   useSceneProgress("H1", h1Ref);
   useSceneProgress("H2", h2Ref);
+  useSceneProgress("H4", h4Ref);
   useSceneProgress("H5", h5Ref);
 
   const [heroTextVisible, setHeroTextVisible] = useState(true);
@@ -233,6 +236,105 @@ export function HomeView() {
         </div>
       </section>
 
+      {/* H4 · This season: Framed Diptych of the Two Official Posters */}
+      <section
+        ref={h4Ref}
+        data-scene="H4"
+        aria-label={site.home.season.label}
+        className="scene-section scene-h4 py-24 sm:py-32 relative z-20"
+      >
+        <div className="site-container flex flex-col items-center gap-10 sm:gap-14">
+          <div className="flex flex-col items-center text-center gap-3 max-w-[700px]">
+            <span className="font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.24em] text-[var(--steel)]">
+              {site.home.season.label}
+            </span>
+            <h2 className="font-unbounded text-[clamp(24px,3.2vw,48px)] leading-[1.08] font-extrabold uppercase text-[var(--paper)] balance-heading">
+              {site.home.season.lines.join(" ")}
+            </h2>
+            <p className="font-cinzel text-[13px] sm:text-[14px] uppercase tracking-[0.26em] text-[var(--world-accent)]">
+              {site.home.season.tagline}
+            </p>
+          </div>
+
+          {/* Framed Diptych: Left = The Red Room, Right = DHAMAAKA */}
+          <div className="site-grid w-full gap-8 lg:gap-12 items-stretch max-w-[1080px]">
+            {/* World One Card / Framed Poster */}
+            <div className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col">
+              <TransitionLink
+                href={site.home.worlds.one.href}
+                transitionType="T1"
+                origin="door"
+                aria-label={`Explore ${site.home.worlds.one.name} — ${site.home.worlds.one.occasion}`}
+                className="group relative flex flex-col h-full rounded-sm border border-[#8B1414]/60 bg-[#0A0203]/90 p-4 sm:p-6 transition-all duration-500 hover:border-[#FF2A1F] hover:shadow-[0_12px_40px_rgba(255,42,31,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F]"
+              >
+                <div className="relative aspect-[4/5] w-full overflow-hidden border border-[#8B1414]/40 bg-[#060101]">
+                  <Image
+                    src="/media/red-room-poster.webp"
+                    alt="The Red Room — Official Halloween Poster"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#060101] via-transparent to-transparent opacity-60" />
+                </div>
+                <div className="flex flex-col gap-2 pt-5">
+                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
+                    {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
+                  </span>
+                  <h3 className="font-cinzel font-black text-[clamp(20px,2vw,28px)] uppercase text-[#FCF9FC] tracking-[0.04em] group-hover:text-[#FF2A1F] transition-colors">
+                    {site.home.worlds.one.name}
+                  </h3>
+                  <span className="font-manrope text-[13px] sm:text-[14px] text-[#FCF9FC]/75">
+                    {site.home.worlds.one.date} · {site.home.worlds.one.place}
+                  </span>
+                  <div className="mt-2 inline-flex items-center gap-2 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF2A1F]">
+                    <span>{site.home.worlds.one.cta}</span>
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </div>
+                </div>
+              </TransitionLink>
+            </div>
+
+            {/* World Two Card / Framed Poster */}
+            <div className="col-span-4 md:col-span-4 lg:col-span-6 flex flex-col">
+              <TransitionLink
+                href={site.home.worlds.two.href}
+                transitionType="T2"
+                origin="door"
+                aria-label={`Explore ${site.home.worlds.two.name} — ${site.home.worlds.two.subtitle}`}
+                className="group relative flex flex-col h-full rounded-sm border border-[#E5B25D]/50 bg-[#0E0608]/90 p-4 sm:p-6 transition-all duration-500 hover:border-[#FFE3A3] hover:shadow-[0_12px_40px_rgba(229,178,93,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
+              >
+                <div className="relative aspect-[4/5] w-full overflow-hidden border border-[#E5B25D]/40 bg-[#0A0305]">
+                  <Image
+                    src="/media/dhamaaka-flyer.webp"
+                    alt="DHAMAAKA — Official Premiere Flyer"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0305] via-transparent to-transparent opacity-60" />
+                </div>
+                <div className="flex flex-col gap-2 pt-5">
+                  <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#E5B25D]">
+                    {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
+                  </span>
+                  <h3 className="font-cinzel font-black text-[clamp(20px,2vw,28px)] uppercase text-[#FFF6EE] tracking-[0.04em] group-hover:text-[#FFE3A3] transition-colors">
+                    {site.home.worlds.two.name}
+                  </h3>
+                  <span className="font-manrope text-[13px] sm:text-[14px] text-[#FFF6EE]/75">
+                    {site.home.worlds.two.date} · {site.home.worlds.two.place}
+                  </span>
+                  <div className="mt-2 inline-flex items-center gap-2 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]">
+                    <span>{site.home.worlds.two.cta}</span>
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </div>
+                </div>
+              </TransitionLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* H5 · The doors */}
       <section
         ref={h5Ref}
@@ -278,7 +380,7 @@ export function HomeView() {
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
                     {site.home.worlds.one.kicker}
                   </span>
-                  <span className="font-nosifer text-heading sm:text-display-m uppercase text-[#D20A15] tracking-[0.05em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.7)] leading-[1.1]">
+                  <span className="font-cinzel font-black text-heading sm:text-display-m uppercase text-[#D20A15] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.7)] leading-[1.1]">
                     {site.home.worlds.one.name}
                   </span>
                   <span className="font-manrope text-body text-[#FCF9FC]/80">

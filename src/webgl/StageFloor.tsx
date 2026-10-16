@@ -65,11 +65,11 @@ export function StageFloor({ world }: { world: WorldId }) {
             resolution={128}
             blur={[160, 64]}
             mixBlur={1}
-            mixStrength={world === "diwali" ? 0.16 : 0.32}
-            mirror={0.12}
+            mixStrength={world === "home" ? 0.65 : world === "diwali" ? 0.16 : 0.32}
+            mirror={world === "home" ? 0.35 : 0.12}
             color={color}
-            metalness={0.25}
-            roughness={0.72}
+            metalness={world === "home" ? 0.45 : 0.25}
+            roughness={world === "home" ? 0.38 : 0.72}
             depthScale={0.3}
             minDepthThreshold={0.4}
             maxDepthThreshold={1.4}

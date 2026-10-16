@@ -136,37 +136,41 @@ export function RedRoomView() {
             <div className="relative inline-block">
               <h1
                 ref={titleRef}
-                className="font-nosifer text-[clamp(2.2rem,4.6vw,3.8rem)] font-normal uppercase text-[#D20A15] tracking-[0.05em] leading-[1.1] balance-heading drop-shadow-[0_6px_24px_rgba(210,10,21,0.7)]"
+                className="font-cinzel font-black text-[clamp(2.4rem,5vw,4.4rem)] uppercase text-[#E81414] tracking-[0.08em] leading-[1.05] balance-heading drop-shadow-[0_8px_32px_rgba(210,10,21,0.85)]"
               >
                 {site.redRoom.title}
               </h1>
 
-              {/* SVG blood drips growing from bottom edges */}
+              {/* Authored organic blood drips sliding from the title */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none relative mx-auto h-10 w-full"
+                className="pointer-events-none relative mx-auto h-12 w-full"
               >
                 {DRIPS.map((drip, i) => (
                   <svg
                     key={i}
-                    width="8"
+                    width="12"
                     height={drip.height}
-                    viewBox={`0 0 8 ${drip.height}`}
+                    viewBox={`0 0 12 ${drip.height}`}
                     style={{
                       left: drip.x,
                       animationDelay: `${drip.delay}s`,
                     }}
-                    className={`absolute top-0 text-[var(--rr-blood)] origin-top ${
+                    className={`absolute top-0 text-[#B80A12] origin-top ${
                       motionEnabled ? "rr-blood-drip" : ""
                     }`}
                   >
                     <path
-                      d={`M3 0 H5 V${drip.height - 5} C5 ${drip.height - 1} 7 ${
-                        drip.height
-                      } 4 ${drip.height} C1 ${drip.height} 3 ${
-                        drip.height - 1
-                      } 3 ${drip.height - 5} Z`}
+                      d={`M5 0 C5 4, 4.5 ${drip.height - 10}, 3.5 ${drip.height - 7} C2.2 ${drip.height - 4}, 2 ${drip.height - 1}, 6 ${drip.height} C10 ${drip.height - 1}, 9.8 ${drip.height - 4}, 8.5 ${drip.height - 7} C7.5 ${drip.height - 10}, 7 4, 7 0 Z`}
                       fill="currentColor"
+                    />
+                    {/* Gloss specular glint on the droplet bulb */}
+                    <circle
+                      cx="5"
+                      cy={drip.height - 3}
+                      r="1.2"
+                      fill="#FF6B72"
+                      opacity="0.8"
                     />
                   </svg>
                 ))}
@@ -378,7 +382,7 @@ export function RedRoomView() {
             <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[var(--rr-neon)]">
               {site.redRoom.dj.role}
             </span>
-            <h2 className="font-nosifer text-[clamp(1.8rem,3.4vw,2.8rem)] font-normal uppercase text-[#D20A15] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.65)] leading-tight">
+            <h2 className="font-cinzel font-black text-[clamp(1.8rem,3.4vw,2.8rem)] uppercase text-[#E81414] tracking-[0.06em] drop-shadow-[0_6px_20px_rgba(210,10,21,0.75)] leading-tight">
               {site.redRoom.dj.name}
             </h2>
             <p className="font-cinzel text-[12px] sm:text-[13px] uppercase tracking-[0.18em] text-[var(--rr-bone)]/90">

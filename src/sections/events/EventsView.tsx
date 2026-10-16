@@ -1,7 +1,8 @@
 "use client";
 
-import { TransitionLink } from "@/ui/TransitionLink";
 import React from "react";
+import Image from "next/image";
+import { TransitionLink } from "@/ui/TransitionLink";
 import { site } from "@/content/site";
 import { useDaysToGo } from "@/utils/useDaysToGo";
 
@@ -51,7 +52,7 @@ export function EventsView() {
 
           {/* Top: Glowing Neon Badge Still + Occasion Chip */}
           <div className="relative z-10 flex items-start justify-between">
-            <img
+            <Image
               src="/media/badge-halloween-still.webp"
               alt="The Red Room badge"
               width={72}
@@ -59,11 +60,11 @@ export function EventsView() {
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_24px_rgba(255,26,53,0.7)] group-hover:scale-105 transition-transform duration-300"
             />
             <div className="flex flex-col items-end gap-2">
-              <span className="px-3 py-1 rounded-full bg-[#FF1A35]/15 border border-[#FF1A35]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
+              <span className="px-3 py-1 rounded-sm bg-[#FF1A35]/15 border border-[#FF1A35]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
                 {one.occasion}
               </span>
               {redRoomDays && (
-                <span className="px-3 py-0.5 rounded-full bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
+                <span className="px-3 py-0.5 rounded-sm bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
                   {redRoomDays}
                 </span>
               )}
@@ -78,17 +79,17 @@ export function EventsView() {
 
             {/* Title with slow light sweep */}
             <div className="animate-title-sweep inline-block">
-              <h2 className="font-nosifer text-3xl sm:text-4xl text-[#FF1A35] tracking-wide leading-tight drop-shadow-[0_4px_24px_rgba(255,26,53,0.8)]">
+              <h2 className="font-cinzel font-black text-3xl sm:text-4xl uppercase text-[#FF1A35] tracking-[0.05em] leading-tight drop-shadow-[0_4px_24px_rgba(255,26,53,0.8)]">
                 {site.home.worlds.one.name}
               </h2>
             </div>
 
             {/* Chips row */}
             <div className="flex flex-wrap items-center gap-2 pt-1 font-manrope text-[13px] text-white/90">
-              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="px-3 py-1 rounded-sm bg-white/5 border border-white/10">
                 {one.date}
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="px-3 py-1 rounded-sm bg-white/5 border border-white/10">
                 {one.place}
               </span>
             </div>
@@ -122,7 +123,7 @@ export function EventsView() {
 
           {/* Top: Jewelled Badge Still + Occasion Chip */}
           <div className="relative z-10 flex items-start justify-between">
-            <img
+            <Image
               src="/media/badge-jewelled-still.webp"
               alt="DHAMAAKA Jewelled Badge"
               width={72}
@@ -130,11 +131,11 @@ export function EventsView() {
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_24px_rgba(229,178,93,0.7)] group-hover:scale-105 transition-transform duration-300"
             />
             <div className="flex flex-col items-end gap-2">
-              <span className="px-3 py-1 rounded-full bg-[#E5B25D]/15 border border-[#E5B25D]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
+              <span className="px-3 py-1 rounded-sm bg-[#E5B25D]/15 border border-[#E5B25D]/40 font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
                 {two.occasion}
               </span>
               {diwaliDays && (
-                <span className="px-3 py-0.5 rounded-full bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
+                <span className="px-3 py-0.5 rounded-sm bg-white/10 border border-white/20 font-mono text-[10px] uppercase tracking-wider text-white font-bold">
                   {diwaliDays}
                 </span>
               )}
@@ -165,10 +166,10 @@ export function EventsView() {
 
             {/* Chips row */}
             <div className="flex flex-wrap items-center gap-2 pt-1 font-manrope text-[13px] text-white/90">
-              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="px-3 py-1 rounded-sm bg-white/5 border border-white/10">
                 {two.date}
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+              <span className="px-3 py-1 rounded-sm bg-white/5 border border-white/10">
                 {two.place}
               </span>
             </div>

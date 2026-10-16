@@ -13,6 +13,7 @@ import { useStore } from "@/state/store";
 import { AnchorFlames, findAnchorNodes, groundObjectToY } from "../fx/Flame";
 import { MirrorFog } from "./MirrorFog";
 import { InvitationTray } from "./InvitationTray";
+import { SmokeDragon } from "./SmokeDragon";
 
 interface CandleClusterItem {
   variant: 0 | 1 | 2; // 0 = Candle_A, 1 = Candle_B, 2 = Candle_C
@@ -467,6 +468,9 @@ export function RedRoomSet() {
         scale={0.18}
         intensitiesRef={flameIntensitiesRef}
       />
+
+      {/* The signature smoke-and-ember dragon coiling around the badge in R1 */}
+      <SmokeDragon />
 
       {/* Interactive Invitation Tray on Procedural Round Velvet Side Table at (0, 0, 2.2) */}
       <InvitationTray />

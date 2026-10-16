@@ -41,7 +41,7 @@ export function MobileHomeFeed() {
             {site.home.hero.label}
           </span>
 
-          <h1 className="font-cinzel text-3xl font-extrabold uppercase tracking-[0.16em] text-[#EA28C1] drop-shadow-[0_2px_16px_rgba(234,40,193,0.35)]">
+          <h1 className="font-unbounded text-[clamp(28px,7vw,36px)] font-black uppercase tracking-[-0.02em] text-[#FCF9FC] drop-shadow-[0_2px_14px_rgba(234,40,193,0.35)]">
             {site.home.hero.title}
           </h1>
 
@@ -51,9 +51,10 @@ export function MobileHomeFeed() {
 
           <TransitionLink
             href="/events"
-            className="mt-2 w-full py-3.5 px-6 rounded-full bg-[#EA28C1] text-[#07090D] font-cinzel text-[13px] font-bold uppercase tracking-[0.22em] shadow-[0_8px_24px_rgba(234,40,193,0.35)] active:scale-95 transition-transform text-center"
+            className="mt-4 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
           >
-            {site.home.hero.seasonCta} →
+            <span>{site.home.hero.seasonCta}</span>
+            <span>→</span>
           </TransitionLink>
         </div>
       </section>
@@ -120,7 +121,7 @@ export function MobileHomeFeed() {
           <div className="flex shrink-0 items-center gap-3 animate-marquee-slow px-4">
             {site.home.nights.list.concat(site.home.nights.list).map((item: string, i: number) => (
               <React.Fragment key={i}>
-                <span className="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 font-cinzel text-xs uppercase tracking-wider text-white/90 whitespace-nowrap">
+                <span className="px-3.5 py-1.5 rounded-sm bg-white/5 border border-white/10 font-cinzel text-xs uppercase tracking-wider text-white/90 whitespace-nowrap">
                   {item}
                 </span>
                 <span className="text-[#EA28C1]/60 font-bold text-xs" aria-hidden="true">

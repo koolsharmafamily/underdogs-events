@@ -430,12 +430,8 @@ export function Badge({
     const isTablet = size.width >= 768 && size.width < 1024;
     const h1 = frame.dampedProgress["H1"] ?? 0;
     const h2 = frame.dampedProgress["H2"] ?? 0;
+    const h4 = frame.dampedProgress["H4"] ?? 0;
     const h5 = frame.dampedProgress["H5"] ?? 0;
-    const scrollP = THREE.MathUtils.clamp(
-      h1 * 0.35 + h2 * 0.45 + h5 * 0.2,
-      0,
-      1,
-    );
     // Phones show the mobile feed instead of the H1–H5 scenes (those are
     // display:none), so the hero exit follows the page scroll directly.
     const phoneHeroExit = THREE.MathUtils.clamp(
@@ -477,12 +473,48 @@ export function Badge({
         const h2X = isTablet ? 1.35 : 1.62;
         const h2Y = 1.55;
 
+        const h4Scale = 0.52;
         const h5Scale = 0.38;
         const h5X = 0;
         const h5Y = 2.78; // Floats above and between doors on desktop
 
-        if (scrollP <= 0.25) {
-          const t = Math.max(0, Math.min(1, scrollP / 0.25));
+        if (h5 > 0.05) {
+          // H5: Badge floats above and between both doors at (0, 2.78, 0)
+          choreoPos.current.set(h5X, h5Y, 0);
+          choreoScale.current = h5Scale;
+          choreoYaw.current = Math.PI * 2;
+        } else if (h4 > 0.05) {
+          // H4: "This season" diptych — badge glides to upper center
+          const t = Math.min(1, h4 * 1.5);
+          const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
+          choreoPos.current.set(
+            THREE.MathUtils.lerp(h2X, 0, smoothT),
+            THREE.MathUtils.lerp(h2Y, 2.5, smoothT),
+            0,
+          );
+          choreoScale.current = THREE.MathUtils.lerp(h2Scale, h4Scale, smoothT);
+          choreoYaw.current = Math.PI * 2;
+        } else if (h2 > 0.02) {
+          // H2: Three statements, each with its own badge turn:
+          // 0: edge-on (72°), 1: back (180°), 2: home (360°/0°)
+          choreoPos.current.set(h2X, h2Y, 0);
+          choreoScale.current = h2Scale;
+          let targetYaw = 0;
+          if (h2 < 0.34) {
+            const sub = THREE.MathUtils.smoothstep(h2 / 0.34, 0, 1);
+            targetYaw = THREE.MathUtils.lerp(0, (72 * Math.PI) / 180, sub);
+          } else if (h2 < 0.67) {
+            const sub = THREE.MathUtils.smoothstep((h2 - 0.34) / 0.33, 0, 1);
+            targetYaw = THREE.MathUtils.lerp((72 * Math.PI) / 180, Math.PI, sub);
+          } else {
+            const sub = THREE.MathUtils.smoothstep((h2 - 0.67) / 0.33, 0, 1);
+            targetYaw = THREE.MathUtils.lerp(Math.PI, Math.PI * 2, sub);
+          }
+          choreoYaw.current = targetYaw;
+          h2SpinDone.current = h2 >= 0.95;
+        } else {
+          // H1 Hero -> H2 entrance
+          const t = Math.max(0, Math.min(1, h1));
           const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
           choreoPos.current.set(
             THREE.MathUtils.lerp(h0X, h2X, smoothT),
@@ -492,29 +524,6 @@ export function Badge({
           choreoScale.current = THREE.MathUtils.lerp(h0Scale, h2Scale, smoothT);
           choreoYaw.current = 0;
           h2SpinDone.current = false;
-        } else if (scrollP <= 0.65) {
-          choreoPos.current.set(h2X, h2Y, 0);
-          choreoScale.current = h2Scale;
-          const spinT = (scrollP - 0.25) / 0.4;
-          choreoYaw.current =
-            THREE.MathUtils.smoothstep(spinT, 0, 1) * Math.PI * 2;
-          h2SpinDone.current = spinT >= 0.98;
-        } else if (scrollP <= 0.82) {
-          // Smooth glide from H2 center-right to H5 top-center above the doors
-          const t = Math.max(0, Math.min(1, (scrollP - 0.65) / 0.17));
-          const smoothT = THREE.MathUtils.smoothstep(t, 0, 1);
-          choreoPos.current.set(
-            THREE.MathUtils.lerp(h2X, h5X, smoothT),
-            THREE.MathUtils.lerp(h2Y, h5Y, smoothT),
-            0,
-          );
-          choreoScale.current = THREE.MathUtils.lerp(h2Scale, h5Scale, smoothT);
-          choreoYaw.current = Math.PI * 2;
-        } else {
-          // H5: Badge floats above and between both doors at (0, 2.78, 0)
-          choreoPos.current.set(h5X, h5Y, 0);
-          choreoScale.current = h5Scale;
-          choreoYaw.current = Math.PI * 2;
         }
       }
     } else if (world === "redroom") {

@@ -10,9 +10,6 @@ if (!fs.existsSync(mediaDir)) {
   fs.mkdirSync(mediaDir, { recursive: true });
 }
 
-const ARTIFACT_HOME_CAPTURE =
-  'C:/Users/kulvi/.gemini/antigravity/brain/c6856244-cbb4-4502-98ab-93f5039574fa/screenshots/phase3_h1_hero_1440x900.png';
-
 async function buildPosters() {
   console.log('Generating WebP posters and 1200x630 Open Graph images (Part 13.5, 13.7 & 13.8)...');
 

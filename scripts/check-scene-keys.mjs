@@ -5,9 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Keys read but knowingly unregistered, with the reason. Keep this empty.
-const PENDING = {
-  H4: 'Home "This season" scene: copy in site.ts, section rebuilt in Pass 3',
-};
+const PENDING = {};
 
 const files = [];
 (function walk(dir) {
