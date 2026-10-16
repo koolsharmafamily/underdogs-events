@@ -42,7 +42,7 @@ export function DhamaakaTitle() {
         />
         <BadgeDomHost
           skin="diwali"
-          sizeClass="w-[170px] h-[170px] sm:w-[210px] sm:h-[210px] lg:w-[230px] lg:h-[230px]"
+          sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
           label="Underdogs Jewelled Badge — prominent crown above Dhamaka"
         />
       </div>

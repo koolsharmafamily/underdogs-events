@@ -25,22 +25,23 @@ export function MobileHomeFeed() {
   return (
     <div className="w-full flex flex-col pt-16 pb-[calc(108px+env(safe-area-inset-bottom,0px))] text-[#FCF9FC] select-none">
       {/* 1. Hero: 3D Enamel Badge + Gate to Rage */}
-      <section className="min-h-[82svh] flex flex-col items-center justify-between px-6 pt-4 pb-10 text-center">
-        {/* Badge centered in upper half */}
-        <div className="my-auto flex flex-col items-center">
-          <BadgeDomHost
-            skin="home"
-            sizeClass="w-[210px] h-[210px]"
-            label="Underdogs Enamel Badge — tap to blink"
-          />
+      <section className="min-h-[84svh] flex flex-col items-center justify-between px-6 pt-2 pb-10 text-center">
+        {/* Presenter / Kicker Line matching Red Room & Diwali */}
+        <div className="my-auto flex flex-col items-center gap-2">
+          <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#FCF9FC]/70">
+            {site.home.hero.label}
+          </span>
+          <div className="flex items-center justify-center my-2 sm:my-4">
+            <BadgeDomHost
+              skin="home"
+              sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
+              label="Underdogs Enamel Badge — tap to blink"
+            />
+          </div>
         </div>
 
         {/* Copy & Primary Button below badge */}
-        <div className="w-full flex flex-col items-center gap-4 max-w-[340px] mx-auto">
-          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#FCF9FC]/70">
-            {site.home.hero.label}
-          </span>
-
+        <div className="w-full flex flex-col items-center gap-4 max-w-[340px] mx-auto mt-2">
           <h1 className="font-unbounded text-[clamp(28px,7vw,36px)] font-black uppercase tracking-[-0.02em] text-[#FCF9FC] drop-shadow-[0_2px_14px_rgba(234,40,193,0.35)]">
             {site.home.hero.title}
           </h1>
@@ -51,7 +52,7 @@ export function MobileHomeFeed() {
 
           <TransitionLink
             href="/events"
-            className="mt-4 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
+            className="mt-2 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
           >
             <span>{site.home.hero.seasonCta}</span>
             <span>→</span>
@@ -210,10 +211,10 @@ export function MobileHomeFeed() {
                 className="w-16 h-16 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(229,178,93,0.5)]"
               />
               <div className="flex flex-col">
-                <span className="font-playfair font-black text-xl text-[#FFF6EE] leading-tight">
+                <span className="font-playfair font-black text-2xl leading-tight bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent drop-shadow-[0_2px_14px_rgba(224,33,122,0.65)] tracking-wide">
                   {site.home.worlds.two.name}
                 </span>
-                <span className="font-cinzel text-[10px] uppercase tracking-wider text-[#E5B25D]/90">
+                <span className="font-cinzel text-[10px] uppercase tracking-wider text-[#E5B25D]/90 mt-0.5">
                   {site.home.worlds.two.subtitle}
                 </span>
                 <span className="font-manrope text-xs text-white/80 mt-1">

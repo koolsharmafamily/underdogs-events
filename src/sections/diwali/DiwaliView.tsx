@@ -89,14 +89,14 @@ export function DiwaliView() {
         aria-label={`${site.diwali.title} — ${site.diwali.subtitle}`}
         className="scene-section scene-d1 relative z-[6]"
       >
-        <div className="scene-sticky flex flex-col items-center justify-between pt-14 pb-24 sm:pt-20 sm:pb-10 text-center">
+        <div className="scene-sticky flex flex-col items-center justify-between pt-14 pb-24 sm:pt-20 sm:pb-10 text-center pointer-events-none">
           {/* Upper / Hero: DhamaakaTitle containing Presenter, Prominent 3D Badge, and DHAMAAKA */}
-          <div className="site-container w-full flex flex-col items-center my-auto">
+          <div className="site-container w-full flex flex-col items-center my-auto pointer-events-auto">
             <DhamaakaTitle />
           </div>
 
           {/* Lower: Date, Venue line & Details chip */}
-          <div className="site-container flex flex-col items-center gap-2 sm:gap-3 pb-1 sm:pb-2">
+          <div className="site-container flex flex-col items-center gap-2 sm:gap-3 pb-1 sm:pb-2 pointer-events-auto">
             <p className="font-manrope text-[14px] sm:text-[16px] text-[#FFF6EE]/90 tracking-[0.03em] font-medium drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
               {site.diwali.sub}
             </p>

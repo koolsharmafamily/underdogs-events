@@ -318,7 +318,7 @@ export function HomeView() {
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#E5B25D]">
                     {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
                   </span>
-                  <h3 className="font-cinzel font-black text-[clamp(20px,2vw,28px)] uppercase text-[#FFF6EE] tracking-[0.04em] group-hover:text-[#FFE3A3] transition-colors">
+                  <h3 className="font-playfair font-black text-[clamp(20px,2vw,28px)] uppercase bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent drop-shadow-[0_2px_12px_rgba(224,33,122,0.6)] tracking-wide">
                     {site.home.worlds.two.name}
                   </h3>
                   <span className="font-manrope text-[13px] sm:text-[14px] text-[#FFF6EE]/75">
@@ -430,7 +430,7 @@ export function HomeView() {
                   <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF70DE]">
                     {site.home.worlds.two.kicker}
                   </span>
-                  <span className="font-playfair font-black text-heading sm:text-display-m uppercase text-[#FFF6EE] leading-[1.05] tracking-wide drop-shadow-[0_2px_12px_rgba(224,33,122,0.4)]">
+                  <span className="font-playfair font-black text-heading sm:text-display-m uppercase bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent leading-[1.05] tracking-wide drop-shadow-[0_4px_20px_rgba(224,33,122,0.75)]">
                     {site.home.worlds.two.name}
                   </span>
                   {site.home.worlds.two.subtitle && (

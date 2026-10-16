@@ -444,15 +444,15 @@ export function Badge({
       if (isMobile) {
         // Mobile phone home page: keep badge strictly at the beginning of the home page (Hero H1)
         // Cleanly fades/scales down as H1 scrolls out, completely hidden in H2 and H5 so it NEVER overlaps doors or text!
-        const h0Scale = 0.88;
+        const h0Scale = 0.77;
         const h0X = 0;
-        const h0Y = size.height < 700 ? 1.72 : 1.88;
+        const h0Y = size.height < 700 ? 2.05 : 2.19;
 
         if (phoneHeroExit < 1) {
           // Beginning of the home page (Hero)
           const exitT = phoneHeroExit;
           const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
-          choreoPos.current.set(h0X, h0Y + exitT * 0.4, 0);
+          choreoPos.current.set(h0X, h0Y + exitT * 0.4, 0.6);
           choreoScale.current = h0Scale * smoothFade;
           choreoYaw.current = 0;
           h2SpinDone.current = false;
@@ -533,7 +533,7 @@ export function Badge({
       const r4 = frame.dampedProgress["R4"] ?? 0;
       const r5 = frame.dampedProgress["R5"] ?? 0;
       const r6 = frame.dampedProgress["R6"] ?? 0;
-      const targetScale = isMobile ? 0.68 : 0.82;
+      const targetScale = isMobile ? 0.86 : 0.82;
 
       if (r6 > 0.05) {
         // R6: Outro — badge returns in upper stage above outro text
@@ -550,7 +550,7 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(targetScale, 0, t);
       } else {
         // R1: Hero badge positioned in upper half above the lower-half "THE RED ROOM" title
-        choreoPos.current.set(0, 1.92, 0.6);
+        choreoPos.current.set(0, isMobile ? 2.345 : 1.92, 0.6);
         choreoScale.current = THREE.MathUtils.damp(
           choreoScale.current,
           targetScale,
@@ -566,8 +566,8 @@ export function Badge({
       const d4 = frame.dampedProgress["D4"] ?? 0;
       const d5 = frame.dampedProgress["D5"] ?? 0;
 
-      // Prominent crown above DHAMAAKA: 0.88 on desktop, 0.72 on mobile
-      const targetScale = isMobile ? 0.72 : 0.88;
+      // Prominent crown above DHAMAAKA: 0.88 on desktop, 0.79 on mobile
+      const targetScale = isMobile ? 0.79 : 0.88;
 
       if (d5 > 0.05) {
         // D5: Outro — badge returns in upper stage above outro text
@@ -576,7 +576,7 @@ export function Badge({
         choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.75, t);
       } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
         // D1: Hero jewelled badge prominent above DHAMAAKA title
-        choreoPos.current.set(0, isMobile ? 2.05 : 2.22, 0.6);
+        choreoPos.current.set(0, isMobile ? 2.354 : 2.22, 0.6);
         choreoScale.current = THREE.MathUtils.damp(
           choreoScale.current,
           targetScale,
@@ -600,21 +600,21 @@ export function Badge({
           const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
           choreoPos.current.set(
             0,
-            (size.height < 700 ? 1.72 : 1.88) + exitT * 0.4,
-            0,
+            (size.height < 700 ? 2.05 : 2.19) + exitT * 0.4,
+            0.6,
           );
-          choreoScale.current = 0.88 * smoothFade;
+          choreoScale.current = 0.77 * smoothFade;
         } else {
           choreoPos.current.set(1.75, 1.8, 0);
           choreoScale.current = isTablet ? 1.35 : 1.9;
         }
       } else if (world === "redroom") {
-        choreoPos.current.set(0, 2.22, 0.6);
-        choreoScale.current = isMobile ? 0.84 : 1.85;
+        choreoPos.current.set(0, isMobile ? 2.345 : 2.22, 0.6);
+        choreoScale.current = isMobile ? 0.86 : 1.85;
       } else {
         // Diwali: Prominent jewelled badge positioned above DHAMAAKA in D1
-        choreoPos.current.set(0, isMobile ? 2.05 : 2.22, 0.6);
-        choreoScale.current = isMobile ? 0.72 : 0.88;
+        choreoPos.current.set(0, isMobile ? 2.354 : 2.22, 0.6);
+        choreoScale.current = isMobile ? 0.79 : 0.88;
       }
     } else if (composition.scene === "H2") {
       if (world === "home" && isMobile) {
@@ -713,6 +713,9 @@ export function Badge({
     if (activePrepared && rootRef.current.visible) {
       badgeScreenBounds.ready = true;
       badgeScreenBounds.readySkin = activeSkinRef.current;
+    }
+    if (typeof window !== "undefined") {
+      (window as any).__badgeScreenBounds = { ...badgeScreenBounds };
     }
     // While the incoming skin loads, the outgoing one keeps rendering (its
     // dissolve waits for the destination), so the badge is still on screen.
