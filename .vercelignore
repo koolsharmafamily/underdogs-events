@@ -1,5 +1,7 @@
 brand-source/
 GLBs/
+Mr. Dog/
+Website Brief/
 scripts/*
 !scripts/patch-fiber-timer.mjs
 *.md
