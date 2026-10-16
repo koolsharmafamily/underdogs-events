@@ -13,6 +13,7 @@ import { PostFX } from "./PostFX";
 import { FallbackPoster } from "./FallbackPoster";
 import { setWebglAdvance } from "@/motion/clock";
 import { useStore } from "@/state/store";
+import { useMrDogStore } from "@/features/mrdog/store";
 import { rendersDirect } from "./pipeline";
 
 function RendererGrade() {
@@ -105,6 +106,7 @@ function CanvasInner() {
   useEffect(() => {
     if (advanceRef.current && !contextLost && !assetFailed && tier !== "T0") {
       setWebglAdvance((time) => {
+        if (useMrDogStore.getState().chatCovering) return;
         // Events and the 404 have no world: draw nothing behind them.
         if (useStore.getState().sceneRoute) advanceRef.current?.(time);
       });
@@ -155,6 +157,7 @@ function CanvasInner() {
           onCreated={({ gl, advance }) => {
             advanceRef.current = advance;
             setWebglAdvance((time) => {
+              if (useMrDogStore.getState().chatCovering) return;
               if (useStore.getState().sceneRoute) advance(time);
             });
             (

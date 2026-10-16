@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useMrDogStore, worldToOutfit } from "./store";
 import { useStore as useAppStore } from "@/state/store";
 import { MrDogStills } from "./MrDogStills";
+import { MrDogStage3D } from "./MrDogStage3D";
 import { MrDogChat } from "./MrDogChat";
 import { getLenis } from "@/motion/clock";
 
@@ -165,16 +166,17 @@ export function MrDogSheet() {
         </div>
       </div>
 
-      {/* Stage: 2D Stills (or collapsed avatar row when keyboard is open) */}
+      {/* Stage: 3D Stage (T2+ with Motion ON) or 2D Stills (or collapsed avatar row when keyboard is open) */}
       <div
         className={`flex items-center justify-center bg-gradient-to-b from-[#0F141C] to-[#07090D] border-b border-white/5 transition-all duration-300 overflow-hidden ${
           keyboardOpen ? "h-16 py-1 shrink-0" : "h-[28vh] shrink-0"
         }`}
       >
-        <MrDogStills
-          size={keyboardOpen ? 56 : 180}
-          isAvatarOnly={keyboardOpen}
-        />
+        {keyboardOpen ? (
+          <MrDogStills size={56} isAvatarOnly={true} />
+        ) : (
+          <MrDogStage3D size={180} />
+        )}
       </div>
 
       {/* Shared Chat UI */}

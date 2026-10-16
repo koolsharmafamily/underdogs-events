@@ -24,6 +24,16 @@ const MrDogSheet = dynamic(
   { ssr: false },
 );
 
+const MrDogLauncher = dynamic(
+  () => import("@/features/mrdog/MrDogLauncher").then((m) => m.MrDogLauncher),
+  { ssr: false },
+);
+
+const MrDogPanel = dynamic(
+  () => import("@/features/mrdog/MrDogPanel").then((m) => m.MrDogPanel),
+  { ssr: false },
+);
+
 const Experience = dynamic(
   () => import("@/webgl/Experience").then((mod) => mod.Experience),
   { ssr: false },
@@ -167,6 +177,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SceneNavigation />
       <PointerDetails />
       <MrDogSheet />
+      <MrDogLauncher />
+      <MrDogPanel />
     </>
   );
 }

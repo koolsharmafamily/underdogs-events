@@ -16,6 +16,17 @@ export function setWebglAdvance(fn: (time: number) => void) {
   webglAdvance = fn;
 }
 
+export type TickerRenderer = (time: number) => void;
+const tickerRenderers = new Set<TickerRenderer>();
+
+export function addTickerRenderer(fn: TickerRenderer) {
+  tickerRenderers.add(fn);
+}
+
+export function removeTickerRenderer(fn: TickerRenderer) {
+  tickerRenderers.delete(fn);
+}
+
 export function getLenis(): Lenis | null {
   return activeLenis;
 }
@@ -167,6 +178,9 @@ export function startClock() {
     }
 
     webglAdvance(time);
+    for (const renderFn of tickerRenderers) {
+      renderFn(time);
+    }
     frame.snapCamera = false;
   };
 

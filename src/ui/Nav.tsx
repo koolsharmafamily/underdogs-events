@@ -8,6 +8,7 @@ import { UnderdogsBadgeSvg } from "./UnderdogsBadgeSvg";
 import { TransitionLink } from "./TransitionLink";
 import { MobileTopBar } from "./mobile/MobileTopBar";
 import { MobileTabBar } from "./mobile/MobileTabBar";
+import { useMrDogStore } from "@/features/mrdog/store";
 
 export function Nav() {
   const pathname = usePathname();
@@ -96,6 +97,24 @@ export function Nav() {
                 isDiwali,
               )}`}
             />
+            <span
+              aria-hidden="true"
+              className={`font-bold text-[14px] ${dotColor}`}
+            >
+              ·
+            </span>
+            <button
+              type="button"
+              onClick={() => useMrDogStore.getState().openMrDog()}
+              className={`min-h-[44px] nav-roll-link inline-flex items-center px-1 font-cinzel text-[14px] sm:text-[15px] font-semibold uppercase tracking-[0.22em] transition-all ${brandTextColor}`}
+            >
+              <span className="nav-roll-inner">
+                <span className="nav-roll-line">Ask Mr. Dog</span>
+                <span className="nav-roll-line" aria-hidden="true">
+                  Ask Mr. Dog
+                </span>
+              </span>
+            </button>
           </nav>
         </div>
       </header>

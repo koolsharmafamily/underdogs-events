@@ -31,11 +31,12 @@ const COPY_VERBATIM = new Set([
 // quantized vertex positions are safe for the badges too.
 // The Halloween logo's face texture is drawn at 2048; the badge is shown large.
 const TEXTURE_SIZE = { 'badge-halloween.glb': 2048 };
-const BUDGETS_MB = { home: 2.5, redroom: 6.0, diwali: 5.0 };
+const BUDGETS_MB = { home: 2.5, redroom: 6.0, diwali: 5.0, mrdog: 1.2 };
 const WORLD_FILES = {
   home: (f) => f === 'badge-enamel.glb' || f.startsWith('door-'),
   redroom: (f) => f.startsWith('redroom-') || f === 'curtain-open.glb' || f === 'badge-halloween.glb',
   diwali: (f) => f === 'badge-jewelled.glb',
+  mrdog: (f) => f === 'mr-dog.glb',
 };
 
 function countTriangles(doc) {

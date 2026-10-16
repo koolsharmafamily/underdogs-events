@@ -28,6 +28,7 @@ interface MrDogState {
   isOpen: boolean;
   expression: MrDogExpression;
   chatCovering: boolean;
+  jawTarget: number;
   messages: ChatMessage[];
   streamingText: string;
   isStreaming: boolean;
@@ -102,6 +103,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
   isOpen: false,
   expression: "idle",
   chatCovering: false,
+  jawTarget: 0,
   messages: getInitialMessages(),
   streamingText: "",
   isStreaming: false,
@@ -244,6 +246,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
       (revealed, jaw, talking) => {
         set({
           streamingText: revealed,
+          jawTarget: jaw,
           expression: talking ? "talking" : get().expression === "talking" ? "idle" : get().expression,
         });
       },
@@ -265,6 +268,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
           messages: finalMsgs,
           isStreaming: false,
           streamingText: "",
+          jawTarget: 0,
           expression: "idle",
         });
       }
