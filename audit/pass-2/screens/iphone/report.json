@@ -1,0 +1,875 @@
+{
+ "device": "iphone",
+ "reduced": false,
+ "pages": {
+  "home": {
+   "shots": [
+    {
+     "name": "gap-0",
+     "y": 0,
+     "file": "audit/pass-2/screens/iphone/home-gap-0.jpg",
+     "frames": 14,
+     "callsMax": 45,
+     "callsAvg": 45,
+     "trisMax": 69429,
+     "renderPasses": 18,
+     "programs": 70,
+     "geometries": 29,
+     "textures": 31,
+     "dpr": 1.5
+    },
+    {
+     "name": "gap-675",
+     "y": 675,
+     "file": "audit/pass-2/screens/iphone/home-gap-675.jpg",
+     "frames": 15,
+     "callsMax": 45,
+     "callsAvg": 24,
+     "trisMax": 69429,
+     "renderPasses": 18,
+     "programs": 70,
+     "geometries": 29,
+     "textures": 31,
+     "dpr": 1.5
+    },
+    {
+     "name": "gap-1350",
+     "y": 1327,
+     "file": "audit/pass-2/screens/iphone/home-gap-1350.jpg",
+     "frames": 14,
+     "callsMax": 23,
+     "callsAvg": 23,
+     "trisMax": 31,
+     "renderPasses": 18,
+     "programs": 70,
+     "geometries": 29,
+     "textures": 31,
+     "dpr": 1.5
+    }
+   ],
+   "readyMs": 43,
+   "loadMs": 60059,
+   "scenes": [],
+   "docH": 2171,
+   "vitals": {
+    "lcp": {
+     "t": 1612,
+     "size": 175500,
+     "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,12 "
+    },
+    "cls": 0,
+    "shifts": []
+   }
+  },
+  "the-red-room": {
+   "shots": [
+    {
+     "name": "R1-25",
+     "y": 21,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R1-25.jpg",
+     "frames": 11,
+     "callsMax": 54,
+     "callsAvg": 54,
+     "trisMax": 211371,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R1-50",
+     "y": 42,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R1-50.jpg",
+     "frames": 11,
+     "callsMax": 54,
+     "callsAvg": 54,
+     "trisMax": 211371,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R1-75",
+     "y": 63,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R1-75.jpg",
+     "frames": 10,
+     "callsMax": 54,
+     "callsAvg": 54,
+     "trisMax": 211371,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R2-25",
+     "y": 968,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R2-25.jpg",
+     "frames": 12,
+     "callsMax": 54,
+     "callsAvg": 48,
+     "trisMax": 211371,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R2-50",
+     "y": 1008,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R2-50.jpg",
+     "frames": 13,
+     "callsMax": 47,
+     "callsAvg": 47,
+     "trisMax": 191254,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R2-75",
+     "y": 1048,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R2-75.jpg",
+     "frames": 15,
+     "callsMax": 47,
+     "callsAvg": 47,
+     "trisMax": 191254,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R3-25",
+     "y": 1954,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R3-25.jpg",
+     "frames": 15,
+     "callsMax": 47,
+     "callsAvg": 46,
+     "trisMax": 191254,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R3-50",
+     "y": 1975,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R3-50.jpg",
+     "frames": 15,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R3-75",
+     "y": 1996,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R3-75.jpg",
+     "frames": 14,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 34,
+     "dpr": 1.5
+    },
+    {
+     "name": "R4-25",
+     "y": 2919,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R4-25.jpg",
+     "frames": 14,
+     "callsMax": 68,
+     "callsAvg": 66,
+     "trisMax": 220752,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R4-50",
+     "y": 2977,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R4-50.jpg",
+     "frames": 15,
+     "callsMax": 68,
+     "callsAvg": 47,
+     "trisMax": 220752,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R4-75",
+     "y": 3035,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R4-75.jpg",
+     "frames": 15,
+     "callsMax": 45,
+     "callsAvg": 45,
+     "trisMax": 186028,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R-DJ-25",
+     "y": 3998,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R-DJ-25.jpg",
+     "frames": 14,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R-DJ-50",
+     "y": 4059,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R-DJ-50.jpg",
+     "frames": 16,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R-DJ-75",
+     "y": 4119,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R-DJ-75.jpg",
+     "frames": 15,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R5-25",
+     "y": 5083,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R5-25.jpg",
+     "frames": 15,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R5-50",
+     "y": 5141,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R5-50.jpg",
+     "frames": 14,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R5-75",
+     "y": 5200,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R5-75.jpg",
+     "frames": 15,
+     "callsMax": 46,
+     "callsAvg": 46,
+     "trisMax": 191252,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R6-25",
+     "y": 6123,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R6-25.jpg",
+     "frames": 14,
+     "callsMax": 53,
+     "callsAvg": 53,
+     "trisMax": 211369,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R6-50",
+     "y": 6144,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R6-50.jpg",
+     "frames": 14,
+     "callsMax": 53,
+     "callsAvg": 53,
+     "trisMax": 211369,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "R6-75",
+     "y": 6165,
+     "file": "audit/pass-2/screens/iphone/the-red-room-R6-75.jpg",
+     "frames": 15,
+     "callsMax": 53,
+     "callsAvg": 53,
+     "trisMax": 211369,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    },
+    {
+     "name": "H6-mid",
+     "y": 6468,
+     "file": "audit/pass-2/screens/iphone/the-red-room-H6-mid.jpg",
+     "frames": 15,
+     "callsMax": 53,
+     "callsAvg": 53,
+     "trisMax": 211369,
+     "renderPasses": 18,
+     "programs": 77,
+     "geometries": 73,
+     "textures": 37,
+     "dpr": 1.5
+    }
+   ],
+   "readyMs": 29351,
+   "loadMs": 32973,
+   "scenes": [
+    {
+     "id": "R1",
+     "top": 0,
+     "h": 928,
+     "label": "The Red Room"
+    },
+    {
+     "id": "R2",
+     "top": 928,
+     "h": 1004,
+     "label": "The Red Room story"
+    },
+    {
+     "id": "R3",
+     "top": 1933,
+     "h": 928,
+     "label": "Dress code"
+    },
+    {
+     "id": "R4",
+     "top": 2861,
+     "h": 1076,
+     "label": "The Red Room Invitation Details"
+    },
+    {
+     "id": "R-DJ",
+     "top": 3937,
+     "h": 1087,
+     "label": "DJ Mohnish"
+    },
+    {
+     "id": "R5",
+     "top": 5024,
+     "h": 1078,
+     "label": ""
+    },
+    {
+     "id": "R6",
+     "top": 6102,
+     "h": 928,
+     "label": "The Red Room Outro"
+    },
+    {
+     "id": "H6",
+     "top": 7030,
+     "h": 282,
+     "label": ""
+    }
+   ],
+   "docH": 7312,
+   "vitals": {
+    "lcp": {
+     "t": 3892,
+     "size": 163800,
+     "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43, "
+    },
+    "cls": 0.023267141399420266,
+    "shifts": [
+     {
+      "v": 0.00001835442716747326,
+      "t": 3391,
+      "src": [
+       "SPAN."
+      ]
+     },
+     {
+      "v": 0.012144637502526897,
+      "t": 3543.5999999996275,
+      "src": [
+       "DIV.site-container flex flex-col items-center gap-2.5 sm:gap-3.5"
+      ]
+     },
+     {
+      "v": 0.011104149469725898,
+      "t": 3901.5,
+      "src": [
+       "DIV.relative inline-block",
+       "H1.font-nosifer text-[clamp(2.2rem,4.6vw,3.8rem)] font-normal u",
+       "svg.[object SVGAnimatedString]",
+       "svg.[object SVGAnimatedString]",
+       "svg.[object SVGAnimatedString]"
+      ]
+     }
+    ]
+   }
+  },
+  "diwali": {
+   "shots": [
+    {
+     "name": "D1-25",
+     "y": 21,
+     "file": "audit/pass-2/screens/iphone/diwali-D1-25.jpg",
+     "frames": 17,
+     "callsMax": 29,
+     "callsAvg": 28,
+     "trisMax": 79064,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D1-50",
+     "y": 42,
+     "file": "audit/pass-2/screens/iphone/diwali-D1-50.jpg",
+     "frames": 17,
+     "callsMax": 29,
+     "callsAvg": 27,
+     "trisMax": 79064,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D1-75",
+     "y": 63,
+     "file": "audit/pass-2/screens/iphone/diwali-D1-75.jpg",
+     "frames": 17,
+     "callsMax": 27,
+     "callsAvg": 26,
+     "trisMax": 79060,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D2-25",
+     "y": 1040,
+     "file": "audit/pass-2/screens/iphone/diwali-D2-25.jpg",
+     "frames": 35,
+     "callsMax": 29,
+     "callsAvg": 3,
+     "trisMax": 79064,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D2-50",
+     "y": 1152,
+     "file": "audit/pass-2/screens/iphone/diwali-D2-50.jpg",
+     "frames": 31,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D2-75",
+     "y": 1263,
+     "file": "audit/pass-2/screens/iphone/diwali-D2-75.jpg",
+     "frames": 34,
+     "callsMax": 2,
+     "callsAvg": 2,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D3-25",
+     "y": 2242,
+     "file": "audit/pass-2/screens/iphone/diwali-D3-25.jpg",
+     "frames": 31,
+     "callsMax": 2,
+     "callsAvg": 1,
+     "trisMax": 4,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D3-50",
+     "y": 2265,
+     "file": "audit/pass-2/screens/iphone/diwali-D3-50.jpg",
+     "frames": 31,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D3-75",
+     "y": 2287,
+     "file": "audit/pass-2/screens/iphone/diwali-D3-75.jpg",
+     "frames": 34,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D-DJ-25",
+     "y": 3214,
+     "file": "audit/pass-2/screens/iphone/diwali-D-DJ-25.jpg",
+     "frames": 30,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D-DJ-50",
+     "y": 3276,
+     "file": "audit/pass-2/screens/iphone/diwali-D-DJ-50.jpg",
+     "frames": 34,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D-DJ-75",
+     "y": 3338,
+     "file": "audit/pass-2/screens/iphone/diwali-D-DJ-75.jpg",
+     "frames": 33,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D4-25",
+     "y": 4309,
+     "file": "audit/pass-2/screens/iphone/diwali-D4-25.jpg",
+     "frames": 32,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D4-50",
+     "y": 4375,
+     "file": "audit/pass-2/screens/iphone/diwali-D4-50.jpg",
+     "frames": 35,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D4-75",
+     "y": 4440,
+     "file": "audit/pass-2/screens/iphone/diwali-D4-75.jpg",
+     "frames": 31,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "gap-5349",
+     "y": 5349,
+     "file": "audit/pass-2/screens/iphone/diwali-gap-5349.jpg",
+     "frames": 33,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "D5-mid",
+     "y": 5831,
+     "file": "audit/pass-2/screens/iphone/diwali-D5-mid.jpg",
+     "frames": 30,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    },
+    {
+     "name": "H6-mid",
+     "y": 5920,
+     "file": "audit/pass-2/screens/iphone/diwali-H6-mid.jpg",
+     "frames": 30,
+     "callsMax": 1,
+     "callsAvg": 1,
+     "trisMax": 2,
+     "renderPasses": 1,
+     "programs": 64,
+     "geometries": 30,
+     "textures": 13,
+     "dpr": 1.5
+    }
+   ],
+   "readyMs": 27,
+   "loadMs": 36000,
+   "scenes": [
+    {
+     "id": "D1",
+     "top": 0,
+     "h": 928,
+     "label": "DHAMAAKA — The Karan Johar Edition"
+    },
+    {
+     "id": "D2",
+     "top": 928,
+     "h": 1291,
+     "label": "Diwali story film cards"
+    },
+    {
+     "id": "D3",
+     "top": 2220,
+     "h": 933,
+     "label": "DHAMAAKA with Underdogs"
+    },
+    {
+     "id": "D-DJ",
+     "top": 3152,
+     "h": 1092,
+     "label": "DJ Yogi"
+    },
+    {
+     "id": "D4",
+     "top": 4244,
+     "h": 1105,
+     "label": "In association with"
+    },
+    {
+     "id": "D5",
+     "top": 6022,
+     "h": 461,
+     "label": "Diwali Dhamaka Outro"
+    },
+    {
+     "id": "H6",
+     "top": 6482,
+     "h": 282,
+     "label": ""
+    }
+   ],
+   "docH": 6764,
+   "vitals": {
+    "lcp": {
+     "t": 3624,
+     "size": 111240,
+     "el": "text.[object SVGAnimatedString] DHAMAAKA"
+    },
+    "cls": 0.000152866157694813,
+    "shifts": [
+     {
+      "v": 0.000152866157694813,
+      "t": 3064.9000000003725,
+      "src": [
+       "SPAN.",
+       "P.font-manrope text-[14px] sm:text-[16px] text-[#FFF6EE]/90 tr"
+      ]
+     }
+    ]
+   }
+  },
+  "events": {
+   "shots": [
+    {
+     "name": "gap-0",
+     "y": 0,
+     "file": "audit/pass-2/screens/iphone/events-gap-0.jpg"
+    },
+    {
+     "name": "gap-675",
+     "y": 625,
+     "file": "audit/pass-2/screens/iphone/events-gap-675.jpg"
+    }
+   ],
+   "readyMs": 762,
+   "loadMs": 1170,
+   "scenes": [],
+   "docH": 1469,
+   "vitals": {
+    "lcp": {
+     "t": 872,
+     "size": 203598,
+     "el": "DIV.absolute inset-0 bg-cover bg-center pointer-events-none opacity-25 group-hover:o "
+    },
+    "cls": 0.012680651568058634,
+    "shifts": [
+     {
+      "v": 0.012680651568058634,
+      "t": 376.59999999962747,
+      "src": [
+       "A.  inline-flex items-center gap-2.5 active:opacity-80 transit",
+       "BUTTON.nav-roll-link inline-flex min-h-[44px] min-w-[44px] items-ce",
+       "H1.font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold upper",
+       "undefined.undefined",
+       "DIV.relative z-10 flex flex-col gap-3 pt-6"
+      ]
+     }
+    ]
+   }
+  },
+  "no-such-door": {
+   "shots": [
+    {
+     "name": "gap-0",
+     "y": 0,
+     "file": "audit/pass-2/screens/iphone/no-such-door-gap-0.jpg"
+    },
+    {
+     "name": "H6-mid",
+     "y": 22,
+     "file": "audit/pass-2/screens/iphone/no-such-door-H6-mid.jpg"
+    }
+   ],
+   "readyMs": 51,
+   "loadMs": 338,
+   "scenes": [
+    {
+     "id": "H6",
+     "top": 584,
+     "h": 282,
+     "label": ""
+    }
+   ],
+   "docH": 866,
+   "vitals": {
+    "lcp": {
+     "t": 688,
+     "size": 20550,
+     "el": "H1.font-unbounded text-display-l font-extrabold uppercase text-[var(--paper)] balan This door doesn’t open."
+    },
+    "cls": 0.0033222568296781873,
+    "shifts": [
+     {
+      "v": 0.0033222568296781873,
+      "t": 240.39999999850988,
+      "src": [
+       "A.  inline-flex items-center gap-2.5 active:opacity-80 transit",
+       "BUTTON.nav-roll-link inline-flex min-h-[44px] min-w-[44px] items-ce",
+       "undefined.undefined"
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "logs": [
+  "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+  "[http 404] http://localhost:3301/no-such-door",
+  "[error] Failed to load resource: the server responded with a status of 404 (Not Found)"
+ ],
+ "external": []
+}

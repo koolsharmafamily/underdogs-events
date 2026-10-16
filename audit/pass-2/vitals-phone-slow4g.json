@@ -1,0 +1,166 @@
+{
+ "/": {
+  "loadMs": 2873,
+  "transferredKB": 1428,
+  "byTypeKB": {
+   "Document": 16,
+   "Script": 593,
+   "Stylesheet": 22,
+   "Image": 122,
+   "Font": 86,
+   "Other": 5,
+   "Fetch": 584
+  },
+  "lcp": {
+   "t": 2924,
+   "size": 175500,
+   "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,12 "
+  },
+  "cls": 0.0165,
+  "shifts": [
+   {
+    "v": 0.0164932254852075,
+    "t": 2573.2999999988824,
+    "src": [
+     "A.  inline-flex items-center gap-2.5 active:opacity-80 transit",
+     "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px",
+     "DIV.w-full flex flex-col items-center gap-4 max-w-[340px] mx-aut",
+     "undefined.undefined"
+    ]
+   }
+  ],
+  "longTasksOver200": 9,
+  "maxEvent": 4488,
+  "fcp": 2492
+ },
+ "/the-red-room": {
+  "loadMs": 3140,
+  "transferredKB": 3789,
+  "byTypeKB": {
+   "Document": 15,
+   "Script": 598,
+   "Stylesheet": 22,
+   "Image": 340,
+   "Font": 176,
+   "Other": 5,
+   "Fetch": 2633
+  },
+  "lcp": {
+   "t": 1940,
+   "size": 163800,
+   "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(255,0,43, "
+  },
+  "cls": 0.0234,
+  "shifts": [
+   {
+    "v": 0.012320024251016085,
+    "t": 2508.10000000149,
+    "src": [
+     "SPAN.",
+     "DIV.site-container flex flex-col items-center gap-2.5 sm:gap-3.5"
+    ]
+   },
+   {
+    "v": 0.011115871466087167,
+    "t": 4011.2000000011176,
+    "src": [
+     "DIV.relative inline-block",
+     "H1.font-nosifer text-[clamp(2.2rem,4.6vw,3.8rem)] font-normal u",
+     "svg.[object SVGAnimatedString]",
+     "svg.[object SVGAnimatedString]",
+     "svg.[object SVGAnimatedString]"
+    ]
+   }
+  ],
+  "longTasksOver200": 14,
+  "maxEvent": 0,
+  "fcp": 1520
+ },
+ "/diwali": {
+  "loadMs": 3791,
+  "transferredKB": 1757,
+  "byTypeKB": {
+   "Document": 22,
+   "Image": 186,
+   "Script": 599,
+   "Stylesheet": 22,
+   "Font": 191,
+   "Other": 5,
+   "Fetch": 733
+  },
+  "lcp": {
+   "t": 3212,
+   "size": 159900,
+   "el": "IMG.w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(224,33,12 "
+  },
+  "cls": 0.0002,
+  "shifts": [
+   {
+    "v": 0.000152866157694813,
+    "t": 2962.9000000003725,
+    "src": [
+     "SPAN.",
+     "P.font-manrope text-[14px] sm:text-[16px] text-[#FFF6EE]/90 tr"
+    ]
+   },
+   {
+    "v": 0.000027356724196417824,
+    "t": 3809.2000000011176,
+    "src": [
+     "DIV.hero-enter mt-1 flex items-center justify-center gap-3 opaci"
+    ]
+   }
+  ],
+  "longTasksOver200": 13,
+  "maxEvent": 2288,
+  "fcp": 2364
+ },
+ "/events": {
+  "loadMs": 6705,
+  "transferredKB": 2726,
+  "byTypeKB": {
+   "Document": 9,
+   "Script": 618,
+   "Stylesheet": 22,
+   "Image": 497,
+   "Font": 86,
+   "Fetch": 1484,
+   "Other": 10
+  },
+  "lcp": {
+   "t": 5156,
+   "size": 203598,
+   "el": "DIV.absolute inset-0 bg-cover bg-center pointer-events-none opacity-25 group-hover:o "
+  },
+  "cls": 0.0136,
+  "shifts": [
+   {
+    "v": 0.0003358316861705712,
+    "t": 2199.800000000745,
+    "src": [
+     "A.  inline-flex items-center gap-2.5 active:opacity-80 transit",
+     "H1.font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold upper",
+     "undefined.undefined",
+     "DIV.flex flex-col items-end gap-2"
+    ]
+   },
+   {
+    "v": 0.009689751710371194,
+    "t": 2418.5,
+    "src": [
+     "DIV.relative z-10 flex flex-col gap-3 pt-6"
+    ]
+   },
+   {
+    "v": 0.0035879837604725854,
+    "t": 23211.5,
+    "src": [
+     "DIV.pointer-events-none absolute top-0 h-[2.5px] w-12 -translate"
+    ]
+   }
+  ],
+  "longTasksOver200": 8,
+  "maxEvent": 272,
+  "fcp": 1568
+ }
+}

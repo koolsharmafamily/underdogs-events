@@ -1,0 +1,78 @@
+{
+ "desktop-05-door-to-red-room-T1": {
+  "realSec": 219,
+  "programsStart": 8,
+  "programsEnd": 58,
+  "frames": 130,
+  "callsMax": 169,
+  "callsAvg": 103,
+  "trisMax": 696851,
+  "renderPasses": 24,
+  "programs": 58,
+  "geometries": 108,
+  "textures": 50,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[frames] 200 captured over 210s real"
+  ],
+  "external": []
+ },
+ "desktop-06-door-to-dhamaaka-T2": {
+  "realSec": 239,
+  "programsStart": 8,
+  "programsEnd": 58,
+  "frames": 313,
+  "callsMax": 133,
+  "callsAvg": 50,
+  "trisMax": 215238,
+  "renderPasses": 1,
+  "programs": 58,
+  "geometries": 83,
+  "textures": 37,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[frames] 404 captured over 233s real"
+  ],
+  "external": []
+ },
+ "desktop-07-red-room-to-dhamaaka-T3": {
+  "realSec": 233,
+  "programsStart": 9,
+  "programsEnd": 59,
+  "frames": 277,
+  "callsMax": 228,
+  "callsAvg": 43,
+  "trisMax": 833608,
+  "renderPasses": 1,
+  "programs": 59,
+  "geometries": 102,
+  "textures": 44,
+  "dpr": 1,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[frames] 328 captured over 228s real"
+  ],
+  "external": []
+ },
+ "phone-05-tabs-and-event-cards": {
+  "realSec": 636,
+  "programsStart": 58,
+  "programsEnd": 56,
+  "frames": 650,
+  "callsMax": 110,
+  "callsAvg": 32,
+  "trisMax": 466089,
+  "renderPasses": 18,
+  "programs": 56,
+  "geometries": 90,
+  "textures": 40,
+  "dpr": 1.5,
+  "logs": [
+   "[warning] THREE.WebGLRenderer: KHR_parallel_shader_compile extension not supported.",
+   "[frames] 4350 captured over 627s real"
+  ],
+  "external": []
+ }
+}
