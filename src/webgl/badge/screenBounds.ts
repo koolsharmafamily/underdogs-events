@@ -9,6 +9,10 @@ export const badgeScreenBounds = {
   drawn: false,
 };
 
+if (typeof window !== "undefined") {
+  (window as any).__badgeScreenBounds = badgeScreenBounds;
+}
+
 /**
  * CSS mask for a full-screen cover that leaves the badge showing through a soft
  * round aperture, or "none" when no badge is drawn (never an empty hole).

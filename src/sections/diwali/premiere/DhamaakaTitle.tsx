@@ -31,9 +31,9 @@ export function DhamaakaTitle() {
         <span className="h-[1px] w-8 sm:w-16 bg-gradient-to-l from-transparent to-[#E5B25D]" />
       </div>
 
-      {/* Prominent 3D Jewelled Badge Host (above DHAMAAKA) */}
+      {/* Prominent 3D Jewelled Badge Host (centered between Presenter and DHAMAAKA) */}
       <div
-        className="hero-enter relative my-2 sm:my-3 [--hero-from:scale(0.95)] [animation-delay:350ms]"
+        className="hero-enter relative mt-5 mb-2 sm:my-3 [--hero-from:scale(0.95)] [animation-delay:350ms]"
       >
         {/* Soft Warm Halo Glow */}
         <div

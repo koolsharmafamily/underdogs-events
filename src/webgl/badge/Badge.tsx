@@ -548,8 +548,12 @@ export function Badge({
         choreoPos.current.set(0, THREE.MathUtils.lerp(1.2, 2.35, t), 0.6);
         choreoScale.current = THREE.MathUtils.lerp(0, targetScale * 0.75, t);
       } else if (d1 < 0.7 && d2 === 0 && d3 === 0 && d4 === 0) {
-        // D1: Hero jewelled badge prominent above DHAMAAKA title
-        choreoPos.current.set(0, isMobile ? 2.354 : 2.22, 0.6);
+        // D1: Hero jewelled badge centered between Presenter and DHAMAAKA title
+        choreoPos.current.set(
+          0,
+          isMobile ? (size.height < 700 ? 2.06 : 2.165) : 2.22,
+          0.6,
+        );
         choreoScale.current = THREE.MathUtils.damp(
           choreoScale.current,
           targetScale,
@@ -579,8 +583,12 @@ export function Badge({
         choreoPos.current.set(0, isMobile ? 2.345 : 2.22, 0.6);
         choreoScale.current = isMobile ? 0.86 : 1.85;
       } else {
-        // Diwali: Prominent jewelled badge positioned above DHAMAAKA in D1
-        choreoPos.current.set(0, isMobile ? 2.354 : 2.22, 0.6);
+        // Diwali: Prominent jewelled badge centered between Presenter and DHAMAAKA in D1
+        choreoPos.current.set(
+          0,
+          isMobile ? (size.height < 700 ? 2.06 : 2.165) : 2.22,
+          0.6,
+        );
         choreoScale.current = isMobile ? 0.79 : 0.88;
       }
     } else if (composition.scene === "H2") {
