@@ -434,10 +434,10 @@ export function Badge({
 
     if (world === "home") {
       if (isMobile) {
-        // Mobile phone home page: big hero in the centre, remains there forever throughout scrolling
+        // Mobile phone home page: big hero centered between Underdogs Entertainment and Gate to Rage
         const h0Scale = 0.86;
         const h0X = 0;
-        const h0Y = size.height < 700 ? 2.25 : 2.35;
+        const h0Y = size.height < 700 ? 2.03 : 2.13;
         choreoPos.current.set(h0X, h0Y, 0.6);
         choreoScale.current = h0Scale;
         choreoYaw.current = 0;
@@ -569,7 +569,7 @@ export function Badge({
     if (composition.hero) {
       if (world === "home") {
         if (isMobile) {
-          choreoPos.current.set(0, size.height < 700 ? 2.25 : 2.35, 0.6);
+          choreoPos.current.set(0, size.height < 700 ? 2.03 : 2.13, 0.6);
           choreoScale.current = 0.86;
         } else {
           choreoPos.current.set(1.75, 1.8, 0);
@@ -585,7 +585,7 @@ export function Badge({
       }
     } else if (composition.scene === "H2") {
       if (world === "home" && isMobile) {
-        choreoPos.current.set(0, size.height < 700 ? 2.25 : 2.35, 0.6);
+        choreoPos.current.set(0, size.height < 700 ? 2.03 : 2.13, 0.6);
         choreoScale.current = 0.86;
       } else {
         choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.65 : 1.85, 0);

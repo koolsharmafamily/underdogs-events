@@ -78,11 +78,27 @@ export function MobileTopBar() {
           {!isDetail && (
             <UnderdogsBadgeSvg skin="home" size={24} className="shrink-0" />
           )}
-          <span
-            className={`font-cinzel text-[13px] font-bold uppercase tracking-[0.28em] ${activeColor}`}
-          >
-            {titleText}
-          </span>
+          {isRedRoom ? (
+            <div className="relative inline-block">
+              <span className="font-nosifer text-[13px] text-[#FF1A35] uppercase tracking-[0.04em] drop-shadow-[0_2px_10px_rgba(255,26,53,0.85)]">
+                {titleText}
+              </span>
+              <div aria-hidden="true" className="pointer-events-none relative h-1.5 w-full">
+                <svg className="absolute top-0 left-[24%] text-[#B80A12] rr-blood-drip" width="4" height="6" viewBox="0 0 4 6">
+                  <path d="M2 0 C2 1, 1.5 4, 0.8 4.5 C0.3 5, 0.3 5.5, 2 6 C3.7 5.5, 3.7 5, 3.2 4.5 C2.5 4, 2 1, 2 0 Z" fill="currentColor" />
+                </svg>
+                <svg className="absolute top-0 left-[72%] text-[#B80A12] rr-blood-drip" width="4" height="7" viewBox="0 0 4 7" style={{ animationDelay: '0.35s' }}>
+                  <path d="M2 0 C2 1.5, 1.5 5, 0.8 5.5 C0.3 6, 0.3 6.5, 2 7 C3.7 6.5, 3.7 6, 3.2 5.5 C2.5 5, 2 1.5, 2 0 Z" fill="currentColor" />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            <span
+              className={`font-cinzel text-[13px] font-bold uppercase tracking-[0.28em] ${activeColor}`}
+            >
+              {titleText}
+            </span>
+          )}
         </TransitionLink>
       </div>
     </header>

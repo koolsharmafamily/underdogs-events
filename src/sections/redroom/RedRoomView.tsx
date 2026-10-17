@@ -136,7 +136,7 @@ export function RedRoomView() {
             <div className="relative inline-block">
               <h1
                 ref={titleRef}
-                className="font-cinzel font-black text-[clamp(2.4rem,5vw,4.4rem)] uppercase text-[#E81414] tracking-[0.08em] leading-[1.05] balance-heading drop-shadow-[0_8px_32px_rgba(210,10,21,0.85)]"
+                className="font-nosifer text-[clamp(2.0rem,5.5vw,4.0rem)] uppercase text-[#E81414] tracking-[0.04em] leading-[1.15] balance-heading drop-shadow-[0_8px_32px_rgba(210,10,21,0.9)]"
               >
                 {site.redRoom.title}
               </h1>

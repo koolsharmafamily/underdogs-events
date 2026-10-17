@@ -12,10 +12,24 @@ export interface TransitionStageRefs {
   stageEl: HTMLElement | null;
   veilEl: HTMLElement | null;
   coinEl?: HTMLElement | null;
+  coinImgEl?: HTMLImageElement | null;
   washEl: HTMLElement | null;
   curtainWrapEl: HTMLElement | null;
   leftCurtainEl: HTMLElement | null;
   rightCurtainEl: HTMLElement | null;
+}
+
+const COIN_STILLS: Record<WorldId, string> = {
+  redroom: "/media/badge-halloween-still.webp",
+  diwali: "/media/badge-jewelled-still.webp",
+  home: "/media/badge-enamel-still.webp",
+};
+
+if (typeof window !== "undefined") {
+  Object.values(COIN_STILLS).forEach((src) => {
+    const img = new Image();
+    img.src = src;
+  });
 }
 
 let stageRefs: TransitionStageRefs | null = null;
@@ -38,6 +52,7 @@ export function registerTransitionVeil(el: HTMLElement | null) {
       stageEl: el,
       veilEl: el,
       coinEl: null,
+      coinImgEl: null,
       washEl: null,
       curtainWrapEl: null,
       leftCurtainEl: null,
@@ -131,7 +146,7 @@ function resetStageComplete() {
   if (stageRefs?.curtainWrapEl)
     gsap.set(stageRefs.curtainWrapEl, { visibility: "hidden" });
 
-  if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 1, scale: 1 });
+  if (stageRefs?.coinEl) gsap.set(stageRefs.coinEl, { opacity: 0, scale: 0.92 });
 
   const mainEl =
     typeof document !== "undefined"
@@ -321,6 +336,12 @@ export function runRouteTransition(
   const toWorld = pathToWorld(toPath);
   const destSkin = worldToSkin(toWorld);
 
+  // Set designated 2D coin still immediately for zero perceived lag
+  const designatedStill = COIN_STILLS[toWorld] ?? COIN_STILLS.home;
+  if (stageRefs?.coinImgEl) {
+    stageRefs.coinImgEl.src = designatedStill;
+  }
+
   // Ensure target world's 3D assets begin preloading immediately
   preloadWorldAssets(toWorld);
 
@@ -459,7 +480,7 @@ export function runRouteTransition(
     };
 
     if (typeof window !== "undefined") {
-      const fallbackDelay = isMobile ? 250 : 350;
+      const fallbackDelay = isMobile ? 180 : 280;
       pendingEnterFallbackTimer = window.setTimeout(() => {
         tryProceedEnter(true);
       }, fallbackDelay);
@@ -547,6 +568,19 @@ export function runRouteTransition(
             frame.transition.t = (outDur + this.time()) / (outDur + inDur);
           },
         });
+        if (coinEl) {
+          enterTl.to(
+            coinEl,
+            {
+              opacity: 0,
+              scale: 1.06,
+              duration: inDur * 0.75,
+              ease: "power2.out",
+              force3D: true,
+            },
+            0,
+          );
+        }
         if (
           motionEnabled &&
           isTargetRedRoom &&
@@ -626,6 +660,19 @@ export function runRouteTransition(
       { opacity: 0, duration: Math.min(0.24, outDur), ease: "ease.in" },
       isCurtainTransition ? Math.max(0, outDur - 0.24) : 0,
     );
+  if (coinEl && !options.isPopState) {
+    exitTl.to(
+      coinEl,
+      {
+        opacity: 1,
+        scale: 1,
+        duration: Math.min(outDur * 0.65, 0.22),
+        ease: "power2.out",
+        force3D: true,
+      },
+      0,
+    );
+  }
   if (isCurtainTransition && leftCurtainEl && rightCurtainEl) {
     exitTl.to(
       leftCurtainEl,

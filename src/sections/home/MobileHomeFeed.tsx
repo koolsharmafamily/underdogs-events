@@ -28,23 +28,23 @@ export function MobileHomeFeed() {
   return (
     <div className="w-full flex flex-col pt-16 pb-[calc(108px+env(safe-area-inset-bottom,0px))] text-[#FCF9FC] select-none">
       {/* 1. Hero: 3D Enamel Badge + Gate to Rage */}
-      <section className="min-h-[84svh] flex flex-col items-center justify-between px-6 pt-2 pb-10 text-center">
-        {/* Presenter / Kicker Line matching Red Room & Diwali */}
-        <div className="my-auto flex flex-col items-center gap-2">
-          <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#FCF9FC]/70">
-            {site.home.hero.label}
-          </span>
-          <div className="flex items-center justify-center my-2 sm:my-4">
-            <BadgeDomHost
-              skin="home"
-              sizeClass="w-[200px] h-[200px] sm:w-[230px] sm:h-[230px]"
-              label="Underdogs Enamel Badge — tap to blink"
-            />
-          </div>
+      <section className="min-h-[82svh] flex flex-col items-center justify-center px-6 pt-2 pb-8 text-center">
+        {/* Presenter / Kicker Line */}
+        <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#FCF9FC]/70 mb-2">
+          {site.home.hero.label}
+        </span>
+
+        {/* 3D Enamel Badge DOM placeholder — carefully centered between kicker and title */}
+        <div className="flex items-center justify-center my-1.5">
+          <BadgeDomHost
+            skin="home"
+            sizeClass="w-[190px] h-[190px] sm:w-[210px] sm:h-[210px]"
+            label="Underdogs Enamel Badge — tap to blink"
+          />
         </div>
 
         {/* Copy & Primary Button below badge */}
-        <div className="w-full flex flex-col items-center gap-4 max-w-[340px] mx-auto mt-2">
+        <div className="w-full flex flex-col items-center gap-3.5 max-w-[340px] mx-auto mt-2">
           <h1 className="font-unbounded text-[clamp(28px,7vw,36px)] font-black uppercase tracking-[-0.02em] text-[#FCF9FC] drop-shadow-[0_2px_14px_rgba(234,40,193,0.35)]">
             {site.home.hero.title}
           </h1>
@@ -55,7 +55,7 @@ export function MobileHomeFeed() {
 
           <TransitionLink
             href="/events"
-            className="mt-2 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
+            className="mt-1 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
           >
             <span>{site.home.hero.seasonCta}</span>
             <span>→</span>
@@ -224,10 +224,20 @@ export function MobileHomeFeed() {
                 className="w-16 h-16 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(255,26,53,0.5)]"
               />
               <div className="flex flex-col">
-                <span className="font-nosifer text-xl text-[#FF1A35] leading-tight">
-                  {site.home.worlds.one.name}
-                </span>
-                <span className="font-manrope text-xs text-white/80 mt-1">
+                <div className="relative inline-block">
+                  <span className="font-nosifer text-xl text-[#FF1A35] leading-tight drop-shadow-[0_4px_16px_rgba(255,26,53,0.85)] tracking-[0.03em] uppercase">
+                    {site.home.worlds.one.name}
+                  </span>
+                  <div aria-hidden="true" className="pointer-events-none relative h-2.5 w-full">
+                    <svg className="absolute top-0 left-[22%] text-[#B80A12] rr-blood-drip" width="6" height="10" viewBox="0 0 6 10">
+                      <path d="M2.5 0 C2.5 2, 2 6, 1 7 C0.5 8, 0.5 9, 3 10 C5.5 9, 5.5 8, 5 7 C4 6, 3.5 2, 3.5 0 Z" fill="currentColor" />
+                    </svg>
+                    <svg className="absolute top-0 left-[68%] text-[#B80A12] rr-blood-drip" width="6" height="12" viewBox="0 0 6 12" style={{ animationDelay: '0.35s' }}>
+                      <path d="M2.5 0 C2.5 2, 2 8, 1 9 C0.5 10, 0.5 11, 3 12 C5.5 11, 5.5 10, 5 9 C4 8, 3.5 2, 3.5 0 Z" fill="currentColor" />
+                    </svg>
+                  </div>
+                </div>
+                <span className="font-manrope text-xs text-white/80 mt-0.5">
                   {site.home.worlds.one.date} · {site.home.worlds.one.place}
                 </span>
               </div>

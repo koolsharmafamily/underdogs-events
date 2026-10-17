@@ -79,11 +79,19 @@ export function EventsView() {
               {one.kicker}
             </span>
 
-            {/* Title with slow light sweep */}
-            <div className="animate-title-sweep inline-block">
-              <h2 className="font-cinzel font-black text-3xl sm:text-4xl uppercase text-[#FF1A35] tracking-[0.05em] leading-tight drop-shadow-[0_4px_24px_rgba(255,26,53,0.8)]">
+            {/* Title with slow light sweep and blood drips */}
+            <div className="relative inline-block animate-title-sweep">
+              <h2 className="font-nosifer text-2xl sm:text-4xl uppercase text-[#FF1A35] tracking-[0.03em] leading-tight drop-shadow-[0_4px_24px_rgba(255,26,53,0.9)]">
                 {site.home.worlds.one.name}
               </h2>
+              <div aria-hidden="true" className="pointer-events-none relative h-2.5 w-full">
+                <svg className="absolute top-0 left-[22%] text-[#B80A12] rr-blood-drip" width="6" height="12" viewBox="0 0 6 12">
+                  <path d="M2.5 0 C2.5 2, 2 8, 1 9 C0.5 10, 0.5 11, 3 12 C5.5 11, 5.5 10, 5 9 C4 8, 3.5 2, 3.5 0 Z" fill="currentColor" />
+                </svg>
+                <svg className="absolute top-0 left-[68%] text-[#B80A12] rr-blood-drip" width="6" height="14" viewBox="0 0 6 14" style={{ animationDelay: '0.4s' }}>
+                  <path d="M2.5 0 C2.5 2, 2 9, 1 10 C0.5 11, 0.5 12, 3 14 C5.5 12, 5.5 11, 5 10 C4 9, 3.5 2, 3.5 0 Z" fill="currentColor" />
+                </svg>
+              </div>
             </div>
 
             {/* Chips row */}
