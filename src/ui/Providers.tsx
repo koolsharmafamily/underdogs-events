@@ -3,11 +3,12 @@ import { PointerDetails } from "./PointerDetails";
 
 import React, { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { startClock, getLenis } from "@/motion/clock";
 import {
   getSavedRouteScroll,
+  notifyRouteEntered,
   runRouteTransition,
   saveRouteScroll,
   pathToWorld,
@@ -40,12 +41,29 @@ const Experience = dynamic(
 );
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const pathname = usePathname();
   const setWorld = useStore((s) => s.setWorld);
   const setPrefersReducedMotion = useStore((s) => s.setPrefersReducedMotion);
   const prevPathnameRef = useRef<string>(pathname);
   const isPopStateRef = useRef<boolean>(false);
   const restoringScrollRef = useRef<boolean>(false);
+
+  // Prefetch primary routes quietly during browser idle
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefetchRoutes = () => {
+      router.prefetch("/the-red-room");
+      router.prefetch("/diwali");
+      router.prefetch("/events");
+      router.prefetch("/");
+    };
+    if ("requestIdleCallback" in window) {
+      (window as Window).requestIdleCallback(prefetchRoutes, { timeout: 2500 });
+    } else {
+      setTimeout(prefetchRoutes, 1000);
+    }
+  }, [router]);
 
   // Save scroll position continuously for the active route (Part 10 T5)
   useEffect(() => {
@@ -92,6 +110,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     useStore.getState().setSceneRoute(isSceneRoute(pathname));
     preloadWorldAssets(world);
     setWorld(world);
+    notifyRouteEntered();
     prevPathnameRef.current = pathname;
 
     const wasPopState = isPopStateRef.current;

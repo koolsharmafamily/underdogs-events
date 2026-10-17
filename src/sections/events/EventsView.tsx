@@ -5,8 +5,10 @@ import Image from "next/image";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { site } from "@/content/site";
 import { useDaysToGo } from "@/utils/useDaysToGo";
+import { useEnterTransition } from "@/motion/transitions";
 
 export function EventsView() {
+  useEnterTransition("home");
   const { one, two } = site.home.worlds;
   const redRoomDays = useDaysToGo(one.isoDate);
   const diwaliDays = useDaysToGo(two.isoDate);

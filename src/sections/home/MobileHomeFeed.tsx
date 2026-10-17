@@ -8,17 +8,18 @@ import { useDaysToGo } from "@/utils/useDaysToGo";
 import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
 
 export function MobileHomeFeed() {
-  const [activeDot, setActiveDot] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
   const swipeContainerRef = useRef<HTMLDivElement>(null);
 
-  // Track swipe card position for dot indicators
+  // Track smooth liquid scroll progress across statements
   const handleScroll = () => {
     if (!swipeContainerRef.current) return;
-    const scrollLeft = swipeContainerRef.current.scrollLeft;
-    const cardWidth = swipeContainerRef.current.offsetWidth * 0.86;
-    const index = Math.round(scrollLeft / cardWidth);
-    setActiveDot(Math.min(2, Math.max(0, index)));
+    const { scrollLeft, scrollWidth, clientWidth } = swipeContainerRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll > 0) {
+      setScrollProgress(Math.min(1, Math.max(0, scrollLeft / maxScroll)));
+    }
   };
 
   const redRoomDays = useDaysToGo(site.home.worlds.one.isoDate);
@@ -36,7 +37,7 @@ export function MobileHomeFeed() {
           <div className="flex items-center justify-center my-2 sm:my-4">
             <BadgeDomHost
               skin="home"
-              sizeClass="w-[180px] h-[180px] sm:w-[220px] sm:h-[220px]"
+              sizeClass="w-[200px] h-[200px] sm:w-[230px] sm:h-[230px]"
               label="Underdogs Enamel Badge — tap to blink"
             />
           </div>
@@ -62,7 +63,7 @@ export function MobileHomeFeed() {
         </div>
       </section>
 
-      {/* 2. "Who we are" — Swipeable Cards */}
+      {/* 2. "Who we are" — Smooth Liquid Glass Runway */}
       <section className="py-12 border-t border-white/10 flex flex-col gap-6">
         <div className="px-6 flex flex-col gap-1">
           <h2 className="font-cinzel text-xl font-bold uppercase tracking-wider text-white">
@@ -70,34 +71,60 @@ export function MobileHomeFeed() {
           </h2>
         </div>
 
-        {/* Swipeable Statement Cards */}
+        {/* Smooth Liquid Glass Scrolling Runway */}
         <div
           ref={swipeContainerRef}
           onScroll={handleScroll}
-          className="flex overflow-x-auto snap-x snap-mandatory px-6 gap-4 no-scrollbar"
+          className="flex overflow-x-auto no-scrollbar px-6 gap-3.5 scroll-smooth overscroll-x-contain touch-pan-x"
+          style={{ WebkitOverflowScrolling: "touch" }}
         >
           {site.home.about.statements.map((stmt: string, idx: number) => (
             <div
               key={idx}
-              className="snap-center shrink-0 w-[84vw] max-w-[320px] p-6 rounded-2xl bg-[#0F131C] border border-white/10 flex flex-col gap-3 shadow-lg"
+              className="group relative shrink-0 w-[78vw] max-w-[310px] p-6 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-white/[0.08] via-white/[0.03] to-white/[0.01] border border-white/[0.14] shadow-[0_12px_40px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden flex flex-col justify-between gap-5 transition-all duration-300 active:scale-[0.99]"
             >
-              <p className="font-cinzel text-base font-bold leading-snug tracking-wide text-white">
+              {/* Liquid glass specular highlights & iridescent neon blur */}
+              <div
+                className="pointer-events-none absolute -top-10 -right-10 w-28 h-28 rounded-full bg-gradient-to-br from-[#EA28C1]/20 to-transparent blur-2xl"
+                aria-hidden="true"
+              />
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent"
+                aria-hidden="true"
+              />
+
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#EA28C1] font-semibold">
+                  0{idx + 1}
+                </span>
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-[#EA28C1]/60 shadow-[0_0_8px_#EA28C1]"
+                  aria-hidden="true"
+                />
+              </div>
+
+              <p className="font-cinzel text-[15px] sm:text-base font-bold leading-relaxed tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
                 {stmt}
               </p>
+
+              <div
+                className="w-8 h-[1px] bg-white/20 group-hover:w-12 group-hover:bg-[#EA28C1]/60 transition-all duration-300"
+                aria-hidden="true"
+              />
             </div>
           ))}
         </div>
 
-        {/* 3-Dot Indicator */}
-        <div className="flex justify-center items-center gap-2 pt-1" aria-hidden="true">
-          {[0, 1, 2].map((dot) => (
-            <span
-              key={dot}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                activeDot === dot ? "w-6 bg-[#EA28C1]" : "w-1.5 bg-white/20"
-              }`}
+        {/* Liquid Glass Scroll Progress Pill */}
+        <div className="flex justify-center items-center pt-1" aria-hidden="true">
+          <div className="w-16 h-1 rounded-full bg-white/10 overflow-hidden relative backdrop-blur-sm">
+            <div
+              className="h-full w-6 rounded-full bg-gradient-to-r from-[#EA28C1] to-[#FF77DC] shadow-[0_0_8px_rgba(234,40,193,0.6)] transition-transform duration-75 ease-out will-change-transform"
+              style={{
+                transform: `translateX(${scrollProgress * 40}px)`,
+              }}
             />
-          ))}
+          </div>
         </div>
 
         {/* Body Paragraph */}

@@ -440,13 +440,17 @@ export function runRouteTransition(
 
     frame.snapCamera = true;
 
+    const isMobile =
+      typeof window !== "undefined" ? window.innerWidth < 768 : false;
+
     const currentStore = useStore.getState();
     pendingTargetWorld = toWorld;
     isRouteEntered = Boolean(options.isPopState);
     isWorldRendered = Boolean(
       currentStore.tier === "T0" ||
       !isSceneRoute(toPath) ||
-      (options.isPopState && currentStore.renderedWorlds[toWorld]),
+      Boolean(currentStore.renderedWorlds[toWorld]) ||
+      isMobile,
     );
 
     pendingEnterCallback = () => {
@@ -455,15 +459,18 @@ export function runRouteTransition(
     };
 
     if (typeof window !== "undefined") {
+      const fallbackDelay = isMobile ? 250 : 350;
       pendingEnterFallbackTimer = window.setTimeout(() => {
         tryProceedEnter(true);
-      }, 1200);
+      }, fallbackDelay);
     }
 
     onCover();
     tryProceedEnter(false);
   };
 
+  const isMobile =
+    typeof window !== "undefined" ? window.innerWidth < 768 : false;
   const isTargetRedRoom = toWorld === "redroom";
   const isTargetDiwali = toWorld === "diwali";
   // §6: Home → DHAMAAKA is a gold studio-light flare (the wash); from the Red
@@ -477,23 +484,31 @@ export function runRouteTransition(
     (isTargetRedRoom || type === "T1");
 
   const outDur = !motionEnabled
-    ? 0.15
-    : isCurtainTransition
-      ? 0.85
-      : type === "T4"
-        ? 0.4
-        : options.isPopState
-          ? 0.15
-          : 0.55;
+    ? 0.1
+    : options.isPopState
+      ? 0.12
+      : isMobile
+        ? isCurtainTransition
+          ? 0.32
+          : 0.28
+        : isCurtainTransition
+          ? 0.42
+          : type === "T4"
+            ? 0.32
+            : 0.36;
   const inDur = !motionEnabled
-    ? 0.15
-    : isCurtainTransition
-      ? 0.8
-      : type === "T4"
-        ? 0.4
-        : options.isPopState
-          ? 0.15
-          : 0.55;
+    ? 0.1
+    : options.isPopState
+      ? 0.12
+      : isMobile
+        ? isCurtainTransition
+          ? 0.30
+          : 0.26
+        : isCurtainTransition
+          ? 0.38
+          : type === "T4"
+            ? 0.30
+            : 0.34;
 
   frame.transition.duration = outDur + inDur;
   frame.transition.coverTime = outDur;
@@ -603,24 +618,23 @@ export function runRouteTransition(
       0,
     );
   }
-  const coverStart = isCurtainTransition
-    ? Math.max(0, outDur - 0.55)
-    : 0;
+  const coverStart = 0;
+  const curtainDur = Math.min(outDur, 0.4);
   if (mainEl)
     exitTl.to(
       mainEl,
-      { opacity: 0, duration: Math.min(0.39, outDur), ease: "ease.in" },
-      isCurtainTransition ? outDur - 0.39 : 0,
+      { opacity: 0, duration: Math.min(0.24, outDur), ease: "ease.in" },
+      isCurtainTransition ? Math.max(0, outDur - 0.24) : 0,
     );
   if (isCurtainTransition && leftCurtainEl && rightCurtainEl) {
     exitTl.to(
       leftCurtainEl,
-      { xPercent: 0, duration: 0.5, ease: "ease.inOut" },
+      { xPercent: 0, duration: curtainDur, ease: "ease.inOut" },
       coverStart,
     );
     exitTl.to(
       rightCurtainEl,
-      { xPercent: 0, duration: 0.5, ease: "ease.inOut" },
+      { xPercent: 0, duration: curtainDur, ease: "ease.inOut" },
       coverStart,
     );
   }

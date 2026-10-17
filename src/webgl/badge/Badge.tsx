@@ -431,37 +431,17 @@ export function Badge({
     const h1 = frame.dampedProgress["H1"] ?? 0;
     const h2 = frame.dampedProgress["H2"] ?? 0;
     const h5 = frame.dampedProgress["H5"] ?? 0;
-    // Phones show the mobile feed instead of the H1–H5 scenes (those are
-    // display:none), so the hero exit follows the page scroll directly.
-    const phoneHeroExit = THREE.MathUtils.clamp(
-      (window.scrollY - size.height * 0.08) / (size.height * 0.45),
-      0,
-      1,
-    );
 
     if (world === "home") {
       if (isMobile) {
-        // Mobile phone home page: keep badge strictly at the beginning of the home page (Hero H1)
-        // Cleanly fades/scales down as H1 scrolls out, completely hidden in H2 and H5 so it NEVER overlaps doors or text!
-        const h0Scale = 0.77;
+        // Mobile phone home page: big hero in the centre, remains there forever throughout scrolling
+        const h0Scale = 0.86;
         const h0X = 0;
-        const h0Y = size.height < 700 ? 2.05 : 2.19;
-
-        if (phoneHeroExit < 1) {
-          // Beginning of the home page (Hero)
-          const exitT = phoneHeroExit;
-          const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
-          choreoPos.current.set(h0X, h0Y + exitT * 0.4, 0.6);
-          choreoScale.current = h0Scale * smoothFade;
-          choreoYaw.current = 0;
-          h2SpinDone.current = false;
-        } else {
-          // Past hero: completely hide badge on mobile home page
-          choreoPos.current.set(0, 4.0, 0);
-          choreoScale.current = 0;
-          choreoYaw.current = 0;
-          h2SpinDone.current = true;
-        }
+        const h0Y = size.height < 700 ? 2.25 : 2.35;
+        choreoPos.current.set(h0X, h0Y, 0.6);
+        choreoScale.current = h0Scale;
+        choreoYaw.current = 0;
+        h2SpinDone.current = false;
       } else {
         const h0Scale = isTablet ? 0.96 : 1.12;
         const h0X = isTablet ? 1.32 : 1.58;
@@ -589,14 +569,8 @@ export function Badge({
     if (composition.hero) {
       if (world === "home") {
         if (isMobile) {
-          const exitT = phoneHeroExit;
-          const smoothFade = 1 - THREE.MathUtils.smoothstep(exitT, 0, 1);
-          choreoPos.current.set(
-            0,
-            (size.height < 700 ? 2.05 : 2.19) + exitT * 0.4,
-            0.6,
-          );
-          choreoScale.current = 0.77 * smoothFade;
+          choreoPos.current.set(0, size.height < 700 ? 2.25 : 2.35, 0.6);
+          choreoScale.current = 0.86;
         } else {
           choreoPos.current.set(1.75, 1.8, 0);
           choreoScale.current = isTablet ? 1.35 : 1.9;
@@ -611,7 +585,8 @@ export function Badge({
       }
     } else if (composition.scene === "H2") {
       if (world === "home" && isMobile) {
-        choreoScale.current = 0;
+        choreoPos.current.set(0, size.height < 700 ? 2.25 : 2.35, 0.6);
+        choreoScale.current = 0.86;
       } else {
         choreoPos.current.set(isMobile ? 0 : 1.75, isMobile ? 2.65 : 1.85, 0);
         choreoScale.current = isMobile ? 0.7 : 1.6;
