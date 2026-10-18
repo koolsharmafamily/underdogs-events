@@ -5,10 +5,15 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useStore } from '@/state/store'
-import { registerMotionEases } from './eases'
+import { DURATIONS, EASES, registerMotionEases } from './eases'
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
+/**
+ * Text reveal hook (Part 3 Motion):
+ * - Lines rise 12–24 px (18px), 40–60 ms stagger (45ms), once per element.
+ * - Never blocks reading or replays on reverse scroll.
+ */
 export function useLineReveal(
   ref: RefObject<HTMLElement | null>,
   options?: { delay?: number; triggerOnMount?: boolean }
@@ -38,26 +43,40 @@ export function useLineReveal(
         linesClass: 'split-line',
       })
 
-      gsap.set(split.lines, { yPercent: 105 })
+      gsap.set(split.lines, { y: 18, opacity: 0 })
 
       if (triggerOnMount) {
         const animation = gsap.to(split.lines, {
-          yPercent: 0, duration: 0.65, stagger: 0.05, delay, ease: 'ease.out', paused: true,
+          y: 0,
+          opacity: 1,
+          duration: DURATIONS.text,
+          stagger: 0.045,
+          delay,
+          ease: EASES.gsapOut,
+          paused: true,
         })
-        const reveal = () => { const state=useStore.getState(); if(state.phase==='complete' && !state.isTransitioning) { animation.play(); unsubscribe?.(); } }
-        unsubscribe=useStore.subscribe(reveal)
+        const reveal = () => {
+          const state = useStore.getState()
+          if (state.phase === 'complete' && !state.isTransitioning) {
+            animation.play()
+            unsubscribe?.()
+          }
+        }
+        unsubscribe = useStore.subscribe(reveal)
         reveal()
       } else {
         gsap.to(split.lines, {
-          yPercent: 0,
-          duration: 0.65,
-          stagger: 0.05,
+          y: 0,
+          opacity: 1,
+          duration: DURATIONS.text,
+          stagger: 0.045,
           delay,
-          ease: 'ease.out',
+          ease: EASES.gsapOut,
           scrollTrigger: {
             trigger: el,
-            start: 'top 88%',
-            toggleActions: 'play none none reverse',
+            start: 'top 90%',
+            once: true,
+            toggleActions: 'play none none none',
           },
         })
       }
@@ -98,13 +117,14 @@ export function useWordBlurReveal(
       if (active) {
         gsap.fromTo(
           split.words,
-          { opacity: 0, filter: 'blur(8px)' },
+          { opacity: 0, filter: 'blur(8px)', y: 12 },
           {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.5,
-            stagger: 0.025,
-            ease: 'ease.out',
+            y: 0,
+            duration: DURATIONS.scene * 0.7,
+            stagger: 0.04,
+            ease: EASES.gsapOut,
             overwrite: true,
           }
         )
@@ -112,8 +132,8 @@ export function useWordBlurReveal(
         gsap.to(split.words, {
           opacity: 0,
           filter: 'blur(6px)',
-          duration: 0.35,
-          ease: 'ease.in',
+          duration: DURATIONS.ui,
+          ease: EASES.gsapInOut,
           overwrite: true,
         })
       }
