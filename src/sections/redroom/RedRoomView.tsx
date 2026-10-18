@@ -325,6 +325,7 @@ export function RedRoomView() {
           cardOverlayRef.current = el;
         }}
         aria-label="Official Red Room Invitation Card Details"
+        style={{ display: "none" }}
         className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-5 sm:p-7 rounded-sm bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-[280ms] overflow-y-auto"
       >
         <div className="flex flex-col items-center text-center gap-1">
@@ -362,7 +363,7 @@ export function RedRoomView() {
         </div>
 
         {/* Booking Details with Instagram & Click-to-Call Phones */}
-        <div className="pt-2.5 border-t border-[#8B1414]/20 my-1 pointer-events-auto">
+        <div className="pt-2.5 border-t border-[#8B1414]/20 my-1">
           <BookingDetails variant="redroom" compact />
         </div>
 
@@ -502,7 +503,7 @@ export function RedRoomView() {
         ref={r6Ref}
         data-scene="R6"
         aria-label="The Red Room Outro"
-        className="scene-section scene-r6"
+        className="scene-section scene-r6 relative z-30"
       >
         <div className="scene-sticky flex flex-col items-center justify-between pt-16 pb-[calc(76px+env(safe-area-inset-bottom))] sm:py-20 text-center">
           <div className="site-container flex flex-col items-center justify-between h-full max-w-[780px]">
@@ -531,7 +532,7 @@ export function RedRoomView() {
               <Divider variant="diamond" active />
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6 pt-4">
+            <div className="relative z-40 flex flex-col sm:flex-row items-center gap-6 pt-4 pointer-events-auto">
               <TransitionLink
                 href={site.redRoom.outro.next.href}
                 transitionType="T3"

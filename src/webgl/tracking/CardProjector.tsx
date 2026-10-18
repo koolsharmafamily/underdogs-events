@@ -22,11 +22,18 @@ export function CardProjector() {
     if (!el) return;
 
     if (!isVisible) {
-      if (el.style.opacity !== "0") {
+      if (el.style.display !== "none") {
+        el.style.display = "none";
+        el.style.visibility = "hidden";
         el.style.opacity = "0";
         el.style.pointerEvents = "none";
       }
       return;
+    }
+
+    if (el.style.display !== "flex") {
+      el.style.display = "flex";
+      el.style.visibility = "visible";
     }
 
     const width = typeof window !== "undefined" ? window.innerWidth : 1440;
@@ -63,6 +70,16 @@ export function CardProjector() {
     const finalOpacity = fadeP * r5Fade * exitFade;
     const isHeld = p4 > 0.45 && p5 < 0.08 && exitFade > 0.5;
 
+    if (finalOpacity <= 0.01) {
+      el.style.display = "none";
+      el.style.visibility = "hidden";
+      el.style.opacity = "0";
+      el.style.pointerEvents = "none";
+      return;
+    }
+
+    el.style.display = "flex";
+    el.style.visibility = "visible";
     el.style.transform = `translate3d(${Math.round(currentLeft)}px, ${Math.round(currentTop)}px, 0)`;
     el.style.width = `${Math.round(targetCardWidth)}px`;
     el.style.height = `${Math.round(targetCardHeight)}px`;

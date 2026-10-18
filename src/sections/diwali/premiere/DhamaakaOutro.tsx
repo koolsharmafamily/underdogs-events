@@ -10,7 +10,7 @@ export function DhamaakaOutro({ ref }: { ref?: React.Ref<HTMLElement> }) {
       ref={ref}
       data-scene="D5"
       aria-label="Diwali Dhamaka Outro"
-      className="relative z-10 w-full max-w-[840px] mx-auto px-4 py-20 sm:py-28 text-center select-none"
+      className="relative z-30 w-full max-w-[840px] mx-auto px-4 py-20 sm:py-28 text-center select-none"
     >
       <div className="flex flex-col items-center gap-6">
         {/* Tagline */}
@@ -33,7 +33,7 @@ export function DhamaakaOutro({ ref }: { ref?: React.Ref<HTMLElement> }) {
         </div>
 
         {/* Navigation Links with ≥48px Tap Targets */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8">
+        <div className="mt-6 relative z-40 flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-8 pointer-events-auto">
           <TransitionLink
             href={site.diwali.outro.other.href}
             transitionType="T3"
