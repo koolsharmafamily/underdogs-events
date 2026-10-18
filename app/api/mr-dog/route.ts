@@ -159,7 +159,10 @@ function createMockStream(text: string): ReadableStream<Uint8Array> {
   });
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const url = new URL(req.url);
+  const doTest = url.searchParams.get("test") === "1";
+
   const rawKey = (
     process.env.MRDOG_API_KEY ||
     process.env.GROQ_API_KEY ||
@@ -181,13 +184,62 @@ export async function GET() {
           ? "openai"
           : "offline-mock";
 
+  let availableModels: string[] = [];
+  let modelsError = "";
+  let testResult: any = null;
+
+  if (apiKey && provider === "groq") {
+    try {
+      const mRes = await fetch("https://api.groq.com/openai/v1/models", {
+        headers: { Authorization: `Bearer ${apiKey}` },
+      });
+      if (mRes.ok) {
+        const data = await mRes.json();
+        availableModels = (data.data || []).map((m: any) => m.id);
+      } else {
+        modelsError = `HTTP ${mRes.status}: ${await mRes.text()}`;
+      }
+    } catch (e: any) {
+      modelsError = e.message;
+    }
+
+    if (doTest) {
+      try {
+        const testRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: "hi" }],
+            max_tokens: 10,
+          }),
+        });
+        const testBody = await testRes.text();
+        testResult = { status: testRes.status, ok: testRes.ok, body: testBody };
+      } catch (e: any) {
+        testResult = { error: e.message };
+      }
+    }
+  }
+
   return Response.json({
     status: "ok",
     liveAI: hasKey,
     keyDetected: hasKey,
     keyPrefix,
     provider,
-    model: provider === "groq" ? "llama-3.3-70b-versatile" : (process.env.MRDOG_MODEL || "auto"),
+    env: {
+      MRDOG_API_BASE: process.env.MRDOG_API_BASE || null,
+      MRDOG_MODEL: process.env.MRDOG_MODEL || null,
+      MRDOG_MODEL_FALLBACK: process.env.MRDOG_MODEL_FALLBACK || null,
+      MRDOG_MOCK: process.env.MRDOG_MOCK || null,
+    },
+    availableModels,
+    modelsError,
+    testResult,
   });
 }
 
@@ -341,9 +393,10 @@ export async function POST(req: NextRequest) {
     ...conversationTurns,
   ];
 
-  let lastError = "";
+  let primaryError = "";
+  let fallbackError = "";
 
-  async function callProvider(model: string, timeoutMs: number): Promise<Response | null> {
+  async function callProvider(model: string, timeoutMs: number): Promise<{ res: Response | null; err: string }> {
     try {
       const headers: Record<string, string> = {
         "Content-Type": "application/json",
@@ -360,7 +413,7 @@ export async function POST(req: NextRequest) {
         body: JSON.stringify({
           model,
           messages: payloadMessages,
-          temperature: 0.4,
+          temperature: 0.7,
           top_p: 0.9,
           max_tokens: 220,
           stream: true,
@@ -370,25 +423,29 @@ export async function POST(req: NextRequest) {
 
       if (!res.ok) {
         const errorText = await res.text().catch(() => "");
-        lastError = `Status ${res.status} (${model}): ${errorText.slice(0, 300)}`;
+        const err = `Status ${res.status} (${model}): ${errorText.slice(0, 300)}`;
         console.error(`[MrDog API Provider Error] Status ${res.status} from ${apiBase}/chat/completions (model: ${model}):`, errorText);
-        return null;
+        return { res: null, err };
       }
-      return res;
+      return { res, err: "" };
     } catch (err: any) {
-      lastError = `Exception (${model}): ${err?.message || String(err)}`;
+      const errStr = `Exception (${model}): ${err?.message || String(err)}`;
       console.error(`[MrDog API Network/Timeout Error] (${model}):`, err);
-      return null;
+      return { res: null, err: errStr };
     }
   }
 
-  let upstreamResponse = await callProvider(primaryModel, 10000);
+  const primaryResult = await callProvider(primaryModel, 10000);
+  let upstreamResponse = primaryResult.res;
+  primaryError = primaryResult.err;
   let resolvedModel = primaryModel;
 
   // Cascade to fallback model if primary returned 429/5xx or timed out
   if (!upstreamResponse) {
-    console.warn(`[MrDog API] Cascading to fallback model: ${fallbackModel}`);
-    upstreamResponse = await callProvider(fallbackModel, 10000);
+    console.warn(`[MrDog API] Primary failed (${primaryError}). Cascading to fallback model: ${fallbackModel}`);
+    const fallbackResult = await callProvider(fallbackModel, 10000);
+    upstreamResponse = fallbackResult.res;
+    fallbackError = fallbackResult.err;
     if (upstreamResponse) {
       resolvedModel = fallbackModel;
     }
@@ -398,13 +455,14 @@ export async function POST(req: NextRequest) {
   if (!upstreamResponse || !upstreamResponse.body) {
     console.warn(`[MrDog API] All upstream AI providers unavailable. Serving deterministic FAQ fallback.`);
     const faq = matchFaq(promptText, world);
+    const combinedError = `[Primary: ${primaryError || "none"}] [Fallback: ${fallbackError || "none"}]`;
     return new Response(createMockStream(faq.reply), {
       status: 200,
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
         "x-mrdog-mode": "faq-fallback",
-        "x-mrdog-error": encodeURIComponent(lastError || "unknown"),
+        "x-mrdog-error": encodeURIComponent(combinedError),
       },
     });
   }
