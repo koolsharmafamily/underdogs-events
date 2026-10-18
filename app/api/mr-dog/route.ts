@@ -30,7 +30,7 @@ function checkRateLimit(ip: string): boolean {
     return true;
   }
 
-  // 10-minute window check (max 10 messages)
+  // 10-minute window check (generous limit: max 120 messages per 10m)
   if (now - record.windowStart10m > 10 * 60 * 1000) {
     record.windowStart10m = now;
     record.count10m = 1;
@@ -38,7 +38,7 @@ function checkRateLimit(ip: string): boolean {
     record.count10m += 1;
   }
 
-  // 24-hour window check (max 50 messages)
+  // 24-hour window check (max 2000 messages per day)
   if (now - record.dayStart > 24 * 60 * 60 * 1000) {
     record.dayStart = now;
     record.countDay = 1;
@@ -46,7 +46,7 @@ function checkRateLimit(ip: string): boolean {
     record.countDay += 1;
   }
 
-  if (record.count10m > 10 || record.countDay > 50) {
+  if (record.count10m > 120 || record.countDay > 2000) {
     return false;
   }
 
@@ -251,9 +251,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // Cap body size to 8 KB
+  // Cap body size to 32 KB
   const contentLength = Number(req.headers.get("content-length") || "0");
-  if (contentLength > 8192) {
+  if (contentLength > 32768) {
     return new Response("Payload too large", { status: 413 });
   }
 
@@ -280,13 +280,14 @@ export async function POST(req: NextRequest) {
     return new Response("Messages array required", { status: 400 });
   }
 
-  // Validate message contents
+  // Validate message contents: allow generous history while preventing payload abuse
   for (const msg of messages) {
     if (!msg || typeof msg.content !== "string") {
       return new Response("Invalid message format", { status: 400 });
     }
-    if (msg.content.length > 300) {
-      return new Response("Message exceeds 300 characters limit", { status: 400 });
+    // Only check length for user query; previous assistant answers can be long
+    if (msg.role === "user" && msg.content.length > 600) {
+      return new Response("Message exceeds 600 characters limit", { status: 400 });
     }
   }
 
