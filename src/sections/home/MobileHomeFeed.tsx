@@ -2,13 +2,13 @@
 
 import { TransitionLink } from "@/ui/TransitionLink";
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { useDaysToGo } from "@/utils/useDaysToGo";
 import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
 
 export function MobileHomeFeed() {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
   const swipeContainerRef = useRef<HTMLDivElement>(null);
@@ -17,11 +17,7 @@ export function MobileHomeFeed() {
   const handleScroll = () => {
     if (!swipeContainerRef.current) return;
     const container = swipeContainerRef.current;
-    const { scrollLeft, scrollWidth, clientWidth } = container;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll > 0) {
-      setScrollProgress(Math.min(1, Math.max(0, scrollLeft / maxScroll)));
-    }
+    const { scrollLeft, clientWidth } = container;
     const cardWidth = clientWidth * 0.84 + 16;
     const newIdx = Math.round(scrollLeft / cardWidth);
     const bounded = Math.min(Math.max(0, newIdx), site.home.about.statements.length - 1);
@@ -52,35 +48,35 @@ export function MobileHomeFeed() {
 
   return (
     <div className="w-full flex flex-col pt-16 pb-[calc(108px+env(safe-area-inset-bottom,0px))] text-[#FCF9FC] select-none">
-      {/* 1. Hero: 3D Enamel Badge + Gate to Rage */}
-      <section className="min-h-[82svh] flex flex-col items-center justify-center px-6 pt-2 pb-8 text-center">
+      {/* 1. Hero: 3D Enamel Badge centered between Underdogs Entertainment and Gate to Rage */}
+      <section className="min-h-[82svh] flex flex-col items-center justify-center px-5 pt-2 pb-8 text-center">
         {/* Presenter / Kicker Line */}
-        <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#FCF9FC]/70 mb-2">
+        <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-[#FCF9FC]/75 mb-2">
           {site.home.hero.label}
         </span>
 
-        {/* 3D Enamel Badge DOM placeholder — carefully centered between kicker and title */}
-        <div className="flex items-center justify-center my-1.5">
+        {/* 3D Enamel Badge DOM placeholder — permanently centered between kicker and title */}
+        <div className="flex items-center justify-center my-2">
           <BadgeDomHost
             skin="home"
-            sizeClass="w-[190px] h-[190px] sm:w-[210px] sm:h-[210px]"
+            sizeClass="w-[196px] h-[196px] sm:w-[216px] sm:h-[216px]"
             label="Underdogs Enamel Badge — tap to blink"
           />
         </div>
 
         {/* Copy & Primary Button below badge */}
-        <div className="w-full flex flex-col items-center gap-3.5 max-w-[340px] mx-auto mt-2">
-          <h1 className="font-unbounded text-[clamp(28px,7vw,36px)] font-black uppercase tracking-[-0.02em] text-[#FCF9FC] drop-shadow-[0_2px_14px_rgba(234,40,193,0.35)]">
+        <div className="w-full flex flex-col items-center gap-3.5 max-w-[345px] mx-auto mt-2">
+          <h1 className="font-unbounded text-[clamp(28px,7.2vw,36px)] font-black uppercase tracking-[-0.02em] text-[#FCF9FC] drop-shadow-[0_2px_14px_rgba(234,40,193,0.35)] balance-heading">
             {site.home.hero.title}
           </h1>
 
-          <p className="font-manrope text-[15px] leading-relaxed text-[#FCF9FC]/85 font-medium">
+          <p className="font-manrope text-[15px] leading-[1.6] text-[#FCF9FC]/85 font-medium pretty-copy">
             {site.home.hero.lead}
           </p>
 
           <TransitionLink
             href="/events"
-            className="mt-1 w-full py-4 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
+            className="mt-1 w-full min-h-[48px] py-3.5 px-6 rounded-sm bg-[#120710] border border-[#EA28C1]/70 text-[#FCF9FC] font-cinzel text-[12px] font-bold uppercase tracking-[0.24em] shadow-[0_6px_24px_rgba(234,40,193,0.22)] active:scale-[0.98] transition-all text-center flex items-center justify-center gap-2.5"
           >
             <span>{site.home.hero.seasonCta}</span>
             <span>→</span>
@@ -90,37 +86,31 @@ export function MobileHomeFeed() {
 
       {/* 2. "Who we are" — iPhone Liquid Glass Paging Runway */}
       <section className="py-12 border-t border-white/10 flex flex-col gap-6">
-        <div className="px-6 flex flex-col gap-1">
-          <h2 className="font-cinzel text-xl font-bold uppercase tracking-wider text-white">
+        <div className="px-5 flex items-center justify-between">
+          <h2 className="font-cinzel text-lg font-bold uppercase tracking-[0.2em] text-white">
             {site.home.about.label}
           </h2>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">
+            0{activeIndex + 1} / 0{site.home.about.statements.length}
+          </span>
         </div>
 
         {/* Liquid Glass Runway with Apple iOS Snap Physics */}
         <div
           ref={swipeContainerRef}
           onScroll={handleScroll}
-          className="flex overflow-x-auto no-scrollbar px-6 gap-4 snap-x snap-mandatory scroll-smooth overscroll-x-contain touch-pan-x"
+          className="flex overflow-x-auto no-scrollbar px-5 gap-4 snap-x snap-mandatory scroll-smooth overscroll-x-contain touch-pan-x"
           style={{
             WebkitOverflowScrolling: "touch",
-            scrollPaddingLeft: "1.5rem",
-            scrollPaddingRight: "1.5rem",
+            scrollPaddingLeft: "1.25rem",
+            scrollPaddingRight: "1.25rem",
           }}
         >
           {site.home.about.statements.map((stmt: string, idx: number) => (
             <div
               key={idx}
               onClick={() => scrollToCard(idx)}
-              className="group relative shrink-0 w-[84vw] max-w-[325px] snap-center p-6 sm:p-7 rounded-[30px] overflow-hidden flex flex-col justify-between gap-6 transition-transform duration-200 active:scale-[0.985] cursor-pointer"
-              style={{
-                background:
-                  "linear-gradient(175deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.015) 100%)",
-                backdropFilter: "blur(32px) saturate(190%) contrast(105%)",
-                WebkitBackdropFilter: "blur(32px) saturate(190%) contrast(105%)",
-                border: "1px solid rgba(255, 255, 255, 0.18)",
-                boxShadow:
-                  "inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.08), 0 20px 48px -12px rgba(0, 0, 0, 0.65)",
-              }}
+              className="ui-liquid-glass group relative shrink-0 w-[84vw] max-w-[330px] snap-center p-6 sm:p-7 rounded-[28px] overflow-hidden flex flex-col justify-between gap-6 transition-transform duration-150 active:scale-[0.985] cursor-pointer"
             >
               {/* Apple Liquid Glass Specular Shimmer & Internal Ambient Caustic */}
               <div
@@ -132,7 +122,7 @@ export function MobileHomeFeed() {
                 aria-hidden="true"
               />
               <div
-                className="pointer-events-none absolute inset-0 rounded-[30px] bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent"
+                className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent"
                 aria-hidden="true"
               />
 
@@ -146,7 +136,7 @@ export function MobileHomeFeed() {
                 />
               </div>
 
-              <p className="font-cinzel text-[16px] sm:text-[17px] font-bold leading-[1.45] tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] relative z-10">
+              <p className="font-cinzel text-[16px] sm:text-[17px] font-bold leading-[1.45] tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] relative z-10 balance-heading">
                 {stmt}
               </p>
 
@@ -155,7 +145,7 @@ export function MobileHomeFeed() {
                   className="w-10 h-[1.5px] rounded-full bg-gradient-to-r from-white/40 to-transparent group-hover:w-16 group-hover:from-[#EA28C1] transition-all duration-300"
                   aria-hidden="true"
                 />
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
                   Swipe →
                 </span>
               </div>
@@ -164,9 +154,9 @@ export function MobileHomeFeed() {
         </div>
 
         {/* Floating Apple Liquid Glass Capsule Indicator */}
-        <div className="flex justify-center items-center pt-2" aria-hidden="true">
+        <div className="flex justify-center items-center pt-1" aria-hidden="true">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full"
             style={{
               background: "rgba(255, 255, 255, 0.08)",
               backdropFilter: "blur(20px) saturate(180%)",
@@ -184,7 +174,7 @@ export function MobileHomeFeed() {
                 className={`transition-all duration-300 rounded-full cursor-pointer touch-manipulation ${
                   activeIndex === i
                     ? "w-7 h-1.5 bg-gradient-to-r from-[#EA28C1] to-[#FF6EC7] shadow-[0_0_10px_rgba(234,40,193,0.8)]"
-                    : "w-1.5 h-1.5 bg-white/30 hover:bg-white/50"
+                    : "w-2 h-1.5 bg-white/30 hover:bg-white/50"
                 }`}
               />
             ))}
@@ -192,31 +182,34 @@ export function MobileHomeFeed() {
         </div>
 
         {/* Body Paragraph */}
-        <div className="px-6 pt-2">
-          <p className="font-manrope text-sm leading-relaxed text-[#FCF9FC]/75 font-normal">
+        <div className="px-5 pt-1">
+          <p className="font-manrope text-[14px] leading-[1.65] text-[#FCF9FC]/80 font-normal pretty-copy">
             {site.home.about.body}
           </p>
         </div>
       </section>
 
-      {/* 3. "Nights we've thrown" — Auto-drifting Liquid Glass Pills */}
-      <section className="py-10 border-t border-white/10 flex flex-col gap-4 overflow-hidden">
-        <div className="px-6 flex flex-col gap-1">
-          <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#EA28C1]">
+      {/* 3. "Nights we've thrown" — Editorial Archive + Liquid Glass Pills */}
+      <section className="py-12 border-t border-white/10 flex flex-col gap-4 overflow-hidden">
+        <div className="px-5 flex flex-col gap-1.5">
+          <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#EA28C1] font-semibold">
             {site.home.nights.label}
           </span>
-          <span className="font-manrope text-xs text-white/70 font-medium">
-            {site.home.nights.latestLabel}: {site.home.nights.latest.name} — {site.home.nights.latest.detail}
-          </span>
+          <div className="inline-flex items-center gap-2 self-start px-3 py-1 rounded-sm bg-white/[0.04] border border-white/10">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#EA28C1]" aria-hidden="true" />
+            <span className="font-mono text-[11px] text-white/85 font-medium">
+              {site.home.nights.latestLabel}: <strong className="text-white">{site.home.nights.latest.name}</strong> — {site.home.nights.latest.detail}
+            </span>
+          </div>
         </div>
 
         {/* Drifting Liquid Glass Lozenges row */}
         <div className="w-full overflow-x-auto no-scrollbar py-2 flex items-center">
-          <div className="flex shrink-0 items-center gap-3 animate-marquee-slow px-4">
+          <div className="flex shrink-0 items-center gap-3 animate-marquee-slow px-5">
             {site.home.nights.list.concat(site.home.nights.list).map((item: string, i: number) => (
               <React.Fragment key={i}>
                 <span
-                  className="px-4 py-2 rounded-full font-cinzel text-[11px] uppercase tracking-[0.18em] text-white/95 whitespace-nowrap transition-transform duration-200 active:scale-95"
+                  className="px-4 py-2 rounded-full font-cinzel text-[11px] uppercase tracking-[0.18em] text-white/95 whitespace-nowrap transition-transform duration-150 active:scale-95"
                   style={{
                     background:
                       "linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)",
@@ -238,23 +231,26 @@ export function MobileHomeFeed() {
         </div>
       </section>
 
-      {/* 4. "This season" — Compact Event Cards */}
-      <section className="py-12 border-t border-white/10 px-6 flex flex-col gap-6">
-        <div className="flex flex-col gap-2 text-center">
+      {/* 4. "This season" — Full-Bleed Thumb-Friendly World Cards */}
+      <section className="py-12 border-t border-white/10 px-5 flex flex-col gap-6">
+        <div className="flex flex-col gap-1.5 text-center">
           <span className="font-cinzel text-[11px] uppercase tracking-[0.3em] text-[#EA28C1]">
             {site.home.season.label}
           </span>
-          <h2 className="font-cinzel text-lg font-bold uppercase tracking-wider text-white">
+          <h2 className="font-cinzel text-lg font-bold uppercase tracking-wider text-white balance-heading">
             {site.home.season.lines[0]} {site.home.season.lines[1]}
           </h2>
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/60">
+            {site.home.season.tagline}
+          </span>
         </div>
 
         <div className="flex flex-col gap-5">
           {/* World 1: The Red Room */}
-          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/30 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
-            {/* CSS Flyer Backdrop behind artwork */}
+          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
+            {/* Optimized Flyer Backdrop behind artwork */}
             <div
-              className="pointer-events-none absolute -inset-2 -z-0 opacity-14 overflow-hidden"
+              className="pointer-events-none absolute -inset-2 -z-0 opacity-16 overflow-hidden"
               style={{
                 maskImage:
                   "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
@@ -262,10 +258,12 @@ export function MobileHomeFeed() {
                   "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
               }}
             >
-              <img
+              <Image
                 src="/media/red-room-poster-1024.webp"
                 alt=""
-                className="w-full h-full object-cover object-top blur-[2px]"
+                fill
+                sizes="(max-width: 768px) 92vw, 420px"
+                className="object-cover object-top blur-[2px]"
               />
               <div className="absolute inset-0 bg-[#3A0504] mix-blend-color opacity-60" />
             </div>
@@ -279,8 +277,8 @@ export function MobileHomeFeed() {
 
             {/* Header info */}
             <div className="relative z-10 pointer-events-none flex items-center justify-between">
-              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35]">
-                {site.home.worlds.one.occasion}
+              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
+                {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
               </span>
               {redRoomDays && (
                 <span className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF1A35] font-mono text-[10px] uppercase tracking-wider font-bold">
@@ -291,7 +289,7 @@ export function MobileHomeFeed() {
 
             {/* Artwork + Name in front */}
             <div className="relative z-10 pointer-events-none flex items-center gap-4">
-              <img
+              <Image
                 src="/media/badge-halloween-still.webp"
                 alt="The Red Room badge"
                 width={64}
@@ -307,18 +305,18 @@ export function MobileHomeFeed() {
                     <svg className="absolute top-0 left-[22%] text-[#B80A12] rr-blood-drip" width="6" height="10" viewBox="0 0 6 10">
                       <path d="M2.5 0 C2.5 2, 2 6, 1 7 C0.5 8, 0.5 9, 3 10 C5.5 9, 5.5 8, 5 7 C4 6, 3.5 2, 3.5 0 Z" fill="currentColor" />
                     </svg>
-                    <svg className="absolute top-0 left-[68%] text-[#B80A12] rr-blood-drip" width="6" height="12" viewBox="0 0 6 12" style={{ animationDelay: '0.35s' }}>
+                    <svg className="absolute top-0 left-[68%] text-[#B80A12] rr-blood-drip" width="6" height="12" viewBox="0 0 6 12" style={{ animationDelay: "0.35s" }}>
                       <path d="M2.5 0 C2.5 2, 2 8, 1 9 C0.5 10, 0.5 11, 3 12 C5.5 11, 5.5 10, 5 9 C4 8, 3.5 2, 3.5 0 Z" fill="currentColor" />
                     </svg>
                   </div>
                 </div>
-                <span className="font-manrope text-xs text-white/80 mt-0.5">
+                <span className="font-manrope text-xs text-white/85 mt-0.5">
                   {site.home.worlds.one.date} · {site.home.worlds.one.place}
                 </span>
               </div>
             </div>
 
-            {/* Bottom Row: Quiet "View official flyer" + CTA */}
+            {/* Bottom Row: 44px+ "View official flyer" + CTA */}
             <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
               <button
                 type="button"
@@ -327,11 +325,11 @@ export function MobileHomeFeed() {
                   e.stopPropagation();
                   setActiveFlyer("redroom");
                 }}
-                className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35]/70 hover:text-[#FF1A35] active:text-[#FF1A35] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF1A35]"
+                className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FF968B]/85 hover:text-[#FF1A35] active:text-[#FF1A35] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF1A35]"
               >
                 View official flyer
               </button>
-              <div className="pointer-events-none flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
+              <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
                 <span>{site.home.worlds.one.cta}</span>
                 <span>→</span>
               </div>
@@ -340,9 +338,9 @@ export function MobileHomeFeed() {
 
           {/* World 2: DHAMAAKA */}
           <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
-            {/* CSS Flyer Backdrop behind artwork */}
+            {/* Optimized Flyer Backdrop behind artwork */}
             <div
-              className="pointer-events-none absolute -inset-2 -z-0 opacity-14 overflow-hidden"
+              className="pointer-events-none absolute -inset-2 -z-0 opacity-16 overflow-hidden"
               style={{
                 maskImage:
                   "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
@@ -350,10 +348,12 @@ export function MobileHomeFeed() {
                   "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
               }}
             >
-              <img
+              <Image
                 src="/media/dhamaaka-flyer-1024.webp"
                 alt=""
-                className="w-full h-full object-cover object-top blur-[2px]"
+                fill
+                sizes="(max-width: 768px) 92vw, 420px"
+                className="object-cover object-top blur-[2px]"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-[#E0217A] to-[#E5B25D] mix-blend-color opacity-50" />
             </div>
@@ -367,8 +367,8 @@ export function MobileHomeFeed() {
 
             {/* Header info */}
             <div className="relative z-10 pointer-events-none flex items-center justify-between">
-              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]">
-                {site.home.worlds.two.occasion}
+              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
+                {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
               </span>
               {diwaliDays && (
                 <span className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold">
@@ -379,7 +379,7 @@ export function MobileHomeFeed() {
 
             {/* Artwork + Name in front */}
             <div className="relative z-10 pointer-events-none flex items-center gap-4">
-              <img
+              <Image
                 src="/media/badge-jewelled-still.webp"
                 alt="DHAMAAKA Jewelled Badge"
                 width={64}
@@ -393,13 +393,13 @@ export function MobileHomeFeed() {
                 <span className="font-cinzel text-[10px] uppercase tracking-wider text-[#E5B25D]/90 mt-0.5">
                   {site.home.worlds.two.subtitle}
                 </span>
-                <span className="font-manrope text-xs text-white/80 mt-1">
+                <span className="font-manrope text-xs text-white/85 mt-1">
                   {site.home.worlds.two.date} · {site.home.worlds.two.place}
                 </span>
               </div>
             </div>
 
-            {/* Bottom Row: Quiet "View official flyer" + CTA */}
+            {/* Bottom Row: 44px+ "View official flyer" + CTA */}
             <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
               <button
                 type="button"
@@ -408,11 +408,11 @@ export function MobileHomeFeed() {
                   e.stopPropagation();
                   setActiveFlyer("diwali");
                 }}
-                className="pointer-events-auto font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D]/70 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
+                className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#E5B25D]/85 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
               >
                 View official flyer
               </button>
-              <div className="pointer-events-none flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
+              <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
                 <span>{site.home.worlds.two.cta}</span>
                 <span>→</span>
               </div>
@@ -421,7 +421,7 @@ export function MobileHomeFeed() {
         </div>
       </section>
 
-      {/* Official Flyer Lightbox Modal (Full-screen sheet on mobile) */}
+      {/* Official Flyer Lightbox Modal */}
       <OfficialFlyerLightbox
         isOpen={activeFlyer !== null}
         onClose={() => setActiveFlyer(null)}
@@ -429,7 +429,7 @@ export function MobileHomeFeed() {
           activeFlyer === "redroom"
             ? {
                 src: "/media/red-room-poster.webp",
-                alt: "The Red Room — Official Halloween Poster",
+                alt: site.redRoom.poster.alt,
                 title: site.home.worlds.one.name,
                 subtitle: `${site.home.worlds.one.occasion} · ${site.home.worlds.one.date}`,
                 world: "redroom",
@@ -437,7 +437,7 @@ export function MobileHomeFeed() {
             : activeFlyer === "diwali"
               ? {
                   src: "/media/dhamaaka-flyer.webp",
-                  alt: "DHAMAAKA — Official Premiere Flyer",
+                  alt: site.diwali.poster.alt,
                   title: site.home.worlds.two.name,
                   subtitle: `${site.home.worlds.two.occasion} · ${site.home.worlds.two.date}`,
                   world: "diwali",
@@ -447,11 +447,10 @@ export function MobileHomeFeed() {
       />
 
       {/* 5. Footer Line & Social */}
-      <footer className="pt-8 pb-4 text-center border-t border-white/10 px-6 flex flex-col items-center gap-2">
-        <span className="font-cinzel text-xs uppercase tracking-[0.24em] text-white/60 font-semibold">
+      <footer className="pt-8 pb-4 text-center border-t border-white/10 px-5 flex flex-col items-center gap-2">
+        <span className="font-cinzel text-xs uppercase tracking-[0.24em] text-white/70 font-semibold">
           {site.brand.name} · {site.brand.city}
         </span>
-        {/* Plain text by rule: the site links nowhere outside itself. */}
         <span className="font-mono text-[11px] tracking-[0.08em] text-[var(--world-muted)]">
           {site.footer.instagram}
         </span>
