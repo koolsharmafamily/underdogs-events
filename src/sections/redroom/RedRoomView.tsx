@@ -9,6 +9,7 @@ import { useStore } from "@/state/store";
 import { useSceneProgress } from "@/motion/useSceneProgress";
 import { useLineReveal } from "@/motion/useLineReveal";
 import { useEnterTransition } from "@/motion/transitions";
+import { getLenis } from "@/motion/clock";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { Divider } from "@/ui/Divider";
 import { InvitationCard } from "@/ui/InvitationCard";
@@ -29,7 +30,7 @@ const DRIPS = [
 
 export function RedRoomView() {
   const titleRef = useRef<HTMLHeadingElement>(null);
-  useLineReveal(titleRef, { triggerOnMount: true, delay: .18 });
+  useLineReveal(titleRef, { triggerOnMount: true, delay: 0.08 });
   const motionEnabled = useStore((s) => s.motionEnabled);
   const setWorld = useStore((s) => s.setWorld);
   const [activeStoryIdx, setActiveStoryIdx] = useState(0);
@@ -58,6 +59,22 @@ export function RedRoomView() {
   useSceneProgress("R4", r4Ref);
   useSceneProgress("R5", r5Ref);
   useSceneProgress("R6", r6Ref);
+
+  const handleJumpToDetails = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const el = r4Ref.current;
+    if (!el) return;
+    // Scroll directly into the open-card hold of R4 (55% through the section) so the invitation is immediately open and scannable
+    const targetY = motionEnabled
+      ? el.offsetTop + Math.round(el.offsetHeight * 0.52)
+      : el.offsetTop;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(targetY, { duration: motionEnabled ? 0.85 : 0 });
+    } else {
+      window.scrollTo({ top: targetY, behavior: motionEnabled ? "smooth" : "instant" });
+    }
+  };
 
   useEffect(() => {
     if (!motionEnabled) {
@@ -145,7 +162,7 @@ export function RedRoomView() {
               {/* Authored organic blood drips sliding from the title */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none relative mx-auto h-12 w-full"
+                className="pointer-events-none relative mx-auto h-10 sm:h-12 w-full"
               >
                 {DRIPS.map((drip, i) => (
                   <svg
@@ -165,7 +182,6 @@ export function RedRoomView() {
                       d={`M5 0 C5 4, 4.5 ${drip.height - 10}, 3.5 ${drip.height - 7} C2.2 ${drip.height - 4}, 2 ${drip.height - 1}, 6 ${drip.height} C10 ${drip.height - 1}, 9.8 ${drip.height - 4}, 8.5 ${drip.height - 7} C7.5 ${drip.height - 10}, 7 4, 7 0 Z`}
                       fill="currentColor"
                     />
-                    {/* Gloss specular glint on the droplet bulb */}
                     <circle
                       cx="5"
                       cy={drip.height - 3}
@@ -178,14 +194,25 @@ export function RedRoomView() {
               </div>
             </div>
 
-            <p className="font-manrope text-sm sm:text-base text-[var(--rr-ash)] max-w-[560px]">
+            <p className="font-manrope text-sm sm:text-base text-[var(--rr-bone)]/90 max-w-[560px]">
               {site.redRoom.sub}
             </p>
+
+            {/* Quick Jump to Invitation Details (< 5s scannability) */}
+            <a
+              href="#redroom-invitation"
+              onClick={handleJumpToDetails}
+              aria-label="Jump to Red Room invitation details"
+              className="group inline-flex min-h-[44px] items-center gap-2 px-5 py-2 rounded-full bg-[#180304]/90 border border-[#FF2A1F]/45 text-[#FF968B] font-cinzel text-[11px] uppercase tracking-[0.24em] hover:bg-[#2A0403] hover:border-[#FF2A1F] hover:text-white transition-all shadow-[0_4px_16px_rgba(0,0,0,0.7)]"
+            >
+              <span>{site.redRoom.jump}</span>
+              <span className="group-hover:translate-y-0.5 transition-transform duration-[140ms]">↓</span>
+            </a>
           </div>
         </div>
       </section>
 
-      {/* R2 · The story (200vh, pinned) */}
+      {/* R2 · The story (140vh, pinned) */}
       <section
         ref={r2Ref}
         data-scene="R2"
@@ -218,8 +245,8 @@ export function RedRoomView() {
                       aria-hidden={!isCurrent}
                       className={`font-cormorant italic text-[clamp(24px,3.4vw,52px)] leading-[1.15] font-medium text-[var(--rr-bone)] balance-heading transition-all ${
                         isCurrent
-                          ? "duration-[650ms] relative opacity-100"
-                          : "duration-[350ms] pointer-events-none absolute inset-x-0 opacity-0"
+                          ? "duration-[680ms] relative opacity-100"
+                          : "duration-[280ms] pointer-events-none absolute inset-x-0 opacity-0"
                       }`}
                     >
                       {words.map((word, wIdx) => (
@@ -233,7 +260,7 @@ export function RedRoomView() {
                           className={`inline-block mr-[0.26em] transition-all ${
                             isCurrent
                               ? "duration-[500ms] opacity-100 blur-0 translate-y-0"
-                              : "duration-[350ms] opacity-0 blur-[8px] translate-y-1"
+                              : "duration-[280ms] opacity-0 blur-[8px] translate-y-1"
                           }`}
                         >
                           {word}
@@ -265,7 +292,7 @@ export function RedRoomView() {
                 return (
                   <p
                     key={line}
-                    className={`font-cinzel text-[clamp(24px,3.6vw,54px)] leading-[1.08] font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[650ms] ${
+                    className={`font-cinzel text-[clamp(24px,3.6vw,54px)] leading-[1.08] font-semibold uppercase tracking-tight text-[var(--rr-bone)] transition-all duration-[680ms] ${
                       lit
                         ? "opacity-100 translate-y-0"
                         : "opacity-75 translate-y-4"
@@ -292,35 +319,42 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* Screen-projected DOM Twin for 3D Invitation Card (Part 8 R4 & Part 14) */}
+      {/* Screen-projected DOM Twin for 3D Invitation Card (Part 8 R4) */}
       <div
         ref={(el) => {
           cardOverlayRef.current = el;
         }}
         aria-label="Official Red Room Invitation Card Details"
-        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-5 sm:p-7 rounded-xl bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-300 overflow-y-auto"
+        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-5 sm:p-7 rounded-sm bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-[280ms] overflow-y-auto"
       >
         <div className="flex flex-col items-center text-center gap-1">
-          <span className="font-cinzel-decorative text-[clamp(18px,2.2vw,28px)] font-black uppercase text-[#4A0808] tracking-[0.06em]">
-            THE RED ROOM
+          <span className="font-nosifer text-[clamp(18px,2.1vw,26px)] uppercase text-[#8B1414] tracking-[0.05em]">
+            {site.redRoom.invitation.heading}
           </span>
           <div className="w-full max-w-[180px]">
             <Divider variant="diamond" active />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-y-3.5 my-2 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2.5 my-2 text-left">
           {site.redRoom.invitation.rows.map((row) => (
-            <div key={row.label} className="flex flex-col gap-0.5">
-              <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-[#8B1414]">
+            <div
+              key={row.label}
+              className={
+                row.label === "Venue"
+                  ? "sm:col-span-2 flex flex-col gap-0.5"
+                  : "flex flex-col gap-0.5"
+              }
+            >
+              <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-[#8B1414] font-semibold">
                 {row.label}
               </span>
-              <span className="font-manrope text-[12px] sm:text-[14px] font-bold text-[#350505]">
+              <span className="font-manrope text-[13px] sm:text-[14px] font-bold text-[#350505]">
                 {row.value}
               </span>
-              {"sub" in row && Boolean((row as any).sub) && (
-                <span className="font-manrope text-[10px] sm:text-[11px] text-[#550A0A]/80">
-                  {(row as any).sub}
+              {"sub" in row && Boolean((row as { sub?: string }).sub) && (
+                <span className="font-manrope text-[11px] text-[#550A0A]/85">
+                  {(row as { sub?: string }).sub}
                 </span>
               )}
             </div>
@@ -333,7 +367,7 @@ export function RedRoomView() {
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[9.5px] uppercase tracking-[0.2em] text-[#4A0808]">
-          <span>{site.brand.name}</span>
+          <span>{site.brand.legalName}</span>
           <span>{site.brand.city}</span>
         </div>
       </div>
@@ -348,10 +382,10 @@ export function RedRoomView() {
       >
         <div className="scene-sticky flex flex-col items-center justify-center py-20">
           <div className="site-container flex flex-col items-center gap-6">
-            {/* One hint while the seal is intact; nothing competes with the card once it opens. */}
+            {/* Hint while seal is intact */}
             <p
               aria-hidden={cardStage !== "sealed"}
-              className={`font-mono text-[11px] uppercase tracking-[0.08em] text-[var(--rr-ash)] transition-opacity duration-300 ${
+              className={`font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--rr-bone)]/85 transition-opacity duration-[280ms] ${
                 motionEnabled && cardStage === "sealed" ? "opacity-100" : "opacity-0"
               }`}
             >
@@ -372,11 +406,11 @@ export function RedRoomView() {
         </div>
       </section>
 
-      {/* R4.5 · Headline artist (client-confirmed) */}
+      {/* R4.5 · Headline artist (DJ Monish) + Scannable Invitation Summary on Mobile */}
       <section
         data-scene="R-DJ"
         aria-label={site.redRoom.dj.name}
-        className="relative z-20 py-20 border-t border-[var(--rr-blood)]/30 bg-gradient-to-b from-transparent via-[#100203]/90 to-transparent"
+        className="relative z-20 py-20 border-t border-[var(--rr-blood)]/30 bg-gradient-to-b from-[#0A0102]/95 via-[#120203]/95 to-[#0A0102]/95"
       >
         <div className="site-container site-grid items-center gap-y-10">
           <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
@@ -388,13 +422,13 @@ export function RedRoomView() {
             <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[var(--rr-neon)]">
               {site.redRoom.dj.role}
             </span>
-            <h2 className="font-cinzel font-black text-[clamp(1.8rem,3.4vw,2.8rem)] uppercase text-[#E81414] tracking-[0.06em] drop-shadow-[0_6px_20px_rgba(210,10,21,0.75)] leading-tight">
+            <h2 className="font-cinzel font-black text-h2 uppercase text-[#E81414] tracking-[0.06em] drop-shadow-[0_6px_20px_rgba(210,10,21,0.75)] leading-tight">
               {site.redRoom.dj.name}
             </h2>
             <p className="font-cinzel text-[12px] sm:text-[13px] uppercase tracking-[0.18em] text-[var(--rr-bone)]/90">
               {site.redRoom.dj.genre}
             </p>
-            <p className="font-manrope text-[15px] sm:text-[16px] leading-[1.7] text-[var(--rr-bone)]/80 max-w-[540px]">
+            <p className="font-manrope text-body text-[var(--rr-bone)]/85 measure-copy pretty-copy">
               {site.redRoom.dj.bio}
             </p>
             <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[var(--rr-ash)]">
@@ -419,13 +453,14 @@ export function RedRoomView() {
         <div className="site-container site-grid items-center gap-y-12">
           {/* Framed official poster on the left wall */}
           <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
-            <figure className="relative border-2 border-[var(--rr-gilt)] bg-[#060101] p-3 max-w-[380px] w-full">
+            <figure className="relative border-2 border-[var(--rr-gilt)] bg-[#060101] p-3 max-w-[380px] w-full shadow-[0_24px_60px_rgba(0,0,0,0.85)]">
               <div className="border border-[var(--rr-gilt)]/40 p-1">
                 <Image
                   src={site.redRoom.poster.src}
                   alt={site.redRoom.poster.alt}
                   width={760}
                   height={950}
+                  sizes="(max-width: 768px) 88vw, 380px"
                   className="h-auto w-full object-cover"
                 />
               </div>

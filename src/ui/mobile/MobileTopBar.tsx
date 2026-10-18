@@ -4,11 +4,14 @@ import { TransitionLink, useTransitionNavigate } from "@/ui/TransitionLink";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
+import { getLenis } from "@/motion/clock";
+import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
 
 export function MobileTopBar() {
   const pathname = usePathname();
   const navigate = useTransitionNavigate();
+  const motionEnabled = useStore((s) => s.motionEnabled);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -35,13 +38,34 @@ export function MobileTopBar() {
       ? "text-[#E5B25D]"
       : "text-[#FCF9FC]";
 
+  const handleJumpDetails = () => {
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      try {
+        navigator.vibrate(8);
+      } catch {}
+    }
+    const targetId = isRedRoom ? "#redroom-invitation" : "#diwali-invitation";
+    const el = document.querySelector<HTMLElement>(targetId);
+    if (!el) return;
+    const targetY =
+      isRedRoom && motionEnabled
+        ? el.offsetTop + Math.round(el.offsetHeight * 0.52)
+        : el.offsetTop;
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(targetY, { duration: motionEnabled ? 0.8 : 0 });
+    } else {
+      window.scrollTo({ top: targetY, behavior: motionEnabled ? "smooth" : "instant" });
+    }
+  };
+
   return (
     <header
       aria-label="Mobile App Header"
-      className={`fixed top-0 inset-x-0 z-40 md:hidden select-none transition-colors duration-200 ${
+      className={`fixed top-0 inset-x-0 z-40 md:hidden select-none transition-colors duration-[200ms] backdrop-blur-xl ${
         scrolled
-          ? "bg-[#07090D]/95 border-b border-white/10"
-          : "bg-[#07090D]/80 border-b border-transparent"
+          ? "bg-[#07090D]/92 border-b border-white/10"
+          : "bg-[#07090D]/75 border-b border-transparent"
       }`}
       style={{
         paddingTop: "env(safe-area-inset-top, 0px)",
@@ -61,7 +85,7 @@ export function MobileTopBar() {
               navigate("/events");
             }}
             aria-label="Back to Events list"
-            className="absolute left-3 top-1/2 -translate-y-1/2 min-h-[48px] min-w-[48px] flex items-center gap-1 font-manrope text-[13px] font-medium tracking-wide text-white/80 active:text-white active:scale-95 transition-transform"
+            className="absolute left-3 top-1/2 -translate-y-1/2 min-h-[48px] min-w-[48px] flex items-center gap-1 font-manrope text-[13px] font-medium tracking-wide text-white/85 active:text-white active:scale-95 transition-transform"
           >
             <span className="text-lg leading-none" aria-hidden="true">
               ‹
@@ -73,7 +97,7 @@ export function MobileTopBar() {
         {/* Center: Badge + Brand Wordmark OR Event Name */}
         <TransitionLink
           href="/"
-          className="inline-flex items-center gap-2.5 active:opacity-80 transition-opacity"
+          className="inline-flex min-h-[44px] items-center gap-2.5 active:opacity-80 transition-opacity"
         >
           {!isDetail && (
             <UnderdogsBadgeSvg skin="home" size={24} className="shrink-0" />
@@ -87,7 +111,7 @@ export function MobileTopBar() {
                 <svg className="absolute top-0 left-[24%] text-[#B80A12] rr-blood-drip" width="4" height="6" viewBox="0 0 4 6">
                   <path d="M2 0 C2 1, 1.5 4, 0.8 4.5 C0.3 5, 0.3 5.5, 2 6 C3.7 5.5, 3.7 5, 3.2 4.5 C2.5 4, 2 1, 2 0 Z" fill="currentColor" />
                 </svg>
-                <svg className="absolute top-0 left-[72%] text-[#B80A12] rr-blood-drip" width="4" height="7" viewBox="0 0 4 7" style={{ animationDelay: '0.35s' }}>
+                <svg className="absolute top-0 left-[72%] text-[#B80A12] rr-blood-drip" width="4" height="7" viewBox="0 0 4 7" style={{ animationDelay: "0.35s" }}>
                   <path d="M2 0 C2 1.5, 1.5 5, 0.8 5.5 C0.3 6, 0.3 6.5, 2 7 C3.7 6.5, 3.7 6, 3.2 5.5 C2.5 5, 2 1.5, 2 0 Z" fill="currentColor" />
                 </svg>
               </div>
@@ -100,6 +124,21 @@ export function MobileTopBar() {
             </span>
           )}
         </TransitionLink>
+
+        {/* Right: Quick contextual "Details" button on event pages */}
+        {isDetail ? (
+          <button
+            type="button"
+            onClick={handleJumpDetails}
+            aria-label="Jump to event details"
+            className={`absolute right-3 top-1/2 -translate-y-1/2 min-h-[44px] px-2.5 flex items-center gap-1 font-cinzel text-[10px] font-semibold uppercase tracking-[0.2em] ${
+              isRedRoom ? "text-[#FF968B]" : "text-[#FFE3A3]"
+            } active:scale-95 transition-transform`}
+          >
+            <span>{isRedRoom ? site.redRoom.jump : site.diwali.jump}</span>
+            <span aria-hidden="true">↓</span>
+          </button>
+        ) : null}
       </div>
     </header>
   );

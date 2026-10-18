@@ -25,11 +25,12 @@ export function OfficialFlyerLightbox({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
-  // Focus management & Esc key listener
+  // Focus management, Esc key listener & WebGL pause hint
   useEffect(() => {
     if (!isOpen || !flyer) return;
 
     previousFocusRef.current = document.activeElement as HTMLElement;
+    document.documentElement.dataset.lightbox = "open";
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -67,6 +68,7 @@ export function OfficialFlyerLightbox({
     closeBtn?.focus();
 
     return () => {
+      delete document.documentElement.dataset.lightbox;
       document.body.style.overflow = originalOverflow;
       window.removeEventListener("keydown", handleKeyDown);
       previousFocusRef.current?.focus();
@@ -87,7 +89,7 @@ export function OfficialFlyerLightbox({
       aria-modal="true"
       aria-label={`${flyer.title} — Official Flyer`}
       ref={modalRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-black/92 backdrop-blur-md transition-opacity duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-black/94 backdrop-blur-xl transition-opacity duration-[280ms]"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -102,18 +104,18 @@ export function OfficialFlyerLightbox({
               {flyer.title}
             </span>
             {flyer.subtitle && (
-              <span className="font-manrope text-[12px] sm:text-[13px] text-white/70">
+              <span className="font-manrope text-[12px] sm:text-[13px] text-white/75">
                 {flyer.subtitle}
               </span>
             )}
           </div>
 
-          {/* Close button */}
+          {/* 44px+ Close button */}
           <button
             type="button"
             onClick={onClose}
             aria-label="Close official flyer lightbox"
-            className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/80 hover:text-white transition-all text-xs font-mono tracking-wider focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+            className="group min-h-[44px] min-w-[44px] flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/90 hover:text-white transition-all text-xs font-mono tracking-wider focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
           >
             <span>CLOSE</span>
             <span className="text-sm font-bold group-hover:scale-110 transition-transform">
@@ -122,15 +124,18 @@ export function OfficialFlyerLightbox({
           </button>
         </div>
 
-        {/* Poster Frame */}
+        {/* Poster Frame with Next/Image and Fixed Aspect Ratio */}
         <div
           className={`relative overflow-hidden rounded-md border bg-black/80 flex items-center justify-center ${accentBorder}`}
-          style={{ maxHeight: "calc(88vh - 48px)" }}
+          style={{ maxHeight: "calc(86vh - 48px)" }}
         >
-          <img
+          <Image
             src={flyer.src}
             alt={flyer.alt}
-            className="max-h-[calc(88vh-52px)] max-w-[90vw] w-auto h-auto object-contain select-none shadow-2xl"
+            width={800}
+            height={1000}
+            sizes="(max-width: 768px) 90vw, 560px"
+            className="max-h-[calc(86vh-52px)] max-w-[90vw] w-auto h-auto object-contain select-none shadow-2xl"
           />
         </div>
       </div>

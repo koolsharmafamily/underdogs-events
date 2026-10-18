@@ -94,7 +94,6 @@ export function CinemaLightbox() {
             fill
             sizes="(max-width: 640px) 90vw, 520px"
             className="object-cover object-center"
-            priority
           />
 
           {/* Glossy Glass Reflection Overlay */}
