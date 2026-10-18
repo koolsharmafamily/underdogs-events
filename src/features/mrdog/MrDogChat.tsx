@@ -106,6 +106,7 @@ export function MrDogChat() {
                     alt="Mr. Dog"
                     width={24}
                     height={24}
+                    unoptimized
                     className="object-cover"
                   />
                 </div>
@@ -137,6 +138,7 @@ export function MrDogChat() {
                 alt="Mr. Dog"
                 width={24}
                 height={24}
+                unoptimized
                 className="object-cover"
               />
             </div>

@@ -45,6 +45,12 @@ class WebGLErrorBoundary extends Component<
   }
 }
 
+const OUTFIT_GLB_PATHS: Record<MrDogOutfit, string> = {
+  home: "/models/mr-dog-coin-OG.glb",
+  redroom: "/models/mr-dog-coin-red-room.glb",
+  diwali: "/models/mr-dog-coin-diwali.glb",
+};
+
 function DogModelInner({
   outfit,
   isPeeking,
@@ -55,7 +61,7 @@ function DogModelInner({
   motionEnabled: boolean;
 }) {
   const { gl, scene } = useThree();
-  const gltf = useGLTF("/models/mr-dog.glb");
+  const gltf = useGLTF(OUTFIT_GLB_PATHS[outfit]);
 
   // Clone GLTF scene hierarchy to keep a fresh instance
   const dogScene = useMemo(() => gltf.scene.clone(true), [gltf.scene]);
@@ -185,10 +191,10 @@ export function MrDogStage3D({ size = 280, isPeeking = true }: StageProps) {
             toneMappingExposure: 1.05,
           }}
           camera={{
-            fov: 30,
+            fov: 32,
             near: 0.1,
             far: 10,
-            position: [0, 0.40, 1.35],
+            position: [0, 0, 2.25],
           }}
           onCreated={({ gl, advance }) => {
             rendererRef.current = gl;
@@ -227,7 +233,9 @@ export function MrDogStage3D({ size = 280, isPeeking = true }: StageProps) {
   );
 }
 
-// Preload the GLTF model in background
+// Preload the GLTF models in background
 if (typeof window !== "undefined") {
-  useGLTF.preload("/models/mr-dog.glb");
+  useGLTF.preload("/models/mr-dog-coin-OG.glb");
+  useGLTF.preload("/models/mr-dog-coin-red-room.glb");
+  useGLTF.preload("/models/mr-dog-coin-diwali.glb");
 }

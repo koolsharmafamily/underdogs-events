@@ -13,7 +13,11 @@ export function MrDogLauncher() {
   const phase = useAppStore((s) => s.phase);
   const isTransitioning = useAppStore((s) => s.isTransitioning);
   const world = useAppStore((s) => s.world);
-  const outfit = worldToOutfit(world);
+  const outfit = pathname.startsWith("/the-red-room")
+    ? "redroom"
+    : pathname.startsWith("/diwali")
+      ? "diwali"
+      : worldToOutfit(world);
 
   const [avatarState, setAvatarState] = useState<"avatar" | "avatar-wink">("avatar");
   const [showNudge, setShowNudge] = useState(false);
@@ -82,7 +86,9 @@ export function MrDogLauncher() {
     // Preload model on hover/focus
     if (typeof window !== "undefined") {
       void import("@react-three/drei").then(({ useGLTF }) => {
-        useGLTF.preload("/models/mr-dog.glb");
+        useGLTF.preload("/models/mr-dog-coin-OG.glb");
+        useGLTF.preload("/models/mr-dog-coin-red-room.glb");
+        useGLTF.preload("/models/mr-dog-coin-diwali.glb");
       });
     }
   }, []);
@@ -168,6 +174,7 @@ export function MrDogLauncher() {
             height={56}
             className="w-full h-full object-cover select-none"
             priority
+            unoptimized
           />
         </div>
 

@@ -13,13 +13,13 @@ export function MobileTabBar() {
   const pathname = usePathname();
   const world = useAppStore((s) => s.world);
   const motion = useAppStore((s) => s.motionEnabled);
-  const outfit = worldToOutfit(world);
 
   const isHome = pathname === "/";
   const isRedRoom = pathname.startsWith("/the-red-room");
   const isDiwali = pathname.startsWith("/diwali");
   const isEventsList = pathname.startsWith("/events");
   const isEventsTab = isEventsList || isRedRoom || isDiwali;
+  const outfit = isRedRoom ? "redroom" : isDiwali ? "diwali" : worldToOutfit(world);
 
   const isSheetOpen = useMrDogStore((s) => s.isOpen);
   const toggleMrDog = useMrDogStore((s) => s.toggleMrDog);
@@ -279,7 +279,8 @@ export function MobileTabBar() {
                 width={52}
                 height={52}
                 priority
-                className="object-contain -translate-y-1 drop-shadow-md select-none pointer-events-none"
+                unoptimized
+                className="object-contain -translate-y-0.5 drop-shadow-md select-none pointer-events-none"
               />
             </div>
           </button>

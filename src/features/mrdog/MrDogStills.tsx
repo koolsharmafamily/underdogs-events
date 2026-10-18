@@ -88,6 +88,7 @@ export function MrDogStills({
           alt={`Mr. Dog (${outfit} - ${activeStill})`}
           fill
           priority
+          unoptimized
           sizes={`${size}px`}
           className="object-contain drop-shadow-md transition-opacity duration-200"
         />
