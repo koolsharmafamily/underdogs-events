@@ -341,6 +341,8 @@ export async function POST(req: NextRequest) {
     ...conversationTurns,
   ];
 
+  let lastError = "";
+
   async function callProvider(model: string, timeoutMs: number): Promise<Response | null> {
     try {
       const headers: Record<string, string> = {
@@ -368,11 +370,13 @@ export async function POST(req: NextRequest) {
 
       if (!res.ok) {
         const errorText = await res.text().catch(() => "");
+        lastError = `Status ${res.status} (${model}): ${errorText.slice(0, 300)}`;
         console.error(`[MrDog API Provider Error] Status ${res.status} from ${apiBase}/chat/completions (model: ${model}):`, errorText);
         return null;
       }
       return res;
-    } catch (err) {
+    } catch (err: any) {
+      lastError = `Exception (${model}): ${err?.message || String(err)}`;
       console.error(`[MrDog API Network/Timeout Error] (${model}):`, err);
       return null;
     }
@@ -400,6 +404,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
         "x-mrdog-mode": "faq-fallback",
+        "x-mrdog-error": encodeURIComponent(lastError || "unknown"),
       },
     });
   }
