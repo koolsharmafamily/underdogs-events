@@ -978,7 +978,14 @@ time {
   pointer-events: none;
 }
 
-/* Mobile App Shell Rules */
+/* Mobile App Shell & Apple-Grade Touch Responsiveness */
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @media (max-width: 767px) {
   html, body {
     overscroll-behavior-y: none;

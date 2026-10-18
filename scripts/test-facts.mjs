@@ -17,11 +17,10 @@ async function run() {
     { name: 'Contains Red Room Date', pass: facts.includes('Saturday, 24 October 2026') },
     { name: 'Contains Red Room Venue', pass: facts.includes('Millo') },
     { name: 'Contains Red Room Dress Code', pass: facts.includes('Costumes compulsory') },
-    { name: 'Contains Red Room DJ', pass: facts.includes('DJ Mohnish') },
+    { name: 'Contains Red Room DJ', pass: facts.includes('DJ Monish') },
     { name: 'Contains Diwali Date', pass: facts.includes('Saturday, 7 November 2026') },
-    { name: 'Contains Diwali Venue', pass: facts.includes('Centre Point, Nagpur') },
-    { name: 'Contains Diwali DJ', pass: facts.includes('DJ Yogi') },
-    { name: 'Contains Announcing soon for unknowns', pass: facts.includes('Announcing soon') },
+    { name: 'Contains Diwali Venue', pass: facts.includes('Hotel Centre Point, Nagpur') },
+    { name: 'Contains Diwali DJ Announcing soon', pass: facts.includes('Announcing soon') },
     { name: 'Under 2500 chars', pass: facts.length <= 2500 },
   ];
 

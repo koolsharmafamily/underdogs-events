@@ -15,6 +15,7 @@ import { InvitationCard } from "@/ui/InvitationCard";
 import { ArtistPortrait } from "@/ui/ArtistPortrait";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
+import { BookingDetails } from "@/ui/BookingDetails";
 import { cardOverlayRef } from "@/webgl/tracking/refs";
 
 const DRIPS = [
@@ -297,28 +298,28 @@ export function RedRoomView() {
           cardOverlayRef.current = el;
         }}
         aria-label="Official Red Room Invitation Card Details"
-        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-6 sm:p-8 rounded-xl bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-300"
+        className="fixed top-0 left-0 z-30 pointer-events-none opacity-0 flex flex-col justify-between p-5 sm:p-7 rounded-xl bg-[#F0E6D8] text-[#550A0A] border-2 border-[#8B1414] shadow-2xl transition-opacity duration-300 overflow-y-auto"
       >
-        <div className="flex flex-col items-center text-center gap-1.5">
-          <span className="font-cinzel-decorative text-[clamp(20px,2.4vw,32px)] font-black uppercase text-[#4A0808] tracking-[0.06em]">
+        <div className="flex flex-col items-center text-center gap-1">
+          <span className="font-cinzel-decorative text-[clamp(18px,2.2vw,28px)] font-black uppercase text-[#4A0808] tracking-[0.06em]">
             THE RED ROOM
           </span>
-          <div className="w-full max-w-[200px]">
+          <div className="w-full max-w-[180px]">
             <Divider variant="diamond" active />
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-4 gap-y-3 sm:gap-y-4 my-auto text-left">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 sm:gap-y-3.5 my-2 text-left">
           {site.redRoom.invitation.rows.map((row) => (
             <div key={row.label} className="flex flex-col gap-0.5">
-              <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.2em] text-[#8B1414]">
+              <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-[#8B1414]">
                 {row.label}
               </span>
-              <span className="font-manrope text-[13px] sm:text-[15px] font-bold text-[#350505]">
+              <span className="font-manrope text-[12px] sm:text-[14px] font-bold text-[#350505]">
                 {row.value}
               </span>
               {"sub" in row && Boolean((row as any).sub) && (
-                <span className="font-manrope text-[11px] text-[#550A0A]/80">
+                <span className="font-manrope text-[10px] sm:text-[11px] text-[#550A0A]/80">
                   {(row as any).sub}
                 </span>
               )}
@@ -326,7 +327,12 @@ export function RedRoomView() {
           ))}
         </div>
 
-        <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[10px] uppercase tracking-[0.2em] text-[#4A0808]">
+        {/* Booking Details with Instagram & Click-to-Call Phones */}
+        <div className="pt-2.5 border-t border-[#8B1414]/20 my-1 pointer-events-auto">
+          <BookingDetails variant="redroom" compact />
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[9.5px] uppercase tracking-[0.2em] text-[#4A0808]">
           <span>{site.brand.name}</span>
           <span>{site.brand.city}</span>
         </div>

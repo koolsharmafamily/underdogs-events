@@ -9,16 +9,41 @@ import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
 
 export function MobileHomeFeed() {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
   const swipeContainerRef = useRef<HTMLDivElement>(null);
 
-  // Track smooth liquid scroll progress across statements
+  // Track smooth liquid scroll progress & active card index across statements
   const handleScroll = () => {
     if (!swipeContainerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = swipeContainerRef.current;
+    const container = swipeContainerRef.current;
+    const { scrollLeft, scrollWidth, clientWidth } = container;
     const maxScroll = scrollWidth - clientWidth;
     if (maxScroll > 0) {
       setScrollProgress(Math.min(1, Math.max(0, scrollLeft / maxScroll)));
+    }
+    const cardWidth = clientWidth * 0.84 + 16;
+    const newIdx = Math.round(scrollLeft / cardWidth);
+    const bounded = Math.min(Math.max(0, newIdx), site.home.about.statements.length - 1);
+    if (bounded !== activeIndex) {
+      setActiveIndex(bounded);
+    }
+  };
+
+  const scrollToCard = (idx: number) => {
+    if (!swipeContainerRef.current) return;
+    const container = swipeContainerRef.current;
+    const cards = container.children;
+    if (cards[idx]) {
+      (cards[idx] as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+      setActiveIndex(idx);
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(8);
+      }
     }
   };
 
@@ -63,7 +88,7 @@ export function MobileHomeFeed() {
         </div>
       </section>
 
-      {/* 2. "Who we are" — Smooth Liquid Glass Runway */}
+      {/* 2. "Who we are" — iPhone Liquid Glass Paging Runway */}
       <section className="py-12 border-t border-white/10 flex flex-col gap-6">
         <div className="px-6 flex flex-col gap-1">
           <h2 className="font-cinzel text-xl font-bold uppercase tracking-wider text-white">
@@ -71,59 +96,98 @@ export function MobileHomeFeed() {
           </h2>
         </div>
 
-        {/* Smooth Liquid Glass Scrolling Runway */}
+        {/* Liquid Glass Runway with Apple iOS Snap Physics */}
         <div
           ref={swipeContainerRef}
           onScroll={handleScroll}
-          className="flex overflow-x-auto no-scrollbar px-6 gap-3.5 scroll-smooth overscroll-x-contain touch-pan-x"
-          style={{ WebkitOverflowScrolling: "touch" }}
+          className="flex overflow-x-auto no-scrollbar px-6 gap-4 snap-x snap-mandatory scroll-smooth overscroll-x-contain touch-pan-x"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            scrollPaddingLeft: "1.5rem",
+            scrollPaddingRight: "1.5rem",
+          }}
         >
           {site.home.about.statements.map((stmt: string, idx: number) => (
             <div
               key={idx}
-              className="group relative shrink-0 w-[78vw] max-w-[310px] p-6 rounded-3xl backdrop-blur-xl bg-gradient-to-br from-white/[0.08] via-white/[0.03] to-white/[0.01] border border-white/[0.14] shadow-[0_12px_40px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.2)] overflow-hidden flex flex-col justify-between gap-5 transition-all duration-300 active:scale-[0.99]"
+              onClick={() => scrollToCard(idx)}
+              className="group relative shrink-0 w-[84vw] max-w-[325px] snap-center p-6 sm:p-7 rounded-[30px] overflow-hidden flex flex-col justify-between gap-6 transition-transform duration-200 active:scale-[0.985] cursor-pointer"
+              style={{
+                background:
+                  "linear-gradient(175deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.015) 100%)",
+                backdropFilter: "blur(32px) saturate(190%) contrast(105%)",
+                WebkitBackdropFilter: "blur(32px) saturate(190%) contrast(105%)",
+                border: "1px solid rgba(255, 255, 255, 0.18)",
+                boxShadow:
+                  "inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.45), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.08), 0 20px 48px -12px rgba(0, 0, 0, 0.65)",
+              }}
             >
-              {/* Liquid glass specular highlights & iridescent neon blur */}
+              {/* Apple Liquid Glass Specular Shimmer & Internal Ambient Caustic */}
               <div
-                className="pointer-events-none absolute -top-10 -right-10 w-28 h-28 rounded-full bg-gradient-to-br from-[#EA28C1]/20 to-transparent blur-2xl"
+                className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br from-[#EA28C1]/25 to-transparent blur-2xl"
                 aria-hidden="true"
               />
               <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/35 to-transparent"
+                className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/50 to-transparent"
+                aria-hidden="true"
+              />
+              <div
+                className="pointer-events-none absolute inset-0 rounded-[30px] bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent"
                 aria-hidden="true"
               />
 
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#EA28C1] font-semibold">
-                  0{idx + 1}
+              <div className="flex items-center justify-between relative z-10">
+                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#EA28C1] font-bold">
+                  0{idx + 1} / 0{site.home.about.statements.length}
                 </span>
                 <span
-                  className="w-1.5 h-1.5 rounded-full bg-[#EA28C1]/60 shadow-[0_0_8px_#EA28C1]"
+                  className="w-2 h-2 rounded-full bg-[#EA28C1] shadow-[0_0_10px_#EA28C1]"
                   aria-hidden="true"
                 />
               </div>
 
-              <p className="font-cinzel text-[15px] sm:text-base font-bold leading-relaxed tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">
+              <p className="font-cinzel text-[16px] sm:text-[17px] font-bold leading-[1.45] tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] relative z-10">
                 {stmt}
               </p>
 
-              <div
-                className="w-8 h-[1px] bg-white/20 group-hover:w-12 group-hover:bg-[#EA28C1]/60 transition-all duration-300"
-                aria-hidden="true"
-              />
+              <div className="flex items-center justify-between pt-1 relative z-10">
+                <div
+                  className="w-10 h-[1.5px] rounded-full bg-gradient-to-r from-white/40 to-transparent group-hover:w-16 group-hover:from-[#EA28C1] transition-all duration-300"
+                  aria-hidden="true"
+                />
+                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
+                  Swipe →
+                </span>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* Liquid Glass Scroll Progress Pill */}
-        <div className="flex justify-center items-center pt-1" aria-hidden="true">
-          <div className="w-16 h-1 rounded-full bg-white/10 overflow-hidden relative backdrop-blur-sm">
-            <div
-              className="h-full w-6 rounded-full bg-gradient-to-r from-[#EA28C1] to-[#FF77DC] shadow-[0_0_8px_rgba(234,40,193,0.6)] transition-transform duration-75 ease-out will-change-transform"
-              style={{
-                transform: `translateX(${scrollProgress * 40}px)`,
-              }}
-            />
+        {/* Floating Apple Liquid Glass Capsule Indicator */}
+        <div className="flex justify-center items-center pt-2" aria-hidden="true">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
+            style={{
+              background: "rgba(255, 255, 255, 0.08)",
+              backdropFilter: "blur(20px) saturate(180%)",
+              WebkitBackdropFilter: "blur(20px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.16)",
+              boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.45)",
+            }}
+          >
+            {site.home.about.statements.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => scrollToCard(i)}
+                aria-label={`Jump to statement ${i + 1}`}
+                className={`transition-all duration-300 rounded-full cursor-pointer touch-manipulation ${
+                  activeIndex === i
+                    ? "w-7 h-1.5 bg-gradient-to-r from-[#EA28C1] to-[#FF6EC7] shadow-[0_0_10px_rgba(234,40,193,0.8)]"
+                    : "w-1.5 h-1.5 bg-white/30 hover:bg-white/50"
+                }`}
+              />
+            ))}
           </div>
         </div>
 
@@ -135,7 +199,7 @@ export function MobileHomeFeed() {
         </div>
       </section>
 
-      {/* 3. "Nights we've thrown" — Auto-drifting Chip Row */}
+      {/* 3. "Nights we've thrown" — Auto-drifting Liquid Glass Pills */}
       <section className="py-10 border-t border-white/10 flex flex-col gap-4 overflow-hidden">
         <div className="px-6 flex flex-col gap-1">
           <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#EA28C1]">
@@ -146,12 +210,23 @@ export function MobileHomeFeed() {
           </span>
         </div>
 
-        {/* Drifting Chips row */}
+        {/* Drifting Liquid Glass Lozenges row */}
         <div className="w-full overflow-x-auto no-scrollbar py-2 flex items-center">
           <div className="flex shrink-0 items-center gap-3 animate-marquee-slow px-4">
             {site.home.nights.list.concat(site.home.nights.list).map((item: string, i: number) => (
               <React.Fragment key={i}>
-                <span className="px-3.5 py-1.5 rounded-sm bg-white/5 border border-white/10 font-cinzel text-xs uppercase tracking-wider text-white/90 whitespace-nowrap">
+                <span
+                  className="px-4 py-2 rounded-full font-cinzel text-[11px] uppercase tracking-[0.18em] text-white/95 whitespace-nowrap transition-transform duration-200 active:scale-95"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%)",
+                    backdropFilter: "blur(18px) saturate(180%)",
+                    WebkitBackdropFilter: "blur(18px) saturate(180%)",
+                    border: "1px solid rgba(255, 255, 255, 0.16)",
+                    boxShadow:
+                      "inset 0 1px 0.5px rgba(255, 255, 255, 0.35), 0 6px 18px rgba(0, 0, 0, 0.4)",
+                  }}
+                >
                   {item}
                 </span>
                 <span className="text-[#EA28C1]/60 font-bold text-xs" aria-hidden="true">

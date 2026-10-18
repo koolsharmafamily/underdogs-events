@@ -20,7 +20,7 @@ export function buildMrDogFacts(): string {
 
   const dDate = diwali.invitation.rows.find((r) => r.label === "Date")?.value || diwali.sub;
   const dTime = diwali.invitation.rows.find((r) => r.label === "Time")?.value || ANNOUNCING_SOON;
-  const dVenue = diwali.invitation.rows.find((r) => r.label === "Venue")?.value || "Centre Point, Nagpur";
+  const dVenue = diwali.invitation.rows.find((r) => r.label === "Venue")?.value || "Hotel Centre Point, Nagpur";
   const dDress = diwali.invitation.rows.find((r) => r.label.toLowerCase().includes("dress"))?.value || ANNOUNCING_SOON;
   const dEntry = diwali.invitation.rows.find((r) => r.label === "Entry")?.value || ANNOUNCING_SOON;
   const dPartners = diwali.partners.list.map((p) => `${p.role}: ${p.name}`).join("; ");
@@ -53,7 +53,7 @@ export function buildMrDogFacts(): string {
     `- Venue: ${dVenue}`,
     `- Theme & dress code: ${dDress}`,
     `- Entry / Tickets: ${dEntry}`,
-    `- Headline DJ: ${diwali.dj.name} (${diwali.dj.role}, ${diwali.dj.genre})`,
+    `- Headline DJ: ${diwali.dj ? `${(diwali.dj as any).name} (${(diwali.dj as any).role})` : "Announcing soon"}`,
     `- Partners: ${dPartners}`,
     ``,
     `POLICY: This website is information only; it does not sell tickets or take bookings. Follow @underdogs_nagpur on Instagram for updates.`,

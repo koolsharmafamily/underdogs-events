@@ -195,44 +195,7 @@ export function DiwaliView() {
         </div>
       </section>
 
-      {/* D3.5 · Headline artist (client-confirmed) */}
-      {site.diwali.dj && (
-        <section
-          data-scene="D-DJ"
-          aria-label={site.diwali.dj.name}
-          className="relative z-20 py-20 border-t border-[#E5B25D]/25 bg-gradient-to-b from-transparent via-[#18080C]/90 to-transparent"
-        >
-          <div className="site-container site-grid items-center gap-y-10">
-            <div className="col-span-4 md:col-span-4 lg:col-span-5 flex justify-center">
-              <ArtistPortrait name={site.diwali.dj.name} photo={site.diwali.dj.photo} />
-            </div>
 
-            {/* Artist Bio & Profile */}
-            <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-7 flex flex-col items-start text-left gap-5">
-              <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.32em] text-[#E5B25D]">
-                {site.diwali.dj.role}
-              </span>
-              <h2 className="font-playfair text-[clamp(2.4rem,4.4vw,3.6rem)] font-bold text-[#FFF6EE] leading-tight">
-                {site.diwali.dj.name}
-              </h2>
-              <p className="font-cinzel text-[12px] sm:text-[13px] uppercase tracking-[0.18em] text-[#FFE3A3]/90">
-                {site.diwali.dj.genre}
-              </p>
-              <p className="font-manrope text-[15px] sm:text-[16px] leading-[1.7] text-[#FFF6EE]/85 max-w-[540px]">
-                {site.diwali.dj.bio}
-              </p>
-              <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-[11px] uppercase tracking-[0.15em] text-[#E5B25D]">
-                <span className="inline-flex items-center gap-2 border border-[#E5B25D]/40 bg-[#16080C] px-3.5 py-1.5 rounded-sm text-[#FFF6EE]">
-                  {site.diwali.dj.date}
-                </span>
-                <span className="inline-flex items-center gap-2 border border-[#E5B25D]/40 bg-[#16080C] px-3.5 py-1.5 rounded-sm text-[#FFE3A3]">
-                  {site.diwali.dj.venue}
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* D4 · The Sponsor Wall (Opening credits step-and-repeat); scroll key D4 */}
       <SponsorWall ref={d4Ref} />

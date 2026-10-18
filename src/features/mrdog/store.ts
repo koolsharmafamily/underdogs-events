@@ -214,7 +214,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
     if (!clean) return;
 
     // Check party/rage trigger words
-    const isRageTrigger = /\b(party|parties|night|nights|rage|mohnish|yogi|halloween|diwali|dhamaaka|red room)\b/i.test(clean);
+    const isRageTrigger = /\b(party|parties|night|nights|rage|monish|mohnish|yogi|halloween|diwali|dhamaaka|red room)\b/i.test(clean);
 
     const userMsg: ChatMessage = {
       id: "u-" + Date.now(),

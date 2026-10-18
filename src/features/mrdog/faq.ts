@@ -103,9 +103,9 @@ export function getFaqAnswer(intent: Intent, world: WorldContext = "home"): stri
       }
       if (world === "diwali") {
         const row = diwali.invitation.rows.find((r) => r.label === "Venue");
-        return `DHAMAAKA is happening at ${row?.value || "Centre Point, Nagpur"}.`;
+        return `DHAMAAKA is happening at ${row?.value || "Hotel Centre Point, Nagpur"}.`;
       }
-      return `Two venues in Nagpur: Millo in Civil Lines for The Red Room, and Centre Point for Diwali DHAMAAKA.`;
+      return `Two venues in Nagpur: Millo in Civil Lines for The Red Room, and Hotel Centre Point for Diwali DHAMAAKA.`;
     }
 
     case "dress": {
@@ -123,9 +123,9 @@ export function getFaqAnswer(intent: Intent, world: WorldContext = "home"): stri
         return `${redRoom.dj.name} is on the decks for The Red Room, spinning ${redRoom.dj.genre}. Get ready for pure mayhem.`;
       }
       if (world === "diwali") {
-        return `${diwali.dj.name} is headlining DHAMAAKA with Bollywood-EDM festival anthems and celebrity remixes.`;
+        return "The headline artist for DHAMAAKA is announcing soon. Keep an eye on @underdogs_nagpur.";
       }
-      return `DJ Mohnish headlines The Red Room for Halloween, and DJ Yogi headlines DHAMAAKA for Diwali.`;
+      return `${redRoom.dj.name} headlines The Red Room for Halloween, and the headline artist for DHAMAAKA is announcing soon.`;
     }
 
     case "partners": {
@@ -147,7 +147,7 @@ export function getFaqAnswer(intent: Intent, world: WorldContext = "home"): stri
       return `We've thrown ${site.home.nights.list.slice(0, 6).join(", ")}, plus NYE and festival editions. Latest was Project X at Pablo Nagpur.`;
 
     case "events":
-      return `This season brings two worlds: The Red Room on Saturday 24 October at Millo, and DHAMAAKA on Saturday 7 November at Centre Point. Pick your poison.`;
+      return `This season brings two worlds: The Red Room on Saturday 24 October at Millo, and DHAMAAKA on Saturday 7 November at Hotel Centre Point. Pick your poison.`;
 
     case "thanks":
       return "Anytime, boss. See you at the gate.";

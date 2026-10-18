@@ -1,6 +1,7 @@
 import React from 'react'
 import { AnnouncingSoon } from './AnnouncingSoon'
 import { Divider } from './Divider'
+import { BookingDetails } from './BookingDetails'
 
 export interface InvitationRow {
   readonly label: string
@@ -104,6 +105,10 @@ export function InvitationCard({
             </div>
           ))}
         </dl>
+
+        <div className="pt-4 border-t border-current/15">
+          <BookingDetails variant={isRedRoom ? "redroom" : "diwali"} />
+        </div>
       </div>
     </article>
   )

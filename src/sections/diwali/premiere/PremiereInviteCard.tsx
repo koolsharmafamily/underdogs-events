@@ -4,6 +4,7 @@ import React from "react";
 import { site, ANNOUNCING_SOON } from "@/content/site";
 import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
+import { BookingDetails } from "@/ui/BookingDetails";
 
 interface PremiereInviteCardProps {
   active?: boolean;
@@ -127,6 +128,11 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
             );
           })}
         </dl>
+
+        {/* Booking Details & Inquiries */}
+        <div className="mt-6 pt-5 border-t border-[#E5B25D]/20">
+          <BookingDetails variant="diwali" />
+        </div>
 
         {/* Footer Note */}
         <div className="mt-8 pt-4 border-t border-[#E5B25D]/20 flex items-center justify-between text-[#FFF6EE]/50 text-[10px] uppercase font-cinzel tracking-[0.2em]">

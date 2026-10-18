@@ -58,7 +58,7 @@ export const site = {
              cta: 'Enter World One', href: '/the-red-room' },
       two: { kicker: 'World Two', name: 'DHAMAAKA', occasion: 'Diwali 2026',
              subtitle: 'The Karan Johar Edition',
-             date: 'Sat 7 Nov 2026', isoDate: '2026-11-07', place: 'Centre Point, Nagpur',
+             date: 'Sat 7 Nov 2026', isoDate: '2026-11-07', place: 'Hotel Centre Point, Nagpur',
              cta: 'Enter World Two', href: '/diwali' },
     },
   },
@@ -97,10 +97,10 @@ export const site = {
     },
     // (client) confirmed headline artist, 15 Oct 2026. `photo` stays null until the client sends one.
     dj: {
-      name: 'DJ Mohnish',
+      name: 'DJ Monish',
       role: 'Headline Artist · The Red Room Halloween',
       genre: 'Afro-House · Dark Commercial · High-Energy Club Anthems',
-      bio: "Nagpur's premier nightlife authority and resident crowd-controller at Millo Nagpur. Renowned for electrifying dancefloors with signature high-octane transitions, dark Afro-house grooves, and pulse-pounding commercial anthems, DJ Mohnish takes control of the decks for an unforgettable Halloween descent into The Red Room.",
+      bio: "Nagpur's premier nightlife authority and resident crowd-controller at Millo Nagpur. Renowned for electrifying dancefloors with signature high-octane transitions, dark Afro-house grooves, and pulse-pounding commercial anthems, DJ Monish takes control of the decks for an unforgettable Halloween descent into The Red Room.",
       venue: 'Millo — Kitchen & Bar, Civil Lines, Nagpur',
       date: 'Saturday 24 October 2026',
       photo: null as string | null,
@@ -128,34 +128,25 @@ export const site = {
     meta: {
       title: 'DHAMAAKA — The Karan Johar Edition · Underdogs Nagpur',
       description:
-        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents.',
+        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Hotel Centre Point, Nagpur. NO CTRL presents.',
     },
     presenter: 'NO CTRL presents',
     kicker: 'World Two · Diwali 2026',
     title: 'DHAMAAKA',
     subtitle: 'The Karan Johar Edition',
     accent: 'दीपावली धमाका',
-    sub: 'Saturday 7 November 2026 · Centre Point, Nagpur',
+    sub: 'Saturday 7 November 2026 · Hotel Centre Point, Nagpur',
     jump: 'Details',
     opener: { slate: 'Diwali 2026', skip: 'Skip' },
     story: ['Two worlds.', 'Two occasions.', 'Two very different nights.', 'You’ve seen one.', 'Now meet the other.'],
-    // (client) confirmed headline artist, 15 Oct 2026. `photo` stays null until the client sends one.
-    dj: {
-      name: 'DJ Yogi',
-      role: 'Headline Artist · Diwali DHAMAAKA',
-      genre: 'Bollywood-EDM · Festival Anthems · Celebrity Remixes',
-      bio: "One of India's most celebrated Bollywood-EDM powerhouses and official remix producer for chart-toppers like Neha Kakkar, Badshah, and Guru Randhawa. Having set stages ablaze across Mumbai, Delhi, Dubai, and New York, DJ Yogi brings festival-grade euphoria and massive celebratory anthems to headline Nagpur's royal Diwali DHAMAAKA.",
-      date: 'Saturday 7 November 2026',
-      venue: 'Centre Point, Nagpur',
-      photo: null as string | null,
-    },
+    dj: null as null,
     invitation: {
       kicker: 'The invitation',
       heading: 'DHAMAAKA with Underdogs',
       rows: [
         { label: 'Date', value: 'Saturday, 7 November 2026' },
         { label: 'Time', value: ANNOUNCING_SOON },
-        { label: 'Venue', value: 'Centre Point, Nagpur' },
+        { label: 'Venue', value: 'Hotel Centre Point, Nagpur' },
         { label: 'Theme & dress code', value: ANNOUNCING_SOON },
         { label: 'Entry', value: ANNOUNCING_SOON },
       ],
@@ -165,6 +156,7 @@ export const site = {
       list: [
         { role: 'Powered by', name: 'Rich Bliss Auto · Rich Bliss Jewels' },
         { role: 'Co-powered by', name: 'F Salon by FashionTV' },
+        { role: 'Venue partner', name: 'Hotel Centre Point' },
         { role: 'Beverage partner', name: 'Alpha Bull Rum' },
         { role: 'Gifting partner', name: 'Shika Arts' },
         { role: 'Experience partner', name: 'Layerz' },
@@ -174,13 +166,27 @@ export const site = {
       ],
     },
     nowShowing: { kicker: 'Now showing', label: 'The official flyer' },
-    poster: { src: '/media/dhamaaka-flyer.webp', alt: 'Official flyer: NO CTRL presents DHAMAAKA — The Karan Johar Edition, Diwali 2026 at Centre Point, Nagpur.' },
+    poster: { src: '/media/dhamaaka-flyer.webp', alt: 'Official flyer: NO CTRL presents DHAMAAKA — The Karan Johar Edition, Diwali 2026 at Hotel Centre Point, Nagpur.' },
     outro: {
       tagline: 'This year, different.',
       wish: 'शुभ दीपावली',
       other: { label: 'The other world: The Red Room', href: '/the-red-room' },
       back: { label: 'Back to the gate', href: '/' },
     },
+  },
+
+  booking: {
+    instagram: {
+      handle: '@underdogs_nagpur',
+      url: 'https://www.instagram.com/underdogs_nagpur/',
+      label: 'Official Instagram · @underdogs_nagpur',
+    },
+    phones: [
+      { display: '+91 90491 00002', tel: '+919049100002' },
+      { display: '+91 98231 77648', tel: '+919823177648' },
+      { display: '+91 72762 05656', tel: '+917276205656' },
+      { display: '+91 96891 93505', tel: '+919689193505' },
+    ],
   },
 
   events: {
@@ -312,7 +318,7 @@ export const siteSchema = z.object({
     jump: text,
     opener: z.object({ slate: text, skip: text }),
     story: z.tuple([z.string(), z.string(), z.string(), z.string(), z.string()]),
-    dj: djSchema,
+    dj: djSchema.nullable(),
     invitation: z.object({
       kicker: text,
       heading: text,
@@ -331,6 +337,19 @@ export const siteSchema = z.object({
       other: z.object({ label: text, href: internalHrefSchema }),
       back: z.object({ label: text, href: internalHrefSchema }),
     }),
+  }),
+  booking: z.object({
+    instagram: z.object({
+      handle: text,
+      url: z.string().url(),
+      label: text,
+    }),
+    phones: z.array(
+      z.object({
+        display: text,
+        tel: text,
+      }),
+    ),
   }),
   events: z.object({
     meta: z.object({ title: text, description: text }),
