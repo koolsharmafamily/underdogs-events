@@ -234,7 +234,8 @@ export async function POST(req: NextRequest) {
   }
 
   const apiKey = process.env.MRDOG_API_KEY?.trim();
-  const apiBase = process.env.MRDOG_API_BASE?.trim() || "https://api.groq.com/openai/v1";
+  const rawApiBase = process.env.MRDOG_API_BASE?.trim() || "https://api.groq.com/openai/v1";
+  const apiBase = rawApiBase.replace(/\/+$/, "");
   const primaryModel = process.env.MRDOG_MODEL?.trim() || "llama-3.3-70b-versatile";
   const fallbackModel = process.env.MRDOG_MODEL_FALLBACK?.trim() || "llama-3.1-8b-instant";
   const isMock = process.env.MRDOG_MOCK === "1" || !apiKey;
