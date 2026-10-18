@@ -1,17 +1,28 @@
 import { site, ANNOUNCING_SOON } from "@/content/site";
+import type { MrDogExpression } from "./store";
 
 export type WorldContext = "home" | "redroom" | "diwali" | "events";
+
+export interface FixedQuestionItem {
+  id: string;
+  chipLabel: string;
+  userQuestion: string;
+  answer: string;
+  expression: MrDogExpression;
+  followUpIds: string[];
+}
 
 export type Intent =
   | "when"
   | "where"
   | "dress"
   | "entry"
-  | "partners"
+  | "booking"
   | "artist"
   | "about"
   | "past"
   | "events"
+  | "partners"
   | "greeting"
   | "thanks"
   | "unknown";
@@ -19,52 +30,253 @@ export type Intent =
 interface IntentMatch {
   intent: Intent;
   reply: string;
+  expression: MrDogExpression;
+  followUpIds: string[];
+}
+
+/**
+ * Fixed Q&A Database for Mr. Dog.
+ * Grounded 100% in src/content/site.ts with authentic mascot voice.
+ */
+export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
+  // --- HOME / GENERAL ---
+  about: {
+    id: "about",
+    chipLabel: "What is Underdogs?",
+    userQuestion: "What is Underdogs?",
+    answer:
+      "We’re Nagpur’s party people. We don’t throw parties — we build worlds and open the gate. Every night gets a name, a dress code, and a reason to remember it. Chaos, curated.",
+    expression: "talking",
+    followUpIds: ["season", "past", "booking"],
+  },
+  season: {
+    id: "season",
+    chipLabel: "This season's nights",
+    userQuestion: "What's on this season?",
+    answer:
+      "Two worlds. Two celebrations. One unforgettable season:\n\n• World One: The Red Room (Halloween) — Saturday 24 October 2026 at Millo, Civil Lines.\n• World Two: DHAMAAKA (Diwali — The Karan Johar Edition) — Saturday 7 November 2026 at Hotel Centre Point, Nagpur.",
+    expression: "talking",
+    followUpIds: ["redroom_when", "diwali_when", "entry"],
+  },
+  past: {
+    id: "past",
+    chipLabel: "Past nights thrown",
+    userQuestion: "What past nights have you thrown?",
+    answer:
+      "We’ve thrown Project X (latest at Pablo, Nagpur), Retro Holi, Anti V, Diwali 2k25, Holi 2k25, Maison Blanche, Afrochella, Akai Yane, Luau, plus our legendary NYE editions.",
+    expression: "talking",
+    followUpIds: ["season", "about", "booking"],
+  },
+  entry: {
+    id: "entry",
+    chipLabel: "How to get tickets / entry?",
+    userQuestion: "How do I get tickets or entry?",
+    answer:
+      "I run the door, not the box office, bhai! Entry details and passes are announcing soon. We don’t sell tickets or take bookings on this website. Keep your eyes on @underdogs_nagpur on Instagram for the official drop.",
+    expression: "shrug",
+    followUpIds: ["booking", "redroom_when", "diwali_when"],
+  },
+  booking: {
+    id: "booking",
+    chipLabel: "VIP Booking & Phone numbers",
+    userQuestion: "How do I book tables or contact the team?",
+    answer:
+      "For official table bookings, VIP reservations, and inquiries, connect directly with the Underdogs team:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
+    expression: "wink",
+    followUpIds: ["redroom_when", "diwali_when", "entry"],
+  },
+
+  // --- THE RED ROOM (HALLOWEEN) ---
+  redroom_when: {
+    id: "redroom_when",
+    chipLabel: "When & where is Red Room?",
+    userQuestion: "When and where is The Red Room?",
+    answer:
+      "The Red Room descends on Saturday, 24 October 2026 at Millo — Kitchen & Bar (245/U1, East High Court Road, near Zudio, Civil Lines, Nagpur 440001). Time details are announcing soon.",
+    expression: "talking",
+    followUpIds: ["redroom_dress", "redroom_dj", "redroom_booking"],
+  },
+  redroom_dress: {
+    id: "redroom_dress",
+    chipLabel: "Halloween dress code",
+    userQuestion: "What is the dress code for Halloween?",
+    answer:
+      "Dress to disturb. Dress to deceive. Dress to become someone else.\n\nCostumes aren’t optional — consider this your warning! Come as yourself and I'll be very disappointed at the gate.",
+    expression: "rage",
+    followUpIds: ["redroom_dj", "redroom_when", "entry"],
+  },
+  redroom_dj: {
+    id: "redroom_dj",
+    chipLabel: "Headline DJ (Red Room)",
+    userQuestion: "Who is the DJ for The Red Room?",
+    answer:
+      "DJ Monish is on the decks! Nagpur's premier nightlife authority and resident crowd-controller at Millo is taking over with dark Afro-house grooves, high-octane transitions, and high-energy club anthems.",
+    expression: "rage",
+    followUpIds: ["redroom_dress", "redroom_booking", "redroom_partners"],
+  },
+  redroom_booking: {
+    id: "redroom_booking",
+    chipLabel: "Book Millo VIP tables",
+    userQuestion: "How do I book VIP tables for The Red Room?",
+    answer:
+      "For table reservations at Millo — Kitchen & Bar, call:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr message @underdogs_nagpur.",
+    expression: "wink",
+    followUpIds: ["redroom_when", "redroom_dress", "redroom_dj"],
+  },
+  redroom_partners: {
+    id: "redroom_partners",
+    chipLabel: "Red Room partners",
+    userQuestion: "Who are the partners for The Red Room?",
+    answer:
+      "The Red Room is brought together in association with:\n• Title partner: F Salon by FashionTV, Nagpur\n• Venue partner: Millo — Kitchen & Bar\n• Glam partner: The Makeup Alchemy\n• Creative experience partner: Layerz\n• Tech partner: Kool Korp",
+    expression: "talking",
+    followUpIds: ["redroom_when", "redroom_dj", "redroom_booking"],
+  },
+
+  // --- DHAMAAKA (DIWALI) ---
+  diwali_when: {
+    id: "diwali_when",
+    chipLabel: "When & where is DHAMAAKA?",
+    userQuestion: "When and where is DHAMAAKA?",
+    answer:
+      "NO CTRL presents DHAMAAKA — The Karan Johar Edition on Saturday, 7 November 2026 at Hotel Centre Point, Nagpur. Start time is announcing soon.",
+    expression: "talking",
+    followUpIds: ["diwali_dress", "diwali_artist", "diwali_booking"],
+  },
+  diwali_dress: {
+    id: "diwali_dress",
+    chipLabel: "Diwali theme & attire",
+    userQuestion: "What is the theme and dress code for DHAMAAKA?",
+    answer:
+      "DHAMAAKA — The Karan Johar Edition (दीपावली धमाका). Theme and dress code details are announcing soon. Think pure royal Bollywood couture and premiere-night glamour.",
+    expression: "wink",
+    followUpIds: ["diwali_artist", "diwali_when", "entry"],
+  },
+  diwali_artist: {
+    id: "diwali_artist",
+    chipLabel: "Headline Artist (Diwali)",
+    userQuestion: "Who is the artist performing at DHAMAAKA?",
+    answer:
+      "The headline artist for DHAMAAKA is announcing soon! Keep an eye on @underdogs_nagpur on Instagram for the official reveal.",
+    expression: "shrug",
+    followUpIds: ["diwali_when", "diwali_dress", "diwali_booking"],
+  },
+  diwali_booking: {
+    id: "diwali_booking",
+    chipLabel: "Book Centre Point tables",
+    userQuestion: "How do I book VIP tables for DHAMAAKA?",
+    answer:
+      "For table reservations at Hotel Centre Point, Nagpur, reach out to:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
+    expression: "wink",
+    followUpIds: ["diwali_when", "diwali_dress", "diwali_partners"],
+  },
+  diwali_partners: {
+    id: "diwali_partners",
+    chipLabel: "DHAMAAKA partners",
+    userQuestion: "Who are the partners for DHAMAAKA?",
+    answer:
+      "DHAMAAKA is presented by NO CTRL with:\n• Powered by: Rich Bliss Auto · Rich Bliss Jewels\n• Co-powered by: F Salon by FashionTV\n• Venue partner: Hotel Centre Point\n• Beverage partner: Alpha Bull Rum\n• Gifting partner: Shika Arts\n• Experience partner: Layerz\n• Fashion partner: Aayush Sachdev Couture\n• Tech partner: Kool Korp\n• Travel partner: Nova Travels",
+    expression: "talking",
+    followUpIds: ["diwali_when", "diwali_artist", "diwali_booking"],
+  },
+};
+
+/**
+ * Returns initial fixed questions list for each world view.
+ */
+export function getInitialFixedQuestionsForWorld(world: WorldContext): FixedQuestionItem[] {
+  if (world === "redroom") {
+    return [
+      FIXED_QUESTIONS.redroom_when,
+      FIXED_QUESTIONS.redroom_dress,
+      FIXED_QUESTIONS.redroom_dj,
+      FIXED_QUESTIONS.entry,
+      FIXED_QUESTIONS.redroom_booking,
+      FIXED_QUESTIONS.redroom_partners,
+    ];
+  }
+  if (world === "diwali") {
+    return [
+      FIXED_QUESTIONS.diwali_when,
+      FIXED_QUESTIONS.diwali_dress,
+      FIXED_QUESTIONS.diwali_artist,
+      FIXED_QUESTIONS.entry,
+      FIXED_QUESTIONS.diwali_booking,
+      FIXED_QUESTIONS.diwali_partners,
+    ];
+  }
+  // Home & Events default
+  return [
+    FIXED_QUESTIONS.about,
+    FIXED_QUESTIONS.season,
+    FIXED_QUESTIONS.redroom_when,
+    FIXED_QUESTIONS.diwali_when,
+    FIXED_QUESTIONS.entry,
+    FIXED_QUESTIONS.booking,
+    FIXED_QUESTIONS.past,
+  ];
 }
 
 const INTENT_PATTERNS: { intent: Intent; keywords: RegExp }[] = [
   {
+    intent: "booking",
+    keywords:
+      /\b(call|phone|number|numbers|mobile|contact|table|tables|vip|cabana|reservation|reservations|inquiry|inquiries|bhai number|reach)\b/i,
+  },
+  {
     intent: "entry",
-    keywords: /\b(ticket|tickets|entry|pass|passes|price|prices|rate|cost|kitna|rupee|rupees|inr|charges|book|booking|rsvp|buy|purchase|how much)\b/i,
+    keywords:
+      /\b(ticket|tickets|entry|pass|passes|price|prices|rate|cost|kitna|rupee|rupees|inr|charges|book|booking|rsvp|buy|purchase|how much|gate pass)\b/i,
   },
   {
     intent: "when",
-    keywords: /\b(when|date|dates|time|timing|schedule|kab|tarikh|tareekh|din|hours|starts?)\b/i,
+    keywords:
+      /\b(when|date|dates|time|timing|schedule|kab|tarikh|tareekh|din|hours|starts?)\b/i,
   },
   {
     intent: "where",
-    keywords: /\b(where|venue|place|location|address|kahan|kidhar|kuthe|kothe|city|directions?|map)\b/i,
+    keywords:
+      /\b(where|venue|place|location|address|kahan|kidhar|kuthe|kothe|city|directions?|map|millo|centre point|hotel centre point)\b/i,
   },
   {
     intent: "dress",
-    keywords: /\b(dress|code|costume|costumes|outfit|outfits|theme|kya pehnu|wear|wearing|clothes|attire)\b/i,
+    keywords:
+      /\b(dress|code|costume|costumes|outfit|outfits|theme|kya pehnu|wear|wearing|clothes|attire|what to wear)\b/i,
   },
   {
     intent: "artist",
-    keywords: /\b(dj|artist|artists|music|lineup|line-up|line up|kaun bajayega|performer|playing|tracks?|genre)\b/i,
+    keywords:
+      /\b(dj|artist|artists|music|lineup|line-up|line up|monish|mohnish|kaun bajayega|performer|playing|tracks?|genre|sound)\b/i,
   },
   {
     intent: "partners",
-    keywords: /\b(partner|partners|sponsor|sponsors|powered by|co-powered|association|brands?)\b/i,
+    keywords:
+      /\b(partner|partners|sponsor|sponsors|powered by|co-powered|association|brands?|rich bliss|f salon|layerz|kool korp)\b/i,
   },
   {
     intent: "about",
-    keywords: /\b(what is underdogs|who are you|who are underdogs|tell me about underdogs|about|company|crew|human|are you human|real person|bot|ai)\b/i,
+    keywords:
+      /\b(what is underdogs|who are you|who are underdogs|tell me about underdogs|about|company|crew|human|are you human|real person|bot|ai)\b/i,
   },
   {
     intent: "past",
-    keywords: /\b(past|history|previous|project x|retro holi|anti v|maison blanche|afrochella|luau|akai yane)\b/i,
+    keywords:
+      /\b(past|history|previous|project x|retro holi|anti v|maison blanche|afrochella|luau|akai yane)\b/i,
   },
   {
     intent: "events",
-    keywords: /\b(events?|two worlds|this season|what's on|whats on|nights|celebrations?|kya scene|scene|chal raha|party)\b/i,
+    keywords:
+      /\b(events?|two worlds|this season|what's on|whats on|nights|celebrations?|kya scene|scene|chal raha|party|parties)\b/i,
   },
   {
     intent: "thanks",
-    keywords: /\b(thank|thanks|dhanyawad|shukriya|bye|cya|see you|goodbye|cheers|awesome|great)\b/i,
+    keywords:
+      /\b(thank|thanks|dhanyawad|shukriya|bye|cya|see you|goodbye|cheers|awesome|great|cool)\b/i,
   },
   {
     intent: "greeting",
-    keywords: /\b(hi|hello|hey|yo|namaste|kaisa hai|wassup|what's up|sup|morning|evening)\b/i,
+    keywords:
+      /\b(hi|hello|hey|yo|namaste|kaisa hai|wassup|what's up|sup|morning|evening|kya bolte)\b/i,
   },
 ];
 
@@ -78,102 +290,205 @@ export function detectIntent(text: string): Intent {
   return "unknown";
 }
 
-export function getFaqAnswer(intent: Intent, world: WorldContext = "home"): string {
-  const redRoom = site.redRoom;
-  const diwali = site.diwali;
+/**
+ * Matches any input (from chip click or free text) to fixed questions & answers.
+ */
+export function matchFaq(text: string, world: WorldContext = "home"): IntentMatch {
+  const clean = text.toLowerCase().trim();
+
+  // 1. Direct chip ID match if passed directly
+  if (FIXED_QUESTIONS[text]) {
+    const q = FIXED_QUESTIONS[text];
+    return {
+      intent: "unknown",
+      reply: q.answer,
+      expression: q.expression,
+      followUpIds: q.followUpIds,
+    };
+  }
+
+  // 2. Exact or close question text match
+  for (const q of Object.values(FIXED_QUESTIONS)) {
+    if (
+      clean === q.chipLabel.toLowerCase() ||
+      clean === q.userQuestion.toLowerCase() ||
+      clean.includes(q.userQuestion.toLowerCase())
+    ) {
+      return {
+        intent: "unknown",
+        reply: q.answer,
+        expression: q.expression,
+        followUpIds: q.followUpIds,
+      };
+    }
+  }
+
+  // 3. Keyword Intent detection with world awareness
+  const intent = detectIntent(text);
 
   switch (intent) {
-    case "entry":
-      return "I run the door, not the box office. Entry and pass details are announcing soon. Keep an eye on @underdogs_nagpur on Instagram.";
-
-    case "when": {
-      if (world === "redroom") {
-        return `The Red Room goes down on ${redRoom.sub.split(" · ")[0]}. Timing details are ${ANNOUNCING_SOON}.`;
-      }
-      if (world === "diwali") {
-        return `DHAMAAKA lights up on ${diwali.sub.split(" · ")[0]}. Start time is ${ANNOUNCING_SOON}.`;
-      }
-      return `Two dates to lock in: The Red Room on ${redRoom.sub.split(" · ")[0]}, and DHAMAAKA on ${diwali.sub.split(" · ")[0]}. Times are announcing soon.`;
+    case "booking": {
+      const q =
+        world === "redroom"
+          ? FIXED_QUESTIONS.redroom_booking
+          : world === "diwali"
+            ? FIXED_QUESTIONS.diwali_booking
+            : FIXED_QUESTIONS.booking;
+      return {
+        intent,
+        reply: q.answer,
+        expression: "wink",
+        followUpIds: q.followUpIds,
+      };
     }
 
+    case "entry": {
+      return {
+        intent,
+        reply: FIXED_QUESTIONS.entry.answer,
+        expression: "shrug",
+        followUpIds: FIXED_QUESTIONS.entry.followUpIds,
+      };
+    }
+
+    case "when":
     case "where": {
-      if (world === "redroom") {
-        const row = redRoom.invitation.rows.find((r) => r.label === "Venue");
-        return `We're taking over ${row?.value || "Millo — Kitchen & Bar"} at ${row?.sub || "Civil Lines, Nagpur"}.`;
-      }
-      if (world === "diwali") {
-        const row = diwali.invitation.rows.find((r) => r.label === "Venue");
-        return `DHAMAAKA is happening at ${row?.value || "Hotel Centre Point, Nagpur"}.`;
-      }
-      return `Two venues in Nagpur: Millo in Civil Lines for The Red Room, and Hotel Centre Point for Diwali DHAMAAKA.`;
+      const q =
+        world === "redroom"
+          ? FIXED_QUESTIONS.redroom_when
+          : world === "diwali"
+            ? FIXED_QUESTIONS.diwali_when
+            : FIXED_QUESTIONS.season;
+      return {
+        intent,
+        reply: q.answer,
+        expression: "talking",
+        followUpIds: q.followUpIds,
+      };
     }
 
     case "dress": {
-      if (world === "redroom") {
-        return "Costumes aren't optional. Dress to disturb, dress to deceive. Come as yourself and I'll be very disappointed at the gate.";
-      }
-      if (world === "diwali") {
-        return "The royal Bollywood Diwali theme and dress code details are announcing soon. Think pure couture.";
-      }
-      return "For The Red Room on Halloween, costumes are compulsory — dress to disturb. For Diwali DHAMAAKA, dress code is announcing soon.";
+      const q =
+        world === "redroom"
+          ? FIXED_QUESTIONS.redroom_dress
+          : world === "diwali"
+            ? FIXED_QUESTIONS.diwali_dress
+            : FIXED_QUESTIONS.redroom_dress;
+      return {
+        intent,
+        reply: q.answer,
+        expression: q.expression,
+        followUpIds: q.followUpIds,
+      };
     }
 
     case "artist": {
-      if (world === "redroom") {
-        return `${redRoom.dj.name} is on the decks for The Red Room, spinning ${redRoom.dj.genre}. Get ready for pure mayhem.`;
-      }
-      if (world === "diwali") {
-        return "The headline artist for DHAMAAKA is announcing soon. Keep an eye on @underdogs_nagpur.";
-      }
-      return `${redRoom.dj.name} headlines The Red Room for Halloween, and the headline artist for DHAMAAKA is announcing soon.`;
+      const q =
+        world === "redroom"
+          ? FIXED_QUESTIONS.redroom_dj
+          : world === "diwali"
+            ? FIXED_QUESTIONS.diwali_artist
+            : FIXED_QUESTIONS.redroom_dj;
+      return {
+        intent,
+        reply: q.answer,
+        expression: q.expression,
+        followUpIds: q.followUpIds,
+      };
     }
 
     case "partners": {
-      if (world === "redroom") {
-        const partners = redRoom.partners.list.map((p) => `${p.role}: ${p.name}`).join(", ");
-        return `The Red Room is brought together with ${partners}.`;
-      }
-      if (world === "diwali") {
-        const powered = diwali.partners.list.find((p) => p.role.includes("Powered"))?.name;
-        return `DHAMAAKA is powered by ${powered || "Rich Bliss"}, co-powered by F Salon by FashionTV, and crafted with our partner family.`;
-      }
-      return "Both nights are co-powered with top collaborators across Nagpur, including F Salon by FashionTV, Millo, and Layerz.";
+      const q =
+        world === "redroom"
+          ? FIXED_QUESTIONS.redroom_partners
+          : world === "diwali"
+            ? FIXED_QUESTIONS.diwali_partners
+            : FIXED_QUESTIONS.redroom_partners;
+      return {
+        intent,
+        reply: q.answer,
+        expression: "talking",
+        followUpIds: q.followUpIds,
+      };
     }
 
     case "about":
-      return "I'm Mr. Dog, the Underdogs concierge — an AI running the door at the Gate to Rage. Underdogs is Nagpur's party people. We don't throw ordinary parties — we build worlds and open the gate.";
+      return {
+        intent,
+        reply: FIXED_QUESTIONS.about.answer,
+        expression: "talking",
+        followUpIds: FIXED_QUESTIONS.about.followUpIds,
+      };
 
     case "past":
-      return `We've thrown ${site.home.nights.list.slice(0, 6).join(", ")}, plus NYE and festival editions. Latest was Project X at Pablo Nagpur.`;
+      return {
+        intent,
+        reply: FIXED_QUESTIONS.past.answer,
+        expression: "talking",
+        followUpIds: FIXED_QUESTIONS.past.followUpIds,
+      };
 
     case "events":
-      return `This season brings two worlds: The Red Room on Saturday 24 October at Millo, and DHAMAAKA on Saturday 7 November at Hotel Centre Point. Pick your poison.`;
+      return {
+        intent,
+        reply: FIXED_QUESTIONS.season.answer,
+        expression: "talking",
+        followUpIds: FIXED_QUESTIONS.season.followUpIds,
+      };
 
     case "thanks":
-      return "Anytime, boss. See you at the gate.";
+      return {
+        intent,
+        reply: "Anytime, boss! See you at the gate. Stay unruly.",
+        expression: "wink",
+        followUpIds:
+          world === "redroom"
+            ? ["redroom_when", "redroom_dress"]
+            : world === "diwali"
+              ? ["diwali_when", "diwali_dress"]
+              : ["season", "booking"],
+      };
 
     case "greeting":
       if (world === "redroom") {
-        return "Gate's open to The Red Room. Costumes are compulsory here. What do you need to know?";
+        return {
+          intent,
+          reply:
+            "Gate's open to The Red Room. Costumes are compulsory here. Tap any question below or ask me about the night, DJ Monish, or VIP tables.",
+          expression: "greet",
+          followUpIds: ["redroom_when", "redroom_dress", "redroom_dj"],
+        };
       }
       if (world === "diwali") {
-        return "Welcome to DHAMAAKA season — The Karan Johar Edition. Ask me anything about the grand premiere.";
+        return {
+          intent,
+          reply:
+            "Welcome to DHAMAAKA — The Karan Johar Edition! Tap any question below or ask me about Hotel Centre Point, tables, and dress codes.",
+          expression: "greet",
+          followUpIds: ["diwali_when", "diwali_dress", "diwali_booking"],
+        };
       }
-      return "Gate's open. I'm Mr. Dog — ask me anything about Underdogs and the nights.";
+      return {
+        intent,
+        reply:
+          "Gate's open. I'm Mr. Dog — the Underdogs concierge. Tap any question below or ask me anything about the season.",
+        expression: "greet",
+        followUpIds: ["season", "about", "booking"],
+      };
 
     case "unknown":
     default:
-      return "That's still under wraps — announcing soon. Even I don't know, and I know everything at the door. Ask me about the dates, venues or dress codes.";
+      return {
+        intent: "unknown",
+        reply:
+          "That's still under wraps — announcing soon, bhai! Even I don't know, and I run the door at the Gate to Rage. Tap one of the questions below or ask me about dates, venues, dress codes, or booking numbers.",
+        expression: "shrug",
+        followUpIds:
+          world === "redroom"
+            ? ["redroom_when", "redroom_dress", "redroom_dj"]
+            : world === "diwali"
+              ? ["diwali_when", "diwali_dress", "diwali_booking"]
+              : ["season", "booking", "entry"],
+      };
   }
-}
-
-/**
- * Returns an instant match if the prompt clearly hits a known intent.
- */
-export function matchFaq(text: string, world: WorldContext = "home"): IntentMatch {
-  const intent = detectIntent(text);
-  return {
-    intent,
-    reply: getFaqAnswer(intent, world),
-  };
 }

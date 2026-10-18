@@ -2,7 +2,12 @@ import { create } from "zustand";
 import { site } from "@/content/site";
 import { useStore as useAppStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
-import { SpeechQueue } from "./speech";
+import {
+  FIXED_QUESTIONS,
+  FixedQuestionItem,
+  getInitialFixedQuestionsForWorld,
+  matchFaq,
+} from "./faq";
 
 export type MrDogExpression =
   | "idle"
@@ -36,6 +41,7 @@ interface MrDogState {
   nudgeVisible: boolean;
   nudgeDismissed: boolean;
   launcherWink: boolean;
+  activeFollowUps: string[];
 
   // Actions
   openMrDog: () => void;
@@ -62,32 +68,27 @@ function getInitialMessages(): ChatMessage[] {
       if (Array.isArray(parsed) && parsed.length > 0) return parsed;
     }
   } catch {}
-
-  // Initial world-dependent greeting from site.ts
   return [];
 }
 
 export function getWorldGreeting(world: WorldId): string {
   if (world === "redroom") {
-    return `Gate's open to The Red Room. Costumes are compulsory — dress to disturb. Ask me anything about Halloween night.`;
+    return `Gate's open to The Red Room. Costumes are compulsory — dress to disturb. Tap any question below or ask me about Halloween night.`;
   }
   if (world === "diwali") {
-    return `Welcome to DHAMAAKA season — The Karan Johar Edition (${site.diwali.accent}). Ask me anything about our Diwali premiere.`;
+    return `Welcome to DHAMAAKA season — The Karan Johar Edition (${site.diwali.accent}). Tap any question below or ask me about our Diwali premiere.`;
   }
-  return "Gate's open. I'm Mr. Dog — ask me anything about Underdogs and the nights.";
+  return "Gate's open. I'm Mr. Dog — ask me anything about Underdogs, the nights, or tap a question below.";
 }
 
-export function getChipsForWorld(world: WorldId): string[] {
-  if (world === "redroom") {
-    return ["When & where?", "Dress code?", "Headline DJ", "Partners"];
+export function getChipsForWorld(world: WorldId, activeFollowUps: string[] = []): FixedQuestionItem[] {
+  if (activeFollowUps && activeFollowUps.length > 0) {
+    const matched = activeFollowUps
+      .map((id) => FIXED_QUESTIONS[id])
+      .filter((q): q is FixedQuestionItem => Boolean(q));
+    if (matched.length > 0) return matched;
   }
-  if (world === "diwali") {
-    return ["When & where?", "Headline DJ", "Partners", "The two nights"];
-  }
-  if (world === "home") {
-    return ["What is Underdogs?", "What's on this season?", "Past nights", "Ticket entry?"];
-  }
-  return ["The two nights", "When & where?", "Dress codes", "Who is playing?"];
+  return getInitialFixedQuestionsForWorld(world);
 }
 
 export function worldToOutfit(world: WorldId): MrDogOutfit {
@@ -96,8 +97,7 @@ export function worldToOutfit(world: WorldId): MrDogOutfit {
   return "home";
 }
 
-let activeAbortController: AbortController | null = null;
-let speechQueueInstance: SpeechQueue | null = null;
+let activeStreamId = 0;
 
 export const useMrDogStore = create<MrDogState>((set, get) => ({
   isOpen: false,
@@ -111,6 +111,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
   nudgeVisible: false,
   nudgeDismissed: false,
   launcherWink: false,
+  activeFollowUps: [],
 
   openMrDog: () => {
     const greeted = get().hasGreetedSession;
@@ -195,26 +196,18 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
       messages: fresh,
       streamingText: "",
       expression: "idle",
+      activeFollowUps: [],
     });
   },
 
   stopStreaming: () => {
-    if (activeAbortController) {
-      activeAbortController.abort();
-      activeAbortController = null;
-    }
-    if (speechQueueInstance) {
-      speechQueueInstance.clear();
-    }
-    set({ isStreaming: false, streamingText: "" });
+    activeStreamId++;
+    set({ isStreaming: false, streamingText: "", jawTarget: 0 });
   },
 
   sendMessage: async (text: string) => {
     const clean = text.trim();
     if (!clean) return;
-
-    // Check party/rage trigger words
-    const isRageTrigger = /\b(party|parties|night|nights|rage|monish|mohnish|yogi|halloween|diwali|dhamaaka|red room)\b/i.test(clean);
 
     const userMsg: ChatMessage = {
       id: "u-" + Date.now(),
@@ -237,97 +230,155 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
       sessionStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     } catch {}
 
-    activeAbortController = new AbortController();
+    activeStreamId++;
+    const currentStreamId = activeStreamId;
 
-    const assistantMsgId = "a-" + Date.now();
-    let accumulatedText = "";
-
-    speechQueueInstance = new SpeechQueue(
-      (revealed, jaw, talking) => {
-        set({
-          streamingText: revealed,
-          jawTarget: jaw,
-          expression: talking ? "talking" : get().expression === "talking" ? "idle" : get().expression,
-        });
-      },
-      () => {
-        // Queue finished
-        const finalMsgs: ChatMessage[] = [
-          ...updated,
-          {
-            id: assistantMsgId,
-            role: "assistant",
-            content: accumulatedText,
-          },
-        ];
-        try {
-          sessionStorage.setItem(STORAGE_KEY, JSON.stringify(finalMsgs));
-        } catch {}
-
-        set({
-          messages: finalMsgs,
-          isStreaming: false,
-          streamingText: "",
-          jawTarget: 0,
-          expression: "idle",
-        });
-      }
-    );
-
+    // 1. Try calling the backend /api/mr-dog endpoint if available
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
+
       const res = await fetch("/api/mr-dog", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: updated.slice(-6).map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
+          messages: updated.slice(-6).map((m) => ({ role: m.role, content: m.content })),
           world: currentWorld,
         }),
-        signal: activeAbortController.signal,
+        signal: controller.signal,
       });
 
-      if (!res.ok || !res.body) {
-        throw new Error("Failed to receive stream");
-      }
+      clearTimeout(timeoutId);
 
-      // First token arrived
-      if (isRageTrigger) {
-        set({ expression: "rage" });
-        setTimeout(() => {
-          if (get().expression === "rage") {
-            set({ expression: "talking" });
-          }
-        }, 1200);
-      } else {
+      if (res.ok && res.body) {
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let accumulated = "";
+
         set({ expression: "talking" });
-      }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
+        while (true) {
+          if (activeStreamId !== currentStreamId) break;
+          const { done, value } = await reader.read();
+          if (done) break;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          accumulated += chunk;
 
-        const chunk = decoder.decode(value, { stream: true });
-        accumulatedText += chunk;
-
-        // Check for shrug trigger
-        if (/announcing soon|don't know|under wraps/i.test(chunk)) {
-          set({ expression: "shrug" });
+          const hasVowel = /[aeiouAEIOU\u0904-\u0914\u093E-\u094C]/.test(chunk);
+          set({
+            streamingText: accumulated,
+            jawTarget: hasVowel ? 0.75 : 0.35,
+            expression: /announcing soon|don't know|under wraps/i.test(accumulated)
+              ? "shrug"
+              : /\b(party|parties|rage|monish|mohnish|halloween|diwali)\b/i.test(accumulated)
+                ? "rage"
+                : "talking",
+          });
         }
 
-        speechQueueInstance.pushText(chunk, motion);
+        if (accumulated.trim() && activeStreamId === currentStreamId) {
+          const assistantMsg: ChatMessage = {
+            id: "a-" + Date.now(),
+            role: "assistant",
+            content: accumulated.trim(),
+          };
+          const finalMsgs = [...updated, assistantMsg];
+          try {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(finalMsgs));
+          } catch {}
+
+          const match = matchFaq(clean, currentWorld);
+          set({
+            messages: finalMsgs,
+            isStreaming: false,
+            streamingText: "",
+            jawTarget: 0,
+            expression: "idle",
+            activeFollowUps: match.followUpIds,
+          });
+          return;
+        }
       }
-    } catch (err: unknown) {
-      if ((err as Error)?.name === "AbortError") {
-        return;
-      }
-      set({ expression: "sorry" });
-      const errorMsg = "Lost the signal at the gate. Try again in a minute, bhai.";
-      speechQueueInstance.pushText(errorMsg, motion);
+    } catch {
+      // Backend not running, timed out, or mock mode -> continue to fixed Q&A engine
     }
+
+    if (activeStreamId !== currentStreamId) return;
+
+    // 2. Client-side Fixed Q&A Engine (100% reliable without external API)
+    const match = matchFaq(clean, currentWorld);
+    const fullReply = match.reply;
+
+    // Natural "thinking" beat so it feels responsive like an AI concierge
+    await new Promise((r) => setTimeout(r, motion ? 320 : 0));
+
+    if (activeStreamId !== currentStreamId) return;
+
+    set({ expression: match.expression || "talking" });
+
+    // Stream words with realistic typing speed & 3D jaw movement
+    const words = fullReply.split(" ");
+    let accumulated = "";
+
+    for (let i = 0; i < words.length; i++) {
+      if (activeStreamId !== currentStreamId) return;
+
+      const word = (i === 0 ? "" : " ") + words[i];
+      accumulated += word;
+
+      const hasVowel = /[aeiouAEIOU\u0904-\u0914\u093E-\u094C]/.test(word);
+      const jaw = hasVowel ? 0.75 : 0.35;
+
+      set({
+        streamingText: accumulated,
+        jawTarget: jaw,
+        expression:
+          match.expression === "rage"
+            ? "rage"
+            : match.expression === "shrug"
+              ? "shrug"
+              : match.expression === "wink"
+                ? i > words.length * 0.7
+                  ? "wink"
+                  : "talking"
+                : "talking",
+      });
+
+      // Punctuation pacing: pause longer at periods and commas
+      const pause = /[.!?]$/.test(word)
+        ? 140
+        : /[,;:\n]$/.test(word)
+          ? 70
+          : 28;
+
+      if (motion) {
+        await new Promise((r) => setTimeout(r, pause));
+      }
+    }
+
+    if (activeStreamId !== currentStreamId) return;
+
+    // Complete reply
+    const assistantMsg: ChatMessage = {
+      id: "a-" + Date.now(),
+      role: "assistant",
+      content: fullReply,
+    };
+
+    const finalMsgs = [...updated, assistantMsg];
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(finalMsgs));
+    } catch {}
+
+    set({
+      messages: finalMsgs,
+      isStreaming: false,
+      streamingText: "",
+      jawTarget: 0,
+      expression: "idle",
+      activeFollowUps: match.followUpIds,
+    });
   },
 }));
+

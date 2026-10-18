@@ -25,7 +25,8 @@ export function MrDogChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const chips = getChipsForWorld(world);
+  const activeFollowUps = useMrDogStore((s) => s.activeFollowUps);
+  const chips = getChipsForWorld(world, activeFollowUps);
 
   // Auto-scroll to bottom on message updates
   useEffect(() => {
@@ -59,9 +60,9 @@ export function MrDogChat() {
     sendMessage(text);
   };
 
-  const handleChipClick = (chip: string) => {
+  const handleChipClick = (question: string) => {
     if (isStreaming) return;
-    sendMessage(chip);
+    sendMessage(question);
   };
 
   const avatarUrl = `/media/mr-dog/${outfit}/avatar.webp`;
@@ -163,20 +164,53 @@ export function MrDogChat() {
           </div>
         )}
 
+        {/* Quick Question Cards on initial open */}
+        {messages.length === 1 && !isStreaming && (
+          <div className="pt-2 pb-1">
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/50 block mb-2 px-1">
+              Select a question to ask:
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {chips.slice(0, 4).map((q) => (
+                <button
+                  key={q.id}
+                  type="button"
+                  onClick={() => handleChipClick(q.userQuestion)}
+                  className="text-left px-3.5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.98] border border-white/10 transition-all flex items-center justify-between group"
+                  style={{ borderColor: `${accentColor}25` }}
+                >
+                  <span className="text-[13px] font-medium text-white/90 group-hover:text-white">
+                    {q.chipLabel}
+                  </span>
+                  <span className="text-[12px] text-white/40 group-hover:text-white/80 transition-colors ml-2">
+                    →
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick-Reply Chips */}
+      {/* Quick-Reply Chips Row */}
       <div className="px-4 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 border-t border-white/5">
+        <span className="text-[10px] uppercase tracking-wider text-white/40 font-mono shrink-0 pr-1">
+          {messages.length <= 1 ? "Questions:" : "Next:"}
+        </span>
         {chips.map((chip) => (
           <button
-            key={chip}
+            key={chip.id}
             type="button"
             disabled={isStreaming}
-            onClick={() => handleChipClick(chip)}
-            className="shrink-0 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 text-[12px] font-medium text-white/80 border border-white/10 transition-all disabled:opacity-50"
+            onClick={() => handleChipClick(chip.userQuestion)}
+            className="shrink-0 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 active:scale-95 text-[12px] font-medium text-white/90 border border-white/10 hover:border-white/20 transition-all disabled:opacity-50"
+            style={{
+              borderColor: `${accentColor}30`,
+            }}
           >
-            {chip}
+            {chip.chipLabel}
           </button>
         ))}
       </div>
@@ -188,7 +222,7 @@ export function MrDogChat() {
             value={inputVal}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Mr. Dog…"
+            placeholder="Ask Mr. Dog a question…"
             rows={1}
             maxLength={300}
             className="flex-1 max-h-24 bg-transparent text-[14px] text-white placeholder-white/40 resize-none outline-none px-2 py-1 leading-snug"
@@ -220,9 +254,9 @@ export function MrDogChat() {
           )}
         </div>
 
-        {/* Counter & Privacy Footer */}
+        {/* Counter & Footer */}
         <div className="flex items-center justify-between px-2 pt-2 text-[11px] text-white/45 select-none">
-          <span>Mr. Dog is an AI. He answers from official Underdogs info and chats aren't stored.</span>
+          <span>Mr. Dog · Underdogs Concierge. Official facts & answers.</span>
           {inputVal.length >= 260 && (
             <span className={inputVal.length >= 295 ? "text-red-400 font-bold" : ""}>
               {inputVal.length}/300
