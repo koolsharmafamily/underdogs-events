@@ -55,19 +55,19 @@ export function MrDogPanel() {
       role="dialog"
       aria-modal="false"
       aria-label="Mr. Dog AI Concierge"
-      className="fixed bottom-6 right-6 z-40 hidden md:flex flex-col w-[400px] max-h-[min(640px,calc(100vh-120px))] rounded-[24px] bg-[#090A0E]/94 backdrop-blur-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.7)] origin-bottom-right transition-all duration-320 ease-out overflow-visible"
+      className="fixed bottom-6 right-6 z-40 hidden md:flex flex-col w-[360px] h-[480px] max-h-[calc(100vh-210px)] rounded-[24px] bg-[#090A0E]/95 backdrop-blur-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.7)] origin-bottom-right transition-all duration-320 ease-out overflow-visible"
       style={{
         boxShadow: `0 16px 48px rgba(0,0,0,0.7), 0 0 32px ${accentColor}25`,
         borderColor: `${accentColor}35`,
       }}
     >
-      {/* 3D Stage Peeking Above Panel Top Edge (-126px to peek 45%) */}
-      <div className="absolute -top-[126px] inset-x-0 h-[140px] flex items-center justify-center pointer-events-none overflow-visible z-20">
-        <MrDogStage3D size={280} isPeeking={true} />
+      {/* 3D Coin Mascot Floating Proudly on Top of Panel - 100% Fully Visible */}
+      <div className="absolute -top-[140px] inset-x-0 h-[155px] flex items-center justify-center pointer-events-none overflow-visible z-30">
+        <MrDogStage3D size={160} isPeeking={true} />
       </div>
 
       {/* Panel Header */}
-      <div className="relative z-10 flex items-center justify-between px-5 pt-4 pb-3 border-b border-white/10 bg-[#0A0D12]/90 rounded-t-[24px]">
+      <div className="relative z-10 flex items-center justify-between px-5 pt-3.5 pb-2.5 border-b border-white/10 bg-[#0A0D12]/90 rounded-t-[24px]">
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <span className="font-cinzel text-[16px] font-bold tracking-wider text-white">
