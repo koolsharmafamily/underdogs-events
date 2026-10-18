@@ -226,7 +226,7 @@ const INTENT_PATTERNS: { intent: Intent; keywords: RegExp }[] = [
   {
     intent: "entry",
     keywords:
-      /\b(ticket|tickets|entry|pass|passes|price|prices|rate|cost|kitna|rupee|rupees|inr|charges|book|booking|rsvp|buy|purchase|how much|gate pass)\b/i,
+      /\b(ticket|tickets|entry|pass|passes|price|prices|rate|cost|kitna|rupee|rupees|inr|charges|book|booking|rsvp|buy|purchase|how much|gate pass|come|coming|attend|attending|join|get in|admission|allowed)\b/i,
   },
   {
     intent: "when",
@@ -343,6 +343,24 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
     }
 
     case "entry": {
+      if (world === "redroom") {
+        return {
+          intent,
+          reply:
+            "I run the door, not the box office, bhai! For The Red Room, costumes are strictly compulsory — dress to disturb. Entry details and passes are announcing soon. For VIP table reservations at Millo, call +91 90491 00002 or DM @underdogs_nagpur.",
+          expression: "rage",
+          followUpIds: ["redroom_dress", "redroom_booking", "redroom_when"],
+        };
+      }
+      if (world === "diwali") {
+        return {
+          intent,
+          reply:
+            "Welcome to DHAMAAKA — The Karan Johar Edition! Entry details and passes are announcing soon. For table reservations at Hotel Centre Point, call +91 90491 00002 or DM @underdogs_nagpur.",
+          expression: "wink",
+          followUpIds: ["diwali_dress", "diwali_booking", "diwali_when"],
+        };
+      }
       return {
         intent,
         reply: FIXED_QUESTIONS.entry.answer,

@@ -236,8 +236,30 @@ export async function POST(req: NextRequest) {
   const apiKey = process.env.MRDOG_API_KEY?.trim();
   const rawApiBase = process.env.MRDOG_API_BASE?.trim() || "https://api.groq.com/openai/v1";
   const apiBase = rawApiBase.replace(/\/+$/, "");
-  const primaryModel = process.env.MRDOG_MODEL?.trim() || "llama-3.3-70b-versatile";
-  const fallbackModel = process.env.MRDOG_MODEL_FALLBACK?.trim() || "llama-3.1-8b-instant";
+
+  // Auto-detect optimal provider defaults if model is not explicitly specified
+  const isGemini = apiBase.includes("googleapis.com");
+  const isOpenRouter = apiBase.includes("openrouter.ai");
+  const isOpenAI = apiBase.includes("openai.com") && !apiBase.includes("groq.com");
+
+  const defaultPrimary = isGemini
+    ? "gemini-2.0-flash"
+    : isOpenRouter
+      ? "meta-llama/llama-3.3-70b-instruct:free"
+      : isOpenAI
+        ? "gpt-4o-mini"
+        : "llama-3.3-70b-versatile";
+
+  const defaultFallback = isGemini
+    ? "gemini-1.5-flash"
+    : isOpenRouter
+      ? "meta-llama/llama-3.1-8b-instruct:free"
+      : isOpenAI
+        ? "gpt-3.5-turbo"
+        : "llama-3.1-8b-instant";
+
+  const primaryModel = process.env.MRDOG_MODEL?.trim() || defaultPrimary;
+  const fallbackModel = process.env.MRDOG_MODEL_FALLBACK?.trim() || defaultFallback;
   const isMock = process.env.MRDOG_MOCK === "1" || !apiKey;
 
   // Mock mode or missing API key: stream instant deterministically grounded FAQ answer
@@ -248,6 +270,7 @@ export async function POST(req: NextRequest) {
       headers: {
         "Content-Type": "text/plain; charset=utf-8",
         "Cache-Control": "no-cache",
+        "x-mrdog-mode": "faq-mock",
       },
     });
   }
@@ -268,12 +291,18 @@ export async function POST(req: NextRequest) {
 
   async function callProvider(model: string, timeoutMs: number): Promise<Response | null> {
     try {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      };
+      // Extra compatibility for Google Gemini OpenAI proxy
+      if (isGemini && apiKey) {
+        headers["x-goog-api-key"] = apiKey;
+      }
+
       const res = await fetch(`${apiBase}/chat/completions`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
+        headers,
         body: JSON.stringify({
           model,
           messages: payloadMessages,
@@ -286,27 +315,40 @@ export async function POST(req: NextRequest) {
       });
 
       if (!res.ok) {
+        const errorText = await res.text().catch(() => "");
+        console.error(`[MrDog API Provider Error] Status ${res.status} from ${apiBase}/chat/completions (model: ${model}):`, errorText);
         return null;
       }
       return res;
-    } catch {
+    } catch (err) {
+      console.error(`[MrDog API Network/Timeout Error] (${model}):`, err);
       return null;
     }
   }
 
-  let upstreamResponse = await callProvider(primaryModel, 8000);
+  let upstreamResponse = await callProvider(primaryModel, 10000);
+  let resolvedModel = primaryModel;
 
-  // Cascade to fallback model if primary returned 429/5xx or timed out after 8s
+  // Cascade to fallback model if primary returned 429/5xx or timed out
   if (!upstreamResponse) {
-    upstreamResponse = await callProvider(fallbackModel, 12000);
+    console.warn(`[MrDog API] Cascading to fallback model: ${fallbackModel}`);
+    upstreamResponse = await callProvider(fallbackModel, 10000);
+    if (upstreamResponse) {
+      resolvedModel = fallbackModel;
+    }
   }
 
   // If both failed, stream FAQ fallback response
   if (!upstreamResponse || !upstreamResponse.body) {
+    console.warn(`[MrDog API] All upstream AI providers unavailable. Serving deterministic FAQ fallback.`);
     const faq = matchFaq(promptText, world);
     return new Response(createMockStream(faq.reply), {
       status: 200,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "x-mrdog-mode": "faq-fallback",
+      },
     });
   }
 
@@ -385,6 +427,8 @@ export async function POST(req: NextRequest) {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache",
+      "x-mrdog-mode": "live-ai",
+      "x-mrdog-model": resolvedModel,
     },
   });
 }

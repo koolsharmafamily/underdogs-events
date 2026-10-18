@@ -236,7 +236,8 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
     // 1. Try calling the backend /api/mr-dog endpoint if available
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      // Allow up to 15s for serverless cold-start and streaming tokens
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       const res = await fetch("/api/mr-dog", {
         method: "POST",
