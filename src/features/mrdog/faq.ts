@@ -25,6 +25,7 @@ export type Intent =
   | "partners"
   | "greeting"
   | "thanks"
+  | "instagram"
   | "unknown";
 
 interface IntentMatch {
@@ -84,6 +85,15 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
       "For official table bookings, VIP reservations, and inquiries, connect directly with the Underdogs team:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
     expression: "wink",
     followUpIds: ["redroom_when", "diwali_when", "entry"],
+  },
+  instagram: {
+    id: "instagram",
+    chipLabel: "Official Instagram Link",
+    userQuestion: "Can you give the link to message or Instagram?",
+    answer:
+      "Tap right here to DM us on Instagram: https://instagram.com/underdogs_nagpur (@underdogs_nagpur)! You can also call VIP table reservations directly:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505",
+    expression: "wink",
+    followUpIds: ["booking", "entry", "season"],
   },
 
   // --- THE RED ROOM (HALLOWEEN) ---
@@ -219,6 +229,11 @@ export function getInitialFixedQuestionsForWorld(world: WorldContext): FixedQues
 
 const INTENT_PATTERNS: { intent: Intent; keywords: RegExp }[] = [
   {
+    intent: "instagram",
+    keywords:
+      /\b(instagram|insta|ig|dm|message|inbox|link|handle|profile|reach|direct message|text you|chat)\b/i,
+  },
+  {
     intent: "booking",
     keywords:
       /\b(call|phone|number|numbers|mobile|contact|table|tables|vip|cabana|reservation|reservations|inquiry|inquiries|bhai number|reach)\b/i,
@@ -327,6 +342,21 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
   const intent = detectIntent(text);
 
   switch (intent) {
+    case "instagram": {
+      return {
+        intent,
+        reply:
+          "Tap right here to DM us on Instagram: https://instagram.com/underdogs_nagpur (@underdogs_nagpur)! You can also reach our VIP booking lines directly:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505",
+        expression: "wink",
+        followUpIds:
+          world === "redroom"
+            ? ["redroom_when", "redroom_dress", "redroom_booking"]
+            : world === "diwali"
+              ? ["diwali_when", "diwali_dress", "diwali_booking"]
+              : ["season", "booking", "entry"],
+      };
+    }
+
     case "booking": {
       const q =
         world === "redroom"

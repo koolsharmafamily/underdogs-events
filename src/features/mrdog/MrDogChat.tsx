@@ -10,6 +10,53 @@ import {
 } from "./store";
 import { useStore as useAppStore } from "@/state/store";
 
+function formatChatMessage(text: string, accentColor: string) {
+  const regex = /(https?:\/\/[^\s]+|@underdogs_nagpur|\+91[\s\u00A0]?\d{5}[\s\u00A0]?\d{5}|\+91[\s\u00A0]?\d{10})/g;
+  const parts: (string | React.ReactNode)[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const token = match[0];
+    if (token.startsWith("http") || token === "@underdogs_nagpur") {
+      const url = token.startsWith("http") ? token : "https://instagram.com/underdogs_nagpur";
+      parts.push(
+        <a
+          key={match.index}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold underline decoration-1 hover:text-white transition-colors cursor-pointer inline-flex items-center gap-0.5"
+          style={{ color: accentColor }}
+        >
+          {token}
+        </a>
+      );
+    } else if (token.startsWith("+91")) {
+      const cleanTel = token.replace(/[\s\u00A0]/g, "");
+      parts.push(
+        <a
+          key={match.index}
+          href={`tel:${cleanTel}`}
+          className="font-mono font-semibold underline decoration-emerald-500/60 text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+        >
+          {token}
+        </a>
+      );
+    }
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 export function MrDogChat() {
   const world = useAppStore((s) => s.world);
   const outfit = worldToOutfit(world);
@@ -124,7 +171,7 @@ export function MrDogChat() {
                     : {}
                 }
               >
-                {msg.content}
+                {isUser ? msg.content : formatChatMessage(msg.content, accentColor)}
               </div>
             </div>
           );
@@ -144,7 +191,9 @@ export function MrDogChat() {
               />
             </div>
             <div className="max-w-[82%] px-3.5 py-2.5 rounded-2xl rounded-bl-sm bg-[#11161F] text-[#FCF9FC] border border-white/5 text-[14px] sm:text-[15px] leading-[1.45] whitespace-pre-wrap break-words">
-              {streamingText || (
+              {streamingText ? (
+                formatChatMessage(streamingText, accentColor)
+              ) : (
                 <span className="inline-flex items-center gap-1 py-1">
                   <span
                     className="w-1.5 h-1.5 rounded-full animate-bounce"
