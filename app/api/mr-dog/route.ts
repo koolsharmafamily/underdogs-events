@@ -159,6 +159,38 @@ function createMockStream(text: string): ReadableStream<Uint8Array> {
   });
 }
 
+export async function GET() {
+  const rawKey = (
+    process.env.MRDOG_API_KEY ||
+    process.env.GROQ_API_KEY ||
+    process.env.GEMINI_API_KEY ||
+    process.env.OPENAI_API_KEY ||
+    ""
+  ).trim();
+  const apiKey = rawKey.replace(/^["']|["']$/g, "");
+
+  const hasKey = Boolean(apiKey);
+  const keyPrefix = apiKey ? apiKey.slice(0, 6) + "..." : "NONE";
+  const provider = apiKey.startsWith("gsk_")
+    ? "groq"
+    : apiKey.startsWith("AIzaSy")
+      ? "gemini"
+      : apiKey.startsWith("sk-or-")
+        ? "openrouter"
+        : hasKey
+          ? "openai"
+          : "offline-mock";
+
+  return Response.json({
+    status: "ok",
+    liveAI: hasKey,
+    keyDetected: hasKey,
+    keyPrefix,
+    provider,
+    model: provider === "groq" ? "llama-3.3-70b-versatile" : (process.env.MRDOG_MODEL || "auto"),
+  });
+}
+
 export async function POST(req: NextRequest) {
   // Cap body size to 8 KB
   const contentLength = Number(req.headers.get("content-length") || "0");
@@ -240,10 +272,22 @@ export async function POST(req: NextRequest) {
     if (!rawApiBase || rawApiBase.includes("googleapis.com")) {
       rawApiBase = "https://api.groq.com/openai/v1";
     }
-    if (!primaryModel || primaryModel.startsWith("gemini-")) {
+    if (
+      !primaryModel ||
+      primaryModel.includes("llama-4") ||
+      primaryModel.startsWith("meta-llama/") ||
+      primaryModel.startsWith("gemini-") ||
+      primaryModel.includes("scout")
+    ) {
       primaryModel = "llama-3.3-70b-versatile";
     }
-    if (!fallbackModel || fallbackModel.startsWith("gemini-")) {
+    if (
+      !fallbackModel ||
+      fallbackModel.includes("llama-4") ||
+      fallbackModel.startsWith("meta-llama/") ||
+      fallbackModel.startsWith("gemini-") ||
+      fallbackModel.includes("scout")
+    ) {
       fallbackModel = "llama-3.1-8b-instant";
     }
   } else if (apiKey.startsWith("AIzaSy") || rawApiBase.includes("googleapis.com")) {
