@@ -291,7 +291,7 @@ export function HomeView() {
           {/* DOM Twins for screen-projected keyboard & hover interaction */}
           <DomTwins />
 
-          <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-between pt-20 pb-8 lg:pt-20 lg:pb-10">
+          <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-between pt-24 pb-8 lg:pt-24 lg:pb-10">
             <h2 className="sr-only">{site.home.worlds.label}</h2>
 
             {/* Season Intro Header */}
@@ -309,7 +309,7 @@ export function HomeView() {
 
             {/* Center viewport window for the 3D doors */}
             <div
-              className="w-full flex-1 pointer-events-none min-h-[16vh] lg:min-h-[22vh]"
+              className="w-full flex-1 pointer-events-none min-h-[16vh] lg:min-h-[20vh]"
               aria-hidden="true"
             />
 

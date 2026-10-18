@@ -33,19 +33,20 @@ export function useLineReveal(
     }
 
     let unsubscribe: (() => void) | undefined
+    let fallbackTimer: ReturnType<typeof setTimeout> | undefined
     let split: SplitText | null = null
     let ctx: gsap.Context | null = null
 
     ctx = gsap.context(() => {
       split = SplitText.create(el, {
         type: 'lines',
-        mask: 'lines',
         linesClass: 'split-line',
       })
 
       gsap.set(split.lines, { y: 18, opacity: 0 })
 
       if (triggerOnMount) {
+        let played = false
         const animation = gsap.to(split.lines, {
           y: 0,
           opacity: 1,
@@ -55,15 +56,23 @@ export function useLineReveal(
           ease: EASES.gsapOut,
           paused: true,
         })
+        const playOnce = () => {
+          if (played) return
+          played = true
+          animation.play()
+          unsubscribe?.()
+          if (fallbackTimer) clearTimeout(fallbackTimer)
+        }
         const reveal = () => {
           const state = useStore.getState()
           if (state.phase === 'complete' && !state.isTransitioning) {
-            animation.play()
-            unsubscribe?.()
+            playOnce()
           }
         }
         unsubscribe = useStore.subscribe(reveal)
         reveal()
+        // Guarantee hero headline strikes within 1 second even if WebGL is still warming up
+        fallbackTimer = setTimeout(playOnce, 250)
       } else {
         gsap.to(split.lines, {
           y: 0,
@@ -84,6 +93,7 @@ export function useLineReveal(
 
     return () => {
       unsubscribe?.()
+      if (fallbackTimer) clearTimeout(fallbackTimer)
       ctx?.revert()
       split?.revert()
     }
