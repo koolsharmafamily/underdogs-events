@@ -338,23 +338,18 @@ export async function POST(req: NextRequest) {
     if (!apiBase || apiBase.includes("googleapis.com")) {
       apiBase = "https://api.groq.com/openai/v1";
     }
-    // High-priority active Groq models:
+    // High-priority active Groq models (qwen/qwen3.8-27b provides instantaneous 0.02s response time)
     const groqPriority = [
+      "qwen/qwen3.8-27b",
       "openai/gpt-oss-120b",
       "openai/gpt-oss-20b",
-      "qwen/qwen3.8-27b",
-      "llama-3.3-70b-versatile",
-      "llama-3.1-8b-instant",
     ];
-    // If user specified a custom model in env, try it
-    if (envModel && !candidateModels.includes(envModel)) {
+    // Only use envModel first if it is explicitly NOT the deprecated/missing llama-3.x models
+    if (envModel && !envModel.includes("llama-3.") && !candidateModels.includes(envModel)) {
       candidateModels.push(envModel);
     }
     for (const m of groqPriority) {
       if (!candidateModels.includes(m)) candidateModels.push(m);
-    }
-    if (envFallback && !candidateModels.includes(envFallback)) {
-      candidateModels.push(envFallback);
     }
   } else if (isGemini) {
     if (!apiBase || apiBase.includes("groq.com")) {
@@ -370,10 +365,9 @@ export async function POST(req: NextRequest) {
   } else {
     if (!apiBase) apiBase = "https://api.groq.com/openai/v1";
     candidateModels.push(
-      envModel || "openai/gpt-oss-120b",
-      "openai/gpt-oss-20b",
       "qwen/qwen3.8-27b",
-      "llama-3.3-70b-versatile"
+      "openai/gpt-oss-120b",
+      "openai/gpt-oss-20b"
     );
   }
 
@@ -425,7 +419,7 @@ export async function POST(req: NextRequest) {
           messages: payloadMessages,
           temperature: 0.7,
           top_p: 0.9,
-          max_tokens: 220,
+          max_tokens: 350,
           stream: true,
         }),
         signal: AbortSignal.timeout(timeoutMs),
@@ -511,7 +505,7 @@ export async function POST(req: NextRequest) {
           if (trimmed.startsWith("data: ")) {
             try {
               const parsed = JSON.parse(trimmed.slice(6));
-              let content = parsed.choices?.[0]?.delta?.content || "";
+              let content = parsed.choices?.[0]?.delta?.content ?? parsed.choices?.[0]?.delta?.text ?? "";
               if (!content) continue;
 
               // Filter <think> blocks from models with reasoning output
