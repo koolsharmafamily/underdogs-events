@@ -56,6 +56,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       router.prefetch("/the-red-room");
       router.prefetch("/diwali");
       router.prefetch("/events");
+      router.prefetch("/mr-dog");
       router.prefetch("/");
     };
     if ("requestIdleCallback" in window) {

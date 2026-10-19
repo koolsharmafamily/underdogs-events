@@ -7,6 +7,7 @@ import { site } from "@/content/site";
 import { getLenis } from "@/motion/clock";
 import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
+import { useMrDogStore } from "@/features/mrdog/store";
 
 export function MobileTopBar() {
   const pathname = usePathname();
@@ -24,19 +25,24 @@ export function MobileTopBar() {
 
   const isRedRoom = pathname.startsWith("/the-red-room");
   const isDiwali = pathname.startsWith("/diwali");
+  const isMrDog = pathname === "/mr-dog";
   const isDetail = isRedRoom || isDiwali;
 
   const titleText = isRedRoom
     ? site.home.worlds.one.name
     : isDiwali
       ? site.home.worlds.two.name
-      : site.brand.name;
+      : isMrDog
+        ? "MR. DOG"
+        : site.brand.name;
 
   const activeColor = isRedRoom
     ? "text-[#FF1A35]"
     : isDiwali
       ? "text-[#E5B25D]"
-      : "text-[#FCF9FC]";
+      : isMrDog
+        ? "text-[#EA28C1]"
+        : "text-[#FCF9FC]";
 
   const handleJumpDetails = () => {
     if (typeof navigator !== "undefined" && navigator.vibrate) {
@@ -117,15 +123,23 @@ export function MobileTopBar() {
               </div>
             </div>
           ) : (
-            <span
-              className={`font-cinzel text-[13px] font-bold uppercase tracking-[0.28em] ${activeColor}`}
-            >
-              {titleText}
-            </span>
+            <div className="flex items-center gap-2">
+              <span
+                className={`font-cinzel text-[13px] font-bold uppercase tracking-[0.28em] ${activeColor}`}
+              >
+                {titleText}
+              </span>
+              {isMrDog && (
+                <span
+                  className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.9)] animate-pulse"
+                  title="Online"
+                />
+              )}
+            </div>
           )}
         </TransitionLink>
 
-        {/* Right: Quick contextual "Details" button on event pages */}
+        {/* Right: Quick contextual "Details" button on event pages OR "Clear Chat" on /mr-dog */}
         {isDetail ? (
           <button
             type="button"
@@ -137,6 +151,34 @@ export function MobileTopBar() {
           >
             <span>{isRedRoom ? site.redRoom.jump : site.diwali.jump}</span>
             <span aria-hidden="true">↓</span>
+          </button>
+        ) : isMrDog ? (
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof navigator !== "undefined" && navigator.vibrate) {
+                try {
+                  navigator.vibrate(8);
+                } catch {}
+              }
+              useMrDogStore.getState().clearChat();
+            }}
+            aria-label="Clear chat"
+            title="Reset conversation"
+            className="absolute right-3 top-1/2 -translate-y-1/2 min-h-[44px] min-w-[44px] flex items-center justify-center text-white/50 hover:text-white active:scale-90 transition-transform cursor-pointer"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
           </button>
         ) : null}
       </div>

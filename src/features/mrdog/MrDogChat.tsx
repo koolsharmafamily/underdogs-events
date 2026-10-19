@@ -57,7 +57,13 @@ function formatChatMessage(text: string, accentColor: string) {
   return parts;
 }
 
-export function MrDogChat() {
+export function MrDogChat({
+  keyboardOpen,
+  isDedicatedPage = false,
+}: {
+  keyboardOpen?: boolean;
+  isDedicatedPage?: boolean;
+} = {}) {
   const world = useAppStore((s) => s.world);
   const outfit = worldToOutfit(world);
 
@@ -69,16 +75,20 @@ export function MrDogChat() {
   const setExpression = useMrDogStore((s) => s.setExpression);
 
   const [inputVal, setInputVal] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeFollowUps = useMrDogStore((s) => s.activeFollowUps);
   const chips = getChipsForWorld(world, activeFollowUps);
 
-  // Auto-scroll to bottom on message updates
+  // Auto-scroll to bottom on message updates or keyboard resize
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, streamingText]);
+    const timer = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 40);
+    return () => clearTimeout(timer);
+  }, [messages, streamingText, keyboardOpen]);
 
   // Handle typing listener for "listening" expression
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -133,6 +143,7 @@ export function MrDogChat() {
       {/* Message List */}
       <div
         data-lenis-prevent
+        onClick={() => textareaRef.current?.blur()}
         className="flex-1 overflow-y-auto px-4 py-3 space-y-3.5 scroll-smooth overscroll-contain"
         tabIndex={0}
         role="log"
@@ -265,16 +276,26 @@ export function MrDogChat() {
       </div>
 
       {/* Composer Section */}
-      <div className="p-3 bg-[#0A0D12] border-t border-white/10 shrink-0">
+      <div
+        className={`p-3 bg-[#0A0D12] border-t border-white/10 shrink-0 ${
+          keyboardOpen
+            ? "pb-2.5"
+            : isDedicatedPage
+              ? "pb-[calc(76px+max(env(safe-area-inset-bottom,0px),8px))] md:pb-3"
+              : "pb-[max(env(safe-area-inset-bottom,0px),12px)] md:pb-3"
+        }`}
+      >
         <div className="relative flex items-end gap-2 bg-white/5 rounded-2xl p-2 border border-white/10 focus-within:border-white/25 transition-colors">
           <textarea
+            ref={textareaRef}
             value={inputVal}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="Ask Mr. Dog a question…"
             rows={1}
             maxLength={300}
-            className="flex-1 max-h-24 bg-transparent text-[14px] text-white placeholder-white/40 resize-none outline-none px-2 py-1 leading-snug"
+            style={{ fontSize: "16px" }}
+            className="flex-1 max-h-24 bg-transparent text-[16px] text-white placeholder-white/40 resize-none outline-none px-2 py-1 leading-snug tracking-normal"
           />
 
           {isStreaming ? (

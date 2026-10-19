@@ -114,6 +114,13 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
   activeFollowUps: [],
 
   openMrDog: () => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      if (window.location.pathname !== "/mr-dog") {
+        window.location.href = "/mr-dog";
+        return;
+      }
+    }
+
     const greeted = get().hasGreetedSession;
     const currentWorld = useAppStore.getState().world;
 

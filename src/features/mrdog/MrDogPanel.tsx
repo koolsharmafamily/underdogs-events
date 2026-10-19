@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { useMrDogStore, worldToOutfit } from "./store";
 import { useStore as useAppStore } from "@/state/store";
 import { MrDogStage3D } from "./MrDogStage3D";
 import { MrDogChat } from "./MrDogChat";
 
 export function MrDogPanel() {
+  const pathname = usePathname();
   const isOpen = useMrDogStore((s) => s.isOpen);
   const closeMrDog = useMrDogStore((s) => s.closeMrDog);
   const clearChat = useMrDogStore((s) => s.clearChat);
@@ -40,7 +42,7 @@ export function MrDogPanel() {
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen || pathname === "/mr-dog") return null;
 
   const accentColor =
     world === "redroom"

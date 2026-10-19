@@ -15,20 +15,30 @@ export function MobileTabBar() {
   const motion = useAppStore((s) => s.motionEnabled);
 
   const isHome = pathname === "/";
+  const isMrDog = pathname === "/mr-dog";
   const isRedRoom = pathname.startsWith("/the-red-room");
   const isDiwali = pathname.startsWith("/diwali");
   const isEventsList = pathname.startsWith("/events");
   const isEventsTab = isEventsList || isRedRoom || isDiwali;
   const outfit = isRedRoom ? "redroom" : isDiwali ? "diwali" : worldToOutfit(world);
 
-  const isSheetOpen = useMrDogStore((s) => s.isOpen);
-  const toggleMrDog = useMrDogStore((s) => s.toggleMrDog);
-  const closeMrDog = useMrDogStore((s) => s.closeMrDog);
-
   const [winking, setWinking] = useState(false);
   const [dogBlinking, setDogBlinking] = useState(false);
   const [dogWinking, setDogWinking] = useState(false);
   const [dogTilt, setDogTilt] = useState(false);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  // Track virtual keyboard on mobile to cleanly hide bottom bar
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const checkKeyboard = () => {
+      const isKb = window.innerHeight - vv.height > 120;
+      setIsKeyboardOpen(isKb);
+    };
+    vv.addEventListener("resize", checkKeyboard);
+    return () => vv.removeEventListener("resize", checkKeyboard);
+  }, []);
 
   // Native haptic feedback
   const triggerHaptic = useCallback(() => {
@@ -41,7 +51,7 @@ export function MobileTabBar() {
 
   // Idle life for Mr. Dog button (blink, wink, tilt)
   useEffect(() => {
-    if (!motion || isSheetOpen) return;
+    if (!motion) return;
 
     // Periodic blink every 4-7s
     const blinkInterval = setInterval(() => {
@@ -66,14 +76,11 @@ export function MobileTabBar() {
       clearInterval(winkInterval);
       clearInterval(tiltInterval);
     };
-  }, [motion, isSheetOpen]);
+  }, [motion]);
 
   // Home icon tap handler
   const handleHomeTap = () => {
     triggerHaptic();
-    if (isSheetOpen) {
-      closeMrDog();
-    }
     setWinking(true);
     window.setTimeout(() => setWinking(false), 120);
     saveRouteScroll(pathname);
@@ -85,9 +92,6 @@ export function MobileTabBar() {
   // Events icon tap handler
   const handleEventsTap = () => {
     triggerHaptic();
-    if (isSheetOpen) {
-      closeMrDog();
-    }
     saveRouteScroll(pathname);
     if (isEventsList) {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -97,11 +101,23 @@ export function MobileTabBar() {
   // Mr. Dog center button tap handler
   const handleDogTap = () => {
     triggerHaptic();
-    toggleMrDog();
+    saveRouteScroll(pathname);
+    if (isMrDog) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Contextual theme accents
   const getTheme = () => {
+    if (isMrDog) {
+      return {
+        accent: "#EA28C1",
+        activeText: "text-[#EA28C1]",
+        glow: "drop-shadow-[0_0_8px_rgba(234,40,193,0.55)]",
+        barBorder: "border-[#EA28C1]/20",
+        barBg: "bg-[#090A0E]/[0.96]",
+      };
+    }
     if (isHome) {
       return {
         accent: "#EA28C1",
@@ -142,9 +158,7 @@ export function MobileTabBar() {
 
   // Determine avatar icon state
   let avatarType = "avatar";
-  if (isSheetOpen) {
-    avatarType = "avatar-x";
-  } else if (dogWinking) {
+  if (dogWinking) {
     avatarType = "avatar-wink";
   } else if (dogBlinking) {
     avatarType = "avatar-blink";
@@ -154,7 +168,9 @@ export function MobileTabBar() {
   return (
     <nav
       aria-label="Primary navigation"
-      className={`fixed inset-x-0 bottom-0 z-50 md:hidden select-none ${barBg} ${barBorder} border-t shadow-[0_-4px_24px_rgba(0,0,0,0.55)] transition-colors duration-300`}
+      className={`fixed inset-x-0 bottom-0 z-50 md:hidden select-none ${barBg} ${barBorder} border-t shadow-[0_-4px_24px_rgba(0,0,0,0.55)] transition-all duration-300 ${
+        isKeyboardOpen ? "translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100"
+      }`}
       style={{
         paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
       }}
@@ -176,13 +192,13 @@ export function MobileTabBar() {
 
       {/* Main Tab Bar Row with 3 Columns */}
       <div className="relative mx-auto flex h-[50px] w-full max-w-md items-stretch justify-between px-2">
-        {/* Sliding illuminated top indicator bar (Homes: 16.67%, Events: 83.33%, Faded out when sheet is open) */}
+        {/* Sliding illuminated top indicator bar (Home: 16.67%, Mr. Dog: 50%, Events: 83.33%) */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute top-0 h-[2.5px] w-12 -translate-x-1/2 rounded-b-full transition-all duration-[280ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
           style={{
-            left: isEventsTab ? "83.33%" : "16.67%",
-            opacity: isSheetOpen ? 0 : 1,
+            left: isEventsTab ? "83.33%" : isMrDog ? "50%" : "16.67%",
+            opacity: 1,
             backgroundColor: accent,
             boxShadow: `0 2px 10px ${accent}`,
           }}
@@ -192,12 +208,12 @@ export function MobileTabBar() {
         <TransitionLink
           href="/"
           onClick={handleHomeTap}
-          aria-current={isHome && !isSheetOpen ? "page" : undefined}
+          aria-current={isHome ? "page" : undefined}
           className={`group relative flex-1 flex flex-col items-center justify-center gap-1 transition-transform duration-100 active:scale-[0.92] ${
-            isHome && !isSheetOpen ? activeText : "text-white/40 hover:text-white/70"
+            isHome ? activeText : "text-white/40 hover:text-white/70"
           }`}
         >
-          {isHome && !isSheetOpen && (
+          {isHome && (
             <div
               className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-10 rounded-full blur-md opacity-25"
               style={{ backgroundColor: accent }}
@@ -214,14 +230,14 @@ export function MobileTabBar() {
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`relative transition-all duration-200 ${isHome && !isSheetOpen ? glow : ""}`}
+            className={`relative transition-all duration-200 ${isHome ? glow : ""}`}
           >
             <circle
               cx="12"
               cy="12"
               r="10"
-              fill={isHome && !isSheetOpen ? "currentColor" : "none"}
-              fillOpacity={isHome && !isSheetOpen ? 0.08 : 0}
+              fill={isHome ? "currentColor" : "none"}
+              fillOpacity={isHome ? 0.08 : 0}
             />
             <g
               style={{
@@ -239,8 +255,8 @@ export function MobileTabBar() {
             </g>
             <path
               d="M10 14h4c0 1.6-0.8 3-2 3s-2-1.4-2-3z"
-              fill={isHome && !isSheetOpen ? "currentColor" : "none"}
-              fillOpacity={isHome && !isSheetOpen ? 0.9 : 0}
+              fill={isHome ? "currentColor" : "none"}
+              fillOpacity={isHome ? 0.9 : 0}
             />
           </svg>
 
@@ -251,22 +267,26 @@ export function MobileTabBar() {
 
         {/* Column 2: Center Mr. Dog Raised Button */}
         <div className="relative flex-1 flex flex-col items-center justify-end pb-1">
-          <button
-            type="button"
+          <TransitionLink
+            href="/mr-dog"
             onClick={handleDogTap}
-            aria-label={isSheetOpen ? "Close Mr. Dog" : "Ask Mr. Dog AI Concierge"}
-            aria-expanded={isSheetOpen}
-            className={`absolute -top-5 left-1/2 -translate-x-1/2 w-[58px] h-[58px] rounded-full flex items-center justify-center bg-[#10171F] transition-all duration-200 active:scale-95 shadow-[0_4px_16px_rgba(0,0,0,0.7)] ${
+            aria-label="Mr. Dog AI Concierge"
+            aria-current={isMrDog ? "page" : undefined}
+            className={`group absolute -top-5 left-1/2 -translate-x-1/2 w-[58px] h-[58px] rounded-full flex items-center justify-center bg-[#10171F] transition-all duration-200 active:scale-95 shadow-[0_4px_16px_rgba(0,0,0,0.7)] ${
               dogTilt ? "rotate-6" : ""
             }`}
             style={{
-              boxShadow: `0 0 16px ${accent}40, 0 4px 12px rgba(0,0,0,0.8)`,
-              border: `1.5px solid ${accent}`,
+              boxShadow: isMrDog
+                ? `0 0 20px ${accent}80, 0 4px 16px rgba(0,0,0,0.9)`
+                : `0 0 16px ${accent}40, 0 4px 12px rgba(0,0,0,0.8)`,
+              border: isMrDog ? `2px solid ${accent}` : `1.5px solid ${accent}`,
             }}
           >
             {/* Ambient soft glow */}
             <div
-              className="pointer-events-none absolute inset-0 rounded-full blur-[6px] opacity-40"
+              className={`pointer-events-none absolute inset-0 rounded-full blur-[6px] transition-opacity ${
+                isMrDog ? "opacity-75" : "opacity-40"
+              }`}
               style={{ backgroundColor: accent }}
               aria-hidden="true"
             />
@@ -275,7 +295,7 @@ export function MobileTabBar() {
             <div className="relative w-[52px] h-[52px] overflow-visible flex items-center justify-center">
               <Image
                 src={dogAvatarSrc}
-                alt={isSheetOpen ? "Mr. Dog (Close)" : "Mr. Dog"}
+                alt="Mr. Dog"
                 width={52}
                 height={52}
                 priority
@@ -283,27 +303,29 @@ export function MobileTabBar() {
                 className="object-contain -translate-y-0.5 drop-shadow-md select-none pointer-events-none"
               />
             </div>
-          </button>
+          </TransitionLink>
 
-          <span
+          <TransitionLink
+            href="/mr-dog"
+            onClick={handleDogTap}
             className={`font-manrope text-[10px] font-bold tracking-[0.06em] uppercase transition-colors ${
-              isSheetOpen ? activeText : "text-white/60"
+              isMrDog ? activeText : "text-white/60 hover:text-white/80"
             }`}
           >
             MR. DOG
-          </span>
+          </TransitionLink>
         </div>
 
         {/* Column 3: Events */}
         <TransitionLink
           href="/events"
           onClick={handleEventsTap}
-          aria-current={isEventsTab && !isSheetOpen ? "page" : undefined}
+          aria-current={isEventsTab ? "page" : undefined}
           className={`group relative flex-1 flex flex-col items-center justify-center gap-1 transition-transform duration-100 active:scale-[0.92] ${
-            isEventsTab && !isSheetOpen ? activeText : "text-white/40 hover:text-white/70"
+            isEventsTab ? activeText : "text-white/40 hover:text-white/70"
           }`}
         >
-          {isEventsTab && !isSheetOpen && (
+          {isEventsTab && (
             <div
               className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-10 rounded-full blur-md opacity-25"
               style={{ backgroundColor: accent }}
@@ -320,17 +342,17 @@ export function MobileTabBar() {
             strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`relative transition-all duration-200 ${isEventsTab && !isSheetOpen ? glow : ""}`}
+            className={`relative transition-all duration-200 ${isEventsTab ? glow : ""}`}
           >
             <path
               d="M4 20V9a4 4 0 0 1 8 0v11"
-              fill={isEventsTab && !isSheetOpen ? "currentColor" : "none"}
-              fillOpacity={isEventsTab && !isSheetOpen ? 0.08 : 0}
+              fill={isEventsTab ? "currentColor" : "none"}
+              fillOpacity={isEventsTab ? 0.08 : 0}
             />
             <path
               d="M12 20V9a4 4 0 0 1 8 0v11"
-              fill={isEventsTab && !isSheetOpen ? "currentColor" : "none"}
-              fillOpacity={isEventsTab && !isSheetOpen ? 0.08 : 0}
+              fill={isEventsTab ? "currentColor" : "none"}
+              fillOpacity={isEventsTab ? 0.08 : 0}
             />
             <line x1="2" y1="20" x2="22" y2="20" />
             <line x1="12" y1="9" x2="12" y2="20" />

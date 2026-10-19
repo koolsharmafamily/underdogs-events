@@ -97,8 +97,8 @@ export function MrDogLauncher() {
     setIsHovered(false);
   }, []);
 
-  // Hide while loader is active, during route transitions, or if panel is already open
-  if (phase !== "complete" || isTransitioning || isOpen) {
+  // Hide while loader is active, during route transitions, if panel is already open, or on /mr-dog dedicated page
+  if (phase !== "complete" || isTransitioning || isOpen || pathname === "/mr-dog") {
     return null;
   }
 

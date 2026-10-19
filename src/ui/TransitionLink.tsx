@@ -7,7 +7,7 @@ import { determineTransitionType, runRouteTransition } from '@/motion/transition
 import { preloadRouteWorld } from '@/webgl/preload'
 import type { TransitionType } from '@/state/frame'
 
-export type TransitionHref = '/' | '/the-red-room' | '/diwali' | '/events'
+export type TransitionHref = '/' | '/the-red-room' | '/diwali' | '/events' | '/mr-dog'
 
 /**
  * Navigates through the transition system (cover, preload, badge continuity),
