@@ -224,33 +224,6 @@ export function MrDogChat({
           </div>
         )}
 
-        {/* Quick Question Cards on initial open */}
-        {messages.length === 1 && !isStreaming && (
-          <div className="pt-2 pb-1">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/50 block mb-2 px-1">
-              Select a question to ask:
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {chips.slice(0, 4).map((q) => (
-                <button
-                  key={q.id}
-                  type="button"
-                  onClick={() => handleChipClick(q.userQuestion)}
-                  className="text-left px-3.5 py-2.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] active:scale-[0.98] border border-white/10 transition-all flex items-center justify-between group"
-                  style={{ borderColor: `${accentColor}25` }}
-                >
-                  <span className="text-[13px] font-medium text-white/90 group-hover:text-white">
-                    {q.chipLabel}
-                  </span>
-                  <span className="text-[12px] text-white/40 group-hover:text-white/80 transition-colors ml-2">
-                    →
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div ref={messagesEndRef} />
       </div>
 
