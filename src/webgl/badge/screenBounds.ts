@@ -20,7 +20,9 @@ if (typeof window !== "undefined") {
 export function badgeApertureMask() {
   const b = badgeScreenBounds;
   if (!b.drawn || b.size < 8) return "none";
-  const inner = b.size * 0.56;
-  const outer = b.size * 0.78;
-  return `radial-gradient(circle at ${b.x}px ${b.y}px, transparent ${inner}px, #000 ${outer}px)`;
+  const x = Math.round(b.x);
+  const y = Math.round(b.y);
+  const inner = Math.round(b.size * 0.56);
+  const outer = Math.round(b.size * 0.78);
+  return `radial-gradient(circle at ${x}px ${y}px, transparent ${inner}px, #000 ${outer}px)`;
 }

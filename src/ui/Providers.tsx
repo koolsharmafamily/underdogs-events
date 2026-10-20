@@ -129,45 +129,37 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     const applyScrollTarget = () => {
       const lenis = getLenis();
+      const isTr = useStore.getState().isTransitioning;
 
+      let targetY = 0;
       if (wasPopState) {
-        if (lenis) {
-          lenis.scrollTo(savedY, { immediate: true });
-        }
-        window.scrollTo({ top: savedY, behavior: "instant" as ScrollBehavior });
+        targetY = savedY;
       } else if (shouldLandAtH5) {
         const h5El = document.querySelector<HTMLElement>('[data-scene="H5"]');
         if (h5El) {
-          const targetTop = h5El.offsetTop;
-          if (lenis) {
-            lenis.scrollTo(targetTop, { immediate: true });
-          }
-          window.scrollTo({
-            top: targetTop,
-            behavior: "instant" as ScrollBehavior,
-          });
+          targetY = h5El.offsetTop;
         }
-      } else {
-        if (lenis) {
-          lenis.scrollTo(0, { immediate: true });
-        }
-        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
       }
 
-      ScrollTrigger.refresh();
+      if (lenis) {
+        lenis.scrollTo(targetY, { immediate: true });
+      }
+      window.scrollTo({ top: targetY, behavior: "instant" as ScrollBehavior });
+
+      // When a route transition is active, tryProceedEnter handles ScrollTrigger.refresh()
+      // once under the opaque veil to avoid mid-transition layout thrashing.
+      if (!isTr) {
+        ScrollTrigger.refresh();
+      }
       frame.snapCamera = true;
     };
 
-    // Apply immediately and verify on next frame once layout has settled
     applyScrollTarget();
-    const rafId = requestAnimationFrame(() => {
-      applyScrollTarget();
-      window.setTimeout(() => {
-        restoringScrollRef.current = false;
-      }, 100);
-    });
+    const timer = window.setTimeout(() => {
+      restoringScrollRef.current = false;
+    }, 100);
 
-    return () => cancelAnimationFrame(rafId);
+    return () => window.clearTimeout(timer);
   }, [pathname, setWorld]);
 
   useEffect(() => {

@@ -53,6 +53,7 @@ export function DiwaliView() {
     }
 
     let prevLine = 0;
+    let prevD3 = false;
 
     const onTick = () => {
       const p2 = frame.linearProgress.D2 ?? 0;
@@ -63,7 +64,11 @@ export function DiwaliView() {
       }
 
       const p3 = frame.progress.D3 ?? 0;
-      setD3Active(p3 > 0.05);
+      const nextD3 = p3 > 0.05;
+      if (nextD3 !== prevD3) {
+        prevD3 = nextD3;
+        setD3Active(nextD3);
+      }
     };
 
     gsap.ticker.add(onTick);

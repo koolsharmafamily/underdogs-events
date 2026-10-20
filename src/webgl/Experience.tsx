@@ -32,6 +32,8 @@ function RendererGrade() {
       world === "redroom" ? 0.82 : world === "diwali" ? 1.05 : 1;
     if (world === "diwali") {
       gl.setClearColor(0x000000, 0);
+    } else {
+      gl.setClearColor(0x07070b, 1);
     }
   }, [gl, settings.hasComposer, world]);
   return null;
@@ -254,6 +256,9 @@ function CanvasInner() {
           <PerformanceMonitor
             flipflops={1}
             onDecline={() => {
+              const s = useStore.getState();
+              // Freeze tier changes during transitions or before loader completes
+              if (s.isTransitioning || s.phase !== "complete") return;
               downgradeTier();
             }}
           />

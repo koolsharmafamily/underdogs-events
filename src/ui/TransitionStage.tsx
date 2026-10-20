@@ -26,15 +26,20 @@ export function TransitionStage() {
       leftCurtainEl: left.current,
       rightCurtainEl: right.current,
     });
+
+    let lastMask = "";
     // The badge travels through every cover: cut a soft aperture wherever a
     // skin is drawn (the outgoing one keeps rendering until the incoming one is
     // ready). With no badge on screen there is no hole.
     const trackBadge = () => {
       if (!stage.current) return;
-      const mask =
-        frame.transition.phase !== "idle" ? badgeApertureMask() : "none";
-      stage.current.style.maskImage = mask;
-      stage.current.style.webkitMaskImage = mask;
+      const isTransitioning = frame.transition.phase !== "idle";
+      const mask = isTransitioning ? badgeApertureMask() : "none";
+      if (mask !== lastMask) {
+        lastMask = mask;
+        stage.current.style.maskImage = mask;
+        stage.current.style.webkitMaskImage = mask;
+      }
     };
     gsap.ticker.add(trackBadge);
     return () => {

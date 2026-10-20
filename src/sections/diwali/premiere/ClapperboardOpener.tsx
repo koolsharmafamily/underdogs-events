@@ -28,12 +28,16 @@ export function ClapperboardOpener({ onComplete }: ClapperboardOpenerProps) {
   // The badge stays on screen through the opener, in a soft aperture.
   useEffect(() => {
     if (dismissed) return;
+    let lastMask = "";
     const track = () => {
       const el = rootRef.current;
       if (!el) return;
       const mask = badgeApertureMask();
-      el.style.maskImage = mask;
-      el.style.webkitMaskImage = mask;
+      if (mask !== lastMask) {
+        lastMask = mask;
+        el.style.maskImage = mask;
+        el.style.webkitMaskImage = mask;
+      }
     };
     gsap.ticker.add(track);
     return () => gsap.ticker.remove(track);
