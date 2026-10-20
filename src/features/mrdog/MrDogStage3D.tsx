@@ -51,6 +51,23 @@ const OUTFIT_GLB_PATHS: Record<MrDogOutfit, string> = {
   diwali: "/models/mr-dog-coin-diwali.glb",
 };
 
+let sharedPmremTexture: THREE.Texture | null = null;
+let sharedGl: THREE.WebGLRenderer | null = null;
+
+function getSharedEnvironment(gl: THREE.WebGLRenderer): THREE.Texture {
+  if (sharedPmremTexture && sharedGl === gl) {
+    return sharedPmremTexture;
+  }
+  const pmremGenerator = new THREE.PMREMGenerator(gl);
+  pmremGenerator.compileEquirectangularShader();
+  const roomEnv = new RoomEnvironment();
+  sharedPmremTexture = pmremGenerator.fromScene(roomEnv, 0.04).texture;
+  sharedGl = gl;
+  roomEnv.dispose();
+  pmremGenerator.dispose();
+  return sharedPmremTexture;
+}
+
 function DogModelInner({
   outfit,
   isPeeking,
@@ -68,19 +85,9 @@ function DogModelInner({
   const rig = useMemo(() => resolveRig(dogScene), [dogScene]);
   const animatorRef = useRef<MrDogAnimator | null>(null);
 
-  // Setup environment PMREM once
+  // Setup environment PMREM once and reuse
   useEffect(() => {
-    const pmremGenerator = new THREE.PMREMGenerator(gl);
-    pmremGenerator.compileEquirectangularShader();
-    const roomEnv = new RoomEnvironment();
-    const envTexture = pmremGenerator.fromScene(roomEnv, 0.04).texture;
-    scene.environment = envTexture;
-
-    return () => {
-      envTexture.dispose();
-      pmremGenerator.dispose();
-      roomEnv.dispose();
-    };
+    scene.environment = getSharedEnvironment(gl);
   }, [gl, scene]);
 
   // Initialize Animator
@@ -129,18 +136,13 @@ function DogModelInner({
     };
   }, [outfit, isPeeking, motionEnabled]);
 
-  // Cleanup textures and geometries on unmount
+  // Cleanup geometries on unmount
   useEffect(() => {
     return () => {
       dogScene.traverse((obj) => {
         if ((obj as THREE.Mesh).isMesh) {
           const mesh = obj as THREE.Mesh;
           mesh.geometry?.dispose();
-          if (Array.isArray(mesh.material)) {
-            mesh.material.forEach((m) => m.dispose());
-          } else if (mesh.material) {
-            mesh.material.dispose();
-          }
         }
       });
     };

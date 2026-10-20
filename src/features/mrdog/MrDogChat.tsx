@@ -95,7 +95,9 @@ export function MrDogChat({
     const val = e.target.value;
     if (val.length <= 300) {
       setInputVal(val);
-      setExpression("listening");
+      if (useMrDogStore.getState().expression !== "listening") {
+        setExpression("listening");
+      }
       if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
       typingTimerRef.current = setTimeout(() => {
         setExpression("idle");
