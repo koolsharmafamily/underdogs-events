@@ -2,6 +2,7 @@
 
 import { TransitionLink, useTransitionNavigate } from "@/ui/TransitionLink";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
 import { getLenis } from "@/motion/clock";
@@ -106,7 +107,20 @@ export function MobileTopBar() {
           className="inline-flex min-h-[44px] items-center gap-2.5 active:opacity-80 transition-opacity"
         >
           {!isDetail && (
-            <UnderdogsBadgeSvg skin="home" size={24} className="shrink-0" />
+            isMrDog ? (
+              <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0 border border-white/10 shadow-[0_0_8px_rgba(234,40,193,0.5)]">
+                <Image
+                  src="/media/mr-dog/party-coin-disc.webp"
+                  alt="Mr. Dog"
+                  width={24}
+                  height={24}
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            ) : (
+              <UnderdogsBadgeSvg skin="home" size={24} className="shrink-0" />
+            )
           )}
           {isRedRoom ? (
             <div className="relative inline-block">

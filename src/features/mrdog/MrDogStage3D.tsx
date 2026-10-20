@@ -46,7 +46,7 @@ class WebGLErrorBoundary extends Component<
 }
 
 const OUTFIT_GLB_PATHS: Record<MrDogOutfit, string> = {
-  home: "/models/mr-dog-coin-OG.glb",
+  home: "/models/mr-dog-party-coin.glb",
   redroom: "/models/mr-dog-coin-red-room.glb",
   diwali: "/models/mr-dog-coin-diwali.glb",
 };
@@ -235,7 +235,7 @@ export function MrDogStage3D({ size = 280, isPeeking = true }: StageProps) {
 
 // Preload the GLTF models in background
 if (typeof window !== "undefined") {
-  useGLTF.preload("/models/mr-dog-coin-OG.glb");
+  useGLTF.preload("/models/mr-dog-party-coin.glb");
   useGLTF.preload("/models/mr-dog-coin-red-room.glb");
   useGLTF.preload("/models/mr-dog-coin-diwali.glb");
 }

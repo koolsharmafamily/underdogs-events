@@ -86,7 +86,7 @@ export function MrDogLauncher() {
     // Preload model on hover/focus
     if (typeof window !== "undefined") {
       void import("@react-three/drei").then(({ useGLTF }) => {
-        useGLTF.preload("/models/mr-dog-coin-OG.glb");
+        useGLTF.preload("/models/mr-dog-party-coin.glb");
         useGLTF.preload("/models/mr-dog-coin-red-room.glb");
         useGLTF.preload("/models/mr-dog-coin-diwali.glb");
       });
@@ -109,7 +109,7 @@ export function MrDogLauncher() {
         ? "#E5B25D"
         : "#EA28C1";
 
-  const avatarSrc = `/media/mr-dog/${outfit}/${avatarState}.webp`;
+  const avatarSrc = outfit === "home" ? "/media/mr-dog/party-coin.webp" : `/media/mr-dog/${outfit}/${avatarState}.webp`;
 
   return (
     <div

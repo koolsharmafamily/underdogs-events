@@ -79,15 +79,15 @@ export function MrDogView() {
             {/* Left Column: Mr. Dog Identity & Info */}
             <div className="col-span-4 rounded-2xl bg-[#0A0D12] border border-white/10 p-6 flex flex-col justify-between shadow-2xl">
               <div className="flex flex-col items-center text-center gap-4">
-                <div className="relative w-36 h-36 rounded-full overflow-hidden bg-[#10171F] border-2 border-[#EA28C1]/40 shadow-[0_0_32px_rgba(234,40,193,0.25)] flex items-center justify-center">
+                <div className="relative w-36 h-36 rounded-full bg-[#10171F]/80 border-2 border-[#EA28C1]/50 shadow-[0_0_36px_rgba(234,40,193,0.35)] flex items-center justify-center overflow-visible">
                   <Image
-                    src={`/media/mr-dog/${outfit}/avatar.webp`}
-                    alt="Mr. Dog"
-                    width={144}
-                    height={144}
+                    src="/media/mr-dog/party-coin.webp"
+                    alt="Mr. Dog Party Coin"
+                    width={140}
+                    height={180}
                     priority
                     unoptimized
-                    className="object-cover"
+                    className="object-contain -translate-y-2 drop-shadow-[0_8px_24px_rgba(0,0,0,0.8)]"
                   />
                 </div>
                 <div>

@@ -122,7 +122,7 @@ export function MrDogChat({
     sendMessage(question);
   };
 
-  const avatarUrl = `/media/mr-dog/${outfit}/avatar.webp`;
+  const avatarUrl = outfit === "home" ? "/media/mr-dog/party-coin-disc.webp" : `/media/mr-dog/${outfit}/avatar.webp`;
 
   const accentColor =
     world === "redroom"

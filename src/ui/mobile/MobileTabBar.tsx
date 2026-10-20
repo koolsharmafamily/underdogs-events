@@ -163,7 +163,7 @@ export function MobileTabBar() {
   } else if (dogBlinking) {
     avatarType = "avatar-blink";
   }
-  const dogAvatarSrc = `/media/mr-dog/${outfit}/${avatarType}.webp`;
+  const dogAvatarSrc = "/media/mr-dog/party-coin.webp";
 
   return (
     <nav
@@ -265,42 +265,42 @@ export function MobileTabBar() {
           </span>
         </TransitionLink>
 
-        {/* Column 2: Center Mr. Dog Raised Button */}
+        {/* Column 2: Center Mr. Dog Party Coin Raised Button */}
         <div className="relative flex-1 flex flex-col items-center justify-end pb-1">
           <TransitionLink
             href="/mr-dog"
             onClick={handleDogTap}
             aria-label="Mr. Dog AI Concierge"
             aria-current={isMrDog ? "page" : undefined}
-            className={`group absolute -top-5 left-1/2 -translate-x-1/2 w-[58px] h-[58px] rounded-full flex items-center justify-center bg-[#10171F] transition-all duration-200 active:scale-95 shadow-[0_4px_16px_rgba(0,0,0,0.7)] ${
+            className={`group absolute -top-[33px] left-1/2 -translate-x-1/2 w-[52px] h-[66px] flex items-end justify-center transition-all duration-200 active:scale-95 ${
               dogTilt ? "rotate-6" : ""
             }`}
-            style={{
-              boxShadow: isMrDog
-                ? `0 0 20px ${accent}80, 0 4px 16px rgba(0,0,0,0.9)`
-                : `0 0 16px ${accent}40, 0 4px 12px rgba(0,0,0,0.8)`,
-              border: isMrDog ? `2px solid ${accent}` : `1.5px solid ${accent}`,
-            }}
           >
-            {/* Ambient soft glow */}
+            {/* Ambient soft glow behind party coin */}
             <div
-              className={`pointer-events-none absolute inset-0 rounded-full blur-[6px] transition-opacity ${
-                isMrDog ? "opacity-75" : "opacity-40"
+              className={`pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[48px] h-[48px] rounded-full blur-[8px] transition-opacity duration-300 ${
+                isMrDog ? "opacity-85 scale-110" : "opacity-35 group-hover:opacity-65"
               }`}
               style={{ backgroundColor: accent }}
               aria-hidden="true"
             />
 
-            {/* Avatar with ears breaking out of the top */}
-            <div className="relative w-[52px] h-[52px] overflow-visible flex items-center justify-center">
+            {/* Backing dark disc for contrast behind coin */}
+            <div
+              className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[46px] h-[46px] rounded-full bg-[#07090D] shadow-[0_4px_14px_rgba(0,0,0,0.85)]"
+              aria-hidden="true"
+            />
+
+            {/* The Authentic Mr. Dog Party Coin */}
+            <div className="relative w-[52px] h-[66px] overflow-visible flex items-end justify-center">
               <Image
-                src={dogAvatarSrc}
-                alt="Mr. Dog"
+                src="/media/mr-dog/party-coin.webp"
+                alt="Mr. Dog Party Coin"
                 width={52}
-                height={52}
+                height={66}
                 priority
                 unoptimized
-                className="object-contain -translate-y-0.5 drop-shadow-md select-none pointer-events-none"
+                className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] select-none pointer-events-none transition-transform duration-200"
               />
             </div>
           </TransitionLink>
