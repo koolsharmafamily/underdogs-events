@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
@@ -42,7 +43,7 @@ export function BadgeDomHost({
   useEffect(() => {
     const target = skin === "diwali" ? "jewelled" : skin === "redroom" ? "halloween" : "enamel";
     const check = () => {
-      if (badgeScreenBounds.ready && badgeScreenBounds.readySkin === target) {
+      if (useStore.getState().renderedWorlds[skin] && badgeScreenBounds.ready && badgeScreenBounds.readySkin === target) {
         setBadge3DReady(true);
       }
     };
@@ -199,7 +200,7 @@ export function BadgeDomHost({
       }}
     >
       {/* 2D Fallback Stills when 3D WebGL is compiling or when tier === T0 */}
-      {((!badge3DReady && !transitioning) || isVisible) && (
+      {((skin !== "home" && !transitioning) || isVisible) && (
         <div
           className={`absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none transition-opacity duration-300 ${
             badge3DReady && !isVisible ? "opacity-0" : "opacity-100"
@@ -207,7 +208,7 @@ export function BadgeDomHost({
         >
           {skin === "diwali" ? (
             <img
-              src="/media/badge-jewelled-still.webp"
+              src={assetUrl("/media/badge-jewelled-still.webp")}
               alt="Underdogs Jewelled Badge"
               width={512}
               height={512}
@@ -215,7 +216,7 @@ export function BadgeDomHost({
             />
           ) : skin === "redroom" ? (
             <img
-              src="/media/badge-halloween-still.webp"
+              src={assetUrl("/media/badge-halloween-still.webp")}
               alt="Underdogs Halloween badge"
               width={512}
               height={512}
@@ -224,15 +225,15 @@ export function BadgeDomHost({
           ) : !showSvgPreview ? (
             <picture className="w-full h-full flex items-center justify-center">
               <source
-                srcSet="/media/badge-enamel-still.webp"
+                srcSet={assetUrl("/media/badge-enamel-still-512.webp")}
                 media="(min-width: 769px)"
               />
               <source
-                srcSet="/media/badge-enamel-still-512.webp"
+                srcSet={assetUrl("/media/badge-enamel-still-512.webp")}
                 media="(max-width: 768px)"
               />
               <img
-                src="/media/badge-enamel-still.webp"
+                src={assetUrl("/media/badge-enamel-still-512.webp")}
                 alt="Underdogs Enamel Badge"
                 className="w-full h-full object-contain select-none drop-shadow-[0_12px_40px_rgba(173,12,128,0.25)]"
               />

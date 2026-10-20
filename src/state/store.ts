@@ -32,6 +32,8 @@ export interface AppStore {
   sceneRoute: boolean;
   /** Worlds whose 3D set is mounted (hidden unless current). Once in, a world stays: no re-upload, no recompile. */
   residentWorlds: Record<WorldId, boolean>;
+  homePropsRequested: boolean;
+  requestHomeProps: () => void;
 
   setWorld: (world: WorldId) => void;
   setPhase: (phase: LoaderPhase) => void;
@@ -100,10 +102,13 @@ export const useStore = create<AppStore>((set, get) => ({
   renderedWorlds: { home: false, redroom: false, diwali: false },
   sceneRoute: typeof window === "undefined" || isSceneRoute(window.location.pathname),
   residentWorlds: {
-    home: true,
-    redroom: true,
-    diwali: true,
+    home: getInitialWorld() === "home",
+    redroom: getInitialWorld() === "redroom",
+    diwali: getInitialWorld() === "diwali",
   },
+
+  homePropsRequested: false,
+  requestHomeProps: () => set({ homePropsRequested: true }),
 
   setWorld: (world) => {
     const cur = get().world;
