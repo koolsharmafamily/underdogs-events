@@ -1,9 +1,10 @@
 "use client";
 import { lazy, Suspense, useEffect } from "react";
 import { useStore } from "@/state/store";
+import { HomeShell } from "./home/HomeShell";
 import { Badge } from "./badge/Badge";
 import { Precompile } from "./Precompile";
-import { preloadAllAppAssets, preloadWorldAssets } from "./preload";
+import { preloadWorldAssets } from "./preload";
 import { StudioEnvironment } from "./StudioEnvironment";
 import { ForegroundHaze } from "./ForegroundHaze";
 const HomeStage = lazy(() =>
@@ -25,9 +26,16 @@ export function WorldDirector() {
   const world = useStore((s) => s.world);
   const resident = useStore((s) => s.residentWorlds);
 
+  const propsRequested = useStore((s) => s.homePropsRequested);
+  const homeReady = useStore((s) => s.renderedWorlds.home);
   useEffect(() => {
-    preloadAllAppAssets();
-  }, []);
+    const request = () => useStore.getState().requestHomeProps();
+    const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) request(); }, { rootMargin: "800px" });
+    const door = document.querySelector('[data-scene="H5"]');
+    if (door) observer.observe(door);
+    const idle = homeReady ? window.requestIdleCallback?.(request, { timeout: 5000 }) : undefined;
+    return () => { observer.disconnect(); if (idle !== undefined) window.cancelIdleCallback(idle); };
+  }, [homeReady, world]);
 
   useEffect(() => {
     preloadWorldAssets(world);
@@ -42,9 +50,9 @@ export function WorldDirector() {
       </Suspense>
       <group name="HomeStageGroup" visible={world === "home"}>
         {resident.home ? (
-          <Suspense fallback={null}>
+          propsRequested ? <Suspense fallback={<HomeShell />}>
             <HomeStage />
-          </Suspense>
+          </Suspense> : <HomeShell />
         ) : null}
       </group>
       <group name="RedRoomSetGroup" visible={world === "redroom"}>

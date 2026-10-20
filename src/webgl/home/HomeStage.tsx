@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
@@ -72,8 +73,8 @@ export function HomeStage() {
   const hoverDoor = useStore((s) => s.hoverDoor);
   const loaderPopped = useStore((s) => s.loaderPopped);
 
-  const redDoorGltf = useGLTF("/models/door-redroom.glb");
-  const diwaliDoorGltf = useGLTF("/models/door-diwali.glb");
+  const redDoorGltf = useGLTF(assetUrl("/models/door-redroom.glb"));
+  const diwaliDoorGltf = useGLTF(assetUrl("/models/door-diwali.glb"));
 
   const redDoorRef = useRef<THREE.Group>(null);
   const diwaliDoorRef = useRef<THREE.Group>(null);

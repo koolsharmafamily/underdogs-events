@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { Suspense, useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -141,6 +142,7 @@ export function Badge({
 }: BadgeProps) {
   const { size, camera } = useThree();
   const rootRef = useRef<THREE.Group>(null);
+  const handoffTime = useRef(0);
 
   // Groups for each skin
   const enamelGroupRef = useRef<THREE.Group>(null);
@@ -634,9 +636,12 @@ export function Badge({
       }
     }
 
+    const homeRendered = useStore.getState().renderedWorlds.home;
+    if (homeRendered) handoffTime.current += delta;
+    const stillHandoff = world === "home" && (!homeRendered || handoffTime.current < 0.24);
     const targetRootScale = choreoScale.current * popScale;
     const nextScale =
-      frame.snapCamera || phase !== "complete"
+      frame.snapCamera || phase !== "complete" || stillHandoff
         ? targetRootScale
         : THREE.MathUtils.damp(
             rootRef.current.scale.x,
@@ -661,7 +666,7 @@ export function Badge({
       currentNodes.tongue,
       {
         time: frame.time,
-        dt: motionEnabled && phase === "complete" ? delta : 0,
+        dt: motionEnabled && phase === "complete" && !stillHandoff ? delta : 0,
         pointer: {
           x: frame.pointer.damped.x,
           y: frame.pointer.damped.y,
@@ -760,7 +765,7 @@ export function Badge({
         {mountedSkins.enamel && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
-              url="/models/badge-enamel.glb"
+              url={assetUrl("/models/badge-enamel.glb")}
               skinName="enamel"
               uniforms={enamelUniforms}
               backTexture={backTexture}
@@ -779,7 +784,7 @@ export function Badge({
         {mountedSkins.halloween && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
-              url="/models/badge-halloween.glb"
+              url={assetUrl("/models/badge-halloween.glb")}
               skinName="halloween"
               uniforms={halloweenUniforms}
               backTexture={backTexture}
@@ -798,7 +803,7 @@ export function Badge({
         {mountedSkins.jewelled && (
           <Suspense fallback={null}>
             <BadgeSkinMesh
-              url="/models/badge-jewelled.glb"
+              url={assetUrl("/models/badge-jewelled.glb")}
               skinName="jewelled"
               uniforms={jewelledUniforms}
               backTexture={backTexture}

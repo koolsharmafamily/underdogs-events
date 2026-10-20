@@ -275,10 +275,13 @@ function CanvasInner() {
 }
 
 export function Experience() {
+  const homeReady = useStore(s => s.renderedWorlds.home);
+  const tier = useStore(s => s.tier);
   const world = useStore((s) => s.world);
   return (
     <div
       aria-hidden="true"
+      style={{opacity:world === "home" && !homeReady && tier !== "T0" ? 0 : 1, transition:"opacity 240ms ease-out"}}
       className={`fixed inset-0 pointer-events-none overflow-hidden ${
         world === "diwali" ? "z-[3]" : "z-0"
       }`}
