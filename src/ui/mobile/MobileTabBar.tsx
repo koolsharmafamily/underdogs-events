@@ -265,56 +265,40 @@ export function MobileTabBar() {
           </span>
         </TransitionLink>
 
-        {/* Column 2: Center Mr. Dog Party Coin Raised Button */}
-        <div className="relative flex-1 flex flex-col items-center justify-end pb-1">
-          <TransitionLink
-            href="/mr-dog"
-            onClick={handleDogTap}
-            aria-label="Mr. Dog AI Concierge"
-            aria-current={isMrDog ? "page" : undefined}
-            className={`group absolute -top-[33px] left-1/2 -translate-x-1/2 w-[52px] h-[66px] flex items-end justify-center transition-all duration-200 active:scale-95 ${
-              dogTilt ? "rotate-6" : ""
-            }`}
-          >
-            {/* Ambient soft glow behind party coin */}
+        {/* Column 2: Center Mr. Dog Party Coin Button */}
+        <TransitionLink
+          href="/mr-dog"
+          onClick={handleDogTap}
+          aria-label="Mr. Dog AI Concierge"
+          aria-current={isMrDog ? "page" : undefined}
+          className={`group relative flex-1 flex flex-col items-center justify-center transition-transform duration-100 active:scale-[0.92] ${
+            dogTilt ? "rotate-6" : ""
+          }`}
+        >
+          {isMrDog && (
             <div
-              className={`pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[48px] h-[48px] rounded-full blur-[8px] transition-opacity duration-300 ${
-                isMrDog ? "opacity-85 scale-110" : "opacity-35 group-hover:opacity-65"
-              }`}
+              className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-10 rounded-full blur-md opacity-35"
               style={{ backgroundColor: accent }}
               aria-hidden="true"
             />
+          )}
 
-            {/* Backing dark disc for contrast behind coin */}
-            <div
-              className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[46px] h-[46px] rounded-full bg-[#07090D] shadow-[0_4px_14px_rgba(0,0,0,0.85)]"
-              aria-hidden="true"
+          <div className="relative flex items-center justify-center">
+            <Image
+              src="/media/mr-dog/party-coin.webp"
+              alt="Mr. Dog"
+              width={31}
+              height={40}
+              priority
+              unoptimized
+              className={`object-contain transition-all duration-200 ${
+                isMrDog
+                  ? "drop-shadow-[0_0_10px_rgba(234,40,193,0.7)] scale-105"
+                  : "opacity-85 group-hover:opacity-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]"
+              }`}
             />
-
-            {/* The Authentic Mr. Dog Party Coin */}
-            <div className="relative w-[52px] h-[66px] overflow-visible flex items-end justify-center">
-              <Image
-                src="/media/mr-dog/party-coin.webp"
-                alt="Mr. Dog Party Coin"
-                width={52}
-                height={66}
-                priority
-                unoptimized
-                className="object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] select-none pointer-events-none transition-transform duration-200"
-              />
-            </div>
-          </TransitionLink>
-
-          <TransitionLink
-            href="/mr-dog"
-            onClick={handleDogTap}
-            className={`font-manrope text-[10px] font-bold tracking-[0.06em] uppercase transition-colors ${
-              isMrDog ? activeText : "text-white/60 hover:text-white/80"
-            }`}
-          >
-            MR. DOG
-          </TransitionLink>
-        </div>
+          </div>
+        </TransitionLink>
 
         {/* Column 3: Events */}
         <TransitionLink
