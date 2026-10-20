@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
+import { redRoomFontVariables, diwaliFontVariables } from "@/theme/fonts";
 import { EventsView } from "@/sections/events/EventsView";
 
 export const metadata: Metadata = {
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function EventsPage() {
-  return <EventsView />;
+  return (
+    <div className={`${redRoomFontVariables} ${diwaliFontVariables}`}>
+      <EventsView />
+    </div>
+  );
 }

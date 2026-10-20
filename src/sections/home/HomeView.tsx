@@ -1,107 +1,25 @@
-"use client";
-
-import React, { useEffect, useRef, useState } from "react";
+import { assetUrl } from "@/utils/assetUrl";
+import React from "react";
 import Image from "next/image";
-import gsap from "gsap";
 import { site } from "@/content/site";
-import { frame } from "@/state/frame";
-import { useStore } from "@/state/store";
-import { useSceneProgress } from "@/motion/useSceneProgress";
-import { useLineReveal } from "@/motion/useLineReveal";
-import { useEnterTransition } from "@/motion/transitions";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
 import { Marquee } from "@/ui/Marquee";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { DomTwins } from "@/webgl/tracking/DomTwins";
 import { MobileHomeFeed } from "./MobileHomeFeed";
-import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
+import {
+  DoorColumn,
+  FlyerTriggerButton,
+  HomeAboutSection,
+  HomeStageController,
+} from "./HomeClientIslands";
 
 export function HomeView() {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  useLineReveal(titleRef, { triggerOnMount: true, delay: 0.06 });
-  const motionEnabled = useStore((s) => s.motionEnabled);
-  const hoverDoor = useStore((s) => s.hoverDoor);
-  const setHoverDoor = useStore((s) => s.setHoverDoor);
-  const setWorld = useStore((s) => s.setWorld);
-
-  useEnterTransition("home");
-
-  useEffect(() => {
-    setWorld("home");
-    document.documentElement.setAttribute("data-world", "home");
-  }, [setWorld]);
-
-  const h1Ref = useRef<HTMLElement>(null);
-  const h2Ref = useRef<HTMLElement>(null);
-  const h5Ref = useRef<HTMLElement>(null);
-
-  useSceneProgress("H1", h1Ref);
-  useSceneProgress("H2", h2Ref);
-  useSceneProgress("H5", h5Ref);
-
-  const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
-
-  const [heroTextVisible, setHeroTextVisible] = useState(true);
-  const [scrollCueVisible, setScrollCueVisible] = useState(true);
-  const [activeStatement, setActiveStatement] = useState(0);
-  const [showAboutBody, setShowAboutBody] = useState(false);
-
-  useEffect(() => {
-    if (!motionEnabled) {
-      setHeroTextVisible(true);
-      setScrollCueVisible(true);
-      setActiveStatement(0);
-      setShowAboutBody(true);
-      return;
-    }
-
-    const prev = {
-      heroText: true,
-      cue: true,
-      stmt: 0,
-      about: false,
-    };
-
-    const onTick = () => {
-      const p1 = frame.progress.H1 ?? 0;
-      if (p1 > 0.12 && prev.cue) {
-        prev.cue = false;
-        setScrollCueVisible(false);
-      } else if (p1 < 0.08 && !prev.cue) {
-        prev.cue = true;
-        setScrollCueVisible(true);
-      }
-
-      if (p1 > 0.9 && prev.heroText) {
-        prev.heroText = false;
-        setHeroTextVisible(false);
-      } else if (p1 < 0.85 && !prev.heroText) {
-        prev.heroText = true;
-        setHeroTextVisible(true);
-      }
-
-      const p2 = frame.linearProgress.H2 ?? 0;
-      const nextStmt = p2 < 0.34 ? 0 : p2 < 0.67 ? 1 : 2;
-      const nextAbout = p2 >= 0.67;
-      if (nextStmt !== prev.stmt) {
-        prev.stmt = nextStmt;
-        setActiveStatement(nextStmt);
-      }
-      if (nextAbout !== prev.about) {
-        prev.about = nextAbout;
-        setShowAboutBody(nextAbout);
-      }
-    };
-
-    gsap.ticker.add(onTick);
-    return () => {
-      gsap.ticker.remove(onTick);
-    };
-  }, [motionEnabled]);
-
   return (
     <main id="main-content" className="relative z-10">
+      <HomeStageController />
+
       {/* Mobile App Feed (< 768px) */}
       <div className="block md:hidden">
         <MobileHomeFeed />
@@ -111,7 +29,6 @@ export function HomeView() {
       <div className="hidden md:block">
         {/* H1 · Hero, "Gate to Rage" (120vh desktop, pinned) */}
         <section
-          ref={h1Ref}
           data-scene="H1"
           aria-label={site.home.hero.title}
           className="scene-section scene-h1"
@@ -129,11 +46,8 @@ export function HomeView() {
 
               {/* Left stage: Focal Headline & Lead (columns 1–6) */}
               <div
-                className={`col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 max-w-[580px] flex flex-col justify-end lg:self-center lg:py-24 gap-6 transition-all ${
-                  heroTextVisible || !motionEnabled
-                    ? "duration-[680ms] opacity-100 translate-y-0"
-                    : "duration-[280ms] opacity-0 -translate-y-6 pointer-events-none"
-                }`}
+                data-hero-text=""
+                className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 order-2 lg:order-1 max-w-[580px] flex flex-col justify-end lg:self-center lg:py-24 gap-6 transition-all duration-[680ms] opacity-100 translate-y-0"
               >
                 <p className="font-mono text-[12px] sm:text-[13px] uppercase tracking-[0.18em] font-medium text-[var(--paper)]/85 flex items-center gap-3">
                   <span
@@ -143,10 +57,7 @@ export function HomeView() {
                   {site.home.hero.label}
                 </p>
 
-                <h1
-                  ref={titleRef}
-                  className="font-unbounded text-[clamp(38px,5.2vw,84px)] leading-[0.94] tracking-[-0.025em] font-extrabold uppercase text-[var(--paper)] balance-heading"
-                >
+                <h1 className="font-unbounded text-[clamp(38px,5.2vw,84px)] leading-[0.94] tracking-[-0.025em] font-extrabold uppercase text-[var(--paper)] balance-heading">
                   <span className="sr-only">{site.brand.name} — </span>
                   {site.home.hero.title}
                 </h1>
@@ -157,9 +68,8 @@ export function HomeView() {
 
                 {/* Scroll Cue ("Enter ↓") */}
                 <div
-                  className={`pt-2 flex items-center gap-4 transition-opacity duration-[280ms] ${
-                    scrollCueVisible || !motionEnabled ? "opacity-90" : "opacity-0 pointer-events-none"
-                  }`}
+                  data-hero-cue=""
+                  className="pt-2 flex items-center gap-4 transition-opacity duration-[280ms] opacity-90"
                 >
                   <div className="relative h-12 w-[1px] bg-[var(--paper)]/20 overflow-hidden" aria-hidden="true">
                     <span className="scroll-cue-segment absolute left-0 top-0 h-3 w-full bg-[var(--magenta)]" />
@@ -175,7 +85,6 @@ export function HomeView() {
 
         {/* H2 · Who we are + Editorial Archive ("Nights we've thrown") */}
         <section
-          ref={h2Ref}
           data-scene="H2"
           aria-labelledby="home-about-label"
           className="scene-section scene-h2 min-h-screen"
@@ -194,74 +103,9 @@ export function HomeView() {
               </span>
             </div>
 
-            <div className="site-container site-grid my-auto items-center py-6">
-              {/* Left half (columns 1–6) */}
-              <div className="col-span-4 md:col-span-4 lg:col-span-6 lg:col-start-1 max-w-[580px] pr-2 lg:pr-6 flex flex-col gap-6">
-                {!motionEnabled ? (
-                  <div className="flex flex-col gap-4">
-                    {site.home.about.statements.map((stmt) => (
-                      <p
-                        key={stmt}
-                        className="font-unbounded text-[clamp(18px,2vw,28px)] leading-[1.18] tracking-[-0.02em] font-extrabold uppercase text-[var(--paper)] balance-heading"
-                      >
-                        {stmt}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="relative min-h-[140px] sm:min-h-[180px] lg:min-h-[210px] flex items-center">
-                    {site.home.about.statements.map((stmt, idx) => {
-                      const isCurrent = idx === activeStatement;
-                      const isPast = idx < activeStatement;
-                      return (
-                        <p
-                          key={stmt}
-                          aria-hidden={!isCurrent}
-                          className={`font-unbounded text-[clamp(24px,2.9vw,44px)] leading-[1.1] tracking-[-0.02em] font-extrabold uppercase text-[var(--paper)] balance-heading transition-all ${
-                            isCurrent
-                              ? "duration-[680ms] relative opacity-100 translate-y-0"
-                              : isPast
-                                ? "duration-[280ms] pointer-events-none absolute inset-x-0 opacity-0 -translate-y-8"
-                                : "duration-[280ms] pointer-events-none absolute inset-x-0 opacity-0 translate-y-8"
-                          }`}
-                        >
-                          {stmt}
-                        </p>
-                      );
-                    })}
-                  </div>
-                )}
-
-                <p
-                  className={`font-manrope text-body text-[var(--paper)]/85 measure-copy pretty-copy transition-opacity duration-[500ms] ${
-                    showAboutBody || !motionEnabled ? "opacity-100" : "opacity-85"
-                  }`}
-                >
-                  {site.home.about.body}
-                </p>
-              </div>
-
-              {/* Right half (columns 7–12): Badge host */}
-              <div className="hidden md:flex md:col-span-4 lg:col-span-6 lg:col-start-7 items-center justify-center">
-                <div
-                  className="flex flex-col items-center gap-3 transition-transform duration-[680ms]"
-                  style={{
-                    transform:
-                      activeStatement === 0
-                        ? "perspective(800px) rotateY(72deg)"
-                        : activeStatement === 1
-                          ? "perspective(800px) rotateY(180deg)"
-                          : "perspective(800px) rotateY(0deg)",
-                  }}
-                >
-                  <BadgeDomHost
-                    skin="home"
-                    sizeClass="w-[220px] h-[220px] lg:w-[300px] lg:h-[300px]"
-                    label="Underdogs Badge choreography preview"
-                  />
-                </div>
-              </div>
-            </div>
+            <React.Suspense fallback={null}>
+              <HomeAboutSection />
+            </React.Suspense>
 
             {/* Editorial Archive Header + Marquee ("Nights we've thrown") */}
             <div className="w-full pt-4 border-t border-[var(--paper)]/15 flex flex-col gap-2 overflow-hidden">
@@ -276,20 +120,23 @@ export function HomeView() {
                   </span>
                 </div>
               </div>
-              <Marquee items={site.home.nights.list} />
+              <React.Suspense fallback={null}>
+                <Marquee items={site.home.nights.list} />
+              </React.Suspense>
             </div>
           </div>
         </section>
 
         {/* H5 · This season & Choose a door (3D Doors + Tinted Flyer Backdrops + Lightbox) */}
         <section
-          ref={h5Ref}
           data-scene="H5"
           aria-label={site.home.worlds.label}
           className="scene-section scene-h5"
         >
           {/* DOM Twins for screen-projected keyboard & hover interaction */}
-          <DomTwins />
+          <React.Suspense fallback={null}>
+            <DomTwins />
+          </React.Suspense>
 
           <div className="scene-sticky-desktop relative z-[21] pointer-events-none flex flex-col justify-between pt-24 pb-8 lg:pt-24 lg:pb-10">
             <h2 className="sr-only">{site.home.worlds.label}</h2>
@@ -316,11 +163,7 @@ export function HomeView() {
             {/* Two Equal Door Portals aligned to 12-column grid */}
             <div className="site-container site-grid relative z-30 items-stretch gap-y-6 pt-2 pb-2 lg:pb-4">
               {/* Door 1: The Red Room */}
-              <div
-                className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-[280ms] ${
-                  hoverDoor === "diwali" ? "opacity-45" : "opacity-100"
-                }`}
-              >
+              <DoorColumn door="redroom">
                 <div className="group/door relative flex flex-col h-full justify-between rounded-sm overflow-hidden bg-[#080305]/90 border border-[var(--paper)]/15 hover:border-[#FF2A1F]/65 transition-all duration-[280ms] shadow-[0_20px_50px_rgba(0,0,0,0.75)]">
                   {/* Faint Tinted Official Flyer Backdrop behind Door 1 */}
                   <div
@@ -333,7 +176,7 @@ export function HomeView() {
                     }}
                   >
                     <Image
-                      src="/media/red-room-poster-1024.webp"
+                      src={assetUrl("/media/red-room-poster-1024.webp")}
                       alt=""
                       fill
                       sizes="(max-width: 1024px) 90vw, 580px"
@@ -348,10 +191,6 @@ export function HomeView() {
                     transitionType="T1"
                     origin="door"
                     aria-label={`Enter ${site.home.worlds.one.kicker}: ${site.home.worlds.one.name}, ${site.home.worlds.one.occasion}, Saturday 24 October 2026`}
-                    onMouseEnter={() => setHoverDoor("redroom")}
-                    onMouseLeave={() => setHoverDoor(null)}
-                    onFocus={() => setHoverDoor("redroom")}
-                    onBlur={() => setHoverDoor(null)}
                     className="relative z-10 pointer-events-auto flex flex-col gap-2.5 p-6 sm:p-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#FF2A1F]"
                   >
                     <div className="flex flex-col gap-2 text-left">
@@ -373,8 +212,6 @@ export function HomeView() {
                       href={site.home.worlds.one.href}
                       transitionType="T1"
                       origin="door"
-                      onMouseEnter={() => setHoverDoor("redroom")}
-                      onMouseLeave={() => setHoverDoor(null)}
                       className="pointer-events-auto min-h-[44px] inline-flex items-center gap-3 font-cinzel text-[12px] font-semibold uppercase tracking-[0.26em] text-[#FCF9FC] hover:text-[#FF2A1F] transition-colors"
                     >
                       <span>{site.home.worlds.one.cta}</span>
@@ -383,23 +220,16 @@ export function HomeView() {
                       </svg>
                     </TransitionLink>
 
-                    <button
-                      type="button"
-                      onClick={() => setActiveFlyer("redroom")}
+                    <FlyerTriggerButton
+                      world="redroom"
                       className="pointer-events-auto min-h-[44px] px-2 inline-flex items-center gap-1.5 font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FF968B]/85 hover:text-[#FF2A1F] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF2A1F]"
-                    >
-                      <span>View official flyer</span>
-                    </button>
+                    />
                   </div>
                 </div>
-              </div>
+              </DoorColumn>
 
               {/* Door 2: DHAMAAKA (Diwali) */}
-              <div
-                className={`col-span-4 md:col-span-4 lg:col-span-6 flex flex-col justify-end transition-opacity duration-[280ms] ${
-                  hoverDoor === "redroom" ? "opacity-45" : "opacity-100"
-                }`}
-              >
+              <DoorColumn door="diwali">
                 <div className="group/door relative flex flex-col h-full justify-between rounded-sm overflow-hidden bg-[#0A0408]/90 border border-[var(--paper)]/15 hover:border-[#E5B25D]/70 transition-all duration-[280ms] shadow-[0_20px_50px_rgba(0,0,0,0.75)]">
                   {/* Faint Tinted Official Flyer Backdrop behind Door 2 */}
                   <div
@@ -412,7 +242,7 @@ export function HomeView() {
                     }}
                   >
                     <Image
-                      src="/media/dhamaaka-flyer-1024.webp"
+                      src={assetUrl("/media/dhamaaka-flyer-1024.webp")}
                       alt=""
                       fill
                       sizes="(max-width: 1024px) 90vw, 580px"
@@ -427,10 +257,6 @@ export function HomeView() {
                     transitionType="T2"
                     origin="door"
                     aria-label={`Enter ${site.home.worlds.two.kicker}: ${site.home.worlds.two.name}, ${site.home.worlds.two.occasion}, Saturday 7 November 2026`}
-                    onMouseEnter={() => setHoverDoor("diwali")}
-                    onMouseLeave={() => setHoverDoor(null)}
-                    onFocus={() => setHoverDoor("diwali")}
-                    onBlur={() => setHoverDoor(null)}
                     className="relative z-10 pointer-events-auto flex flex-col gap-2.5 p-6 sm:p-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
                   >
                     <div className="flex flex-col gap-2 text-left">
@@ -457,8 +283,6 @@ export function HomeView() {
                       href={site.home.worlds.two.href}
                       transitionType="T2"
                       origin="door"
-                      onMouseEnter={() => setHoverDoor("diwali")}
-                      onMouseLeave={() => setHoverDoor(null)}
                       className="pointer-events-auto min-h-[44px] inline-flex items-center gap-3 font-cinzel text-[12px] font-semibold uppercase tracking-[0.26em] text-[#FFF6EE] hover:text-[#E5B25D] transition-colors"
                     >
                       <span>{site.home.worlds.two.cta}</span>
@@ -467,49 +291,23 @@ export function HomeView() {
                       </svg>
                     </TransitionLink>
 
-                    <button
-                      type="button"
-                      onClick={() => setActiveFlyer("diwali")}
+                    <FlyerTriggerButton
+                      world="diwali"
                       className="pointer-events-auto min-h-[44px] px-2 inline-flex items-center gap-1.5 font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#E5B25D]/85 hover:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
-                    >
-                      <span>View official flyer</span>
-                    </button>
+                    />
                   </div>
                 </div>
-              </div>
+              </DoorColumn>
             </div>
 
             <div className="site-container" aria-hidden="true" />
           </div>
         </section>
 
-        {/* Official Flyer Lightbox Modal */}
-        <OfficialFlyerLightbox
-          isOpen={activeFlyer !== null}
-          onClose={() => setActiveFlyer(null)}
-          flyer={
-            activeFlyer === "redroom"
-              ? {
-                  src: "/media/red-room-poster.webp",
-                  alt: site.redRoom.poster.alt,
-                  title: site.home.worlds.one.name,
-                  subtitle: `${site.home.worlds.one.occasion} · ${site.home.worlds.one.date}`,
-                  world: "redroom",
-                }
-              : activeFlyer === "diwali"
-                ? {
-                    src: "/media/dhamaaka-flyer.webp",
-                    alt: site.diwali.poster.alt,
-                    title: site.home.worlds.two.name,
-                    subtitle: `${site.home.worlds.two.occasion} · ${site.home.worlds.two.date}`,
-                    world: "diwali",
-                  }
-                : null
-          }
-        />
-
         {/* H6 · Footer */}
-        <Footer />
+        <React.Suspense fallback={null}>
+          <Footer />
+        </React.Suspense>
       </div>
     </main>
   );

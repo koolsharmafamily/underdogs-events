@@ -1,5 +1,7 @@
+import { assetUrl } from "@/utils/assetUrl";
 import type { Metadata } from 'next'
 import { site } from '@/content/site'
+import { diwaliFontVariables } from '@/theme/fonts'
 import { DiwaliView } from '@/sections/diwali/DiwaliView'
 import { JsonLd } from '@/ui/JsonLd'
 
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/media/dhamaaka-flyer.png',
+        url: assetUrl("/media/dhamaaka-flyer.png"),
         width: 1080,
         height: 1350,
         alt: site.diwali.poster.alt,
@@ -29,15 +31,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: site.diwali.meta.title,
     description: site.diwali.meta.description,
-    images: ['/media/dhamaaka-flyer.png'],
+    images: [assetUrl("/media/dhamaaka-flyer.png")],
   },
 }
 
 export default function DiwaliPage() {
   return (
-    <>
+    <div className={diwaliFontVariables}>
       <JsonLd page="diwali" />
       <DiwaliView />
-    </>
+    </div>
   )
 }

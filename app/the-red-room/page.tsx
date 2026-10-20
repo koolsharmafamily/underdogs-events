@@ -1,5 +1,7 @@
+import { assetUrl } from "@/utils/assetUrl";
 import type { Metadata } from 'next'
 import { site } from '@/content/site'
+import { redRoomFontVariables } from '@/theme/fonts'
 import { RedRoomView } from '@/sections/redroom/RedRoomView'
 import { JsonLd } from '@/ui/JsonLd'
 
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/media/og-red-room.png',
+        url: assetUrl("/media/og-red-room.png"),
         width: 1200,
         height: 630,
         alt: site.redRoom.poster.alt,
@@ -29,15 +31,15 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: site.redRoom.meta.title,
     description: site.redRoom.meta.description,
-    images: ['/media/og-red-room.png'],
+    images: [assetUrl("/media/og-red-room.png")],
   },
 }
 
 export default function RedRoomPage() {
   return (
-    <>
+    <div className={redRoomFontVariables}>
       <JsonLd page="redroom" />
       <RedRoomView />
-    </>
+    </div>
   )
 }

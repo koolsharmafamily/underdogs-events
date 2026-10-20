@@ -1,3 +1,4 @@
+import { assetUrl } from "@/utils/assetUrl";
 import type { Metadata } from 'next'
 import { site } from '@/content/site'
 import { HomeView } from '@/sections/home/HomeView'
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/media/og-home.png',
+        url: assetUrl("/media/og-home.png"),
         width: 1200,
         height: 630,
         alt: `${site.brand.name} — ${site.brand.line}`,
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: site.home.meta.title,
     description: site.home.meta.description,
-    images: ['/media/og-home.png'],
+    images: [assetUrl("/media/og-home.png")],
   },
 }
 

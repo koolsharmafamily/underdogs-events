@@ -109,7 +109,6 @@ export const coreFontVariables = [
   cinzel.variable,
   manrope.variable,
   jetbrainsMono.variable,
-  nosifer.variable,
 ].join(' ')
 
 export const redRoomFontVariables = [

@@ -1,11 +1,10 @@
+import { assetUrl } from "@/utils/assetUrl";
+import React from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "@/content/site.schema";
 import { site } from "@/content/site";
-import {
-  coreFontVariables,
-  redRoomFontVariables,
-  diwaliFontVariables,
-} from "@/theme/fonts";
+import { coreFontVariables } from "@/theme/fonts";
 import { Providers } from "@/ui/Providers";
 import { DomLoader } from "@/ui/DomLoader";
 import { Nav } from "@/ui/Nav";
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/media/og-home.png",
+        url: assetUrl("/media/og-home.png"),
         width: 1200,
         height: 630,
         alt: `${site.brand.name} — ${site.brand.line}`,
@@ -61,7 +60,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: site.home.meta.title,
     description: site.home.meta.description,
-    images: ["/media/og-home.png"],
+    images: [assetUrl("/media/og-home.png")],
   },
 };
 
@@ -75,7 +74,7 @@ export default function RootLayout({
       lang="en"
       data-world="home"
       data-motion="on"
-      className={`${coreFontVariables} ${redRoomFontVariables} ${diwaliFontVariables}`}
+      className={coreFontVariables}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
@@ -120,7 +119,7 @@ export default function RootLayout({
         <link
           rel="preload"
           as="image"
-          href="/media/badge-enamel-still-512.webp"
+          href={assetUrl("/media/badge-enamel-still-512.webp")}
           fetchPriority="high"
           type="image/webp"
         />

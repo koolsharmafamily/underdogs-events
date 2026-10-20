@@ -1,51 +1,16 @@
-"use client";
-
+import { assetUrl } from "@/utils/assetUrl";
 import { TransitionLink } from "@/ui/TransitionLink";
-import React, { useRef, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
-import { useDaysToGo } from "@/utils/useDaysToGo";
-import { OfficialFlyerLightbox } from "@/ui/OfficialFlyerLightbox";
+import {
+  DaysToGoBadge,
+  FlyerTriggerButton,
+  MobileAboutRunway,
+} from "./HomeClientIslands";
 
 export function MobileHomeFeed() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [activeFlyer, setActiveFlyer] = useState<"redroom" | "diwali" | null>(null);
-  const swipeContainerRef = useRef<HTMLDivElement>(null);
-
-  // Track smooth liquid scroll progress & active card index across statements
-  const handleScroll = () => {
-    if (!swipeContainerRef.current) return;
-    const container = swipeContainerRef.current;
-    const { scrollLeft, clientWidth } = container;
-    const cardWidth = clientWidth * 0.84 + 16;
-    const newIdx = Math.round(scrollLeft / cardWidth);
-    const bounded = Math.min(Math.max(0, newIdx), site.home.about.statements.length - 1);
-    if (bounded !== activeIndex) {
-      setActiveIndex(bounded);
-    }
-  };
-
-  const scrollToCard = (idx: number) => {
-    if (!swipeContainerRef.current) return;
-    const container = swipeContainerRef.current;
-    const cards = container.children;
-    if (cards[idx]) {
-      (cards[idx] as HTMLElement).scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
-      setActiveIndex(idx);
-      if (typeof navigator !== "undefined" && navigator.vibrate) {
-        navigator.vibrate(8);
-      }
-    }
-  };
-
-  const redRoomDays = useDaysToGo(site.home.worlds.one.isoDate);
-  const diwaliDays = useDaysToGo(site.home.worlds.two.isoDate);
-
   return (
     <div className="w-full flex flex-col pt-16 pb-[calc(108px+env(safe-area-inset-bottom,0px))] text-[#FCF9FC] select-none">
       {/* 1. Hero: 3D Enamel Badge centered between Underdogs Entertainment and Gate to Rage */}
@@ -85,109 +50,9 @@ export function MobileHomeFeed() {
       </section>
 
       {/* 2. "Who we are" — iPhone Liquid Glass Paging Runway */}
-      <section className="py-12 border-t border-white/10 flex flex-col gap-6">
-        <div className="px-5 flex items-center justify-between">
-          <h2 className="font-cinzel text-lg font-bold uppercase tracking-[0.2em] text-white">
-            {site.home.about.label}
-          </h2>
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">
-            0{activeIndex + 1} / 0{site.home.about.statements.length}
-          </span>
-        </div>
-
-        {/* Liquid Glass Runway with Apple iOS Snap Physics */}
-        <div
-          ref={swipeContainerRef}
-          onScroll={handleScroll}
-          className="flex overflow-x-auto no-scrollbar px-5 gap-4 snap-x snap-mandatory scroll-smooth overscroll-x-contain touch-pan-x"
-          style={{
-            WebkitOverflowScrolling: "touch",
-            scrollPaddingLeft: "1.25rem",
-            scrollPaddingRight: "1.25rem",
-          }}
-        >
-          {site.home.about.statements.map((stmt: string, idx: number) => (
-            <div
-              key={idx}
-              onClick={() => scrollToCard(idx)}
-              className="ui-liquid-glass group relative shrink-0 w-[84vw] max-w-[330px] snap-center p-6 sm:p-7 rounded-[28px] overflow-hidden flex flex-col justify-between gap-6 transition-transform duration-150 active:scale-[0.985] cursor-pointer"
-            >
-              {/* Apple Liquid Glass Specular Shimmer & Internal Ambient Caustic */}
-              <div
-                className="pointer-events-none absolute -top-12 -right-12 w-32 h-32 rounded-full bg-gradient-to-br from-[#EA28C1]/25 to-transparent blur-2xl"
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/50 to-transparent"
-                aria-hidden="true"
-              />
-              <div
-                className="pointer-events-none absolute inset-0 rounded-[28px] bg-gradient-to-tr from-transparent via-white/[0.03] to-transparent"
-                aria-hidden="true"
-              />
-
-              <div className="flex items-center justify-between relative z-10">
-                <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-[#EA28C1] font-bold">
-                  0{idx + 1} / 0{site.home.about.statements.length}
-                </span>
-                <span
-                  className="w-2 h-2 rounded-full bg-[#EA28C1] shadow-[0_0_10px_#EA28C1]"
-                  aria-hidden="true"
-                />
-              </div>
-
-              <p className="font-cinzel text-[16px] sm:text-[17px] font-bold leading-[1.45] tracking-wide text-[#FCF9FC] drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] relative z-10 balance-heading">
-                {stmt}
-              </p>
-
-              <div className="flex items-center justify-between pt-1 relative z-10">
-                <div
-                  className="w-10 h-[1.5px] rounded-full bg-gradient-to-r from-white/40 to-transparent group-hover:w-16 group-hover:from-[#EA28C1] transition-all duration-300"
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/45">
-                  Swipe →
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Floating Apple Liquid Glass Capsule Indicator */}
-        <div className="flex justify-center items-center pt-1" aria-hidden="true">
-          <div
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full"
-            style={{
-              background: "rgba(255, 255, 255, 0.08)",
-              backdropFilter: "blur(20px) saturate(180%)",
-              WebkitBackdropFilter: "blur(20px) saturate(180%)",
-              border: "1px solid rgba(255, 255, 255, 0.16)",
-              boxShadow: "inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.45)",
-            }}
-          >
-            {site.home.about.statements.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => scrollToCard(i)}
-                aria-label={`Jump to statement ${i + 1}`}
-                className={`transition-all duration-300 rounded-full cursor-pointer touch-manipulation ${
-                  activeIndex === i
-                    ? "w-7 h-1.5 bg-gradient-to-r from-[#EA28C1] to-[#FF6EC7] shadow-[0_0_10px_rgba(234,40,193,0.8)]"
-                    : "w-2 h-1.5 bg-white/30 hover:bg-white/50"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Body Paragraph */}
-        <div className="px-5 pt-1">
-          <p className="font-manrope text-[14px] leading-[1.65] text-[#FCF9FC]/80 font-normal pretty-copy">
-            {site.home.about.body}
-          </p>
-        </div>
-      </section>
+      <React.Suspense fallback={null}>
+        <MobileAboutRunway />
+      </React.Suspense>
 
       {/* 3. "Nights we've thrown" — Editorial Archive + Liquid Glass Pills */}
       <section className="py-12 border-t border-white/10 flex flex-col gap-4 overflow-hidden">
@@ -259,7 +124,7 @@ export function MobileHomeFeed() {
               }}
             >
               <Image
-                src="/media/red-room-poster-1024.webp"
+                src={assetUrl("/media/red-room-poster-1024.webp")}
                 alt=""
                 fill
                 sizes="(max-width: 768px) 92vw, 420px"
@@ -280,17 +145,16 @@ export function MobileHomeFeed() {
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
                 {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
               </span>
-              {redRoomDays && (
-                <span className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF1A35] font-mono text-[10px] uppercase tracking-wider font-bold">
-                  {redRoomDays}
-                </span>
-              )}
+              <DaysToGoBadge
+                isoDate={site.home.worlds.one.isoDate}
+                className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF1A35] font-mono text-[10px] uppercase tracking-wider font-bold"
+              />
             </div>
 
             {/* Artwork + Name in front */}
             <div className="relative z-10 pointer-events-none flex items-center gap-4">
               <Image
-                src="/media/badge-halloween-still.webp"
+                src={assetUrl("/media/badge-halloween-still.webp")}
                 alt="The Red Room badge"
                 width={64}
                 height={64}
@@ -318,17 +182,10 @@ export function MobileHomeFeed() {
 
             {/* Bottom Row: 44px+ "View official flyer" + CTA */}
             <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActiveFlyer("redroom");
-                }}
+              <FlyerTriggerButton
+                world="redroom"
                 className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FF968B]/85 hover:text-[#FF1A35] active:text-[#FF1A35] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF1A35]"
-              >
-                View official flyer
-              </button>
+              />
               <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
                 <span>{site.home.worlds.one.cta}</span>
                 <span>→</span>
@@ -349,7 +206,7 @@ export function MobileHomeFeed() {
               }}
             >
               <Image
-                src="/media/dhamaaka-flyer-1024.webp"
+                src={assetUrl("/media/dhamaaka-flyer-1024.webp")}
                 alt=""
                 fill
                 sizes="(max-width: 768px) 92vw, 420px"
@@ -370,17 +227,16 @@ export function MobileHomeFeed() {
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
                 {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
               </span>
-              {diwaliDays && (
-                <span className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold">
-                  {diwaliDays}
-                </span>
-              )}
+              <DaysToGoBadge
+                isoDate={site.home.worlds.two.isoDate}
+                className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold"
+              />
             </div>
 
             {/* Artwork + Name in front */}
             <div className="relative z-10 pointer-events-none flex items-center gap-4">
               <Image
-                src="/media/badge-jewelled-still.webp"
+                src={assetUrl("/media/badge-jewelled-still.webp")}
                 alt="DHAMAAKA Jewelled Badge"
                 width={64}
                 height={64}
@@ -401,17 +257,10 @@ export function MobileHomeFeed() {
 
             {/* Bottom Row: 44px+ "View official flyer" + CTA */}
             <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActiveFlyer("diwali");
-                }}
+              <FlyerTriggerButton
+                world="diwali"
                 className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#E5B25D]/85 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
-              >
-                View official flyer
-              </button>
+              />
               <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
                 <span>{site.home.worlds.two.cta}</span>
                 <span>→</span>
@@ -420,31 +269,6 @@ export function MobileHomeFeed() {
           </div>
         </div>
       </section>
-
-      {/* Official Flyer Lightbox Modal */}
-      <OfficialFlyerLightbox
-        isOpen={activeFlyer !== null}
-        onClose={() => setActiveFlyer(null)}
-        flyer={
-          activeFlyer === "redroom"
-            ? {
-                src: "/media/red-room-poster.webp",
-                alt: site.redRoom.poster.alt,
-                title: site.home.worlds.one.name,
-                subtitle: `${site.home.worlds.one.occasion} · ${site.home.worlds.one.date}`,
-                world: "redroom",
-              }
-            : activeFlyer === "diwali"
-              ? {
-                  src: "/media/dhamaaka-flyer.webp",
-                  alt: site.diwali.poster.alt,
-                  title: site.home.worlds.two.name,
-                  subtitle: `${site.home.worlds.two.occasion} · ${site.home.worlds.two.date}`,
-                  world: "diwali",
-                }
-              : null
-        }
-      />
 
       {/* 5. Footer Line & Social */}
       <footer className="pt-8 pb-4 text-center border-t border-white/10 px-5 flex flex-col items-center gap-2">
