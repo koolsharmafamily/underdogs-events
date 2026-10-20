@@ -1,0 +1,3344 @@
+{
+ "label": "optimized",
+ "profile": "mobile",
+ "results": [
+  {
+   "name": "loader -> home",
+   "ms": 3034,
+   "frames": 135,
+   "p50": 16.5,
+   "p95": 24.2,
+   "p99": 32.7,
+   "max": 154,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0203,
+   "programLinks": 11,
+   "textureUploads": 11,
+   "bigUploads": [
+    "texSubImage2D:1024:47ms",
+    "texSubImage2D:1024:152ms",
+    "texSubImage2D:512:24ms",
+    "texSubImage2D:512:49ms",
+    "texSubImage2D:256:9ms",
+    "texSubImage2D:512:22ms"
+   ],
+   "slowGl": [
+    "texSubImage2D:411ms"
+   ],
+   "afterLoader": false
+  },
+  {
+   "name": "scroll home",
+   "ms": 2719,
+   "frames": 149,
+   "p50": 16.3,
+   "p95": 27.2,
+   "p99": 90.3,
+   "max": 98.6,
+   "over33": 7,
+   "over50": 3,
+   "droppedRuns": 1,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 11429.70000000298,
+     "dur": 100.8999999910593,
+     "blocking": 0,
+     "render": 9.199999988079071,
+     "styleLayout": 1.199999988079071,
+     "scripts": [
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 11547.5,
+     "dur": 93.59999999403954,
+     "blocking": 0,
+     "render": 12.5,
+     "styleLayout": 1.2999999970197678,
+     "scripts": [
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom",
+   "ms": 2315,
+   "frames": 58,
+   "p50": 21,
+   "p95": 187.3,
+   "p99": 298.1,
+   "max": 298.1,
+   "over33": 18,
+   "over50": 10,
+   "droppedRuns": 4,
+   "loaf50": 5,
+   "worstLoaf": [
+    {
+     "t": 14379.70000000298,
+     "dur": 492,
+     "blocking": 438.4,
+     "render": 208,
+     "styleLayout": 10.600000008940697,
+     "scripts": [
+      {
+       "dur": 280,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 249
+      },
+      {
+       "dur": 195,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 90
+      }
+     ]
+    },
+    {
+     "t": 14891.20000000298,
+     "dur": 133.3999999910593,
+     "blocking": 72.9,
+     "render": 113.19999998807907,
+     "styleLayout": 6.899999991059303,
+     "scripts": [
+      {
+       "dur": 56,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 47,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "0e5-i6mvs2j1a.js:2040",
+       "forced": 46
+      }
+     ]
+    },
+    {
+     "t": 15040.79999999702,
+     "dur": 119.70000000298023,
+     "blocking": 35,
+     "render": 62.79999999701977,
+     "styleLayout": 44.79999999701977,
+     "scripts": [
+      {
+       "dur": 22,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      },
+      {
+       "dur": 14,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali",
+   "ms": 5355,
+   "frames": 181,
+   "p50": 22.3,
+   "p95": 52.9,
+   "p99": 248.3,
+   "max": 515.6,
+   "over33": 23,
+   "over50": 14,
+   "droppedRuns": 10,
+   "loaf50": 6,
+   "worstLoaf": [
+    {
+     "t": 17178.90000000596,
+     "dur": 509.79999999701977,
+     "blocking": 455.5,
+     "render": 6.5,
+     "styleLayout": 3.2999999970197678,
+     "scripts": [
+      {
+       "dur": 499,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 473
+      }
+     ]
+    },
+    {
+     "t": 17694.20000000298,
+     "dur": 308,
+     "blocking": 249.5,
+     "render": 92.90000000596046,
+     "styleLayout": 9.400000005960464,
+     "scripts": [
+      {
+       "dur": 206,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 169
+      },
+      {
+       "dur": 47,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "0e5-i6mvs2j1a.js:2040",
+       "forced": 46
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 18078.40000000596,
+     "dur": 70.79999999701977,
+     "blocking": 14.2,
+     "render": 63.29999999701977,
+     "styleLayout": 53.1000000089407,
+     "scripts": [
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom",
+   "ms": 2171,
+   "frames": 60,
+   "p50": 25.7,
+   "p95": 78.8,
+   "p99": 169.2,
+   "max": 169.2,
+   "over33": 22,
+   "over50": 10,
+   "droppedRuns": 4,
+   "loaf50": 8,
+   "worstLoaf": [
+    {
+     "t": 22276.90000000596,
+     "dur": 155.19999998807907,
+     "blocking": 92.3,
+     "render": 25.799999997019768,
+     "styleLayout": 3,
+     "scripts": [
+      {
+       "dur": 116,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 79
+      },
+      {
+       "dur": 11,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 22160.20000000298,
+     "dur": 102.8999999910593,
+     "blocking": 52,
+     "render": 17.19999998807907,
+     "styleLayout": 7.799999997019768,
+     "scripts": [
+      {
+       "dur": 85,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 57
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 22641.20000000298,
+     "dur": 71,
+     "blocking": 20.5,
+     "render": 70.29999999701977,
+     "styleLayout": 46.79999999701977,
+     "scripts": [
+      {
+       "dur": 13,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home",
+   "ms": 2100,
+   "frames": 79,
+   "p50": 22.1,
+   "p95": 45.6,
+   "p99": 160,
+   "max": 160,
+   "over33": 11,
+   "over50": 3,
+   "droppedRuns": 7,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 24305.40000000596,
+     "dur": 148.59999999403954,
+     "blocking": 89.4,
+     "render": 21.799999997019768,
+     "styleLayout": 5.200000002980232,
+     "scripts": [
+      {
+       "dur": 118,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 72
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 2
+      }
+     ]
+    },
+    {
+     "t": 24217.40000000596,
+     "dur": 75.19999998807907,
+     "blocking": 24.6,
+     "render": 15.699999988079071,
+     "styleLayout": 4.5999999940395355,
+     "scripts": [
+      {
+       "dur": 59,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 47
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali",
+   "ms": 3770,
+   "frames": 129,
+   "p50": 21.9,
+   "p95": 70.2,
+   "p99": 150.2,
+   "max": 268.3,
+   "over33": 23,
+   "over50": 11,
+   "droppedRuns": 4,
+   "loaf50": 7,
+   "worstLoaf": [
+    {
+     "t": 26883.79999999702,
+     "dur": 242.6000000089407,
+     "blocking": 180.6,
+     "render": 40,
+     "styleLayout": 4.300000011920929,
+     "scripts": [
+      {
+       "dur": 190,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 157
+      },
+      {
+       "dur": 12,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 10,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 1
+      }
+     ]
+    },
+    {
+     "t": 26694.09999999404,
+     "dur": 161,
+     "blocking": 109.9,
+     "render": 23.099999994039536,
+     "styleLayout": 10.299999997019768,
+     "scripts": [
+      {
+       "dur": 136,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 113
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 27191.90000000596,
+     "dur": 69.79999999701977,
+     "blocking": 19.2,
+     "render": 67.6000000089407,
+     "styleLayout": 51.5,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home",
+   "ms": 2026,
+   "frames": 72,
+   "p50": 25.8,
+   "p95": 49.5,
+   "p99": 117.7,
+   "max": 117.7,
+   "over33": 13,
+   "over50": 3,
+   "droppedRuns": 5,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 30746.09999999404,
+     "dur": 119.70000000298023,
+     "blocking": 60.3,
+     "render": 32.8999999910593,
+     "styleLayout": 3,
+     "scripts": [
+      {
+       "dur": 77,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 42
+      },
+      {
+       "dur": 23,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 2
+      }
+     ]
+    },
+    {
+     "t": 30644.59999999404,
+     "dur": 86.90000000596046,
+     "blocking": 36.2,
+     "render": 13,
+     "styleLayout": 8.099999994039536,
+     "scripts": [
+      {
+       "dur": 73,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 47
+      }
+     ]
+    }
+   ],
+   "cls": 0.0053,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back",
+   "ms": 1889,
+   "frames": 43,
+   "p50": 25.4,
+   "p95": 83.7,
+   "p99": 105.7,
+   "max": 105.7,
+   "over33": 17,
+   "over50": 7,
+   "droppedRuns": 2,
+   "loaf50": 5,
+   "worstLoaf": [
+    {
+     "t": 32731,
+     "dur": 76.20000000298023,
+     "blocking": 25.1,
+     "render": 74.79999999701977,
+     "styleLayout": 43.29999999701977,
+     "scripts": [
+      {
+       "dur": 26,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 32558.70000000298,
+     "dur": 69.5,
+     "blocking": 15,
+     "render": 61.70000000298023,
+     "styleLayout": 3.6000000089406967,
+     "scripts": [
+      {
+       "dur": 44,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9164",
+       "forced": 41
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 33062.70000000298,
+     "dur": 69.29999999701977,
+     "blocking": 18.9,
+     "render": 68.90000000596046,
+     "styleLayout": 23,
+     "scripts": [
+      {
+       "dur": 24,
+       "invoker": "#document.ontransitionend",
+       "fn": "fq",
+       "src": "0s7mvllxht1mo.js:214004",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward",
+   "ms": 1745,
+   "frames": 64,
+   "p50": 18.4,
+   "p95": 43.5,
+   "p99": 276.6,
+   "max": 276.6,
+   "over33": 9,
+   "over50": 3,
+   "droppedRuns": 2,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 34026.20000000298,
+     "dur": 290.8999999910593,
+     "blocking": 237.5,
+     "render": 33.3999999910593,
+     "styleLayout": 10.199999988079071,
+     "scripts": [
+      {
+       "dur": 233,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "r",
+       "src": "0s7mvllxht1mo.js:11059",
+       "forced": 116
+      },
+      {
+       "dur": 18,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "e",
+       "src": "09_00-w9ek5qj.js:26727",
+       "forced": 4
+      },
+      {
+       "dur": 18,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 2
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events",
+   "ms": 2254,
+   "frames": 114,
+   "p50": 16.5,
+   "p95": 24.7,
+   "p99": 106.9,
+   "max": 155.7,
+   "over33": 3,
+   "over50": 3,
+   "droppedRuns": 1,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 36400.5,
+     "dur": 150.20000000298023,
+     "blocking": 0,
+     "render": 12.299999997019768,
+     "styleLayout": 1.4000000059604645,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9164",
+       "forced": 7
+      }
+     ]
+    },
+    {
+     "t": 36215.09999999404,
+     "dur": 115.30000001192093,
+     "blocking": 64.2,
+     "render": 21.900000005960464,
+     "styleLayout": 8.100000008940697,
+     "scripts": [
+      {
+       "dur": 92,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 68
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 36345.20000000298,
+     "dur": 50.599999994039536,
+     "blocking": 0,
+     "render": 12.5,
+     "styleLayout": 0.8999999910593033,
+     "scripts": [
+      {
+       "dur": 20,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 2
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 8
+      },
+      {
+       "dur": 6,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0048,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom",
+   "ms": 2203,
+   "frames": 82,
+   "p50": 17.9,
+   "p95": 65.7,
+   "p99": 151.1,
+   "max": 151.1,
+   "over33": 17,
+   "over50": 6,
+   "droppedRuns": 2,
+   "loaf50": 5,
+   "worstLoaf": [
+    {
+     "t": 38559.40000000596,
+     "dur": 126.5,
+     "blocking": 68.5,
+     "render": 6.800000011920929,
+     "styleLayout": 0.7000000029802322,
+     "scripts": [
+      {
+       "dur": 112,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 83
+      },
+      {
+       "dur": 7,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 38441.59999999404,
+     "dur": 97.1000000089407,
+     "blocking": 46.6,
+     "render": 8.700000002980232,
+     "styleLayout": 6.600000008940697,
+     "scripts": [
+      {
+       "dur": 88,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 65
+      }
+     ]
+    },
+    {
+     "t": 38856.5,
+     "dur": 68.09999999403954,
+     "blocking": 17.3,
+     "render": 65.8999999910593,
+     "styleLayout": 53.69999998807907,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events",
+   "ms": 2101,
+   "frames": 82,
+   "p50": 17.5,
+   "p95": 59.7,
+   "p99": 94.2,
+   "max": 94.2,
+   "over33": 18,
+   "over50": 7,
+   "droppedRuns": 5,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 40754.79999999702,
+     "dur": 77.79999999701977,
+     "blocking": 12.9,
+     "render": 6.699999988079071,
+     "styleLayout": 2.5999999940395355,
+     "scripts": [
+      {
+       "dur": 55,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 35
+      },
+      {
+       "dur": 12,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 40670.20000000298,
+     "dur": 71.09999999403954,
+     "blocking": 20.1,
+     "render": 10.399999991059303,
+     "styleLayout": 3.5999999940395355,
+     "scripts": [
+      {
+       "dur": 59,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 35
+      }
+     ]
+    },
+    {
+     "t": 40908.29999999702,
+     "dur": 60.70000000298023,
+     "blocking": 9.4,
+     "render": 56.900000005960464,
+     "styleLayout": 52.900000005960464,
+     "scripts": []
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali",
+   "ms": 3616,
+   "frames": 127,
+   "p50": 21.1,
+   "p95": 76.2,
+   "p99": 169.1,
+   "max": 247.1,
+   "over33": 14,
+   "over50": 11,
+   "droppedRuns": 6,
+   "loaf50": 7,
+   "worstLoaf": [
+    {
+     "t": 42916,
+     "dur": 229,
+     "blocking": 170.5,
+     "render": 42.099999994039536,
+     "styleLayout": 6.200000002980232,
+     "scripts": [
+      {
+       "dur": 178,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 153
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 4
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 42706.29999999702,
+     "dur": 179.29999999701977,
+     "blocking": 117.9,
+     "render": 15,
+     "styleLayout": 12.099999994039536,
+     "scripts": [
+      {
+       "dur": 153,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 125
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 43436,
+     "dur": 85.79999999701977,
+     "blocking": 35,
+     "render": 85,
+     "styleLayout": 41.3999999910593,
+     "scripts": [
+      {
+       "dur": 35,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b)",
+   "ms": 2308,
+   "frames": 87,
+   "p50": 22,
+   "p95": 40.9,
+   "p99": 193.9,
+   "max": 193.9,
+   "over33": 12,
+   "over50": 3,
+   "droppedRuns": 5,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 46681.79999999702,
+     "dur": 165.90000000596046,
+     "blocking": 96.3,
+     "render": 18.900000005960464,
+     "styleLayout": 4.200000002980232,
+     "scripts": [
+      {
+       "dur": 128,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 85
+      },
+      {
+       "dur": 12,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      }
+     ]
+    },
+    {
+     "t": 46551,
+     "dur": 106.70000000298023,
+     "blocking": 52.9,
+     "render": 22.600000008940697,
+     "styleLayout": 9.600000008940697,
+     "scripts": [
+      {
+       "dur": 80,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 61
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 2
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "tab home -> mr-dog",
+   "ms": 2089,
+   "frames": 115,
+   "p50": 16.5,
+   "p95": 24.4,
+   "p99": 62.8,
+   "max": 81.4,
+   "over33": 3,
+   "over50": 2,
+   "droppedRuns": 1,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 49543.90000000596,
+     "dur": 85,
+     "blocking": 34.1,
+     "render": 13.400000005960464,
+     "styleLayout": 4.800000011920929,
+     "scripts": [
+      {
+       "dur": 70,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 51
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 49637.90000000596,
+     "dur": 55.29999999701977,
+     "blocking": 0,
+     "render": 13.200000002980232,
+     "styleLayout": 2.2999999970197678,
+     "scripts": [
+      {
+       "dur": 19,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 1
+      },
+      {
+       "dur": 11,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 7
+      },
+      {
+       "dur": 5,
+       "invoker": "http://localhost:3007/_next/static/chunks/2shpb4cy1s41t.js",
+       "fn": "",
+       "src": "2shpb4cy1s41t.js:0",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0023,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "mr-dog typing",
+   "ms": 2262,
+   "frames": 129,
+   "p50": 16.4,
+   "p95": 25.5,
+   "p99": 28.5,
+   "max": 41.8,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "tab mr-dog -> events",
+   "ms": 1816,
+   "frames": 108,
+   "p50": 16.5,
+   "p95": 21.8,
+   "p99": 25.1,
+   "max": 34.9,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "tab events -> home",
+   "ms": 2003,
+   "frames": 107,
+   "p50": 16.5,
+   "p95": 26.8,
+   "p99": 70.9,
+   "max": 70.9,
+   "over33": 4,
+   "over50": 2,
+   "droppedRuns": 2,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 55646.29999999702,
+     "dur": 70.40000000596046,
+     "blocking": 18.4,
+     "render": 8.400000005960464,
+     "styleLayout": 1.6000000089406967,
+     "scripts": [
+      {
+       "dur": 60,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 45
+      }
+     ]
+    },
+    {
+     "t": 55742.5,
+     "dur": 55.20000000298023,
+     "blocking": 0,
+     "render": 14.799999997019768,
+     "styleLayout": 1.4000000059604645,
+     "scripts": [
+      {
+       "dur": 22,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 3
+      },
+      {
+       "dur": 12,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      }
+     ]
+    }
+   ],
+   "cls": 0.0044,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom #2",
+   "ms": 2353,
+   "frames": 81,
+   "p50": 19.5,
+   "p95": 74.1,
+   "p99": 152.4,
+   "max": 152.4,
+   "over33": 19,
+   "over50": 10,
+   "droppedRuns": 2,
+   "loaf50": 6,
+   "worstLoaf": [
+    {
+     "t": 57945.79999999702,
+     "dur": 149.29999999701977,
+     "blocking": 90.5,
+     "render": 45,
+     "styleLayout": 1.5,
+     "scripts": [
+      {
+       "dur": 96,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 71
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "#document.ontransitionrun",
+       "fn": "fq",
+       "src": "0s7mvllxht1mo.js:214004",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 57825.09999999404,
+     "dur": 107.70000000298023,
+     "blocking": 57.4,
+     "render": 12.5,
+     "styleLayout": 2.2999999970197678,
+     "scripts": [
+      {
+       "dur": 95,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 78
+      }
+     ]
+    },
+    {
+     "t": 58167.20000000298,
+     "dur": 73.09999999403954,
+     "blocking": 19.6,
+     "render": 65.3999999910593,
+     "styleLayout": 50.3999999910593,
+     "scripts": [
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali #2",
+   "ms": 5564,
+   "frames": 220,
+   "p50": 20.5,
+   "p95": 51.8,
+   "p99": 109.3,
+   "max": 272.1,
+   "over33": 19,
+   "over50": 13,
+   "droppedRuns": 7,
+   "loaf50": 6,
+   "worstLoaf": [
+    {
+     "t": 60470.59999999404,
+     "dur": 294.1000000089407,
+     "blocking": 236.1,
+     "render": 86.70000000298023,
+     "styleLayout": 2.5,
+     "scripts": [
+      {
+       "dur": 199,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 158
+      },
+      {
+       "dur": 28,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 17,
+       "invoker": "FrameRequestCallback",
+       "fn": "w",
+       "src": "3ip877k90tnwb.js:16943",
+       "forced": 0
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "0e5-i6mvs2j1a.js:2040",
+       "forced": 8
+      }
+     ]
+    },
+    {
+     "t": 60272.79999999702,
+     "dur": 173.90000000596046,
+     "blocking": 122.5,
+     "render": 21,
+     "styleLayout": 2.7999999970197678,
+     "scripts": [
+      {
+       "dur": 151,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 125
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 60791.59999999404,
+     "dur": 64.6000000089407,
+     "blocking": 0,
+     "render": 46.400000005960464,
+     "styleLayout": 7.700000002980232,
+     "scripts": [
+      {
+       "dur": 30,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom #2",
+   "ms": 2367,
+   "frames": 76,
+   "p50": 21.7,
+   "p95": 70.1,
+   "p99": 170.7,
+   "max": 170.7,
+   "over33": 20,
+   "over50": 9,
+   "droppedRuns": 3,
+   "loaf50": 6,
+   "worstLoaf": [
+    {
+     "t": 65927.40000000596,
+     "dur": 165.8999999910593,
+     "blocking": 105,
+     "render": 34.099999994039536,
+     "styleLayout": 1.5999999940395355,
+     "scripts": [
+      {
+       "dur": 121,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 85
+      },
+      {
+       "dur": 12,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 3
+      }
+     ]
+    },
+    {
+     "t": 65782.09999999404,
+     "dur": 129.1000000089407,
+     "blocking": 77.5,
+     "render": 18.100000008940697,
+     "styleLayout": 2.6000000089406967,
+     "scripts": [
+      {
+       "dur": 109,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 83
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 66298.5,
+     "dur": 62,
+     "blocking": 9.9,
+     "render": 59,
+     "styleLayout": 45.29999999701977,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home #2",
+   "ms": 2328,
+   "frames": 89,
+   "p50": 17.9,
+   "p95": 49.6,
+   "p99": 160.3,
+   "max": 160.3,
+   "over33": 18,
+   "over50": 4,
+   "droppedRuns": 3,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 68296.29999999702,
+     "dur": 144.5,
+     "blocking": 74.8,
+     "render": 23.899999991059303,
+     "styleLayout": 1.5,
+     "scripts": [
+      {
+       "dur": 101,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 62
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      },
+      {
+       "dur": 7,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 68167.29999999702,
+     "dur": 106.6000000089407,
+     "blocking": 54.8,
+     "render": 19,
+     "styleLayout": 2.4000000059604645,
+     "scripts": [
+      {
+       "dur": 86,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 59
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 68760.29999999702,
+     "dur": 57,
+     "blocking": 6.3,
+     "render": 55.8999999910593,
+     "styleLayout": 2.8999999910593033,
+     "scripts": [
+      {
+       "dur": 52,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 25
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali #2",
+   "ms": 3544,
+   "frames": 105,
+   "p50": 25.4,
+   "p95": 70.1,
+   "p99": 190.1,
+   "max": 251.9,
+   "over33": 21,
+   "over50": 14,
+   "droppedRuns": 7,
+   "loaf50": 7,
+   "worstLoaf": [
+    {
+     "t": 71202.40000000596,
+     "dur": 220.19999998807907,
+     "blocking": 163.7,
+     "render": 39.29999999701977,
+     "styleLayout": 3.5,
+     "scripts": [
+      {
+       "dur": 175,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 151
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 70988,
+     "dur": 181.79999999701977,
+     "blocking": 131,
+     "render": 29.299999997019768,
+     "styleLayout": 1.5999999940395355,
+     "scripts": [
+      {
+       "dur": 152,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 124
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 71508.90000000596,
+     "dur": 74.59999999403954,
+     "blocking": 22.1,
+     "render": 70.5,
+     "styleLayout": 56.400000005960464,
+     "scripts": [
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home #2",
+   "ms": 2230,
+   "frames": 64,
+   "p50": 28.3,
+   "p95": 54.3,
+   "p99": 212,
+   "max": 212,
+   "over33": 24,
+   "over50": 6,
+   "droppedRuns": 5,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 74772,
+     "dur": 313.59999999403954,
+     "blocking": 262.4,
+     "render": 187.8999999910593,
+     "styleLayout": 4.699999988079071,
+     "scripts": [
+      {
+       "dur": 174,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 99
+      },
+      {
+       "dur": 124,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 93
+      }
+     ]
+    }
+   ],
+   "cls": 0.0051,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back #2",
+   "ms": 2028,
+   "frames": 41,
+   "p50": 28.6,
+   "p95": 85.5,
+   "p99": 100.1,
+   "max": 100.1,
+   "over33": 14,
+   "over50": 7,
+   "droppedRuns": 3,
+   "loaf50": 6,
+   "worstLoaf": [
+    {
+     "t": 77086.40000000596,
+     "dur": 75.19999998807907,
+     "blocking": 24.5,
+     "render": 74.19999998807907,
+     "styleLayout": 45.3999999910593,
+     "scripts": [
+      {
+       "dur": 21,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 76994.90000000596,
+     "dur": 73.79999999701977,
+     "blocking": 17.1,
+     "render": 66.20000000298023,
+     "styleLayout": 50.70000000298023,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 76903.5,
+     "dur": 73.5,
+     "blocking": 19.4,
+     "render": 67,
+     "styleLayout": 3.0999999940395355,
+     "scripts": [
+      {
+       "dur": 50,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9164",
+       "forced": 46
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0047,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward #2",
+   "ms": 1733,
+   "frames": 60,
+   "p50": 17.5,
+   "p95": 53.7,
+   "p99": 265.2,
+   "max": 265.2,
+   "over33": 15,
+   "over50": 3,
+   "droppedRuns": 2,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 78394.5,
+     "dur": 269.5,
+     "blocking": 218.4,
+     "render": 26.799999997019768,
+     "styleLayout": 1.5999999940395355,
+     "scripts": [
+      {
+       "dur": 225,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "r",
+       "src": "0s7mvllxht1mo.js:11059",
+       "forced": 121
+      },
+      {
+       "dur": 13,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "e",
+       "src": "09_00-w9ek5qj.js:26727",
+       "forced": 5
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events #2",
+   "ms": 1967,
+   "frames": 110,
+   "p50": 16.5,
+   "p95": 24.5,
+   "p99": 44.2,
+   "max": 78.3,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 80482.90000000596,
+     "dur": 76.69999998807907,
+     "blocking": 25.9,
+     "render": 10.099999994039536,
+     "styleLayout": 1.7999999970197678,
+     "scripts": [
+      {
+       "dur": 66,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 47
+      }
+     ]
+    }
+   ],
+   "cls": 0.0041,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom #2",
+   "ms": 2298,
+   "frames": 84,
+   "p50": 17.6,
+   "p95": 69.2,
+   "p99": 177.8,
+   "max": 177.8,
+   "over33": 16,
+   "over50": 12,
+   "droppedRuns": 2,
+   "loaf50": 10,
+   "worstLoaf": [
+    {
+     "t": 82621.59999999404,
+     "dur": 175.40000000596046,
+     "blocking": 114.6,
+     "render": 37.70000000298023,
+     "styleLayout": 1.4000000059604645,
+     "scripts": [
+      {
+       "dur": 127,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 102
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 2
+      }
+     ]
+    },
+    {
+     "t": 82507.20000000298,
+     "dur": 96.29999999701977,
+     "blocking": 39.2,
+     "render": 11.099999994039536,
+     "styleLayout": 1.5,
+     "scripts": [
+      {
+       "dur": 78,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 60
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 83184.09999999404,
+     "dur": 58.900000005960464,
+     "blocking": 7.9,
+     "render": 57.5,
+     "styleLayout": 29.099999994039536,
+     "scripts": [
+      {
+       "dur": 23,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events #2",
+   "ms": 2187,
+   "frames": 92,
+   "p50": 19.1,
+   "p95": 50.3,
+   "p99": 125.1,
+   "max": 125.1,
+   "over33": 10,
+   "over50": 5,
+   "droppedRuns": 4,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 85011,
+     "dur": 108.90000000596046,
+     "blocking": 40.9,
+     "render": 14.5,
+     "styleLayout": 1.2000000029802322,
+     "scripts": [
+      {
+       "dur": 76,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 44
+      },
+      {
+       "dur": 8,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 84916.5,
+     "dur": 83.70000000298023,
+     "blocking": 31.6,
+     "render": 17,
+     "styleLayout": 2.6000000089406967,
+     "scripts": [
+      {
+       "dur": 64,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 44
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali #2",
+   "ms": 3654,
+   "frames": 128,
+   "p50": 21,
+   "p95": 74.8,
+   "p99": 166,
+   "max": 228.2,
+   "over33": 18,
+   "over50": 12,
+   "droppedRuns": 4,
+   "loaf50": 8,
+   "worstLoaf": [
+    {
+     "t": 87217.90000000596,
+     "dur": 223.8999999910593,
+     "blocking": 168.5,
+     "render": 48.20000000298023,
+     "styleLayout": 3.0999999940395355,
+     "scripts": [
+      {
+       "dur": 170,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 139
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 5
+      }
+     ]
+    },
+    {
+     "t": 87027.5,
+     "dur": 165.09999999403954,
+     "blocking": 114.4,
+     "render": 16.399999991059303,
+     "styleLayout": 1.3999999910593033,
+     "scripts": [
+      {
+       "dur": 148,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 125
+      }
+     ]
+    },
+    {
+     "t": 87499.90000000596,
+     "dur": 80.69999998807907,
+     "blocking": 7.1,
+     "render": 56,
+     "styleLayout": 38.8999999910593,
+     "scripts": [
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b) #2",
+   "ms": 2208,
+   "frames": 78,
+   "p50": 24.1,
+   "p95": 45.6,
+   "p99": 162.4,
+   "max": 162.4,
+   "over33": 16,
+   "over50": 3,
+   "droppedRuns": 6,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 90918.29999999702,
+     "dur": 142.40000000596046,
+     "blocking": 90.4,
+     "render": 23.200000002980232,
+     "styleLayout": 1.4000000059604645,
+     "scripts": [
+      {
+       "dur": 117,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 91
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9164",
+       "forced": 3
+      }
+     ]
+    },
+    {
+     "t": 91086.90000000596,
+     "dur": 134.8999999910593,
+     "blocking": 68,
+     "render": 18,
+     "styleLayout": 3.2999999970197678,
+     "scripts": [
+      {
+       "dur": 100,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 65
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      },
+      {
+       "dur": 6,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 91314,
+     "dur": 50,
+     "blocking": 0,
+     "render": 48.70000000298023,
+     "styleLayout": 3.5999999940395355,
+     "scripts": [
+      {
+       "dur": 43,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 21
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom #3",
+   "ms": 2350,
+   "frames": 84,
+   "p50": 18.6,
+   "p95": 72.1,
+   "p99": 159.2,
+   "max": 159.2,
+   "over33": 18,
+   "over50": 8,
+   "droppedRuns": 1,
+   "loaf50": 7,
+   "worstLoaf": [
+    {
+     "t": 93580.20000000298,
+     "dur": 143.70000000298023,
+     "blocking": 87.3,
+     "render": 22.900000005960464,
+     "styleLayout": 1,
+     "scripts": [
+      {
+       "dur": 115,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 88
+      }
+     ]
+    },
+    {
+     "t": 93459.20000000298,
+     "dur": 104,
+     "blocking": 52.2,
+     "render": 19.100000008940697,
+     "styleLayout": 2.1000000089406967,
+     "scripts": [
+      {
+       "dur": 83,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 64
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 93794.5,
+     "dur": 66.29999999701977,
+     "blocking": 15.6,
+     "render": 64.79999999701977,
+     "styleLayout": 51.3999999910593,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali #3",
+   "ms": 5761,
+   "frames": 223,
+   "p50": 21.6,
+   "p95": 54.1,
+   "p99": 81.7,
+   "max": 249.1,
+   "over33": 21,
+   "over50": 12,
+   "droppedRuns": 9,
+   "loaf50": 9,
+   "worstLoaf": [
+    {
+     "t": 96013.5,
+     "dur": 228.29999999701977,
+     "blocking": 164.6,
+     "render": 43.79999999701977,
+     "styleLayout": 2.0999999940395355,
+     "scripts": [
+      {
+       "dur": 171,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 141
+      },
+      {
+       "dur": 9,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 3
+      }
+     ]
+    },
+    {
+     "t": 95823.59999999404,
+     "dur": 160.1000000089407,
+     "blocking": 109.2,
+     "render": 25.600000008940697,
+     "styleLayout": 1.7999999970197678,
+     "scripts": [
+      {
+       "dur": 134,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 110
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 96366.59999999404,
+     "dur": 62.70000000298023,
+     "blocking": 12.6,
+     "render": 61,
+     "styleLayout": 49,
+     "scripts": []
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom #3",
+   "ms": 2457,
+   "frames": 80,
+   "p50": 19.3,
+   "p95": 80.1,
+   "p99": 186.9,
+   "max": 186.9,
+   "over33": 20,
+   "over50": 11,
+   "droppedRuns": 1,
+   "loaf50": 7,
+   "worstLoaf": [
+    {
+     "t": 101826.29999999702,
+     "dur": 179.5,
+     "blocking": 118.7,
+     "render": 35.3999999910593,
+     "styleLayout": 1.0999999940395355,
+     "scripts": [
+      {
+       "dur": 133,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 100
+      },
+      {
+       "dur": 11,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 4
+      }
+     ]
+    },
+    {
+     "t": 101677.90000000596,
+     "dur": 128.59999999403954,
+     "blocking": 78.1,
+     "render": 19.099999994039536,
+     "styleLayout": 1.9000000059604645,
+     "scripts": [
+      {
+       "dur": 109,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 85
+      }
+     ]
+    },
+    {
+     "t": 102224.20000000298,
+     "dur": 68,
+     "blocking": 16.6,
+     "render": 66,
+     "styleLayout": 54,
+     "scripts": [
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0003,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home #3",
+   "ms": 2264,
+   "frames": 86,
+   "p50": 18.5,
+   "p95": 56.9,
+   "p99": 163.2,
+   "max": 163.2,
+   "over33": 14,
+   "over50": 6,
+   "droppedRuns": 2,
+   "loaf50": 4,
+   "worstLoaf": [
+    {
+     "t": 104202,
+     "dur": 147.59999999403954,
+     "blocking": 84.2,
+     "render": 24.19999998807907,
+     "styleLayout": 1.199999988079071,
+     "scripts": [
+      {
+       "dur": 110,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 68
+      },
+      {
+       "dur": 12,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      }
+     ]
+    },
+    {
+     "t": 104064,
+     "dur": 116.29999999701977,
+     "blocking": 65.6,
+     "render": 19,
+     "styleLayout": 2.0999999940395355,
+     "scripts": [
+      {
+       "dur": 97,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 73
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 104842.79999999702,
+     "dur": 66.20000000298023,
+     "blocking": 15.8,
+     "render": 65.70000000298023,
+     "styleLayout": 2.2999999970197678,
+     "scripts": [
+      {
+       "dur": 61,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 20
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali #3",
+   "ms": 3801,
+   "frames": 135,
+   "p50": 21.6,
+   "p95": 65.6,
+   "p99": 174,
+   "max": 250.9,
+   "over33": 17,
+   "over50": 9,
+   "droppedRuns": 4,
+   "loaf50": 5,
+   "worstLoaf": [
+    {
+     "t": 107020.70000000298,
+     "dur": 237.8999999910593,
+     "blocking": 180.9,
+     "render": 55.8999999910593,
+     "styleLayout": 2.3999999910593033,
+     "scripts": [
+      {
+       "dur": 175,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 141
+      },
+      {
+       "dur": 13,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 2
+      }
+     ]
+    },
+    {
+     "t": 106818.70000000298,
+     "dur": 173.79999999701977,
+     "blocking": 123.2,
+     "render": 22.5,
+     "styleLayout": 2.2000000029802322,
+     "scripts": [
+      {
+       "dur": 150,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 133
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 107539.59999999404,
+     "dur": 57.70000000298023,
+     "blocking": 6.8,
+     "render": 56.29999999701977,
+     "styleLayout": 41.5,
+     "scripts": [
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home #3",
+   "ms": 2138,
+   "frames": 71,
+   "p50": 24.2,
+   "p95": 49.3,
+   "p99": 160.6,
+   "max": 160.6,
+   "over33": 22,
+   "over50": 2,
+   "droppedRuns": 5,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 110965,
+     "dur": 151.29999999701977,
+     "blocking": 90.1,
+     "render": 31.099999994039536,
+     "styleLayout": 1.5999999940395355,
+     "scripts": [
+      {
+       "dur": 108,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 72
+      },
+      {
+       "dur": 21,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 2
+      },
+      {
+       "dur": 8,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 110817.5,
+     "dur": 122.5,
+     "blocking": 71.6,
+     "render": 19.200000002980232,
+     "styleLayout": 2.7000000029802322,
+     "scripts": [
+      {
+       "dur": 102,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 77
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0053,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back #3",
+   "ms": 1724,
+   "frames": 41,
+   "p50": 24.7,
+   "p95": 67.2,
+   "p99": 78.9,
+   "max": 78.9,
+   "over33": 15,
+   "over50": 10,
+   "droppedRuns": 1,
+   "loaf50": 4,
+   "worstLoaf": [
+    {
+     "t": 112700.79999999702,
+     "dur": 62.70000000298023,
+     "blocking": 9.5,
+     "render": 58.29999999701977,
+     "styleLayout": 4,
+     "scripts": [
+      {
+       "dur": 41,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9164",
+       "forced": 37
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 113028.20000000298,
+     "dur": 54,
+     "blocking": 3.6,
+     "render": 53.400000005960464,
+     "styleLayout": 42.29999999701977,
+     "scripts": []
+    },
+    {
+     "t": 113210.29999999702,
+     "dur": 52.6000000089407,
+     "blocking": 1.6,
+     "render": 51.400000005960464,
+     "styleLayout": 30.30000001192093,
+     "scripts": [
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward #3",
+   "ms": 1730,
+   "frames": 60,
+   "p50": 19.4,
+   "p95": 48.5,
+   "p99": 251.9,
+   "max": 251.9,
+   "over33": 14,
+   "over50": 2,
+   "droppedRuns": 3,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 114139.29999999702,
+     "dur": 245.6000000089407,
+     "blocking": 194.7,
+     "render": 25.80000001192093,
+     "styleLayout": 2,
+     "scripts": [
+      {
+       "dur": 205,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "r",
+       "src": "0s7mvllxht1mo.js:11059",
+       "forced": 128
+      },
+      {
+       "dur": 12,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "e",
+       "src": "09_00-w9ek5qj.js:26727",
+       "forced": 3
+      },
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 1
+      }
+     ]
+    },
+    {
+     "t": 114551,
+     "dur": 86.09999999403954,
+     "blocking": 33.2,
+     "render": 83,
+     "styleLayout": 1.2999999970197678,
+     "scripts": [
+      {
+       "dur": 79,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 40
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events #3",
+   "ms": 2017,
+   "frames": 113,
+   "p50": 16.5,
+   "p95": 24.5,
+   "p99": 49.6,
+   "max": 88.7,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 116233.20000000298,
+     "dur": 85.59999999403954,
+     "blocking": 34,
+     "render": 9.299999997019768,
+     "styleLayout": 2,
+     "scripts": [
+      {
+       "dur": 75,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 52
+      }
+     ]
+    }
+   ],
+   "cls": 0.0042,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom #3",
+   "ms": 2229,
+   "frames": 82,
+   "p50": 16.9,
+   "p95": 74.9,
+   "p99": 163.6,
+   "max": 163.6,
+   "over33": 16,
+   "over50": 11,
+   "droppedRuns": 3,
+   "loaf50": 8,
+   "worstLoaf": [
+    {
+     "t": 118370.09999999404,
+     "dur": 159.80000001192093,
+     "blocking": 98.4,
+     "render": 28.80000001192093,
+     "styleLayout": 1.7000000029802322,
+     "scripts": [
+      {
+       "dur": 119,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 86
+      },
+      {
+       "dur": 10,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 2
+      }
+     ]
+    },
+    {
+     "t": 118238.09999999404,
+     "dur": 114.70000000298023,
+     "blocking": 58.5,
+     "render": 10,
+     "styleLayout": 1,
+     "scripts": [
+      {
+       "dur": 98,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 77
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 118776,
+     "dur": 66.70000000298023,
+     "blocking": 15.4,
+     "render": 64.79999999701977,
+     "styleLayout": 51.70000000298023,
+     "scripts": [
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events #3",
+   "ms": 2082,
+   "frames": 89,
+   "p50": 17.7,
+   "p95": 49.3,
+   "p99": 103.7,
+   "max": 103.7,
+   "over33": 11,
+   "over50": 4,
+   "droppedRuns": 4,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 120607.79999999702,
+     "dur": 85.6000000089407,
+     "blocking": 18.1,
+     "render": 8,
+     "styleLayout": 0.4000000059604645,
+     "scripts": [
+      {
+       "dur": 60,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 42
+      },
+      {
+       "dur": 9,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 120525.90000000596,
+     "dur": 69.5,
+     "blocking": 18.6,
+     "render": 12.900000005960464,
+     "styleLayout": 2.9000000059604645,
+     "scripts": [
+      {
+       "dur": 56,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 39
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 120778.79999999702,
+     "dur": 51,
+     "blocking": 0.4,
+     "render": 50,
+     "styleLayout": 47.29999999701977,
+     "scripts": []
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali #3",
+   "ms": 3609,
+   "frames": 123,
+   "p50": 23.5,
+   "p95": 63.1,
+   "p99": 140,
+   "max": 230.4,
+   "over33": 21,
+   "over50": 11,
+   "droppedRuns": 7,
+   "loaf50": 5,
+   "worstLoaf": [
+    {
+     "t": 122746.29999999702,
+     "dur": 213.70000000298023,
+     "blocking": 152.5,
+     "render": 35.79999999701977,
+     "styleLayout": 1.7999999970197678,
+     "scripts": [
+      {
+       "dur": 166,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 135
+      },
+      {
+       "dur": 8,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 3
+      }
+     ]
+    },
+    {
+     "t": 122574.70000000298,
+     "dur": 141.3999999910593,
+     "blocking": 90.6,
+     "render": 14.5,
+     "styleLayout": 2.8999999910593033,
+     "scripts": [
+      {
+       "dur": 126,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 103
+      }
+     ]
+    },
+    {
+     "t": 123100.40000000596,
+     "dur": 56.3999999910593,
+     "blocking": 4.3,
+     "render": 53.5,
+     "styleLayout": 41.29999999701977,
+     "scripts": [
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0006,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b) #3",
+   "ms": 2338,
+   "frames": 85,
+   "p50": 23.3,
+   "p95": 46.5,
+   "p99": 174.3,
+   "max": 174.3,
+   "over33": 15,
+   "over50": 3,
+   "droppedRuns": 6,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 126534.59999999404,
+     "dur": 150,
+     "blocking": 79.5,
+     "render": 21.899999991059303,
+     "styleLayout": 1.7999999970197678,
+     "scripts": [
+      {
+       "dur": 107,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 63
+      },
+      {
+       "dur": 9,
+       "invoker": "MessagePort.onmessage",
+       "fn": "P",
+       "src": "00n4laozkgr-j.js:901244",
+       "forced": 0
+      },
+      {
+       "dur": 8,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 126379.5,
+     "dur": 130.40000000596046,
+     "blocking": 79.1,
+     "render": 25.700000002980232,
+     "styleLayout": 1.2000000029802322,
+     "scripts": [
+      {
+       "dur": 103,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 83
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "26sk41v3vgju1.js:9112",
+       "forced": 3
+      }
+     ]
+    }
+   ],
+   "cls": 0.0054,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  }
+ ],
+ "memory": [
+  {
+   "at": "after loader",
+   "heapMB": 52.4,
+   "programs": 44,
+   "textures": 23,
+   "geometries": 14
+  },
+  {
+   "at": "after round 1",
+   "heapMB": 55.5,
+   "programs": 44,
+   "textures": 25,
+   "geometries": 117
+  },
+  {
+   "at": "after round 3",
+   "heapMB": 57.4,
+   "programs": 44,
+   "textures": 25,
+   "geometries": 117
+  }
+ ]
+}

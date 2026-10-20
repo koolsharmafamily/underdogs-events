@@ -1,0 +1,1281 @@
+{
+ "label": "baseline",
+ "profile": "desktop",
+ "results": [
+  {
+   "name": "loader -> home",
+   "ms": -2981,
+   "frames": 0,
+   "p50": 0,
+   "p95": 0,
+   "p99": 0,
+   "max": 0,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": false
+  },
+  {
+   "name": "scroll home",
+   "ms": 3212,
+   "frames": 179,
+   "p50": 16.6,
+   "p95": 24.5,
+   "p99": 78.8,
+   "max": 142.1,
+   "over33": 3,
+   "over50": 2,
+   "droppedRuns": 1,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 5655.399999991059,
+     "dur": 141.90000000596046,
+     "blocking": 0,
+     "render": 3.9000000059604645,
+     "styleLayout": 0.4000000059604645,
+     "scripts": []
+    },
+    {
+     "t": 5955.0999999940395,
+     "dur": 77.29999999701977,
+     "blocking": 27.2,
+     "render": 76.8999999910593,
+     "styleLayout": 0.7999999970197678,
+     "scripts": [
+      {
+       "dur": 75,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 3,
+   "bigUploads": [
+    "texSubImage2D:819:24ms",
+    "texSubImage2D:790:24ms"
+   ],
+   "slowGl": [
+    "texSubImage2D:48ms"
+   ],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom",
+   "ms": 2373,
+   "frames": 124,
+   "p50": 16.7,
+   "p95": 24.2,
+   "p99": 102.9,
+   "max": 155.9,
+   "over33": 3,
+   "over50": 2,
+   "droppedRuns": 1,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 9036.20000000298,
+     "dur": 137.29999999701977,
+     "blocking": 81.3,
+     "render": 99.40000000596046,
+     "styleLayout": 1,
+     "scripts": [
+      {
+       "dur": 83,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 32,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 20
+      },
+      {
+       "dur": 13,
+       "invoker": "FrameRequestCallback",
+       "fn": "",
+       "src": "07ps-3gh7rsx2.js:27702",
+       "forced": 12
+      }
+     ]
+    },
+    {
+     "t": 8860.5,
+     "dur": 97.79999999701977,
+     "blocking": 42,
+     "render": 86.70000000298023,
+     "styleLayout": 0.5,
+     "scripts": [
+      {
+       "dur": 86,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      },
+      {
+       "dur": 5,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 0
+      }
+     ]
+    },
+    {
+     "t": 8959.39999999106,
+     "dur": 72.70000000298023,
+     "blocking": 22.3,
+     "render": 4.799999997019768,
+     "styleLayout": 2.0999999940395355,
+     "scripts": [
+      {
+       "dur": 67,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 56
+      }
+     ]
+    }
+   ],
+   "cls": 0.0002,
+   "programLinks": 2,
+   "textureUploads": 7,
+   "bigUploads": [
+    "texSubImage2D:2048:29ms"
+   ],
+   "slowGl": [
+    "texSubImage2D:29ms"
+   ],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali",
+   "ms": 5759,
+   "frames": 305,
+   "p50": 16.7,
+   "p95": 24,
+   "p99": 60.8,
+   "max": 264.6,
+   "over33": 7,
+   "over50": 4,
+   "droppedRuns": 2,
+   "loaf50": 3,
+   "worstLoaf": [
+    {
+     "t": 11363.29999999702,
+     "dur": 304,
+     "blocking": 249.1,
+     "render": 259.5,
+     "styleLayout": 1.2999999970197678,
+     "scripts": [
+      {
+       "dur": 253,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      },
+      {
+       "dur": 39,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 30
+      }
+     ]
+    },
+    {
+     "t": 11718,
+     "dur": 160.09999999403954,
+     "blocking": 0,
+     "render": 10.700000002980232,
+     "styleLayout": 6.899999991059303,
+     "scripts": []
+    },
+    {
+     "t": 11228.5,
+     "dur": 128.79999999701977,
+     "blocking": 78.4,
+     "render": 8.599999994039536,
+     "styleLayout": 5.0999999940395355,
+     "scripts": [
+      {
+       "dur": 120,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 114
+      }
+     ]
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 1,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom",
+   "ms": 2112,
+   "frames": 119,
+   "p50": 16.7,
+   "p95": 23.9,
+   "p99": 34.3,
+   "max": 93.4,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 16913.29999999702,
+     "dur": 94.90000000596046,
+     "blocking": 0,
+     "render": 6.4000000059604645,
+     "styleLayout": 1.800000011920929,
+     "scripts": []
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home",
+   "ms": 1930,
+   "frames": 113,
+   "p50": 16.5,
+   "p95": 23.2,
+   "p99": 32,
+   "max": 32.8,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0002,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali",
+   "ms": 3317,
+   "frames": 194,
+   "p50": 16.6,
+   "p95": 24.6,
+   "p99": 38.8,
+   "max": 49.6,
+   "over33": 2,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home",
+   "ms": 1915,
+   "frames": 112,
+   "p50": 16.4,
+   "p95": 23.4,
+   "p99": 29.7,
+   "max": 49.2,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back",
+   "ms": 1502,
+   "frames": 86,
+   "p50": 16.6,
+   "p95": 22.4,
+   "p99": 33.3,
+   "max": 33.3,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward",
+   "ms": 1534,
+   "frames": 86,
+   "p50": 16.6,
+   "p95": 20.1,
+   "p99": 58.3,
+   "max": 58.3,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 0,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 27880.29999999702,
+     "dur": 63.29999999701977,
+     "blocking": 0,
+     "render": 16.599999994039536,
+     "styleLayout": 0.5999999940395355,
+     "scripts": [
+      {
+       "dur": 16,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 13
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events",
+   "ms": 1969,
+   "frames": 111,
+   "p50": 16.6,
+   "p95": 25.3,
+   "p99": 55.2,
+   "max": 67.6,
+   "over33": 3,
+   "over50": 2,
+   "droppedRuns": 1,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 29744.59999999404,
+     "dur": 65.5,
+     "blocking": 0,
+     "render": 1,
+     "styleLayout": 0.3999999910593033,
+     "scripts": []
+    },
+    {
+     "t": 29817.70000000298,
+     "dur": 55,
+     "blocking": 0,
+     "render": 0.9000000059604645,
+     "styleLayout": 0.5,
+     "scripts": []
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom",
+   "ms": 2075,
+   "frames": 119,
+   "p50": 16.7,
+   "p95": 23.9,
+   "p99": 25.4,
+   "max": 78,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 0,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 31526.89999999106,
+     "dur": 76.30000001192093,
+     "blocking": 0,
+     "render": 1.4000000059604645,
+     "styleLayout": 0.800000011920929,
+     "scripts": []
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events",
+   "ms": 2015,
+   "frames": 118,
+   "p50": 16.6,
+   "p95": 20.3,
+   "p99": 40.3,
+   "max": 44.9,
+   "over33": 2,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali",
+   "ms": 3329,
+   "frames": 197,
+   "p50": 16.6,
+   "p95": 21.3,
+   "p99": 30.4,
+   "max": 41.5,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b)",
+   "ms": 1955,
+   "frames": 107,
+   "p50": 17,
+   "p95": 27.3,
+   "p99": 30.9,
+   "max": 30.9,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "mr-dog open + typing",
+   "ms": 2372,
+   "frames": 138,
+   "p50": 16.5,
+   "p95": 22.9,
+   "p99": 25,
+   "max": 66.8,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 0,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 41275.79999999702,
+     "dur": 67.09999999403954,
+     "blocking": 0,
+     "render": 2.7999999970197678,
+     "styleLayout": 0.7999999970197678,
+     "scripts": []
+    }
+   ],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "mr-dog close",
+   "ms": 618,
+   "frames": 36,
+   "p50": 16.5,
+   "p95": 24.4,
+   "p99": 25,
+   "max": 25,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom #2",
+   "ms": 2112,
+   "frames": 126,
+   "p50": 16.5,
+   "p95": 23.6,
+   "p99": 24.8,
+   "max": 28.9,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0002,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali #2",
+   "ms": 5305,
+   "frames": 314,
+   "p50": 16.5,
+   "p95": 24.4,
+   "p99": 31.9,
+   "max": 42,
+   "over33": 3,
+   "over50": 0,
+   "droppedRuns": 2,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom #2",
+   "ms": 2127,
+   "frames": 126,
+   "p50": 16.4,
+   "p95": 21.5,
+   "p99": 23.7,
+   "max": 36.4,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home #2",
+   "ms": 1927,
+   "frames": 112,
+   "p50": 16.6,
+   "p95": 23.4,
+   "p99": 27.7,
+   "max": 36.6,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0002,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali #2",
+   "ms": 3327,
+   "frames": 196,
+   "p50": 16.4,
+   "p95": 23,
+   "p99": 36.8,
+   "max": 50.3,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home #2",
+   "ms": 1918,
+   "frames": 113,
+   "p50": 16.5,
+   "p95": 18.6,
+   "p99": 27.5,
+   "max": 30.9,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back #2",
+   "ms": 1513,
+   "frames": 87,
+   "p50": 16.6,
+   "p95": 19,
+   "p99": 25.6,
+   "max": 25.6,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward #2",
+   "ms": 1512,
+   "frames": 86,
+   "p50": 16.5,
+   "p95": 23.6,
+   "p99": 51,
+   "max": 51,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 62999.5,
+     "dur": 53.29999999701977,
+     "blocking": 0,
+     "render": 11.799999997019768,
+     "styleLayout": 0.9000000059604645,
+     "scripts": [
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 8
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events #2",
+   "ms": 1970,
+   "frames": 117,
+   "p50": 16.7,
+   "p95": 19.8,
+   "p99": 24.2,
+   "max": 25.9,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom #2",
+   "ms": 2143,
+   "frames": 115,
+   "p50": 16.7,
+   "p95": 28.9,
+   "p99": 42.6,
+   "max": 44.1,
+   "over33": 3,
+   "over50": 0,
+   "droppedRuns": 2,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events #2",
+   "ms": 2031,
+   "frames": 113,
+   "p50": 16.7,
+   "p95": 25.4,
+   "p99": 40.6,
+   "max": 43.6,
+   "over33": 2,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali #2",
+   "ms": 3328,
+   "frames": 194,
+   "p50": 16.7,
+   "p95": 23.4,
+   "p99": 37.8,
+   "max": 49.8,
+   "over33": 2,
+   "over50": 0,
+   "droppedRuns": 2,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 71012.39999999106,
+     "dur": 50.20000000298023,
+     "blocking": 0,
+     "render": 14.099999994039536,
+     "styleLayout": 0.29999999701976776,
+     "scripts": [
+      {
+       "dur": 35,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 26
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b) #2",
+   "ms": 1945,
+   "frames": 115,
+   "p50": 16.5,
+   "p95": 24.3,
+   "p99": 29.2,
+   "max": 30.4,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> redroom #3",
+   "ms": 2169,
+   "frames": 116,
+   "p50": 16.7,
+   "p95": 29.3,
+   "p99": 41.1,
+   "max": 58.5,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 2,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 76779.59999999404,
+     "dur": 61.900000005960464,
+     "blocking": 8.4,
+     "render": 17.900000005960464,
+     "styleLayout": 0.5,
+     "scripts": [
+      {
+       "dur": 40,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 26
+      },
+      {
+       "dur": 9,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0002,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> diwali #3",
+   "ms": 5385,
+   "frames": 311,
+   "p50": 16.6,
+   "p95": 23.6,
+   "p99": 29.1,
+   "max": 78.6,
+   "over33": 3,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 78909.59999999404,
+     "dur": 75.5,
+     "blocking": 23.1,
+     "render": 17.700000002980232,
+     "styleLayout": 0.5999999940395355,
+     "scripts": [
+      {
+       "dur": 56,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 44
+      },
+      {
+       "dur": 6,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> redroom #3",
+   "ms": 2120,
+   "frames": 122,
+   "p50": 16.6,
+   "p95": 22.6,
+   "p99": 29.1,
+   "max": 29.6,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> home #3",
+   "ms": 1951,
+   "frames": 115,
+   "p50": 16.5,
+   "p95": 23.6,
+   "p99": 26.5,
+   "max": 27.6,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0002,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> diwali #3",
+   "ms": 3317,
+   "frames": 195,
+   "p50": 16.5,
+   "p95": 22,
+   "p99": 25.4,
+   "max": 50.8,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 88770.39999999106,
+     "dur": 51.400000005960464,
+     "blocking": 0,
+     "render": 11.5,
+     "styleLayout": 0.29999999701976776,
+     "scripts": [
+      {
+       "dur": 38,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 31
+      },
+      {
+       "dur": 5,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home #3",
+   "ms": 1951,
+   "frames": 114,
+   "p50": 16.5,
+   "p95": 23.8,
+   "p99": 29.5,
+   "max": 57.5,
+   "over33": 1,
+   "over50": 1,
+   "droppedRuns": 0,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 91977.09999999404,
+     "dur": 56.70000000298023,
+     "blocking": 0,
+     "render": 4.9000000059604645,
+     "styleLayout": 1.4000000059604645,
+     "scripts": []
+    }
+   ],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "back #3",
+   "ms": 1511,
+   "frames": 87,
+   "p50": 16.4,
+   "p95": 21.1,
+   "p99": 25.8,
+   "max": 25.8,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "forward #3",
+   "ms": 1563,
+   "frames": 87,
+   "p50": 16.5,
+   "p95": 21.6,
+   "p99": 70.3,
+   "max": 70.3,
+   "over33": 2,
+   "over50": 2,
+   "droppedRuns": 0,
+   "loaf50": 2,
+   "worstLoaf": [
+    {
+     "t": 95174.5,
+     "dur": 69.3999999910593,
+     "blocking": 18.7,
+     "render": 9.099999994039536,
+     "styleLayout": 0.29999999701976776,
+     "scripts": [
+      {
+       "dur": 56,
+       "invoker": "DOMWindow.onpopstate",
+       "fn": "r",
+       "src": "0s7mvllxht1mo.js:11059",
+       "forced": 29
+      }
+     ]
+    },
+    {
+     "t": 95285.89999999106,
+     "dur": 55.900000005960464,
+     "blocking": 0,
+     "render": 10.5,
+     "styleLayout": 0.4000000059604645,
+     "scripts": [
+      {
+       "dur": 10,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 7
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "home -> events #3",
+   "ms": 1967,
+   "frames": 118,
+   "p50": 16.5,
+   "p95": 22.9,
+   "p99": 26,
+   "max": 26.7,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> redroom #3",
+   "ms": 2092,
+   "frames": 122,
+   "p50": 16.3,
+   "p95": 24.2,
+   "p99": 28.8,
+   "max": 29,
+   "over33": 0,
+   "over50": 0,
+   "droppedRuns": 0,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "redroom -> events #3",
+   "ms": 2009,
+   "frames": 114,
+   "p50": 16.5,
+   "p95": 28.1,
+   "p99": 33.2,
+   "max": 43.8,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 2,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0,
+   "programLinks": 0,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "events -> diwali #3",
+   "ms": 3374,
+   "frames": 193,
+   "p50": 16.5,
+   "p95": 24.9,
+   "p99": 47.5,
+   "max": 65.5,
+   "over33": 2,
+   "over50": 1,
+   "droppedRuns": 1,
+   "loaf50": 1,
+   "worstLoaf": [
+    {
+     "t": 103241.20000000298,
+     "dur": 69.8999999910593,
+     "blocking": 17.4,
+     "render": 20.899999991059303,
+     "styleLayout": 0.7000000029802322,
+     "scripts": [
+      {
+       "dur": 47,
+       "invoker": "MessagePort.onmessage",
+       "fn": "z",
+       "src": "0s7mvllxht1mo.js:225003",
+       "forced": 38
+      },
+      {
+       "dur": 7,
+       "invoker": "FrameRequestCallback",
+       "fn": "t",
+       "src": "30t3p8fk_nrey.js:78537",
+       "forced": 0
+      }
+     ]
+    }
+   ],
+   "cls": 0,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  },
+  {
+   "name": "diwali -> home(b) #3",
+   "ms": 1958,
+   "frames": 115,
+   "p50": 16.4,
+   "p95": 24.5,
+   "p99": 30.5,
+   "max": 35.1,
+   "over33": 1,
+   "over50": 0,
+   "droppedRuns": 1,
+   "loaf50": 0,
+   "worstLoaf": [],
+   "cls": 0.0001,
+   "programLinks": 1,
+   "textureUploads": 0,
+   "bigUploads": [],
+   "slowGl": [],
+   "afterLoader": true
+  }
+ ],
+ "memory": [
+  {
+   "at": "after loader",
+   "heapMB": 54.1,
+   "programs": 43,
+   "textures": 14,
+   "geometries": 14
+  },
+  {
+   "at": "after round 1",
+   "heapMB": 55.7,
+   "programs": 43,
+   "textures": 25,
+   "geometries": 132
+  },
+  {
+   "at": "after round 3",
+   "heapMB": 57.4,
+   "programs": 43,
+   "textures": 25,
+   "geometries": 132
+  }
+ ]
+}
