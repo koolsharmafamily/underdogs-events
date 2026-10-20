@@ -1,4 +1,5 @@
 "use client";
+import { assetUrl } from "@/utils/assetUrl";
 import { useEffect, useRef } from "react";
 import { registerTransitionStage } from "@/motion/transitions";
 import gsap from "gsap";
@@ -83,7 +84,7 @@ export function TransitionStage() {
       >
         <img
           ref={coinImg}
-          src="/media/badge-halloween-still.webp"
+          src={assetUrl("/media/badge-halloween-still.webp")}
           alt=""
           className="w-44 h-44 sm:w-56 sm:h-56 object-contain drop-shadow-[0_12px_44px_rgba(0,0,0,0.95)] pointer-events-none"
         />

@@ -2,12 +2,6 @@ import { create } from "zustand";
 import { site } from "@/content/site";
 import { useStore as useAppStore } from "@/state/store";
 import type { WorldId } from "@/theme/tokens";
-import {
-  FIXED_QUESTIONS,
-  FixedQuestionItem,
-  getInitialFixedQuestionsForWorld,
-  matchFaq,
-} from "./faq";
 
 export type MrDogExpression =
   | "idle"
@@ -79,16 +73,6 @@ export function getWorldGreeting(world: WorldId): string {
     return `Welcome to DHAMAAKA season — The Karan Johar Edition (${site.diwali.accent}). Tap any question below or ask me about our Diwali premiere.`;
   }
   return "Gate's open. I'm Mr. Dog — ask me anything about Underdogs, the nights, or tap a question below.";
-}
-
-export function getChipsForWorld(world: WorldId, activeFollowUps: string[] = []): FixedQuestionItem[] {
-  if (activeFollowUps && activeFollowUps.length > 0) {
-    const matched = activeFollowUps
-      .map((id) => FIXED_QUESTIONS[id])
-      .filter((q): q is FixedQuestionItem => Boolean(q));
-    if (matched.length > 0) return matched;
-  }
-  return getInitialFixedQuestionsForWorld(world);
 }
 
 export function worldToOutfit(world: WorldId): MrDogOutfit {
@@ -215,6 +199,7 @@ export const useMrDogStore = create<MrDogState>((set, get) => ({
   sendMessage: async (text: string) => {
     const clean = text.trim();
     if (!clean) return;
+    const { matchFaq } = await import("./faq");
 
     const userMsg: ChatMessage = {
       id: "u-" + Date.now(),

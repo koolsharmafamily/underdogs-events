@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
-import gsap from 'gsap'
+import { afterPaint } from "@/motion/afterPaint";
 import { frame } from '@/state/frame'
 import { useStore } from '@/state/store'
 
@@ -52,10 +52,7 @@ export function Marquee({ items }: MarqueeProps) {
       el2.style.transform = `translate3d(${offset2}px, 0, 0)`
     }
 
-    gsap.ticker.add(update)
-    return () => {
-      gsap.ticker.remove(update)
-    }
+    return afterPaint(async () => { const {default:gsap}=await import("gsap"); gsap.ticker.add(update); return () => { gsap.ticker.remove(update); }; });
   }, [motionEnabled])
 
   if (!motionEnabled) {

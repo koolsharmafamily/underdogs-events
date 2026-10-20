@@ -88,6 +88,7 @@ export const TransitionLink = React.forwardRef<HTMLAnchorElement, TransitionLink
 
     return (
       <Link
+        prefetch={false}
         ref={ref}
         href={href}
         onClick={handleClick}

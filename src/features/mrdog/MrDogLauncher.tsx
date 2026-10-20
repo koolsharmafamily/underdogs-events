@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -86,9 +87,9 @@ export function MrDogLauncher() {
     // Preload model on hover/focus
     if (typeof window !== "undefined") {
       void import("@react-three/drei").then(({ useGLTF }) => {
-        useGLTF.preload("/models/mr-dog-party-coin.glb");
-        useGLTF.preload("/models/mr-dog-coin-red-room.glb");
-        useGLTF.preload("/models/mr-dog-coin-diwali.glb");
+        useGLTF.preload(assetUrl("/models/mr-dog-party-coin.glb"));
+        useGLTF.preload(assetUrl("/models/mr-dog-coin-red-room.glb"));
+        useGLTF.preload(assetUrl("/models/mr-dog-coin-diwali.glb"));
       });
     }
   }, []);
@@ -98,7 +99,7 @@ export function MrDogLauncher() {
   }, []);
 
   // Hide while loader is active, during route transitions, if panel is already open, or on /mr-dog dedicated page
-  if (phase !== "complete" || isTransitioning || isOpen || pathname === "/mr-dog") {
+  if (isTransitioning || isOpen || pathname === "/mr-dog") {
     return null;
   }
 
@@ -109,7 +110,7 @@ export function MrDogLauncher() {
         ? "#E5B25D"
         : "#EA28C1";
 
-  const avatarSrc = outfit === "home" ? "/media/mr-dog/party-coin.webp" : `/media/mr-dog/${outfit}/${avatarState}.webp`;
+  const avatarSrc = outfit === "home" ? assetUrl("/media/mr-dog/party-coin.webp") : `/media/mr-dog/${outfit}/${avatarState}.webp`;
 
   return (
     <div
@@ -173,8 +174,7 @@ export function MrDogLauncher() {
             width={56}
             height={56}
             className="w-full h-full object-cover select-none"
-            priority
-            unoptimized
+              loading="eager"
           />
         </div>
 

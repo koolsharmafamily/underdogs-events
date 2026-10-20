@@ -1,13 +1,14 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import {
   useMrDogStore,
-  getChipsForWorld,
   worldToOutfit,
   ChatMessage,
 } from "./store";
+import { getChipsForWorld } from "./chips";
 import { useStore as useAppStore } from "@/state/store";
 
 function formatChatMessage(text: string, accentColor: string) {
@@ -124,7 +125,7 @@ export function MrDogChat({
     sendMessage(question);
   };
 
-  const avatarUrl = outfit === "home" ? "/media/mr-dog/party-coin-disc.webp" : `/media/mr-dog/${outfit}/avatar.webp`;
+  const avatarUrl = outfit === "home" ? assetUrl("/media/mr-dog/party-coin-disc.webp") : `/media/mr-dog/${outfit}/avatar.webp`;
 
   const accentColor =
     world === "redroom"
