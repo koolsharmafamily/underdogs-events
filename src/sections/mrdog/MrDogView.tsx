@@ -1,11 +1,13 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { site } from "@/content/site";
 import { useEnterTransition } from "@/motion/transitions";
 import { MrDogChat } from "@/features/mrdog/MrDogChat";
-import { useMrDogStore, worldToOutfit, getChipsForWorld, getWorldGreeting } from "@/features/mrdog/store";
+import { useMrDogStore, worldToOutfit, getWorldGreeting } from "@/features/mrdog/store";
+import { getChipsForWorld } from "@/features/mrdog/chips";
 import { useStore as useAppStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
 
@@ -81,7 +83,7 @@ export function MrDogView() {
               <div className="flex flex-col items-center text-center gap-4">
                 <div className="relative w-36 h-36 rounded-full bg-[#10171F]/80 border-2 border-[#EA28C1]/50 shadow-[0_0_36px_rgba(234,40,193,0.35)] flex items-center justify-center overflow-visible">
                   <Image
-                    src="/media/mr-dog/party-coin.webp"
+                    src={assetUrl("/media/mr-dog/party-coin.webp")}
                     alt="Mr. Dog Party Coin"
                     width={140}
                     height={180}

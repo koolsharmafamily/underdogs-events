@@ -1,11 +1,13 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import { TransitionLink, useTransitionNavigate } from "@/ui/TransitionLink";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { site } from "@/content/site";
-import { getLenis } from "@/motion/clock";
+import type Lenis from "lenis";
+const getLenis = () => (window as unknown as { __lenis?: Lenis }).__lenis;
 import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
 import { useMrDogStore } from "@/features/mrdog/store";
@@ -110,7 +112,7 @@ export function MobileTopBar() {
             isMrDog ? (
               <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0 border border-white/10 shadow-[0_0_8px_rgba(234,40,193,0.5)]">
                 <Image
-                  src="/media/mr-dog/party-coin-disc.webp"
+                  src={assetUrl("/media/mr-dog/party-coin-disc.webp")}
                   alt="Mr. Dog"
                   width={24}
                   height={24}

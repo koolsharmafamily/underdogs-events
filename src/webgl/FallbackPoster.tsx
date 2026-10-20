@@ -1,5 +1,6 @@
 'use client';
 
+import { assetUrl } from "@/utils/assetUrl";
 import React from 'react';
 import Image from 'next/image';
 import { useStore } from '@/state/store';
@@ -34,7 +35,7 @@ export function FallbackPoster({ showAssetNotice = false }: FallbackPosterProps)
             bg: '#140812',
           }
         : {
-            src: '/media/home-poster.webp',
+            src: assetUrl("/media/home-poster.webp"),
             alt: 'Underdogs Entertainment Enamel Badge',
             bg: '#07090D',
           };

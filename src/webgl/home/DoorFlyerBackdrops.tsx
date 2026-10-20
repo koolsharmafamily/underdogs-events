@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -96,8 +97,8 @@ export function DoorFlyerBackdrops({
 
   // Load optimized <= 1024px tall WebP textures
   const [redTex, diwaliTex] = useTexture([
-    "/media/red-room-poster-1024.webp",
-    "/media/dhamaaka-flyer-1024.webp",
+    assetUrl("/media/red-room-poster-1024.webp"),
+    assetUrl("/media/dhamaaka-flyer-1024.webp"),
   ]);
 
   useEffect(() => {

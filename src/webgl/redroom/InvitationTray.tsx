@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useRef, useMemo } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
@@ -42,7 +43,7 @@ function captureTransform(node: THREE.Object3D | null): NodeTransform {
 
 export function InvitationTray() {
   const stageRef = useRef<THREE.Group>(null);
-  const gltf = useGLTF("/models/redroom-invitation.glb");
+  const gltf = useGLTF(assetUrl("/models/redroom-invitation.glb"));
   const motionEnabled = useStore((s) => s.motionEnabled);
 
   const shard1Ref = useRef<THREE.Object3D | null>(null);

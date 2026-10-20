@@ -35,3 +35,8 @@ next-env.d.ts
 
 # extra build directories (NEXT_DIST_DIR)
 /.next-*/
+
+# Content-addressed assets are reproduced by prebuild
+/public/models/v/
+/public/media/v/
+/public/sw.js

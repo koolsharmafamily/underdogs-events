@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { site } from "@/content/site";
@@ -89,7 +90,7 @@ export function CinemaLightbox() {
         {/* Inner Lightbox Poster Display */}
         <div className="relative rounded-lg overflow-hidden border border-[#E5B25D]/40 aspect-[4/5] w-full bg-[#0A0606]">
           <Image
-            src={site.diwali.poster?.src || "/media/dhamaaka-flyer.webp"}
+            src={site.diwali.poster?.src || assetUrl("/media/dhamaaka-flyer.webp")}
             alt={site.diwali.poster?.alt || "Official DHAMAAKA Premiere Flyer"}
             fill
             sizes="(max-width: 640px) 90vw, 520px"

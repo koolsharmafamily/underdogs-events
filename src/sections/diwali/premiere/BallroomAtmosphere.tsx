@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
@@ -50,7 +51,7 @@ export function BallroomAtmosphere() {
         style={{ transform: "translate3d(0, 0, 0) scale(1.04)" }}
       >
         <Image
-          src="/media/dhamaaka-ballroom-plate.webp"
+          src={assetUrl("/media/dhamaaka-ballroom-plate.webp")}
           alt=""
           fill
           priority

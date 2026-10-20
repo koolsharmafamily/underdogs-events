@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { Component, useEffect, useRef, useState, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
@@ -46,9 +47,9 @@ class WebGLErrorBoundary extends Component<
 }
 
 const OUTFIT_GLB_PATHS: Record<MrDogOutfit, string> = {
-  home: "/models/mr-dog-party-coin.glb",
-  redroom: "/models/mr-dog-coin-red-room.glb",
-  diwali: "/models/mr-dog-coin-diwali.glb",
+  home: assetUrl("/models/mr-dog-party-coin.glb"),
+  redroom: assetUrl("/models/mr-dog-coin-red-room.glb"),
+  diwali: assetUrl("/models/mr-dog-coin-diwali.glb"),
 };
 
 let sharedPmremTexture: THREE.Texture | null = null;
@@ -237,7 +238,7 @@ export function MrDogStage3D({ size = 280, isPeeking = true }: StageProps) {
 
 // Preload the GLTF models in background
 if (typeof window !== "undefined") {
-  useGLTF.preload("/models/mr-dog-party-coin.glb");
-  useGLTF.preload("/models/mr-dog-coin-red-room.glb");
-  useGLTF.preload("/models/mr-dog-coin-diwali.glb");
+  useGLTF.preload(assetUrl("/models/mr-dog-party-coin.glb"));
+  useGLTF.preload(assetUrl("/models/mr-dog-coin-red-room.glb"));
+  useGLTF.preload(assetUrl("/models/mr-dog-coin-diwali.glb"));
 }

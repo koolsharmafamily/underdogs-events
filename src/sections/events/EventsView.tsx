@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React from "react";
 import Image from "next/image";
 import { TransitionLink } from "@/ui/TransitionLink";
@@ -45,7 +46,7 @@ export function EventsView() {
             {/* Next/Image Optimized Flyer Background (Zero CLS, AVIF/WebP) */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <Image
-                src="/media/red-room-poster.webp"
+                src={assetUrl("/media/red-room-poster.webp")}
                 alt=""
                 fill
                 priority
@@ -61,7 +62,7 @@ export function EventsView() {
             {/* Top Row: 3D Coin Still + Occasion & Countdown */}
             <div className="relative z-10 flex items-start justify-between gap-4">
               <Image
-                src="/media/badge-halloween-still.webp"
+                src={assetUrl("/media/badge-halloween-still.webp")}
                 alt="The Red Room badge"
                 width={80}
                 height={80}
@@ -119,7 +120,7 @@ export function EventsView() {
             {/* Next/Image Optimized Ballroom Background (Zero CLS, AVIF/WebP) */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <Image
-                src="/media/dhamaaka-ballroom-plate.webp"
+                src={assetUrl("/media/dhamaaka-ballroom-plate.webp")}
                 alt=""
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -134,7 +135,7 @@ export function EventsView() {
             {/* Top Row: 3D Coin Still + Occasion & Countdown */}
             <div className="relative z-10 flex items-start justify-between gap-4">
               <Image
-                src="/media/badge-jewelled-still.webp"
+                src={assetUrl("/media/badge-jewelled-still.webp")}
                 alt="DHAMAAKA Jewelled Badge"
                 width={80}
                 height={80}

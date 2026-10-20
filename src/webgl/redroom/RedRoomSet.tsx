@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useGLTF, useTexture } from "@react-three/drei";
@@ -54,14 +55,14 @@ const CANDLE_INSTANCES: CandleClusterItem[] = [
 export function RedRoomSet() {
   const world = useStore((s) => s.world);
   const previousWorld = useStore((s) => s.previousWorld);
-  const curtainGltf = useGLTF("/models/curtain-open.glb");
-  const mirrorGltf = useGLTF("/models/redroom-mirror.glb");
-  const chandelierGltf = useGLTF("/models/redroom-chandelier.glb");
-  const candelabraGltf = useGLTF("/models/redroom-candelabra.glb");
-  const candleGltf = useGLTF("/models/redroom-candle.glb");
+  const curtainGltf = useGLTF(assetUrl("/models/curtain-open.glb"));
+  const mirrorGltf = useGLTF(assetUrl("/models/redroom-mirror.glb"));
+  const chandelierGltf = useGLTF(assetUrl("/models/redroom-chandelier.glb"));
+  const candelabraGltf = useGLTF(assetUrl("/models/redroom-candelabra.glb"));
+  const candleGltf = useGLTF(assetUrl("/models/redroom-candle.glb"));
 
   // Official poster texture for framed display on left wall (Part 8 R5)
-  const posterTex = useTexture("/media/red-room-poster.webp");
+  const posterTex = useTexture(assetUrl("/media/red-room-poster.webp"));
 
   const chandelierRef = useRef<THREE.Group>(null);
   const candleLight1Ref = useRef<THREE.PointLight>(null);

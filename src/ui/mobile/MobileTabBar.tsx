@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import { TransitionLink } from "@/ui/TransitionLink";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -163,7 +164,7 @@ export function MobileTabBar() {
   } else if (dogBlinking) {
     avatarType = "avatar-blink";
   }
-  const dogAvatarSrc = "/media/mr-dog/party-coin.webp";
+  const dogAvatarSrc = assetUrl("/media/mr-dog/party-coin.webp");
 
   return (
     <nav
@@ -285,12 +286,11 @@ export function MobileTabBar() {
 
           <div className="relative flex items-center justify-center">
             <Image
-              src="/media/mr-dog/party-coin.webp"
+              src={assetUrl("/media/mr-dog/party-coin.webp")}
               alt="Mr. Dog"
               width={31}
               height={40}
-              priority
-              unoptimized
+              loading="eager"
               className={`object-contain transition-all duration-200 ${
                 isMrDog
                   ? "drop-shadow-[0_0_10px_rgba(234,40,193,0.7)] scale-105"
