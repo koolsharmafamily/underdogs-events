@@ -4,9 +4,8 @@ import gsap from "gsap";
 import { useStore } from "@/state/store";
 import { registerMotionEases } from "@/motion/eases";
 import { badgeScreenBounds } from "@/webgl/badge/screenBounds";
-import { preloadAllBadges } from "@/webgl/preload";
+import { preloadAllAppAssets, preloadAllBadges } from "@/webgl/preload";
 import { site } from "@/content/site";
-
 
 export function DomLoader() {
   const phase = useStore((s) => s.phase),
@@ -23,6 +22,7 @@ export function DomLoader() {
       done = false,
       tl: gsap.core.Timeline | null = null;
     if (!initialized.current) {
+      preloadAllAppAssets();
       try {
         repeatVisit.current =
           sessionStorage.getItem("underdogs-loader-seen") === "1";

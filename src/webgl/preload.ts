@@ -3,6 +3,27 @@ import { useStore } from "@/state/store";
 
 const preloadedWorlds = new Set<WorldId>();
 
+export const ALL_APP_MODELS = [
+  "/models/badge-enamel.glb",
+  "/models/badge-halloween.glb",
+  "/models/badge-jewelled.glb",
+  "/models/door-redroom.glb",
+  "/models/door-diwali.glb",
+  "/models/curtain-open.glb",
+  "/models/redroom-mirror.glb",
+  "/models/redroom-chandelier.glb",
+  "/models/redroom-candelabra.glb",
+  "/models/redroom-candle.glb",
+  "/models/redroom-invitation.glb",
+  "/models/mr-dog-party-coin.glb",
+];
+
+export const ALL_APP_TEXTURES = [
+  "/media/red-room-poster.webp",
+  "/media/red-room-poster-1024.webp",
+  "/media/dhamaaka-flyer-1024.webp",
+];
+
 const WORLD_MODELS: Record<WorldId, string[]> = {
   redroom: [
     "/models/badge-halloween.glb",
@@ -20,10 +41,14 @@ const WORLD_MODELS: Record<WorldId, string[]> = {
     "/models/door-diwali.glb",
   ],
 };
+
 const WORLD_TEXTURES: Record<WorldId, string[]> = {
   redroom: ["/media/red-room-poster.webp"],
   diwali: [],
-  home: [],
+  home: [
+    "/media/red-room-poster-1024.webp",
+    "/media/dhamaaka-flyer-1024.webp",
+  ],
 };
 
 // drei (and with it three.js) loads on first use, never in the first bundle:
@@ -33,6 +58,29 @@ function preload(models: string[], textures: string[] = []) {
     for (const url of models) useGLTF.preload(url);
     for (const url of textures) useTexture.preload(url);
   });
+}
+
+/**
+ * Preloads all 3D GLBs and textures for the entire application upfront
+ * behind the initial loader so Suspense never resolves inside a visible transition.
+ */
+export function preloadAllAppAssets() {
+  if (typeof window === "undefined") return;
+  preload(ALL_APP_MODELS, ALL_APP_TEXTURES);
+  
+  // Pre-decode 2D flyer & coin still images
+  const stillUrls = [
+    "/media/badge-enamel-still.webp",
+    "/media/badge-halloween-still.webp",
+    "/media/badge-jewelled-still.webp",
+    "/media/red-room-poster.webp",
+    "/media/diwali-teaser.webp",
+  ];
+  for (const url of stillUrls) {
+    const img = new Image();
+    img.src = url;
+    img.decode?.().catch(() => {});
+  }
 }
 
 /**

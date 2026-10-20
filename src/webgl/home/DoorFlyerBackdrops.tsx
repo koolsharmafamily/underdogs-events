@@ -89,7 +89,7 @@ export function DoorFlyerBackdrops({
   redDoorRef,
   diwaliDoorRef,
 }: DoorFlyerBackdropsProps) {
-  const { size } = useThree();
+  const { size, gl } = useThree();
   const motionEnabled = useStore((s) => s.motionEnabled);
   const hoverDoor = useStore((s) => s.hoverDoor);
   const world = useStore((s) => s.world);
@@ -104,13 +104,17 @@ export function DoorFlyerBackdrops({
     redTex.generateMipmaps = true;
     redTex.minFilter = THREE.LinearMipmapLinearFilter;
     redTex.magFilter = THREE.LinearFilter;
-    redTex.needsUpdate = true;
+    try {
+      gl.initTexture(redTex);
+    } catch {}
 
     diwaliTex.generateMipmaps = true;
     diwaliTex.minFilter = THREE.LinearMipmapLinearFilter;
     diwaliTex.magFilter = THREE.LinearFilter;
-    diwaliTex.needsUpdate = true;
-  }, [redTex, diwaliTex]);
+    try {
+      gl.initTexture(diwaliTex);
+    } catch {}
+  }, [redTex, diwaliTex, gl]);
 
   // Uniform colors
   const redTint = useMemo(() => new THREE.Color("#4A0706"), []); // Ember red

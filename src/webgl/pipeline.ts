@@ -32,6 +32,7 @@ export function compileFor(
         type: THREE.HalfFloatType,
       });
       gl.setRenderTarget(composerTarget);
+      gl.toneMapping = THREE.NoToneMapping;
     }
     jobs.push(
       object === scene

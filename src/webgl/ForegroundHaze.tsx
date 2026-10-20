@@ -3,6 +3,12 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useStore } from "@/state/store";
 
+const HAZE_COLORS = {
+  home: "#584266",
+  redroom: "#4C2520",
+  diwali: "#B27D62",
+} as const;
+
 /** Broad defocused foreground wisps frame the set without crossing its subject. */
 export function ForegroundHaze() {
   const world = useStore((s) => s.world);
@@ -13,13 +19,7 @@ export function ForegroundHaze() {
         depthWrite: false,
         uniforms: {
           tint: {
-            value: new THREE.Color(
-              world === "home"
-                ? "#584266"
-                : world === "redroom"
-                  ? "#4C2520"
-                  : "#B27D62",
-            ),
+            value: new THREE.Color(HAZE_COLORS.home),
           },
         },
         vertexShader:
@@ -27,9 +27,15 @@ export function ForegroundHaze() {
         fragmentShader:
           "varying vec2 vUv; uniform vec3 tint; void main(){vec2 p=(vUv-.5)*2.; float a=exp(-dot(p,p)*5.)*.055; gl_FragColor=vec4(tint,a);}",
       }),
-    [world],
+    [],
   );
+
+  useEffect(() => {
+    material.uniforms.tint.value.set(HAZE_COLORS[world] ?? HAZE_COLORS.home);
+  }, [world, material]);
+
   useEffect(() => () => material.dispose(), [material]);
+
   return (
     <group name="DefocusedForeground">
       <mesh position={[-2.9, 0.2, 3.4]} material={material}>
@@ -41,3 +47,4 @@ export function ForegroundHaze() {
     </group>
   );
 }
+

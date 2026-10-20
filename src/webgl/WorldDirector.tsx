@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { useStore } from "@/state/store";
 import { Badge } from "./badge/Badge";
 import { Precompile } from "./Precompile";
-import { preloadWorldAssets } from "./preload";
+import { preloadAllAppAssets, preloadWorldAssets } from "./preload";
 import { StudioEnvironment } from "./StudioEnvironment";
 import { ForegroundHaze } from "./ForegroundHaze";
 const HomeStage = lazy(() =>
@@ -24,9 +24,15 @@ const DiwaliSet = lazy(() =>
 export function WorldDirector() {
   const world = useStore((s) => s.world);
   const resident = useStore((s) => s.residentWorlds);
+
+  useEffect(() => {
+    preloadAllAppAssets();
+  }, []);
+
   useEffect(() => {
     preloadWorldAssets(world);
   }, [world]);
+
   return (
     <group name="WorldDirector">
       <StudioEnvironment />

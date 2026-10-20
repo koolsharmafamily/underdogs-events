@@ -100,9 +100,9 @@ export const useStore = create<AppStore>((set, get) => ({
   renderedWorlds: { home: false, redroom: false, diwali: false },
   sceneRoute: typeof window === "undefined" || isSceneRoute(window.location.pathname),
   residentWorlds: {
-    home: getInitialWorld() === "home",
-    redroom: getInitialWorld() === "redroom",
-    diwali: getInitialWorld() === "diwali",
+    home: true,
+    redroom: true,
+    diwali: true,
   },
 
   setWorld: (world) => {
@@ -113,10 +113,6 @@ export const useStore = create<AppStore>((set, get) => ({
       residentWorlds: get().residentWorlds[world]
         ? get().residentWorlds
         : { ...get().residentWorlds, [world]: true },
-      renderedWorlds:
-        cur !== world
-          ? { ...get().renderedWorlds, [world]: false }
-          : get().renderedWorlds,
       previousWorld: cur !== world && isTr ? cur : get().previousWorld,
     });
     syncDocumentDataset(world, get().motionEnabled);
