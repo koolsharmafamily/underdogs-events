@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit -p .",
     "check:scenes": "node scripts/check-scene-keys.mjs",
     "smoke": "node scripts/smoke.mjs",
-    "prebuild": "node scripts/version-assets.mjs"
+    "version:assets": "node scripts/version-assets.mjs"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",
