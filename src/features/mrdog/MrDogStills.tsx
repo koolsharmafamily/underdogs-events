@@ -1,5 +1,6 @@
 "use client";
 
+import { assetUrl } from "@/utils/assetUrl";
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useMrDogStore, MrDogExpression, worldToOutfit } from "./store";
@@ -68,7 +69,7 @@ export function MrDogStills({
     setActiveStill(effectiveName);
   }, [effectiveName]);
 
-  const stillPath = `/media/mr-dog/${outfit}/${activeStill}.webp`;
+  const stillPath = assetUrl(`/media/mr-dog/${outfit}/${activeStill}.webp`);
 
   return (
     <div

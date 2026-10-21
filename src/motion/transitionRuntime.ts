@@ -23,14 +23,21 @@ export interface TransitionStageRefs {
 const COIN_STILLS: Record<WorldId, string> = {
   redroom: assetUrl("/media/badge-halloween-still.webp"),
   diwali: assetUrl("/media/badge-jewelled-still.webp"),
-  home: assetUrl("/media/badge-enamel-still.webp"),
+  home: assetUrl("/media/badge-enamel-still-512.webp"),
 };
 
 if (typeof window !== "undefined") {
-  Object.values(COIN_STILLS).forEach((src) => {
-    const img = new Image();
-    img.src = src;
-  });
+  const preloadCoinStills = () => {
+    Object.values(COIN_STILLS).forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  };
+  if (typeof window.requestIdleCallback === "function") {
+    window.requestIdleCallback(preloadCoinStills, { timeout: 4000 });
+  } else {
+    window.setTimeout(preloadCoinStills, 2500);
+  }
 }
 
 let stageRefs: TransitionStageRefs | null = null;

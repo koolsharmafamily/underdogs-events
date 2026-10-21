@@ -42,14 +42,24 @@ export function BadgeDomHost({
 
   useEffect(() => {
     const target = skin === "diwali" ? "jewelled" : skin === "redroom" ? "halloween" : "enamel";
+    let interval: ReturnType<typeof setInterval> | null = null;
     const check = () => {
       if (useStore.getState().renderedWorlds[skin] && badgeScreenBounds.ready && badgeScreenBounds.readySkin === target) {
         setBadge3DReady(true);
+        if (interval !== null) {
+          clearInterval(interval);
+          interval = null;
+        }
+        return true;
       }
+      return false;
     };
-    check();
-    const interval = setInterval(check, 50);
-    return () => clearInterval(interval);
+    if (!check()) {
+      interval = setInterval(check, 50);
+    }
+    return () => {
+      if (interval !== null) clearInterval(interval);
+    };
   }, [skin]);
 
   // Pointer drag/swipe tracking refs

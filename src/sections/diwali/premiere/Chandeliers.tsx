@@ -1,11 +1,8 @@
 "use client";
 
 import React from "react";
-import { useStore } from "@/state/store";
 
 export function Chandeliers() {
-  const motionEnabled = useStore((s) => s.motionEnabled);
-
   return (
     <div
       aria-hidden="true"

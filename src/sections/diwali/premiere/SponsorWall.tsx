@@ -2,10 +2,8 @@
 
 import React from "react";
 import { site } from "@/content/site";
-import { useStore } from "@/state/store";
 
 export function SponsorWall({ ref }: { ref?: React.Ref<HTMLElement> }) {
-  const motionEnabled = useStore((s) => s.motionEnabled);
   const partners = site.diwali.partners?.list || [];
 
   const poweredBy = partners.find((p) => p.role.toLowerCase().includes("powered by") && !p.role.toLowerCase().includes("co-powered"));

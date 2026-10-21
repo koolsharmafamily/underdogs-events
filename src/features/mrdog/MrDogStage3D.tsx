@@ -1,7 +1,7 @@
 "use client";
 
 import { assetUrl } from "@/utils/assetUrl";
-import React, { Component, useEffect, useRef, useState, useMemo } from "react";
+import React, { Component, useEffect, useRef, useMemo } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -234,11 +234,4 @@ export function MrDogStage3D({ size = 280, isPeeking = true }: StageProps) {
       </div>
     </WebGLErrorBoundary>
   );
-}
-
-// Preload the GLTF models in background
-if (typeof window !== "undefined") {
-  useGLTF.preload(assetUrl("/models/mr-dog-party-coin.glb"));
-  useGLTF.preload(assetUrl("/models/mr-dog-coin-red-room.glb"));
-  useGLTF.preload(assetUrl("/models/mr-dog-coin-diwali.glb"));
 }

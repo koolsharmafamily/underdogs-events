@@ -125,7 +125,10 @@ export function MrDogChat({
     sendMessage(question);
   };
 
-  const avatarUrl = outfit === "home" ? assetUrl("/media/mr-dog/party-coin-disc.webp") : `/media/mr-dog/${outfit}/avatar.webp`;
+  const avatarUrl =
+    outfit === "home"
+      ? assetUrl("/media/mr-dog/party-coin-disc.webp")
+      : assetUrl(`/media/mr-dog/${outfit}/avatar.webp`);
 
   const accentColor =
     world === "redroom"

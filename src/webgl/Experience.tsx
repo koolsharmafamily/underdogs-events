@@ -219,6 +219,11 @@ function CanvasInner() {
                 setContextLost(false);
                 if (advanceRef.current) {
                   setWebglAdvance((time) => {
+                    if (
+                      useMrDogStore.getState().chatCovering ||
+                      document.documentElement.dataset.lightbox === "open"
+                    )
+                      return;
                     if (useStore.getState().sceneRoute) advanceRef.current?.(time);
                   });
                 }
@@ -275,13 +280,16 @@ function CanvasInner() {
 }
 
 export function Experience() {
-  const homeReady = useStore(s => s.renderedWorlds.home);
-  const tier = useStore(s => s.tier);
+  const homeReady = useStore((s) => s.renderedWorlds.home);
+  const tier = useStore((s) => s.tier);
   const world = useStore((s) => s.world);
   return (
     <div
       aria-hidden="true"
-      style={{opacity:world === "home" && !homeReady && tier !== "T0" ? 0 : 1, transition:"opacity 240ms ease-out"}}
+      style={{
+        opacity: world === "home" && !homeReady && tier !== "T0" ? 0 : 1,
+        transition: "opacity 240ms ease-out",
+      }}
       className={`fixed inset-0 pointer-events-none overflow-hidden ${
         world === "diwali" ? "z-[3]" : "z-0"
       }`}

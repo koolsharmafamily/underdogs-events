@@ -11,7 +11,6 @@ export function MrDogLauncher() {
   const pathname = usePathname();
   const isOpen = useMrDogStore((s) => s.isOpen);
   const openMrDog = useMrDogStore((s) => s.openMrDog);
-  const phase = useAppStore((s) => s.phase);
   const isTransitioning = useAppStore((s) => s.isTransitioning);
   const world = useAppStore((s) => s.world);
   const outfit = pathname.startsWith("/the-red-room")
@@ -84,15 +83,19 @@ export function MrDogLauncher() {
 
   const handlePointerEnter = useCallback(() => {
     setIsHovered(true);
-    // Preload model on hover/focus
+    // Preload active world's Mr. Dog model on hover/focus
     if (typeof window !== "undefined") {
+      const modelPath =
+        outfit === "redroom"
+          ? "/models/mr-dog-coin-red-room.glb"
+          : outfit === "diwali"
+            ? "/models/mr-dog-coin-diwali.glb"
+            : "/models/mr-dog-party-coin.glb";
       void import("@react-three/drei").then(({ useGLTF }) => {
-        useGLTF.preload(assetUrl("/models/mr-dog-party-coin.glb"));
-        useGLTF.preload(assetUrl("/models/mr-dog-coin-red-room.glb"));
-        useGLTF.preload(assetUrl("/models/mr-dog-coin-diwali.glb"));
+        useGLTF.preload(assetUrl(modelPath));
       });
     }
-  }, []);
+  }, [outfit]);
 
   const handlePointerLeave = useCallback(() => {
     setIsHovered(false);
@@ -110,7 +113,10 @@ export function MrDogLauncher() {
         ? "#E5B25D"
         : "#EA28C1";
 
-  const avatarSrc = outfit === "home" ? assetUrl("/media/mr-dog/party-coin.webp") : `/media/mr-dog/${outfit}/${avatarState}.webp`;
+  const avatarSrc =
+    outfit === "home"
+      ? assetUrl("/media/mr-dog/party-coin.webp")
+      : assetUrl(`/media/mr-dog/${outfit}/${avatarState}.webp`);
 
   return (
     <div
@@ -174,7 +180,7 @@ export function MrDogLauncher() {
             width={56}
             height={56}
             className="w-full h-full object-cover select-none"
-              loading="eager"
+            loading="eager"
           />
         </div>
 

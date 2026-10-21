@@ -29,12 +29,32 @@ export function WorldDirector() {
   const propsRequested = useStore((s) => s.homePropsRequested);
   const homeReady = useStore((s) => s.renderedWorlds.home);
   useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth < 768) return;
     const request = () => useStore.getState().requestHomeProps();
-    const observer = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) request(); }, { rootMargin: "800px" });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) request();
+      },
+      { rootMargin: "800px" },
+    );
     const door = document.querySelector('[data-scene="H5"]');
     if (door) observer.observe(door);
-    const idle = homeReady ? window.requestIdleCallback?.(request, { timeout: 5000 }) : undefined;
-    return () => { observer.disconnect(); if (idle !== undefined) window.cancelIdleCallback(idle); };
+    let idleId: number | undefined;
+    let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
+    if (homeReady) {
+      if (typeof window.requestIdleCallback === "function") {
+        idleId = window.requestIdleCallback(request, { timeout: 5000 });
+      } else {
+        fallbackTimer = setTimeout(request, 1500);
+      }
+    }
+    return () => {
+      observer.disconnect();
+      if (idleId !== undefined && typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(idleId);
+      }
+      if (fallbackTimer !== undefined) clearTimeout(fallbackTimer);
+    };
   }, [homeReady, world]);
 
   useEffect(() => {

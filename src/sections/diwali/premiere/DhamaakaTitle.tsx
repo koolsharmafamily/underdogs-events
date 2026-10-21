@@ -10,9 +10,6 @@ export function DhamaakaTitle() {
   // The entrance is a CSS animation (.hero-enter), so the title paints with the
   // HTML and never waits for JavaScript (LCP).
 
-  // Letters for staggered reveal: D - H - A - M - A - A - K - A
-  const letters = ["D", "H", "A", "M", "A", "A", "K", "A"];
-
   return (
     <div className="relative z-10 flex flex-col items-center text-center px-2 select-none w-full max-w-[1020px] mx-auto">
       {/* Accessible h1 */}
