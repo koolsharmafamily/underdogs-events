@@ -1,9 +1,8 @@
 "use client";
 import { PointerDetails } from "./PointerDetails";
 
-import React, { useEffect, useRef, useState } from "react";
-import dynamic from "next/dynamic";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { startClock, getLenis } from "@/motion/clock";
 import {
@@ -15,14 +14,11 @@ import {
 } from "@/motion/transitions";
 import { frame } from "@/state/frame";
 import { isSceneRoute, useStore } from "@/state/store";
-import { preloadWorldAssets } from "@/webgl/preload";
 import { TransitionStage } from "./TransitionStage";
 import { SceneNavigation } from "./SceneNavigation";
-import { MrDogLauncher } from "@/features/mrdog/MrDogLauncher";
 import { useMrDogStore } from "@/features/mrdog/store";
 
 export function MotionRuntime() {
-  const router = useRouter();
   const pathname = usePathname();
   const setWorld = useStore((s) => s.setWorld);
   const setPrefersReducedMotion = useStore((s) => s.setPrefersReducedMotion);
@@ -77,7 +73,7 @@ export function MotionRuntime() {
     useStore.getState().setSceneRoute(isSceneRoute(pathname));
     // The renderer starts loading the active world after first paint.
     setWorld(world);
-    notifyRouteEntered();
+    notifyRouteEntered(pathname);
     prevPathnameRef.current = pathname;
 
     const wasPopState = isPopStateRef.current;

@@ -45,6 +45,7 @@ let activeTimeline: gsap.core.Timeline | null = null;
 let pendingEnterCallback: (() => void) | null = null;
 let pendingEnterFallbackTimer: number | null = null;
 let pendingTargetWorld: WorldId | null = null;
+let pendingTargetPath: string | null = null;
 let isRouteEntered = false;
 let isWorldRendered = false;
 
@@ -177,6 +178,7 @@ function tryProceedEnter(force = false) {
   const fn = pendingEnterCallback;
   pendingEnterCallback = null;
   pendingTargetWorld = null;
+  pendingTargetPath = null;
 
   // Wait one animation frame after layout + WebGL settle so frame 1 of the coin dissolve is 100% hitch-free
   requestAnimationFrame(() => {
@@ -197,9 +199,16 @@ function tryProceedEnter(force = false) {
 }
 
 /**
- * Called by destination page's `useEnterTransition` once its DOM is mounted
+ * Called by destination page's `useEnterTransition` or `MotionRuntime` once its DOM is mounted
  */
-export function notifyRouteEntered() {
+export function notifyRouteEntered(pathname?: string) {
+  if (
+    pendingTargetPath &&
+    pathname &&
+    pathname !== pendingTargetPath
+  ) {
+    return;
+  }
   isRouteEntered = true;
   tryProceedEnter(false);
 }
@@ -219,7 +228,9 @@ export function notifyWorldRendered(world: WorldId) {
  */
 export function useEnterTransition(world: WorldId) {
   useEffect(() => {
-    notifyRouteEntered();
+    notifyRouteEntered(
+      typeof window !== "undefined" ? window.location.pathname : undefined,
+    );
   }, [world]);
 }
 
@@ -393,6 +404,7 @@ export function runRouteTransition(
   }
   pendingEnterCallback = null;
   pendingTargetWorld = null;
+  pendingTargetPath = null;
   isRouteEntered = false;
   isWorldRendered = false;
 
@@ -474,7 +486,10 @@ export function runRouteTransition(
 
     const currentStore = useStore.getState();
     pendingTargetWorld = toWorld;
-    isRouteEntered = Boolean(options.isPopState);
+    pendingTargetPath = toPath;
+    isRouteEntered =
+      Boolean(options.isPopState) ||
+      (typeof window !== "undefined" && window.location.pathname === toPath);
     isWorldRendered = Boolean(
       currentStore.tier === "T0" ||
       !isSceneRoute(toPath) ||
@@ -488,7 +503,7 @@ export function runRouteTransition(
     };
 
     if (typeof window !== "undefined") {
-      const fallbackDelay = isMobile ? 180 : 280;
+      const fallbackDelay = isMobile ? 260 : 360;
       pendingEnterFallbackTimer = window.setTimeout(() => {
         tryProceedEnter(true);
       }, fallbackDelay);

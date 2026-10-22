@@ -9,6 +9,12 @@ import type { TransitionType } from '@/state/frame'
 
 export type TransitionHref = '/' | '/the-red-room' | '/diwali' | '/events' | '/mr-dog'
 
+let pendingTargetHref: TransitionHref | null = null
+
+export function clearPendingTargetHref() {
+  pendingTargetHref = null
+}
+
 /**
  * Navigates through the transition system (cover, preload, badge continuity),
  * for buttons and taps that are not links. Same route: does nothing.
@@ -18,13 +24,20 @@ export function useTransitionNavigate() {
   const pathname = usePathname()
   return useCallback(
     (href: TransitionHref, options: { transitionType?: TransitionType; origin?: 'door' | 'gate' | 'nav' } = {}) => {
-      if (pathname === href) return
+      const currentPath =
+        typeof window !== 'undefined' ? window.location.pathname : pathname
+      if (currentPath === href && pendingTargetHref === null) return
+      if (pendingTargetHref === href) return
+      pendingTargetHref = href
       router.prefetch(href)
       preloadRouteWorld(href)
       runRouteTransition(
-        options.transitionType ?? determineTransitionType(pathname, href),
-        () => router.push(href),
-        { fromPath: pathname, toPath: href, origin: options.origin }
+        options.transitionType ?? determineTransitionType(currentPath, href),
+        () => {
+          pendingTargetHref = null
+          router.push(href)
+        },
+        { fromPath: currentPath, toPath: href, origin: options.origin }
       )
     },
     [router, pathname]

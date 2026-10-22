@@ -82,9 +82,13 @@ let promise: Promise<typeof import("./transitionRuntime")> | undefined;
 export function loadTransitionRuntime() { return promise ??= import("./transitionRuntime").then(m => (runtime=m)); }
 export function registerTransitionStage(refs: TransitionStageRefs | null) { runtime?.registerTransitionStage(refs); }
 export function registerTransitionVeil(el: HTMLElement | null) { runtime?.registerTransitionVeil(el); }
-export function notifyRouteEntered() { runtime?.notifyRouteEntered(); }
+export function notifyRouteEntered(pathname?: string) { runtime?.notifyRouteEntered(pathname); }
 export function notifyWorldRendered(world: WorldId) { runtime?.notifyWorldRendered(world); }
-export function useEnterTransition(world: WorldId) { useEffect(() => { notifyRouteEntered(); }, [world]); }
+export function useEnterTransition(world: WorldId) {
+  useEffect(() => {
+    notifyRouteEntered(typeof window !== "undefined" ? window.location.pathname : undefined);
+  }, [world]);
+}
 export function runRouteTransition(type: TransitionType, onCover: () => void, options: RouteTransitionOptions = {}) {
   if (runtime) runtime.runRouteTransition(type,onCover,options); else onCover();
 }

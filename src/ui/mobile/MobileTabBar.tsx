@@ -2,16 +2,17 @@
 
 import { assetUrl } from "@/utils/assetUrl";
 import { TransitionLink } from "@/ui/TransitionLink";
-import React, { useState, useCallback, useEffect, useRef } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { saveRouteScroll } from "@/motion/transitions";
 import { site } from "@/content/site";
-import { useMrDogStore, worldToOutfit } from "@/features/mrdog/store";
+import { worldToOutfit } from "@/features/mrdog/store";
 import { useStore as useAppStore } from "@/state/store";
 
 export function MobileTabBar() {
   const pathname = usePathname();
+  const router = useRouter();
   const world = useAppStore((s) => s.world);
   const motion = useAppStore((s) => s.motionEnabled);
 
@@ -21,7 +22,14 @@ export function MobileTabBar() {
   const isDiwali = pathname.startsWith("/diwali");
   const isEventsList = pathname.startsWith("/events");
   const isEventsTab = isEventsList || isRedRoom || isDiwali;
-  const outfit = isRedRoom ? "redroom" : isDiwali ? "diwali" : worldToOutfit(world);
+  const _outfit = isRedRoom ? "redroom" : isDiwali ? "diwali" : worldToOutfit(world);
+
+  // Eagerly prefetch mobile tab routes so switching tabs never falls back to a slow RSC fetch
+  useEffect(() => {
+    router.prefetch("/");
+    router.prefetch("/events");
+    router.prefetch("/mr-dog");
+  }, [router]);
 
   const [winking, setWinking] = useState(false);
   const [dogBlinking, setDogBlinking] = useState(false);
@@ -158,13 +166,12 @@ export function MobileTabBar() {
   const { accent, activeText, glow, barBorder, barBg } = getTheme();
 
   // Determine avatar icon state
-  let avatarType = "avatar";
+  let _avatarType = "avatar";
   if (dogWinking) {
-    avatarType = "avatar-wink";
+    _avatarType = "avatar-wink";
   } else if (dogBlinking) {
-    avatarType = "avatar-blink";
+    _avatarType = "avatar-blink";
   }
-  const dogAvatarSrc = assetUrl("/media/mr-dog/party-coin.webp");
 
   return (
     <nav
@@ -208,6 +215,7 @@ export function MobileTabBar() {
         {/* Column 1: Home */}
         <TransitionLink
           href="/"
+          origin="nav"
           onClick={handleHomeTap}
           aria-current={isHome ? "page" : undefined}
           className={`group relative flex-1 flex flex-col items-center justify-center gap-1 transition-transform duration-100 active:scale-[0.92] ${
@@ -269,6 +277,7 @@ export function MobileTabBar() {
         {/* Column 2: Center Mr. Dog Party Coin Button */}
         <TransitionLink
           href="/mr-dog"
+          origin="nav"
           onClick={handleDogTap}
           aria-label="Mr. Dog AI Concierge"
           aria-current={isMrDog ? "page" : undefined}
@@ -303,6 +312,7 @@ export function MobileTabBar() {
         {/* Column 3: Events */}
         <TransitionLink
           href="/events"
+          origin="nav"
           onClick={handleEventsTap}
           aria-current={isEventsTab ? "page" : undefined}
           className={`group relative flex-1 flex flex-col items-center justify-center gap-1 transition-transform duration-100 active:scale-[0.92] ${
