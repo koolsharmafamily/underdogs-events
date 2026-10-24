@@ -1,7 +1,7 @@
 import React from 'react'
 import { site } from '@/content/site'
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://underdogsnagpur.com'
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.underdogs.co.in'
 
 export const organizationSchema = {
   '@context': 'https://schema.org',

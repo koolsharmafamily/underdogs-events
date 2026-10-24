@@ -11,7 +11,7 @@ import { Nav } from "@/ui/Nav";
 import { FilmGrain } from "@/ui/FilmGrain";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://underdogsnagpur.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.underdogs.co.in";
 
 export const viewport: Viewport = {
   width: "device-width",
