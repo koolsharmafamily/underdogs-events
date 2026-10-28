@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { site, ANNOUNCING_SOON } from "@/content/site";
+import { site } from "@/content/site";
 import { useStore } from "@/state/store";
 import { UnderdogsBadgeSvg } from "@/ui/UnderdogsBadgeSvg";
 import { BookingDetails } from "@/ui/BookingDetails";
@@ -12,16 +12,17 @@ interface PremiereInviteCardProps {
 
 export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
   const motionEnabled = useStore((s) => s.motionEnabled);
+  const diwali = site.diwali;
 
   return (
     <div
       role="region"
       aria-label="Official Premiere Invitation Card Details"
-      className="relative z-10 w-full max-w-[620px] mx-auto px-4 select-none perspective-[1200px]"
+      className="relative z-10 w-full max-w-[660px] mx-auto px-4 select-none perspective-[1200px]"
     >
       {/* Spotlight beam shining directly onto the invitation card */}
       <div
-        className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[420px] h-[520px] rounded-full bg-[radial-gradient(circle_at_50%_0%,rgba(255,241,201,0.18)_0%,rgba(229,178,93,0.06)_45%,transparent_70%)] blur-2xl"
+        className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[440px] h-[520px] rounded-full bg-[radial-gradient(circle_at_50%_0%,rgba(255,241,201,0.18)_0%,rgba(229,178,93,0.06)_45%,transparent_70%)] blur-2xl"
         aria-hidden="true"
       />
 
@@ -71,15 +72,15 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </div>
 
           <span className="font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.34em] text-[#E5B25D]">
-            {site.diwali.invitation.kicker}
+            {diwali.presenter}
           </span>
 
-          <h2 className="font-playfair font-black text-[24px] sm:text-[30px] uppercase tracking-[0.06em] text-[#FFF6EE] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            {site.diwali.title}
+          <h2 className="font-playfair font-black text-[24px] sm:text-[32px] uppercase tracking-[0.06em] text-[#FFF6EE] drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+            {diwali.title}
           </h2>
 
-          <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.22em] text-[#FFE3A3]/80">
-            {site.diwali.subtitle}
+          <span className="font-cinzel text-[11px] sm:text-[13px] uppercase tracking-[0.24em] text-[#FFE3A3]/90">
+            {diwali.subtitle}
           </span>
 
           {/* Fine Gold Divider */}
@@ -90,46 +91,104 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </div>
         </div>
 
-        {/* Invitation Rows: Date, Venue, Time, Dress Code, Entry */}
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-2 border-t border-[#E5B25D]/20 text-left">
-          {site.diwali.invitation.rows.map((row) => {
-            const isAnnouncing = row.value.includes(ANNOUNCING_SOON);
+        {/* Invitation Event Details Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 pt-3 border-t border-[#E5B25D]/20 text-left">
+          {/* Date */}
+          <div className="flex flex-col gap-0.5">
+            <span className="font-cinzel text-[10px] uppercase tracking-[0.24em] text-[#E5B25D]">
+              Date
+            </span>
+            <span className="font-manrope text-[14px] sm:text-[15px] font-semibold text-[#FFF6EE]">
+              {diwali.date}
+            </span>
+          </div>
 
-            return (
+          {/* Time & Gates Close Notice */}
+          <div className="flex flex-col gap-0.5">
+            <span className="font-cinzel text-[10px] uppercase tracking-[0.24em] text-[#E5B25D]">
+              Time
+            </span>
+            <span className="font-manrope text-[14px] sm:text-[15px] font-semibold text-[#FFF6EE]">
+              {diwali.time}
+            </span>
+            <span className="font-manrope text-[11px] font-medium text-[#E0217A]">
+              {diwali.gatesClose}
+            </span>
+          </div>
+
+          {/* Venue */}
+          <div className="sm:col-span-2 flex flex-col gap-0.5">
+            <span className="font-cinzel text-[10px] uppercase tracking-[0.24em] text-[#E5B25D]">
+              Venue
+            </span>
+            <span className="font-manrope text-[14px] sm:text-[15px] font-semibold text-[#FFF6EE]">
+              {diwali.invitation.rows[2].value}
+            </span>
+          </div>
+        </div>
+
+        {/* Phase 1 Rates Box */}
+        <div className="mt-6 pt-5 border-t border-[#E5B25D]/25">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.26em] text-[#FFE3A3] font-bold">
+              {diwali.pricing.title}
+            </span>
+            <span className="px-2.5 py-0.5 rounded text-[9.5px] font-mono uppercase tracking-wider bg-[#E5B25D]/15 border border-[#E5B25D]/40 text-[#FFE3A3]">
+              Limited Passes
+            </span>
+          </div>
+
+          {/* Rate Tiers: Couple & Stag */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {diwali.pricing.rates.map((rate) => (
               <div
-                key={row.label}
-                className={
-                  row.label === "Venue" ? "sm:col-span-2 flex flex-col gap-1" : "flex flex-col gap-1"
-                }
+                key={rate.tier}
+                className="flex flex-col p-3.5 rounded-lg bg-[#180A10]/80 border border-[#E5B25D]/30"
               >
-                <dt className="font-cinzel text-[10px] uppercase tracking-[0.24em] text-[#E5B25D]">
-                  {row.label}
-                </dt>
-                <dd className="font-manrope text-[14px] sm:text-[15px] font-medium text-[#FFF6EE] flex items-center gap-2">
-                  {isAnnouncing ? (
-                    <span className="inline-flex items-center gap-2 text-[#FFE3A3]/75 italic">
-                      <span
-                        className="inline-block w-2 h-2 rounded-full bg-[#FFF1C9] animate-[bulbTwinkle_2s_infinite_ease-in-out]"
-                        style={{ boxShadow: "0 0 6px #FFF1C9" }}
-                        aria-hidden="true"
-                      />
-                      {row.value}
-                    </span>
-                  ) : (
-                    <span>{row.value}</span>
-                  )}
-                </dd>
-                {(row as { sub?: string }).sub && (
-                  <p className="font-manrope text-[11px] text-[#FFF6EE]/60 mt-0.5">
-                    {(row as { sub?: string }).sub}
-                  </p>
-                )}
+                <div className="flex items-center justify-between">
+                  <span className="font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FFE3A3] font-semibold">
+                    {rate.tier}
+                  </span>
+                  <span className="font-manrope text-[16px] sm:text-[17px] font-extrabold text-white">
+                    {rate.price}
+                  </span>
+                </div>
+                {/* Cover on a separate line beneath it */}
+                <span className="font-manrope text-[12px] text-[#E5B25D] font-medium pt-1">
+                  {rate.cover}
+                </span>
               </div>
-            );
-          })}
-        </dl>
+            ))}
+          </div>
 
-        {/* Booking Details & Inquiries */}
+          {/* Gates Close Notice */}
+          <p className="font-manrope text-[12px] text-[#FFF6EE]/75 font-medium mt-2.5 text-center">
+            {diwali.pricing.notice}
+          </p>
+        </div>
+
+        {/* VIP Enclosures Sold Out Notice (Styled in world's pink/gold) */}
+        <div className="mt-5 p-3 rounded-lg bg-[#240A15]/90 border border-[#E0217A]/50 flex items-center justify-center gap-2.5 text-center shadow-[0_4px_16px_rgba(224,33,122,0.2)]">
+          <span className="w-2 h-2 rounded-full bg-[#E0217A] animate-pulse" aria-hidden="true" />
+          <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.22em] text-[#FFE3A3] font-bold">
+            {diwali.vipEnclosures.notice}
+          </span>
+        </div>
+
+        {/* Hidden Diwali QR slot (hidden until asset supplied) */}
+        {diwali.qrEntry.enabled && (
+          <div className="mt-6 pt-5 border-t border-[#E5B25D]/20 flex flex-col items-center gap-2">
+            <span className="font-cinzel text-xs uppercase tracking-widest text-[#E5B25D]">
+              Fast-Track Entry QR
+            </span>
+            {/* Slot prepared for client QR asset */}
+            <div className="w-48 h-48 border border-white/20 bg-black/40 rounded flex items-center justify-center">
+              <span className="font-mono text-xs text-white/60">QR Slot</span>
+            </div>
+          </div>
+        )}
+
+        {/* Tickets, tables & enclosures enquiries */}
         <div className="mt-6 pt-5 border-t border-[#E5B25D]/20">
           <BookingDetails variant="diwali" />
         </div>

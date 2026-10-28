@@ -21,13 +21,17 @@ const djSchema = z.object({
 })
 
 const worldDoorSchema = z.object({
+  status: z.enum(['past', 'upcoming']).optional(),
   kicker: text,
   name: text,
   occasion: text,
   subtitle: text.optional(),
   date: text,
+  time: text.optional(),
+  gatesClose: text.optional(),
   isoDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   place: text,
+  pastLabel: text.optional(),
   cta: text,
   href: internalHrefSchema,
 })
@@ -49,6 +53,13 @@ export const siteSchema = z.object({
       statements: z.tuple([z.string(), z.string(), z.string()]),
       body: text,
     }),
+    pastArtists: z.array(
+      z.object({
+        name: text,
+        genre: text.optional(),
+        photo: z.string().nullable(),
+      })
+    ),
     nights: z.object({
       label: text,
       latestLabel: text,
@@ -64,6 +75,18 @@ export const siteSchema = z.object({
   }),
   redRoom: z.object({
     meta: z.object({ title: text, description: text }),
+    status: z.literal('past'),
+    pastLabel: text,
+    thankYou: text,
+    decorProduction: z.object({
+      credit: text,
+      logo: z.string().startsWith('/'),
+      alt: text,
+    }),
+    nextGate: z.object({
+      label: text,
+      href: internalHrefSchema,
+    }),
     presenter: text,
     kicker: text,
     title: text,
@@ -90,28 +113,62 @@ export const siteSchema = z.object({
   }),
   diwali: z.object({
     meta: z.object({ title: text, description: text }),
+    status: z.literal('upcoming'),
     presenter: text,
     kicker: text,
     title: text,
     subtitle: text,
     accent: text,
+    date: text,
+    time: text,
+    gatesClose: text,
     sub: text,
     jump: text,
     opener: z.object({ slate: text, skip: text }),
     story: z.tuple([z.string(), z.string(), z.string(), z.string(), z.string()]),
     dj: djSchema.nullable(),
+    pricing: z.object({
+      title: text,
+      rates: z.array(
+        z.object({
+          tier: text,
+          price: text,
+          cover: text,
+        })
+      ),
+      notice: text,
+    }),
+    vipEnclosures: z.object({
+      status: z.literal('sold_out'),
+      notice: text,
+    }),
+    layout: z.object({
+      title: text,
+      src: z.string().startsWith('/'),
+      fullSrc: z.string().startsWith('/'),
+      alt: text,
+      caption: text,
+    }),
+    qrEntry: z.object({
+      enabled: z.boolean(),
+      src: z.string().nullable(),
+      instructions: z.string().nullable(),
+    }),
     invitation: z.object({
       kicker: text,
       heading: text,
-      // Venue is the name only: no street address until the client confirms one.
-      rows: z.array(invitationRowSchema.extend({ sub: z.undefined().optional() })).length(5),
+      rows: z.array(invitationRowSchema).length(5),
     }),
     partners: z.object({
       label: text,
       list: z.array(z.object({ role: text, name: text })).min(1),
     }),
     nowShowing: z.object({ kicker: text, label: text }),
-    poster: z.object({ src: z.string().startsWith('/'), alt: text }),
+    poster: z.object({
+      src: z.string().startsWith('/'),
+      fullSrc: z.string().startsWith('/').optional(),
+      alt: text,
+    }),
     outro: z.object({
       tagline: text,
       wish: text,

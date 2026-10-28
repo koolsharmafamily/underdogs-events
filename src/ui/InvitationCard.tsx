@@ -1,7 +1,12 @@
+"use client";
+
 import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { AnnouncingSoon } from './AnnouncingSoon'
 import { Divider } from './Divider'
 import { BookingDetails } from './BookingDetails'
+import { site } from '@/content/site'
 
 export interface InvitationRow {
   readonly label: string
@@ -16,15 +21,6 @@ interface InvitationCardProps {
   className?: string
 }
 
-/**
- * Part 8 R4 & Part 9 D3 Invitation Card DOM Overlay:
- * - Red Room: Card paper is --rr-bone (#EFD9CD), with oxblood hairline borders.
- *   Heading "THE RED ROOM" in Cinzel Decorative, --rr-velvet (#510805), then a diamond divider.
- *   Two-column grid: Cinzel caps labels (12 px, +0.2em, --rr-blood #95120E) and Manrope values (--rr-oxblood #2A0403).
- * - Diwali: Ivory card (--dw-ivory #FFF6EE) with rani-pink inner panel border and gold-foil border.
- *   Heading "Diwali with Underdogs" in Bodoni Moda Italic (--dw-rani-deep #7E1347), then a sparkle divider.
- *   Two-column grid: labels in Cinzel caps (12 px, --dw-rani-deep) and values in Manrope (--dw-plum-ink #2A0E1B).
- */
 export function InvitationCard({
   variant,
   heading,
@@ -106,9 +102,46 @@ export function InvitationCard({
           ))}
         </dl>
 
-        <div className="pt-4 border-t border-current/15">
-          <BookingDetails variant={isRedRoom ? "redroom" : "diwali"} />
-        </div>
+        {isRedRoom ? (
+          /* Red Room Past Event Section: Thank-You Note, Rise India Credit & Link to DHAMAAKA */
+          <div className="pt-5 border-t border-[#95120E]/25 flex flex-col gap-4 text-center">
+            {/* Classy Thank-You Note */}
+            <p className="font-cormorant italic text-[18px] sm:text-[21px] font-semibold text-[#510805] leading-snug">
+              &ldquo;{site.redRoom.thankYou}&rdquo;
+            </p>
+
+            {/* Décor & Production by Rise India credit */}
+            <div className="flex flex-col items-center gap-2 pt-2 pb-1">
+              <span className="font-cinzel text-[10.5px] uppercase tracking-[0.24em] text-[#95120E] font-semibold">
+                {site.redRoom.decorProduction.credit}
+              </span>
+              <div className="relative w-36 h-12 rounded bg-[#0A0203] p-1.5 flex items-center justify-center border border-[#95120E]/30 shadow-inner">
+                <Image
+                  src={site.redRoom.decorProduction.logo}
+                  alt={site.redRoom.decorProduction.alt}
+                  width={140}
+                  height={45}
+                  className="object-contain max-h-full"
+                />
+              </div>
+            </div>
+
+            {/* Next Gate Onward Link to DHAMAAKA */}
+            <div className="pt-2">
+              <Link
+                href={site.redRoom.nextGate.href}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-[#510805] text-[#EFD9CD] hover:bg-[#8B1414] transition-colors font-cinzel text-xs uppercase tracking-[0.24em] font-semibold shadow-md"
+              >
+                <span>{site.redRoom.nextGate.label}</span>
+                <span>→</span>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="pt-4 border-t border-current/15">
+            <BookingDetails variant="diwali" />
+          </div>
+        )}
       </div>
     </article>
   )

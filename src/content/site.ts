@@ -19,12 +19,12 @@ export const site = {
     meta: {
       title: 'Underdogs — Gate to Rage · Nagpur',
       description:
-        'Underdogs Entertainment is a party and entertainment crew from Nagpur. This season: two worlds — The Red Room (Halloween, Sat 24 Oct 2026) and DHAMAAKA (Diwali, Sat 7 Nov 2026).',
+        'Underdogs Entertainment is Nagpur’s party people. This season: two worlds — The Red Room (Halloween, Sat 24 Oct 2026) and DHAMAAKA (Diwali, Sat 7 Nov 2026).',
     },
     hero: {
-      label: 'Underdogs Entertainment — Nagpur',
+      label: 'Nagpur’s Party People · Underdogs',
       title: 'Gate to Rage.',
-      lead: 'We’re Nagpur’s party people. Every night we throw gets its own name, its own look and its own rules.',
+      lead: 'We’re Nagpur’s party people. Underdogs was created to cater to an exclusive niche within Nagpur’s party scene — every night gets its own name, its own look and its own rules.',
       cue: 'Enter',
       seasonCta: 'This season',
     },
@@ -36,8 +36,14 @@ export const site = {
         'Chaos, curated.',
       ],
       body:
-        'Underdogs Entertainment is a party and entertainment crew from Nagpur. Past nights include Project X, Maison Blanche, Afrochella, Akai Yane, Luau and Anti V — plus our Holi, Diwali and New Year’s Eve editions.',
+        'Underdogs was created to cater to an exclusive niche within Nagpur’s party scene. Past nights include Project X, Maison Blanche, Afrochella, Akai Yane, Luau and Anti V — plus our Holi, Diwali and New Year’s Eve editions.',
     },
+    // Ready-to-fill past-artist registry (hidden until client assets supplied)
+    pastArtists: [] as ReadonlyArray<{
+      name: string;
+      genre?: string;
+      photo: string | null;
+    }>,
     nights: {
       label: 'Nights we’ve thrown',
       latestLabel: 'Latest',
@@ -53,13 +59,32 @@ export const site = {
     },
     worlds: {
       label: 'Choose a door',
-      one: { kicker: 'World One', name: 'The Red Room', occasion: 'Halloween',
-             date: 'Sat 24 Oct 2026', isoDate: '2026-10-24', place: 'Millo, Civil Lines, Nagpur',
-             cta: 'Enter World One', href: '/the-red-room' },
-      two: { kicker: 'World Two', name: 'DHAMAAKA', occasion: 'Diwali 2026',
-             subtitle: 'The Karan Johar Edition',
-             date: 'Sat 7 Nov 2026', isoDate: '2026-11-07', place: 'Hotel Centre Point, Nagpur',
-             cta: 'Enter World Two', href: '/diwali' },
+      one: {
+        status: 'past' as const,
+        kicker: 'World One',
+        name: 'The Red Room',
+        occasion: 'Halloween',
+        date: 'Sat 24 Oct 2026',
+        isoDate: '2026-10-24',
+        place: 'Millo, Civil Lines, Nagpur',
+        pastLabel: 'Happened · Sat 24 Oct 2026',
+        cta: 'Enter World One',
+        href: '/the-red-room' as const,
+      },
+      two: {
+        status: 'upcoming' as const,
+        kicker: 'World Two',
+        name: 'DHAMAAKA',
+        occasion: 'Diwali 2026',
+        subtitle: 'The Karan Johar Edition',
+        date: 'Sat 7 Nov 2026',
+        time: '8:00 PM – 1:30 AM',
+        gatesClose: 'Gates close at 10:00 PM.',
+        isoDate: '2026-11-07',
+        place: 'Hotel Centre Point, Nagpur',
+        cta: 'Enter World Two',
+        href: '/diwali' as const,
+      },
     },
   },
 
@@ -69,33 +94,45 @@ export const site = {
       description:
         'World One: The Red Room. Halloween with Underdogs — Saturday 24 October 2026 at Millo, Civil Lines, Nagpur. Costumes compulsory.',
     },
-    presenter: 'Underdogs present',               // (client) poster
+    status: 'past' as const,
+    pastLabel: 'Happened · Sat 24 Oct 2026',
+    thankYou:
+      'The Red Room has closed its doors. Thank you, Nagpur, for coming dressed to disturb. See you at the next gate.',
+    decorProduction: {
+      credit: 'Décor & Production by Rise India',
+      logo: assetUrl('/media/rise-india-logo.webp'),
+      alt: 'Rise India — Raise Your Expectations',
+    },
+    nextGate: {
+      label: 'The next gate: DHAMAAKA — 7 November',
+      href: '/diwali' as const,
+    },
+    presenter: 'Underdogs present',
     kicker: 'World One · Halloween',
     title: 'The Red Room',
-    sub: 'Saturday 24 October 2026 · Millo, Nagpur',
+    sub: 'Happened Saturday 24 October 2026 · Millo, Nagpur',
     jump: 'Details',
-    story: [                                       // (client) caption, verbatim
+    story: [
       'This year, we’re opening the doors to a different kind of madness.',
       'A night where the ordinary disappears, the shadows come alive, and the line between fantasy and reality begins to blur.',
       'Halloween is no longer just a celebration. It’s a character you become.',
     ],
-    dress: {                                       // (client) caption, verbatim
+    dress: {
       lines: ['Dress to disturb.', 'Dress to deceive.', 'Dress to become someone else.'],
       warning: 'Costumes aren’t optional. Consider this your warning.',
     },
     invitation: {
       heading: 'The Red Room',
-      hint: 'Scroll to break the seal',
+      hint: 'Scroll to view record',
       rows: [
         { label: 'Date', value: 'Saturday, 24 October 2026' },
-        { label: 'Time', value: ANNOUNCING_SOON },
+        { label: 'Status', value: 'Happened · Sat 24 Oct 2026' },
         { label: 'Venue', value: 'Millo — Kitchen & Bar',
           sub: '245/U1, East High Court Road, near Zudio, Civil Lines, Nagpur 440001' },
         { label: 'Dress code', value: 'Costumes compulsory' },
-        { label: 'Entry', value: ANNOUNCING_SOON },
+        { label: 'Décor & Production', value: 'Rise India' },
       ],
     },
-    // (client) confirmed headline artist, 15 Oct 2026. `photo` stays null until the client sends one.
     dj: {
       name: 'DJ Monish',
       role: 'Headline Artist · The Red Room Halloween',
@@ -107,7 +144,8 @@ export const site = {
     },
     partners: {
       label: 'In association with',
-      list: [                                      // (client) poster + caption; tech partner confirmed 15 Oct 2026
+      list: [
+        { role: 'Décor & production', name: 'Rise India' },
         { role: 'Title partner', name: 'F Salon by FashionTV, Nagpur' },
         { role: 'Venue partner', name: 'Millo — Kitchen & Bar' },
         { role: 'Glam partner', name: 'The Makeup Alchemy' },
@@ -115,12 +153,12 @@ export const site = {
         { role: 'Tech partner', name: 'Kool Korp' },
       ],
     },
-    poster: { src: assetUrl("/media/red-room-poster.webp"), alt: 'Official poster: Underdogs present The Red Room, Halloween, save the date 24 October.' },
+    poster: { src: assetUrl("/media/red-room-poster.webp"), alt: 'Official poster: Underdogs present The Red Room, Halloween, Saturday 24 October.' },
     outro: {
-      lines: ['Enter the world of Red Room.', 'The first world awaits.'],   // (client)
-      tagline: 'This year. Different.',                                    // (client)
-      next: { label: 'Now meet the other', href: '/diwali' },
-      back: { label: 'Back to the gate', href: '/' },
+      lines: ['The Red Room has closed its doors.', 'Thank you, Nagpur.'],
+      tagline: 'This year. Different.',
+      next: { label: 'The next gate: DHAMAAKA — 7 November', href: '/diwali' as const },
+      back: { label: 'Back to the gate', href: '/' as const },
     },
   },
 
@@ -128,27 +166,56 @@ export const site = {
     meta: {
       title: 'DHAMAAKA — The Karan Johar Edition · Underdogs Nagpur',
       description:
-        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Hotel Centre Point, Nagpur. NO CTRL presents.',
+        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents. Phase 1 Rates: Couple ₹5,000 (₹2,500 cover), Stag ₹4,000 (₹2,000 cover).',
     },
+    status: 'upcoming' as const,
     presenter: 'NO CTRL presents',
     kicker: 'World Two · Diwali 2026',
     title: 'DHAMAAKA',
     subtitle: 'The Karan Johar Edition',
     accent: 'दीपावली धमाका',
-    sub: 'Saturday 7 November 2026 · Hotel Centre Point, Nagpur',
+    date: 'Saturday 7 November 2026',
+    time: '8:00 PM – 1:30 AM',
+    gatesClose: 'Gates close at 10:00 PM.',
+    sub: 'Saturday 7 November 2026 · Centre Point, Nagpur',
     jump: 'Details',
     opener: { slate: 'Diwali 2026', skip: 'Skip' },
     story: ['Two worlds.', 'Two occasions.', 'Two very different nights.', 'You’ve seen one.', 'Now meet the other.'],
     dj: null as null,
+    pricing: {
+      title: 'Phase 1 Rates',
+      rates: [
+        { tier: 'Couple', price: '₹5,000', cover: '₹2,500 cover' },
+        { tier: 'Stag', price: '₹4,000', cover: '₹2,000 cover' },
+      ],
+      notice: 'Gates close at 10:00 PM.',
+    },
+    vipEnclosures: {
+      status: 'sold_out' as const,
+      notice: 'All VIP Enclosures Sold Out',
+    },
+    layout: {
+      title: 'Venue Layout',
+      src: assetUrl('/media/dhamaaka-layout.webp'),
+      fullSrc: assetUrl('/media/dhamaaka-layout-full.webp'),
+      alt: 'Official Venue Layout — NO CTRL presents DHAMAAKA',
+      caption:
+        'Reference layout — tables D1–D9 and U1–U4, NO CTRL Lounge, stage and DJ booth, bars, entrances and fire exit.',
+    },
+    qrEntry: {
+      enabled: false,
+      src: null as string | null,
+      instructions: null as string | null,
+    },
     invitation: {
       kicker: 'The invitation',
       heading: 'DHAMAAKA with Underdogs',
       rows: [
         { label: 'Date', value: 'Saturday, 7 November 2026' },
-        { label: 'Time', value: ANNOUNCING_SOON },
-        { label: 'Venue', value: 'Hotel Centre Point, Nagpur' },
-        { label: 'Theme & dress code', value: ANNOUNCING_SOON },
-        { label: 'Entry', value: ANNOUNCING_SOON },
+        { label: 'Time', value: '8:00 PM – 1:30 AM', sub: 'Gates close at 10:00 PM.' },
+        { label: 'Venue', value: 'Centre Point, Nagpur' },
+        { label: 'Phase 1 Rates', value: 'Couple: ₹5,000 · Stag: ₹4,000' },
+        { label: 'VIP Enclosures', value: 'All VIP Enclosures Sold Out' },
       ],
     },
     partners: {
@@ -156,22 +223,25 @@ export const site = {
       list: [
         { role: 'Powered by', name: 'Rich Bliss Auto · Rich Bliss Jewels' },
         { role: 'Co-powered by', name: 'F Salon by FashionTV' },
-        { role: 'Venue partner', name: 'Hotel Centre Point' },
         { role: 'Beverage partner', name: 'Alpha Bull Rum' },
         { role: 'Gifting partner', name: 'Shika Arts' },
-        { role: 'Experience partner', name: 'Layerz' },
-        { role: 'Fashion partner', name: 'Aayush Sachdev Couture' },
         { role: 'Tech partner', name: 'Kool Korp' },
+        { role: 'Fashion partner', name: 'Aayush Sachdev Couture' },
+        { role: 'Experience partner', name: 'Layerz' },
         { role: 'Travel partner', name: 'Nova Travels' },
       ],
     },
-    nowShowing: { kicker: 'Now showing', label: 'The official flyer' },
-    poster: { src: assetUrl("/media/dhamaaka-flyer.webp"), alt: 'Official flyer: NO CTRL presents DHAMAAKA — The Karan Johar Edition, Diwali 2026 at Hotel Centre Point, Nagpur.' },
+    nowShowing: { kicker: 'Now showing', label: 'The official poster' },
+    poster: {
+      src: assetUrl('/media/dhamaaka-poster-phase1.webp'),
+      fullSrc: assetUrl('/media/dhamaaka-poster-phase1-full.webp'),
+      alt: 'Official poster: NO CTRL presents DHAMAAKA — The Karan Johar Edition · Saturday 7 November 2026 · Centre Point, Nagpur.',
+    },
     outro: {
       tagline: 'This year, different.',
       wish: 'शुभ दीपावली',
-      other: { label: 'The other world: The Red Room', href: '/the-red-room' },
-      back: { label: 'Back to the gate', href: '/' },
+      other: { label: 'The other world: The Red Room', href: '/the-red-room' as const },
+      back: { label: 'Back to the gate', href: '/' as const },
     },
   },
 
@@ -192,7 +262,7 @@ export const site = {
   events: {
     meta: {
       title: 'Events · Underdogs Nagpur',
-      description: 'Two worlds. Two celebrations. One unforgettable season. The Red Room (Halloween, Sat 24 Oct 2026) and DHAMAAKA (Diwali, Sat 7 Nov 2026).',
+      description: 'Two worlds. Two celebrations. One unforgettable season. DHAMAAKA (Diwali, Sat 7 Nov 2026) and The Red Room (Halloween, Sat 24 Oct 2026).',
     },
     title: 'This season',
     lines: ['Two worlds.', 'Two celebrations.'],

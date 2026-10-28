@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  experimental: {
+    agentUpgrade: 'security',
+  },
   async rewrites() {
     return ['models', 'media'].map((folder) => ({
       source: `/${folder}/v/:hash/:path*`,

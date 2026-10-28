@@ -16,7 +16,6 @@ import { InvitationCard } from "@/ui/InvitationCard";
 import { ArtistPortrait } from "@/ui/ArtistPortrait";
 import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
-import { BookingDetails } from "@/ui/BookingDetails";
 import { cardOverlayRef } from "@/webgl/tracking/refs";
 
 const DRIPS = [
@@ -363,8 +362,34 @@ export function RedRoomView() {
         </div>
 
         {/* Booking Details with Instagram & Click-to-Call Phones */}
-        <div className="pt-2.5 border-t border-[#8B1414]/20 my-1">
-          <BookingDetails variant="redroom" compact />
+        <div className="pt-3 border-t border-[#8B1414]/25 my-1 flex flex-col gap-2.5 text-center">
+          <p className="font-cormorant italic text-[15px] sm:text-[17px] font-semibold text-[#510805] leading-snug">
+            &ldquo;{site.redRoom.thankYou}&rdquo;
+          </p>
+          <div className="flex flex-col items-center gap-1.5 py-1">
+            <span className="font-cinzel text-[9.5px] uppercase tracking-[0.24em] text-[#8B1414] font-semibold">
+              {site.redRoom.decorProduction.credit}
+            </span>
+            <div className="relative w-32 h-10 rounded bg-[#0A0203] p-1 flex items-center justify-center border border-[#8B1414]/30">
+              <Image
+                src={site.redRoom.decorProduction.logo}
+                alt={site.redRoom.decorProduction.alt}
+                width={120}
+                height={38}
+                className="object-contain max-h-full"
+              />
+            </div>
+          </div>
+          <div className="pt-1">
+            <TransitionLink
+              href={site.redRoom.nextGate.href}
+              transitionType="T3"
+              className="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-[#510805] text-[#EFD9CD] hover:bg-[#8B1414] transition-colors font-cinzel text-[10.5px] uppercase tracking-[0.24em] font-semibold shadow-md"
+            >
+              <span>{site.redRoom.nextGate.label}</span>
+              <span>→</span>
+            </TransitionLink>
+          </div>
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-[#8B1414]/20 font-cinzel text-[9.5px] uppercase tracking-[0.2em] text-[#4A0808]">
@@ -403,6 +428,55 @@ export function RedRoomView() {
                 />
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Past Event Thank-You & Rise India Décor & Production Credit */}
+      <section
+        aria-label="Event Record and Acknowledgements"
+        className="relative z-20 py-12 border-t border-[var(--rr-blood)]/30 bg-[#0E0204]/90 text-center"
+      >
+        <div className="site-container max-w-[680px] mx-auto flex flex-col items-center gap-6 px-4">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#FF1A35]/15 border border-[#FF1A35]/35 font-mono text-[11px] uppercase tracking-widest text-[#FF968B] font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF1A35]" />
+            {site.redRoom.pastLabel}
+          </div>
+
+          <p className="font-cormorant italic text-[clamp(20px,2.8vw,32px)] text-[var(--rr-bone)] leading-snug font-medium balance-heading">
+            &ldquo;{site.redRoom.thankYou}&rdquo;
+          </p>
+
+          <div className="w-full max-w-[280px]">
+            <Divider variant="diamond" active />
+          </div>
+
+          {/* Décor & Production by Rise India */}
+          <div className="flex flex-col items-center gap-3 pt-1">
+            <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.28em] text-[var(--rr-ash)] font-semibold">
+              {site.redRoom.decorProduction.credit}
+            </span>
+            <div className="relative w-44 h-16 rounded-md bg-[#060102] p-2 flex items-center justify-center border border-[#8B1414]/40 shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+              <Image
+                src={site.redRoom.decorProduction.logo}
+                alt={site.redRoom.decorProduction.alt}
+                width={160}
+                height={50}
+                className="object-contain max-h-full"
+              />
+            </div>
+          </div>
+
+          {/* Clear Link Onward to DHAMAAKA */}
+          <div className="pt-3">
+            <TransitionLink
+              href={site.redRoom.nextGate.href}
+              transitionType="T3"
+              className="inline-flex min-h-[46px] items-center gap-3 px-6 py-3 rounded-sm bg-[#510805] border border-[#FF2A1F]/40 text-[#EFD9CD] hover:border-[#FF2A1F] hover:text-white transition-all font-cinzel text-xs uppercase tracking-[0.26em] font-semibold shadow-lg"
+            >
+              <span>{site.redRoom.nextGate.label}</span>
+              <span>→</span>
+            </TransitionLink>
           </div>
         </div>
       </section>

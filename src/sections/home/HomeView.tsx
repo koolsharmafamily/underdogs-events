@@ -8,6 +8,7 @@ import { TransitionLink } from "@/ui/TransitionLink";
 import { Footer } from "@/ui/Footer";
 import { DomTwins } from "@/webgl/tracking/DomTwins";
 import { MobileHomeFeed } from "./MobileHomeFeed";
+import { PastArtistsSection } from "./PastArtistsSection";
 import {
   DoorColumn,
   FlyerTriggerButton,
@@ -195,7 +196,7 @@ export function HomeView() {
                   >
                     <div className="flex flex-col gap-2 text-left">
                       <span className="font-cinzel text-[11px] uppercase tracking-[0.28em] text-[#FF2A1F]">
-                        {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
+                        {site.home.worlds.one.pastLabel} · {site.home.worlds.one.occasion}
                       </span>
                       <span className="font-nosifer text-[clamp(22px,2.4vw,34px)] uppercase text-[#E81414] tracking-[0.04em] drop-shadow-[0_4px_16px_rgba(210,10,21,0.75)] leading-[1.15]">
                         {site.home.worlds.one.name}
@@ -272,7 +273,7 @@ export function HomeView() {
                         </span>
                       )}
                       <span className="font-manrope text-body text-[#FFF6EE]/85 pt-0.5">
-                        {site.home.worlds.two.date} · {site.home.worlds.two.place}
+                        {site.home.worlds.two.date} · {site.home.worlds.two.time} · {site.home.worlds.two.place}
                       </span>
                     </div>
                   </TransitionLink>
@@ -303,6 +304,9 @@ export function HomeView() {
             <div className="site-container" aria-hidden="true" />
           </div>
         </section>
+
+        {/* Ready-to-fill Past Artists Section */}
+        <PastArtistsSection />
 
         {/* H6 · Footer */}
         <React.Suspense fallback={null}>

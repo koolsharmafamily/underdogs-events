@@ -40,3 +40,6 @@ next-env.d.ts
 /public/models/v/
 /public/media/v/
 /public/sw.js
+
+# scratch
+scratch/

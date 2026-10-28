@@ -65,12 +65,12 @@ export function BookingDetails({
       <div className="flex items-center justify-between border-b pb-2 pt-1 border-current/15">
         <div className="flex flex-col gap-0.5 text-left">
           <span
-            className={`font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.26em] font-bold ${theme.accent}`}
+            className={`font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.24em] font-bold ${theme.accent}`}
           >
-            Booking Details & Inquiries
+            {isDiwali ? "Tickets, tables & enclosures enquiries" : "Booking Details & Inquiries"}
           </span>
           <span className="font-manrope text-[11px] sm:text-[12px] opacity-75">
-            Official Table Reservations & Guestlist
+            {isDiwali ? "Official Passes & Enquiries" : "Official Table Reservations & Guestlist"}
           </span>
         </div>
         <span

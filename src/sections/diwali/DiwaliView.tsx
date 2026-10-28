@@ -15,6 +15,7 @@ import { ClapperboardOpener } from "./premiere/ClapperboardOpener";
 import { DhamaakaStage } from "./premiere/DhamaakaStage";
 import { DhamaakaTitle } from "./premiere/DhamaakaTitle";
 import { PremiereInviteCard } from "./premiere/PremiereInviteCard";
+import { VenueLayoutViewer } from "./premiere/VenueLayoutViewer";
 import { SponsorWall } from "./premiere/SponsorWall";
 import { CinemaLightbox } from "./premiere/CinemaLightbox";
 import { DhamaakaOutro } from "./premiere/DhamaakaOutro";
@@ -200,7 +201,8 @@ export function DiwaliView() {
         </div>
       </section>
 
-
+      {/* Venue Layout Section & Interactive Zoom Viewer */}
+      <VenueLayoutViewer />
 
       {/* D4 · The Sponsor Wall (Opening credits step-and-repeat); scroll key D4 */}
       <SponsorWall ref={d4Ref} />

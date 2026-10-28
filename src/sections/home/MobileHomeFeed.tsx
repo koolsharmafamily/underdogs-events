@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { site } from "@/content/site";
 import { BadgeDomHost } from "@/ui/BadgeDomHost";
+import { PastArtistsSection } from "./PastArtistsSection";
 import {
   DaysToGoBadge,
   FlyerTriggerButton,
@@ -111,9 +112,82 @@ export function MobileHomeFeed() {
         </div>
 
         <div className="flex flex-col gap-5">
-          {/* World 1: The Red Room */}
+          {/* World 2: DHAMAAKA (FIRST / UPCOMING) */}
+          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/40 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
+            {/* Optimized Flyer Backdrop */}
+            <div
+              className="pointer-events-none absolute -inset-2 -z-0 opacity-16 overflow-hidden"
+              style={{
+                maskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
+              }}
+            >
+              <Image
+                src={assetUrl("/media/dhamaaka-flyer-1024.webp")}
+                alt=""
+                fill
+                sizes="(max-width: 768px) 92vw, 420px"
+                className="object-cover object-top blur-[2px]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#E0217A] to-[#E5B25D] mix-blend-color opacity-50" />
+            </div>
+
+            <TransitionLink
+              href="/diwali"
+              className="absolute inset-0 z-10"
+              aria-label={`Explore ${site.home.worlds.two.name} — ${site.home.worlds.two.subtitle}`}
+            />
+
+            <div className="relative z-10 pointer-events-none flex items-center justify-between">
+              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-bold">
+                Upcoming · {site.home.worlds.two.occasion}
+              </span>
+              <DaysToGoBadge
+                isoDate={site.home.worlds.two.isoDate}
+                className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold"
+              />
+            </div>
+
+            <div className="relative z-10 pointer-events-none flex items-center gap-4">
+              <Image
+                src={assetUrl("/media/badge-jewelled-still.webp")}
+                alt="DHAMAAKA Jewelled Badge"
+                width={64}
+                height={64}
+                className="w-16 h-16 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(229,178,93,0.5)]"
+              />
+              <div className="flex flex-col">
+                <span className="font-playfair font-black text-2xl leading-tight bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent drop-shadow-[0_2px_14px_rgba(224,33,122,0.65)] tracking-wide">
+                  {site.home.worlds.two.name}
+                </span>
+                <span className="font-cinzel text-[10px] uppercase tracking-wider text-[#E5B25D]/90 mt-0.5">
+                  {site.home.worlds.two.subtitle}
+                </span>
+                <span className="font-manrope text-xs font-semibold text-white/95 mt-1">
+                  {site.home.worlds.two.date} · {site.home.worlds.two.time}
+                </span>
+                <span className="font-manrope text-[11px] text-white/75">
+                  {site.home.worlds.two.place} · {site.home.worlds.two.gatesClose}
+                </span>
+              </div>
+            </div>
+
+            <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
+              <FlyerTriggerButton
+                world="diwali"
+                className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#E5B25D]/85 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
+              />
+              <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
+                <span>{site.home.worlds.two.cta}</span>
+                <span>→</span>
+              </div>
+            </div>
+          </div>
+
+          {/* World 1: The Red Room (SECOND / PAST) */}
           <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2A050A] to-[#120204] border border-[#FF1A35]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
-            {/* Optimized Flyer Backdrop behind artwork */}
             <div
               className="pointer-events-none absolute -inset-2 -z-0 opacity-16 overflow-hidden"
               style={{
@@ -133,25 +207,21 @@ export function MobileHomeFeed() {
               <div className="absolute inset-0 bg-[#3A0504] mix-blend-color opacity-60" />
             </div>
 
-            {/* Whole tile link */}
             <TransitionLink
               href="/the-red-room"
               className="absolute inset-0 z-10"
               aria-label={`Explore ${site.home.worlds.one.name} — ${site.home.worlds.one.occasion}`}
             />
 
-            {/* Header info */}
             <div className="relative z-10 pointer-events-none flex items-center justify-between">
               <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#FF1A35] font-semibold">
                 {site.home.worlds.one.kicker} · {site.home.worlds.one.occasion}
               </span>
-              <DaysToGoBadge
-                isoDate={site.home.worlds.one.isoDate}
-                className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF1A35] font-mono text-[10px] uppercase tracking-wider font-bold"
-              />
+              <span className="px-2.5 py-0.5 rounded-full bg-[#FF1A35]/20 border border-[#FF1A35]/40 text-[#FF968B] font-mono text-[10px] uppercase tracking-wider font-bold">
+                {site.home.worlds.one.pastLabel}
+              </span>
             </div>
 
-            {/* Artwork + Name in front */}
             <div className="relative z-10 pointer-events-none flex items-center gap-4">
               <Image
                 src={assetUrl("/media/badge-halloween-still.webp")}
@@ -177,98 +247,28 @@ export function MobileHomeFeed() {
                 <span className="font-manrope text-xs text-white/85 mt-0.5">
                   {site.home.worlds.one.date} · {site.home.worlds.one.place}
                 </span>
+                <span className="font-manrope text-[11px] text-white/70 italic mt-0.5">
+                  Event concluded · Record open
+                </span>
               </div>
             </div>
 
-            {/* Bottom Row: 44px+ "View official flyer" + CTA */}
             <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
               <FlyerTriggerButton
                 world="redroom"
                 className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FF968B]/85 hover:text-[#FF1A35] active:text-[#FF1A35] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#FF1A35]"
               />
               <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#FF1A35] group-hover:text-white transition-colors">
-                <span>{site.home.worlds.one.cta}</span>
-                <span>→</span>
-              </div>
-            </div>
-          </div>
-
-          {/* World 2: DHAMAAKA */}
-          <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#2B0E1B] to-[#10040B] border border-[#E5B25D]/35 p-5 flex flex-col gap-4 shadow-xl active:scale-[0.99] transition-transform">
-            {/* Optimized Flyer Backdrop behind artwork */}
-            <div
-              className="pointer-events-none absolute -inset-2 -z-0 opacity-16 overflow-hidden"
-              style={{
-                maskImage:
-                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
-                WebkitMaskImage:
-                  "radial-gradient(ellipse 80% 65% at 50% 30%, black 55%, transparent 95%), linear-gradient(to bottom, black 65%, transparent 100%)",
-              }}
-            >
-              <Image
-                src={assetUrl("/media/dhamaaka-flyer-1024.webp")}
-                alt=""
-                fill
-                sizes="(max-width: 768px) 92vw, 420px"
-                className="object-cover object-top blur-[2px]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#E0217A] to-[#E5B25D] mix-blend-color opacity-50" />
-            </div>
-
-            {/* Whole tile link */}
-            <TransitionLink
-              href="/diwali"
-              className="absolute inset-0 z-10"
-              aria-label={`Explore ${site.home.worlds.two.name} — ${site.home.worlds.two.subtitle}`}
-            />
-
-            {/* Header info */}
-            <div className="relative z-10 pointer-events-none flex items-center justify-between">
-              <span className="font-cinzel text-[11px] uppercase tracking-[0.24em] text-[#E5B25D] font-semibold">
-                {site.home.worlds.two.kicker} · {site.home.worlds.two.occasion}
-              </span>
-              <DaysToGoBadge
-                isoDate={site.home.worlds.two.isoDate}
-                className="px-2.5 py-0.5 rounded-full bg-[#E5B25D]/20 border border-[#E5B25D]/40 text-[#E5B25D] font-mono text-[10px] uppercase tracking-wider font-bold"
-              />
-            </div>
-
-            {/* Artwork + Name in front */}
-            <div className="relative z-10 pointer-events-none flex items-center gap-4">
-              <Image
-                src={assetUrl("/media/badge-jewelled-still.webp")}
-                alt="DHAMAAKA Jewelled Badge"
-                width={64}
-                height={64}
-                className="w-16 h-16 object-contain shrink-0 drop-shadow-[0_0_16px_rgba(229,178,93,0.5)]"
-              />
-              <div className="flex flex-col">
-                <span className="font-playfair font-black text-2xl leading-tight bg-gradient-to-r from-[#FFE3A3] via-[#E0217A] to-[#FF70DE] bg-clip-text text-transparent drop-shadow-[0_2px_14px_rgba(224,33,122,0.65)] tracking-wide">
-                  {site.home.worlds.two.name}
-                </span>
-                <span className="font-cinzel text-[10px] uppercase tracking-wider text-[#E5B25D]/90 mt-0.5">
-                  {site.home.worlds.two.subtitle}
-                </span>
-                <span className="font-manrope text-xs text-white/85 mt-1">
-                  {site.home.worlds.two.date} · {site.home.worlds.two.place}
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Row: 44px+ "View official flyer" + CTA */}
-            <div className="relative z-20 pt-2 border-t border-white/10 flex items-center justify-between">
-              <FlyerTriggerButton
-                world="diwali"
-                className="pointer-events-auto min-h-[44px] px-1 inline-flex items-center font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#E5B25D]/85 hover:text-[#FFE3A3] active:text-[#FFE3A3] transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-[#E5B25D]"
-              />
-              <div className="pointer-events-none min-h-[44px] inline-flex items-center gap-1.5 text-xs font-cinzel uppercase tracking-widest text-[#E5B25D] group-hover:text-white transition-colors">
-                <span>{site.home.worlds.two.cta}</span>
+                <span>View Record</span>
                 <span>→</span>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Ready-to-fill Past Artists Section */}
+      <PastArtistsSection />
 
       {/* 5. Footer Line & Social */}
       <footer className="pt-8 pb-4 text-center border-t border-white/10 px-5 flex flex-col items-center gap-2">
