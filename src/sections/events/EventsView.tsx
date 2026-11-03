@@ -110,12 +110,17 @@ export function EventsView() {
                 </p>
               </div>
 
-              {/* Phase 1 Rates Highlight & VIP Sold Out Notice */}
+              {/* Phase 2 Rates Highlight & Availability Notice */}
               <div className="mt-1 p-2.5 rounded-lg bg-[#220B16]/90 border border-[#E5B25D]/30 flex flex-wrap items-center justify-between gap-2 text-xs">
-                <span className="font-manrope text-[#FFE3A3] font-bold">
-                  Phase 1 Rates: Couple ₹5,000 (₹2,500 cover) · Stag ₹4,000 (₹2,000 cover)
-                </span>
-                <span className="font-cinzel text-[10.5px] uppercase tracking-wider text-[#E0217A] font-bold">
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-manrope text-[#FFE3A3] font-bold">
+                    Phase 2 Rates: Stag ₹6,000 (₹3,000 cover) · Couple ₹6,000 (₹3,000 cover · per couple)
+                  </span>
+                  <span className="font-manrope text-[11px] text-[#FFF6EE]/75">
+                    Passes only · All tables &amp; VIP enclosures sold out
+                  </span>
+                </div>
+                <span className="font-cinzel text-[10.5px] uppercase tracking-wider text-[#E0217A] font-bold self-center">
                   {site.diwali.vipEnclosures.notice}
                 </span>
               </div>

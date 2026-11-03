@@ -134,9 +134,11 @@ export const siteSchema = z.object({
           tier: text,
           price: text,
           cover: text,
+          note: text.nullable().optional(),
         })
       ),
       notice: text,
+      availabilityNote: text.optional(),
     }),
     vipEnclosures: z.object({
       status: z.literal('sold_out'),

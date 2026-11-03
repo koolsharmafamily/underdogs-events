@@ -76,19 +76,19 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
   },
   entry: {
     id: "entry",
-    chipLabel: "How to get tickets / entry?",
-    userQuestion: "How do I get tickets or entry?",
+    chipLabel: "How to get passes / entry?",
+    userQuestion: "How do I get passes or entry?",
     answer:
-      "For DHAMAAKA (7 Nov 2026), Phase 1 Rates are live:\n• Couple: ₹5,000 (with ₹2,500 cover)\n• Stag: ₹4,000 (with ₹2,000 cover)\n\nWe don't take direct website card checkout. Slide into @underdogs_nagpur on Instagram or call our official lines to secure your passes before gates close at 10:00 PM!",
+      "For DHAMAAKA (7 Nov 2026), Phase 2 Rates are live:\n• Stag: ₹6,000 (with ₹3,000 cover)\n• Couple: ₹6,000 (with ₹3,000 cover — per couple)\n\nNote: Only Phase 2 Stag & Couple passes remain available — all tables, VIP enclosures, and packages are Sold Out. We don't take direct website card checkout. Slide into @underdogs_nagpur on Instagram or call our official lines to secure your passes before gates close at 10:00 PM!",
     expression: "wink",
     followUpIds: ["diwali_rates", "diwali_cover", "booking"],
   },
   booking: {
     id: "booking",
-    chipLabel: "VIP Booking & Phone numbers",
-    userQuestion: "How do I book tables or contact the team?",
+    chipLabel: "Passes & Phone numbers",
+    userQuestion: "How do I book passes or contact the team?",
     answer:
-      "For tickets, table enquiries, and bookings for DHAMAAKA at Centre Point, connect directly with the Underdogs team:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
+      "For Phase 2 passes and bookings for DHAMAAKA at Centre Point, connect directly with the Underdogs team (Note: All tables & VIP enclosures are Sold Out):\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
     expression: "wink",
     followUpIds: ["diwali_rates", "diwali_vip", "diwali_when"],
   },
@@ -135,7 +135,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "How much was Red Room entry?",
     userQuestion: "How much was Red Room entry?",
     answer:
-      "The Red Room has already concluded, and admission was strictly through a name-based guest list. We do not quote rates for past events. Head over to DHAMAAKA for our upcoming Diwali Phase 1 rates!",
+      "The Red Room has already concluded, and admission was strictly through a name-based guest list. We do not quote rates for past events. Head over to DHAMAAKA for our upcoming Diwali Phase 2 rates!",
     expression: "shrug",
     followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
   },
@@ -146,7 +146,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Rates & timings",
     userQuestion: "What are the DHAMAAKA rates and timings?",
     answer:
-      "NO CTRL presents DHAMAAKA — The Karan Johar Edition on Saturday, 7 November 2026 at Hotel Centre Point, Nagpur, from 8:00 PM – 1:30 AM (Gates close at 10:00 PM).\n\nPhase 1 Rates:\n• Couple: ₹5,000\n  ₹2,500 cover\n• Stag: ₹4,000\n  ₹2,000 cover",
+      "NO CTRL presents DHAMAAKA — The Karan Johar Edition on Saturday, 7 November 2026 at Hotel Centre Point, Nagpur, from 8:00 PM – 1:30 AM (Gates close at 10:00 PM).\n\nPhase 2 Rates:\n• Stag: ₹6,000\n  ₹3,000 cover\n• Couple: ₹6,000 (per couple)\n  ₹3,000 cover\n\nOnly Phase 2 Stag & Couple passes remain available. All tables and VIP enclosures are Sold Out.",
     expression: "wink",
     followUpIds: ["diwali_cover", "diwali_gates", "diwali_vip"],
   },
@@ -155,7 +155,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "What's the cover?",
     userQuestion: "What is the cover for DHAMAAKA?",
     answer:
-      "For DHAMAAKA Phase 1 Rates:\n• Couple (₹5,000): includes ₹2,500 cover\n• Stag (₹4,000): includes ₹2,000 cover\n\nThe cover is described exactly as ₹2,500 cover and ₹2,000 cover.",
+      "For DHAMAAKA Phase 2 Rates:\n• Stag: ₹6,000 with ₹3,000 cover\n• Couple: ₹6,000 (per couple) with ₹3,000 cover\n\nCover amounts are shown separately beneath the ticket price and are never added together.",
     expression: "talking",
     followUpIds: ["diwali_rates", "diwali_gates", "diwali_booking"],
   },
@@ -182,7 +182,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Are VIP tables available?",
     userQuestion: "Are VIP tables available for DHAMAAKA?",
     answer:
-      "Notice: All VIP Enclosures Sold Out! General entry (Couple & Stag) and standard table enquiries are open via @underdogs_nagpur on Instagram or our booking lines: +91 90491 00002.",
+      "Notice: All Tables & VIP Enclosures Sold Out! Only Phase 2 Stag & Couple passes remain available. For pass bookings, connect via @underdogs_nagpur on Instagram or our booking lines: +91 90491 00002.",
     expression: "talking",
     followUpIds: ["diwali_layout", "diwali_rates", "diwali_booking"],
   },
@@ -224,10 +224,10 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
   },
   diwali_booking: {
     id: "diwali_booking",
-    chipLabel: "Book Centre Point tables",
-    userQuestion: "How do I book tables for DHAMAAKA?",
+    chipLabel: "Book Centre Point passes",
+    userQuestion: "How do I book passes for DHAMAAKA?",
     answer:
-      "For Phase 1 passes and table enquiries at Hotel Centre Point, Nagpur, reach out to:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
+      "Notice: All tables, VIP enclosures, and packages for DHAMAAKA are Sold Out! Only Phase 2 Stag & Couple passes remain available. To secure your passes at Hotel Centre Point, reach out to:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
     expression: "wink",
     followUpIds: ["diwali_rates", "diwali_vip", "diwali_partners"],
   },
@@ -275,12 +275,12 @@ const INTENT_PATTERNS: { intent: Intent; keywords: RegExp }[] = [
   {
     intent: "rates",
     keywords:
-      /\b(rate|rates|pricing|price|prices|ticket|tickets|entry fee|cost|charges|how much|5000|4000|phase 1|stag|couple)\b/i,
+      /\b(rate|rates|pricing|price|prices|ticket|tickets|entry fee|cost|charges|how much|6000|3000|5000|4000|phase 2|phase 1|stag|couple)\b/i,
   },
   {
     intent: "cover",
     keywords:
-      /\b(cover|cover charge|redeemable|2500|2000)\b/i,
+      /\b(cover|cover charge|redeemable|3000|2500|2000)\b/i,
   },
   {
     intent: "gates",
@@ -643,7 +643,7 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
       return {
         intent,
         reply:
-          "Gate's open. I'm Mr. Dog — the Underdogs concierge. Tap any question below or ask me about DHAMAAKA rates, timings, or VIP tables.",
+          "Gate's open. I'm Mr. Dog — the Underdogs concierge. Tap any question below or ask me about DHAMAAKA Phase 2 rates, timings, or passes.",
         expression: "greet",
         followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
       };
@@ -653,7 +653,7 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
       return {
         intent: "unknown",
         reply:
-          "Slide into our DMs at @underdogs_nagpur or tap one of the questions below for DHAMAAKA Phase 1 rates, timings, and tables!",
+          "Slide into our DMs at @underdogs_nagpur or tap one of the questions below for DHAMAAKA Phase 2 rates, timings, and passes!",
         expression: "shrug",
         followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
       };

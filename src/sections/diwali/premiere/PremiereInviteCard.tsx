@@ -127,18 +127,18 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </div>
         </div>
 
-        {/* Phase 1 Rates Box */}
+        {/* Phase 2 Rates Box */}
         <div className="mt-6 pt-5 border-t border-[#E5B25D]/25">
           <div className="flex items-center justify-between mb-3">
             <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.26em] text-[#FFE3A3] font-bold">
               {diwali.pricing.title}
             </span>
             <span className="px-2.5 py-0.5 rounded text-[9.5px] font-mono uppercase tracking-wider bg-[#E5B25D]/15 border border-[#E5B25D]/40 text-[#FFE3A3]">
-              Limited Passes
+              Limited Passes Available
             </span>
           </div>
 
-          {/* Rate Tiers: Couple & Stag */}
+          {/* Rate Tiers: Stag & Couple */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             {diwali.pricing.rates.map((rate) => (
               <div
@@ -146,17 +146,29 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
                 className="flex flex-col p-3.5 rounded-lg bg-[#180A10]/80 border border-[#E5B25D]/30"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FFE3A3] font-semibold">
-                    {rate.tier}
-                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="font-cinzel text-[11px] uppercase tracking-[0.22em] text-[#FFE3A3] font-semibold">
+                      {rate.tier}
+                    </span>
+                    {rate.note && (
+                      <span className="font-manrope text-[10px] text-[#FFE3A3]/75 font-normal">
+                        ({rate.note})
+                      </span>
+                    )}
+                  </div>
                   <span className="font-manrope text-[16px] sm:text-[17px] font-extrabold text-white">
                     {rate.price}
                   </span>
                 </div>
-                {/* Cover on a separate line beneath it */}
-                <span className="font-manrope text-[12px] text-[#E5B25D] font-medium pt-1">
-                  {rate.cover}
-                </span>
+                {/* Cover on a separate line beneath the price */}
+                <div className="flex items-center justify-between pt-1">
+                  <span className="font-manrope text-[12px] text-[#E5B25D] font-medium">
+                    {rate.cover}
+                  </span>
+                  <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-emerald-400 font-medium">
+                    Passes Open
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -167,11 +179,16 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </p>
         </div>
 
-        {/* VIP Enclosures Sold Out Notice (Styled in world's pink/gold) */}
-        <div className="mt-5 p-3 rounded-lg bg-[#240A15]/90 border border-[#E0217A]/50 flex items-center justify-center gap-2.5 text-center shadow-[0_4px_16px_rgba(224,33,122,0.2)]">
-          <span className="w-2 h-2 rounded-full bg-[#E0217A] animate-pulse" aria-hidden="true" />
-          <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.22em] text-[#FFE3A3] font-bold">
-            {diwali.vipEnclosures.notice}
+        {/* All Tables & VIP Enclosures Sold Out Notice */}
+        <div className="mt-5 p-3.5 rounded-lg bg-[#240A15]/90 border border-[#E0217A]/50 flex flex-col items-center justify-center gap-1 text-center shadow-[0_4px_16px_rgba(224,33,122,0.2)]">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#E0217A] animate-pulse" aria-hidden="true" />
+            <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.22em] text-[#FFE3A3] font-bold">
+              {diwali.vipEnclosures.notice}
+            </span>
+          </div>
+          <span className="font-manrope text-[11.5px] text-[#FFF6EE]/80">
+            Only Phase 2 Stag &amp; Couple passes remain available · Tables &amp; packages are Sold Out
           </span>
         </div>
 

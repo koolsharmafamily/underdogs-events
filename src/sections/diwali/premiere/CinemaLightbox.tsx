@@ -44,7 +44,7 @@ export function CinemaLightbox() {
       <section
         ref={containerRef}
         aria-label={`${site.diwali.nowShowing.kicker}: ${site.diwali.nowShowing.label}`}
-        className="relative z-10 w-full max-w-[620px] mx-auto px-4 py-16 sm:py-24 text-center select-none"
+        className="relative z-10 w-full max-w-[500px] mx-auto px-4 py-16 sm:py-24 text-center select-none"
       >
         {/* Lightbox Caption */}
         <div className="flex flex-col items-center gap-2 mb-8">
@@ -103,13 +103,13 @@ export function CinemaLightbox() {
               }
             }}
             aria-label="Enlarge official DHAMAAKA poster"
-            className="group relative rounded-lg overflow-hidden border border-[#E5B25D]/40 aspect-[1206/1496] w-full bg-[#0A0606] cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
+            className="group relative rounded-lg overflow-hidden border border-[#E5B25D]/40 aspect-[9/16] w-full bg-[#0A0606] cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E5B25D]"
           >
             <Image
               src={poster.src}
               alt={poster.alt}
               fill
-              sizes="(max-width: 640px) 94vw, 560px"
+              sizes="(max-width: 640px) 94vw, 500px"
               className="object-contain object-center transition-transform duration-500 group-hover:scale-[1.01]"
             />
 
@@ -137,7 +137,7 @@ export function CinemaLightbox() {
           src: poster.fullSrc || poster.src,
           alt: poster.alt,
           title: "DHAMAAKA — The Karan Johar Edition",
-          subtitle: "NO CTRL presents · Saturday 7 November 2026 · Centre Point, Nagpur",
+          subtitle: "NO CTRL presents · Phase 2 Rates · Saturday 7 November 2026 · Centre Point, Nagpur",
           world: "diwali",
         }}
       />

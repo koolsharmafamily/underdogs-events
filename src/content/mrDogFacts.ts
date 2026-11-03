@@ -11,8 +11,8 @@ export function buildMrDogFacts(): string {
   const diwali = site.diwali;
 
   const rrPartners = redRoom.partners.list.map((p) => `${p.role}: ${p.name}`).join("; ");
-  const dPartners = diwali.partners.list.map((p) => `${p.role}: ${p.name}`).join("; ");
-  const pastNights = site.home.nights.list.slice(0, 8).join(", ");
+  const dPartners = diwali.partners.list.map((p) => p.name).join(", ");
+  const pastNights = site.home.nights.list.slice(0, 5).join(", ");
 
   const facts = [
     `IDENTITY: ${brand.name} (${brand.legalName}), Nagpur. "Nagpur's Party People", creating an exclusive niche in Nagpur's party scene. Line: "${brand.line}". Instagram: ${brand.instagram}.`,
@@ -33,9 +33,9 @@ export function buildMrDogFacts(): string {
     `- Date: Saturday 7 November 2026`,
     `- Timings: 8:00 PM – 1:30 AM (Notice: "Gates close at 10:00 PM.")`,
     `- Venue: Hotel Centre Point, Nagpur`,
-    `- Phase 1 Rates: Couple ₹5,000 (₹2,500 cover) · Stag ₹4,000 (₹2,000 cover). Cover described strictly as "₹X cover".`,
-    `- VIP Enclosures: "All VIP Enclosures Sold Out". Don't take VIP enclosure enquiries; general tickets/tables not sold out.`,
-    `- Layout: Tables D1–D9 and U1–U4, NO CTRL Lounge, stage, DJ booth, bars, entrances, fire exit. No invented individual table prices/capacities.`,
+    `- Phase 2 Rates: Stag ₹6,000 (₹3,000 cover) · Couple ₹6,000 (₹3,000 cover). Note: Couple rate is ₹6,000 per couple, not per person. Cover amounts are shown separately beneath the price and never added to ticket price.`,
+    `- Availability: Only Phase 2 Stag & Couple passes remain available. All other categories—including tables, VIP enclosures, and packages—are Sold Out. Enquiries are passes only.`,
+    `- Layout: Tables D1–D9 and U1–U4, NO CTRL Lounge, stage, DJ booth, bars, entrances, fire exit. Reference only; all tables and packages are Sold Out.`,
     `- Headline Artist: Announcing soon on @underdogs_nagpur.`,
     `- Partners: ${dPartners}.`,
     ``,

@@ -53,7 +53,7 @@ export const diwaliEventSchema = {
   doorTime: '2026-11-07T20:00:00+05:30',
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  image: [`${BASE_URL}/media/dhamaaka-poster-phase1.webp`],
+  image: [`${BASE_URL}/media/dhamaaka-poster-phase2.webp`],
   location: {
     '@type': 'Place',
     name: site.diwali.invitation.rows[2].value,
@@ -66,19 +66,24 @@ export const diwaliEventSchema = {
   offers: [
     {
       '@type': 'Offer',
-      name: 'Couple Phase 1',
-      price: '5000',
+      name: 'Stag Phase 2',
+      price: '6000',
       priceCurrency: 'INR',
-      description: '₹2,500 cover',
+      description: '₹3,000 cover',
       availability: 'https://schema.org/InStock',
     },
     {
       '@type': 'Offer',
-      name: 'Stag Phase 1',
-      price: '4000',
+      name: 'Couple Phase 2',
+      price: '6000',
       priceCurrency: 'INR',
-      description: '₹2,000 cover',
+      description: '₹3,000 cover (per couple)',
       availability: 'https://schema.org/InStock',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Tables & VIP Enclosures',
+      availability: 'https://schema.org/SoldOut',
     },
   ],
   organizer: {
