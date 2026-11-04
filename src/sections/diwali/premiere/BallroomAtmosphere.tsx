@@ -47,8 +47,8 @@ export function BallroomAtmosphere() {
       {/* Moving Atmosphere Container */}
       <div
         ref={containerRef}
-        className="absolute -inset-[5%] w-[110%] h-[110%] transition-transform duration-500 ease-out"
-        style={{ transform: "translate3d(0, 0, 0) scale(1.04)" }}
+        className="absolute -inset-[5%] w-[110%] h-[110%]"
+        style={{ transform: "translate3d(0, 0, 0) scale(1.04)", willChange: "transform" }}
       >
         <Image
           src={assetUrl("/media/dhamaaka-ballroom-plate.webp")}

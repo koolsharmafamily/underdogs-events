@@ -28,9 +28,11 @@ export function MotionRuntime() {
 
   // Routes and chat load on intent; no background route competition with the hero.
 
-  // Save scroll position continuously for the active route (Part 10 T5)
+  // Save scroll position for the active route when scrolling rests (defer-work-until-scroll-ends)
   useEffect(() => {
-    const onScroll = () => {
+    let scrollTimeout: ReturnType<typeof setTimeout> | undefined;
+
+    const save = () => {
       if (
         !useStore.getState().isTransitioning &&
         !isPopStateRef.current &&
@@ -39,8 +41,30 @@ export function MotionRuntime() {
         saveRouteScroll(window.location.pathname, window.scrollY);
       }
     };
+
+    if (typeof window !== "undefined" && "onscrollend" in window) {
+      window.addEventListener("scrollend", save, { passive: true });
+    }
+
+    const onScroll = () => {
+      // Debounce fallback for browsers without native scrollend
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(save, 150);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("pagehide", save);
+    window.addEventListener("beforeunload", save);
+
+    return () => {
+      clearTimeout(scrollTimeout);
+      if (typeof window !== "undefined" && "onscrollend" in window) {
+        window.removeEventListener("scrollend", save);
+      }
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pagehide", save);
+      window.removeEventListener("beforeunload", save);
+    };
   }, []);
 
   // Listen to browser back and forward (Part 10 T5)

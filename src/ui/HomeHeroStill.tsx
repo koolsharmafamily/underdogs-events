@@ -16,8 +16,16 @@ export function HomeHeroStill() {
   useEffect(() => {
     if (pathname !== "/" || ready) return;
     let raf = 0;
+    let scrollTicking = false;
     const onScroll = () => {
-      setScrolledPastHero(window.scrollY > window.innerHeight * 0.45);
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          const isPast = window.scrollY > window.innerHeight * 0.45;
+          setScrolledPastHero((prev) => (prev !== isPast ? isPast : prev));
+          scrollTicking = false;
+        });
+      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });

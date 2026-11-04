@@ -55,6 +55,11 @@ export function DhamaakaParticlesCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const motionEnabled = useStore((s) => s.motionEnabled);
   const lastFireworkLineRef = useRef<number>(-1);
+  const activeStoryLineRef = useRef<number>(activeStoryLine);
+
+  useEffect(() => {
+    activeStoryLineRef.current = activeStoryLine;
+  }, [activeStoryLine]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -155,15 +160,16 @@ export function DhamaakaParticlesCanvas({
       ctx.clearRect(0, 0, width, height);
 
       // Check if story line changed to trigger firework
+      const currentLine = activeStoryLineRef.current;
       if (
         motionEnabled &&
-        activeStoryLine > 0 &&
-        activeStoryLine !== lastFireworkLineRef.current
+        currentLine > 0 &&
+        currentLine !== lastFireworkLineRef.current
       ) {
-        lastFireworkLineRef.current = activeStoryLine;
-        const fx = width * (0.25 + (activeStoryLine % 3) * 0.25);
+        lastFireworkLineRef.current = currentLine;
+        const fx = width * (0.25 + (currentLine % 3) * 0.25);
         const fy = height * 0.25;
-        spawnFirework(fx, fy, activeStoryLine % 2 === 0 ? "gold" : "rani");
+        spawnFirework(fx, fy, currentLine % 2 === 0 ? "gold" : "rani");
       }
 
       // 1. Draw Bokeh Orbs
@@ -275,13 +281,14 @@ export function DhamaakaParticlesCanvas({
       cancelAnimationFrame(animId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [motionEnabled, activeStoryLine]);
+  }, [motionEnabled]);
 
   return (
     <canvas
       ref={canvasRef}
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-[4] select-none"
+      style={{ transform: "translate3d(0, 0, 0)", willChange: "contents" }}
     />
   );
 }

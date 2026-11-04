@@ -22,6 +22,9 @@ export function StudioSpotlights() {
             background:
               "conic-gradient(from 40deg at 0% 0%, rgba(255,241,201,0.11) 0deg, rgba(255,227,163,0.06) 18deg, transparent 32deg)",
             filter: "blur(24px)",
+            willChange: "transform",
+            transform: "translate3d(0, 0, 0)",
+            contain: "layout paint",
           }}
         />
 
@@ -67,6 +70,9 @@ export function StudioSpotlights() {
             background:
               "conic-gradient(from 280deg at 100% 0%, transparent 0deg, rgba(255,227,163,0.06) 14deg, rgba(255,241,201,0.11) 32deg)",
             filter: "blur(24px)",
+            willChange: "transform",
+            transform: "translate3d(0, 0, 0)",
+            contain: "layout paint",
           }}
         />
 

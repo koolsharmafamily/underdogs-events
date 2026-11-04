@@ -19,9 +19,18 @@ export function MobileTopBar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const onScroll = () => {
-      setScrolled(window.scrollY > 12);
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          const isPast = window.scrollY > 12;
+          setScrolled((prev) => (prev !== isPast ? isPast : prev));
+          ticking = false;
+        });
+      }
     };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -78,6 +87,8 @@ export function MobileTopBar() {
       }`}
       style={{
         paddingTop: "env(safe-area-inset-top, 0px)",
+        transform: "translate3d(0, 0, 0)",
+        willChange: "background-color, border-color",
       }}
     >
       <div className="relative flex h-14 items-center justify-center px-4">

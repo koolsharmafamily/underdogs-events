@@ -84,6 +84,8 @@ export function MobileHomeFeed() {
                     border: "1px solid rgba(255, 255, 255, 0.16)",
                     boxShadow:
                       "inset 0 1px 0.5px rgba(255, 255, 255, 0.35), 0 6px 18px rgba(0, 0, 0, 0.4)",
+                    transform: "translateZ(0)",
+                    willChange: "transform",
                   }}
                 >
                   {item}
