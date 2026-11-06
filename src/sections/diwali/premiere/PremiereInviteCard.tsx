@@ -127,7 +127,7 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
           </div>
         </div>
 
-        {/* Phase 2 Rates Box */}
+        {/* Final Phase Rates Box */}
         <div className="mt-6 pt-5 border-t border-[#E5B25D]/25">
           <div className="flex items-center justify-between mb-3">
             <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.26em] text-[#FFE3A3] font-bold">
@@ -188,7 +188,7 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
             </span>
           </div>
           <span className="font-manrope text-[11.5px] text-[#FFF6EE]/80">
-            Only Phase 2 Stag &amp; Couple passes remain available · Tables &amp; packages are Sold Out
+            Only Final Phase Stag &amp; Couple passes remain available · Tables &amp; packages are Sold Out
           </span>
         </div>
 

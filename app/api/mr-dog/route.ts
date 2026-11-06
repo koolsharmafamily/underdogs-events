@@ -73,7 +73,7 @@ function escapeRegExp(str: string): string {
 
 // Text sanitizer: removes rogue external links, emails, and unconfirmed prices
 // Explicitly preserves official Underdogs Instagram URL, VIP phone numbers,
-// and ONLY approved DHAMAAKA Phase 2 rates: 6,000 (3,000 cover).
+// and ONLY approved DHAMAAKA Final Phase rates: 10,000 (5,000 cover), 8,000 (4,000 cover).
 function sanitizeOutput(text: string): string {
   let cleaned = text;
 
@@ -95,13 +95,13 @@ function sanitizeOutput(text: string): string {
     );
   }
 
-  // Price guardrail: allow ONLY confirmed DHAMAAKA Phase 2 rates & covers
-  // Approved numbers: 6000, 3000
+  // Price guardrail: allow ONLY confirmed DHAMAAKA Final Phase rates & covers
+  // Approved numbers: 10000, 8000, 5000, 4000
   const currencyMatches = cleaned.match(/\b(₹|rs\.?|inr|rupees)\s*[\d,]+/gi);
   if (currencyMatches) {
     for (const match of currencyMatches) {
       const numStr = match.replace(/[^\d]/g, "");
-      const isApprovedPrice = ["6000", "3000"].includes(numStr);
+      const isApprovedPrice = ["10000", "8000", "5000", "4000"].includes(numStr);
       if (!isApprovedPrice) {
         cleaned = cleaned.replace(
           new RegExp("[^.!?]*" + escapeRegExp(match) + "[^.!?]*[.!?]", "gi"),
@@ -139,12 +139,12 @@ function assembleSystemPrompt(world: WorldContext): string {
     `- TODAY IS: ${today} (Asia/Kolkata).`,
     "- THE RED ROOM IS A PAST EVENT: It took place on Saturday 24 October 2026 at Millo, Civil Lines, Nagpur (Décor & Production by Rise India; DJ Monish on the decks). Speak of it strictly in the PAST TENSE (That night's done — and it was a scene! The Red Room has closed its doors. Thank you, Nagpur, for coming dressed to disturb). Never quote prices for The Red Room; admission was via an exclusive guest list. Always steer guests to the upcoming DHAMAAKA!",
     "- DHAMAAKA (UPCOMING EVENT): Saturday 7 November 2026 at Hotel Centre Point, Nagpur. Timings: 8:00 PM – 1:30 AM. Notice: 'Gates close at 10:00 PM.' NO CTRL presents DHAMAAKA — The Karan Johar Edition.",
-    "- PRICE RULE (STRICT): You may state ONLY the confirmed DHAMAAKA Phase 2 rates:",
-    "  • Stag: ₹6,000 (₹3,000 cover)",
-    "  • Couple: ₹6,000 (₹3,000 cover) — note that the couple price is per couple, not per person.",
-    "  • Cover rule: Cover amounts must be shown separately beneath ticket prices (e.g., '₹3,000 cover'); never add them to ticket price.",
+    "- PRICE RULE (STRICT): You may state ONLY the confirmed DHAMAAKA Final Phase rates:",
+    "  • Stag: ₹10,000 (₹5,000 cover)",
+    "  • Couple: ₹8,000 (₹4,000 cover) — note that the couple price is per couple, not per person.",
+    "  • Cover rule: Cover amounts must be shown separately beneath ticket prices (e.g., '₹5,000 cover' for Stag, '₹4,000 cover' for Couple); never add them to ticket price.",
     "  • NEVER quote any other price, never invent table or enclosure prices, capacities, or availability for specific tables.",
-    "- AVAILABILITY & TABLES RULE: Only Phase 2 Stag & Couple passes remain available! State clearly that 'All Tables & VIP Enclosures Sold Out'. Do not take table or VIP enclosure enquiries; booking actions are strictly passes only.",
+    "- AVAILABILITY & TABLES RULE: Only Final Phase Stag & Couple passes remain available! State clearly that 'All Tables & VIP Enclosures Sold Out'. Do not take table or VIP enclosure enquiries; booking actions are strictly passes only.",
     "- VENUE LAYOUT: Reference layout includes tables D1–D9 and U1–U4, NO CTRL Lounge, stage and DJ booth, bars, entrances, and fire exit. Direct guests to view the full interactive layout on the DHAMAAKA page.",
     "- PARTNERS: Powered by: Rich Bliss Auto · Rich Bliss Jewels; Co-powered by: F Salon by FashionTV; Beverage partner: Alpha Bull Rum; Gifting partner: Shika Arts; Tech partner: Kool Korp; Fashion partner: Aayush Sachdev Couture; Experience partner: Layerz; Travel partner: Nova Travels.",
     "- PASSES / INSTAGRAM / BOOKINGS: When asked about passes, tickets, or messaging the team, direct them to DM on our official Instagram: https://instagram.com/underdogs_nagpur (handle @underdogs_nagpur) or call official lines: +91 90491 00002, +91 98231 77648, +91 72762 05656, +91 96891 93505.",

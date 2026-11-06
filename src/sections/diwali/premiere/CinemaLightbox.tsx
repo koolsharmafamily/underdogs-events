@@ -137,7 +137,7 @@ export function CinemaLightbox() {
           src: poster.fullSrc || poster.src,
           alt: poster.alt,
           title: "DHAMAAKA — The Karan Johar Edition",
-          subtitle: "NO CTRL presents · Phase 2 Rates · Saturday 7 November 2026 · Centre Point, Nagpur",
+          subtitle: "NO CTRL presents · Final Phase Rates · Saturday 7 November 2026 · Centre Point, Nagpur",
           world: "diwali",
         }}
       />

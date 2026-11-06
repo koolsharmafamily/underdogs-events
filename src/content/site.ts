@@ -166,7 +166,7 @@ export const site = {
     meta: {
       title: 'DHAMAAKA — The Karan Johar Edition · Underdogs Nagpur',
       description:
-        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents. Phase 2 Rates: Stag ₹6,000 (₹3,000 cover), Couple ₹6,000 (₹3,000 cover · per couple). Passes only · All tables & VIP enclosures sold out.',
+        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents. Final Phase Rates: Stag ₹10,000 (₹5,000 cover), Couple ₹8,000 (₹4,000 cover · per couple). Passes only · All tables & VIP enclosures sold out.',
     },
     status: 'upcoming' as const,
     presenter: 'NO CTRL presents',
@@ -183,13 +183,13 @@ export const site = {
     story: ['Two worlds.', 'Two occasions.', 'Two very different nights.', 'You’ve seen one.', 'Now meet the other.'],
     dj: null as null,
     pricing: {
-      title: 'Phase 2 Rates',
+      title: 'Final Phase Rates',
       rates: [
-        { tier: 'Stag', price: '₹6,000', cover: '₹3,000 cover', note: null as string | null },
-        { tier: 'Couple', price: '₹6,000', cover: '₹3,000 cover', note: 'per couple' as string | null },
+        { tier: 'Stag', price: '₹10,000', cover: '₹5,000 cover', note: null as string | null },
+        { tier: 'Couple', price: '₹8,000', cover: '₹4,000 cover', note: 'per couple' as string | null },
       ],
       notice: 'Gates close at 10:00 PM.',
-      availabilityNote: 'Only Phase 2 Stag & Couple passes remain available. All tables, VIP enclosures & packages are Sold Out.',
+      availabilityNote: 'Only Final Phase Stag & Couple passes remain available. All tables, VIP enclosures & packages are Sold Out.',
     },
     vipEnclosures: {
       status: 'sold_out' as const,
@@ -215,7 +215,7 @@ export const site = {
         { label: 'Date', value: 'Saturday, 7 November 2026' },
         { label: 'Time', value: '8:00 PM – 1:30 AM', sub: 'Gates close at 10:00 PM.' },
         { label: 'Venue', value: 'Centre Point, Nagpur' },
-        { label: 'Phase 2 Rates', value: 'Stag: ₹6,000 · Couple: ₹6,000 (per couple)' },
+        { label: 'Final Phase Rates', value: 'Stag: ₹10,000 · Couple: ₹8,000 (per couple)' },
         { label: 'Availability', value: 'Passes Only · All Tables & VIP Enclosures Sold Out' },
       ],
     },
@@ -234,9 +234,9 @@ export const site = {
     },
     nowShowing: { kicker: 'Now showing', label: 'The official poster' },
     poster: {
-      src: assetUrl('/media/dhamaaka-poster-phase2.webp'),
-      fullSrc: assetUrl('/media/dhamaaka-poster-phase2-full.webp'),
-      alt: 'Official poster: NO CTRL presents DHAMAAKA — Phase 2 Rates · Saturday 7 November 2026 · Centre Point, Nagpur.',
+      src: assetUrl('/media/dhamaaka-poster-final-phase.webp'),
+      fullSrc: assetUrl('/media/dhamaaka-poster-final-phase-full.webp'),
+      alt: 'Official poster: NO CTRL presents DHAMAAKA — Final Phase Rates · Saturday 7 November 2026 · Centre Point, Nagpur.',
     },
     outro: {
       tagline: 'This year, different.',

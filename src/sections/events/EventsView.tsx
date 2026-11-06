@@ -110,11 +110,11 @@ export function EventsView() {
                 </p>
               </div>
 
-              {/* Phase 2 Rates Highlight & Availability Notice */}
+              {/* Final Phase Rates Highlight & Availability Notice */}
               <div className="mt-1 p-2.5 rounded-lg bg-[#220B16]/90 border border-[#E5B25D]/30 flex flex-wrap items-center justify-between gap-2 text-xs">
                 <div className="flex flex-col gap-0.5">
                   <span className="font-manrope text-[#FFE3A3] font-bold">
-                    Phase 2 Rates: Stag ₹6,000 (₹3,000 cover) · Couple ₹6,000 (₹3,000 cover · per couple)
+                    Final Phase Rates: Stag ₹10,000 (₹5,000 cover) · Couple ₹8,000 (₹4,000 cover · per couple)
                   </span>
                   <span className="font-manrope text-[11px] text-[#FFF6EE]/75">
                     Passes only · All tables &amp; VIP enclosures sold out

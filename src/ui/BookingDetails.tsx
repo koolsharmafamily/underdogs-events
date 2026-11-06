@@ -67,7 +67,7 @@ export function BookingDetails({
           <span
             className={`font-cinzel text-[10px] sm:text-[11px] uppercase tracking-[0.24em] font-bold ${theme.accent}`}
           >
-            {isDiwali ? "Phase 2 Passes & Enquiries" : "Booking Details & Inquiries"}
+            {isDiwali ? "Final Phase Passes & Enquiries" : "Booking Details & Inquiries"}
           </span>
           <span className="font-manrope text-[11px] sm:text-[12px] opacity-75">
             {isDiwali ? "Official Passes Only · Tables Sold Out" : "Official Table Reservations & Guestlist"}
@@ -116,7 +116,7 @@ export function BookingDetails({
             </span>
             <span className="font-manrope text-[10px] sm:text-[11px] opacity-80">
               {isDiwali
-                ? "Official Instagram · DM for Phase 2 Passes"
+                ? "Official Instagram · DM for Final Phase Passes"
                 : "Official Instagram · DM for Passes & Tables"}
             </span>
           </div>
@@ -130,7 +130,7 @@ export function BookingDetails({
       {/* 4 Phone Numbers (Click to Call on iPhone & Android) */}
       <div className="flex flex-col gap-1.5 text-left">
         <span className="font-cinzel text-[9.5px] uppercase tracking-[0.22em] opacity-70">
-          {isDiwali ? "Call for Phase 2 Passes (Tables Sold Out)" : "Call for Passes & VIP Reservations"}
+          {isDiwali ? "Call for Final Phase Passes (Tables Sold Out)" : "Call for Passes & VIP Reservations"}
         </span>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
