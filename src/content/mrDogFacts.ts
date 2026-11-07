@@ -34,7 +34,7 @@ export function buildMrDogFacts(): string {
     `- Timings: 8:00 PM – 1:30 AM (Notice: "Gates close at 10:00 PM.")`,
     `- Venue: Hotel Centre Point, Nagpur`,
     `- Final Phase Rates: Stag ₹10,000 (₹5,000 cover) · Couple ₹8,000 (₹4,000 cover). Note: Couple rate is ₹8,000 per couple, not per person. Cover amounts are shown separately beneath the price and never added to ticket price.`,
-    `- Availability: Only Final Phase Stag & Couple passes remain available. All other categories—including tables, VIP enclosures, and packages—are Sold Out. Enquiries are passes only.`,
+    `- Availability: ALL TICKETS AND PASSES ARE COMPLETELY SOLD OUT! No phase is available (Phase 1, Phase 2, and Final Phase are all sold out). All tables, VIP enclosures, and packages are Sold Out. The event is 100% Housefull.`,
     `- Layout: Tables D1–D9 and U1–U4, NO CTRL Lounge, stage, DJ booth, bars, entrances, fire exit. Reference only; all tables and packages are Sold Out.`,
     `- Headline Artist: Announcing soon on @underdogs_nagpur.`,
     `- Partners: ${dPartners}.`,

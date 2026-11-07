@@ -79,8 +79,8 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "How to get passes / entry?",
     userQuestion: "How do I get passes or entry?",
     answer:
-      "For DHAMAAKA (7 Nov 2026), Final Phase Rates are live:\n• Stag: ₹10,000 (with ₹5,000 cover)\n• Couple: ₹8,000 (with ₹4,000 cover — per couple)\n\nNote: Only Final Phase Stag & Couple passes remain available — all tables, VIP enclosures, and packages are Sold Out. We don't take direct website card checkout. Slide into @underdogs_nagpur on Instagram or call our official lines to secure your passes before gates close at 10:00 PM!",
-    expression: "wink",
+      "DHAMAAKA (7 Nov 2026) is 100% SOLD OUT! All tickets and passes are completely sold out — no phase (Phase 1, Phase 2, or Final Phase) is available anymore. All tables and VIP enclosures are also Sold Out. No passes will be sold at the gates or online. Follow @underdogs_nagpur on Instagram for live event stories and future night drops!",
+    expression: "talking",
     followUpIds: ["diwali_rates", "diwali_cover", "booking"],
   },
   booking: {
@@ -88,8 +88,8 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Passes & Phone numbers",
     userQuestion: "How do I book passes or contact the team?",
     answer:
-      "For Final Phase passes and bookings for DHAMAAKA at Centre Point, connect directly with the Underdogs team (Note: All tables & VIP enclosures are Sold Out):\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
-    expression: "wink",
+      "Notice: DHAMAAKA is completely SOLD OUT! All tickets, passes, and tables are sold out across all phases. No booking or purchase is available. For general event information or attendee queries, reach out to our official lines:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
+    expression: "talking",
     followUpIds: ["diwali_rates", "diwali_vip", "diwali_when"],
   },
   instagram: {
@@ -135,7 +135,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "How much was Red Room entry?",
     userQuestion: "How much was Red Room entry?",
     answer:
-      "The Red Room has already concluded, and admission was strictly through a name-based guest list. We do not quote rates for past events. Head over to DHAMAAKA for our upcoming Diwali Final Phase rates!",
+      "The Red Room has already concluded, and admission was strictly through a name-based guest list. We do not quote rates for past events. Note that our upcoming Diwali event DHAMAAKA is also now completely SOLD OUT!",
     expression: "shrug",
     followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
   },
@@ -146,8 +146,8 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Rates & timings",
     userQuestion: "What are the DHAMAAKA rates and timings?",
     answer:
-      "NO CTRL presents DHAMAAKA — The Karan Johar Edition on Saturday, 7 November 2026 at Hotel Centre Point, Nagpur, from 8:00 PM – 1:30 AM (Gates close at 10:00 PM).\n\nFinal Phase Rates:\n• Stag: ₹10,000\n  ₹5,000 cover\n• Couple: ₹8,000 (per couple)\n  ₹4,000 cover\n\nOnly Final Phase Stag & Couple passes remain available. All tables and VIP enclosures are Sold Out.",
-    expression: "wink",
+      "NO CTRL presents DHAMAAKA — The Karan Johar Edition on Saturday, 7 November 2026 at Hotel Centre Point, Nagpur, from 8:00 PM – 1:30 AM (Gates close at 10:00 PM).\n\nStatus: FULLY SOLD OUT! All passes (Stag & Couple) and all tables are completely sold out across all phases. No phase is available.",
+    expression: "talking",
     followUpIds: ["diwali_cover", "diwali_gates", "diwali_vip"],
   },
   diwali_cover: {
@@ -155,7 +155,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "What's the cover?",
     userQuestion: "What is the cover for DHAMAAKA?",
     answer:
-      "For DHAMAAKA Final Phase Rates:\n• Stag: ₹10,000 with ₹5,000 cover\n• Couple: ₹8,000 (per couple) with ₹4,000 cover\n\nCover amounts are shown separately beneath the ticket price and are never added together.",
+      "Notice: DHAMAAKA is completely SOLD OUT! Final Phase passes were Stag ₹10,000 (₹5,000 cover) and Couple ₹8,000 (₹4,000 cover), but all passes, tickets, and tables across all phases are now fully sold out.",
     expression: "talking",
     followUpIds: ["diwali_rates", "diwali_gates", "diwali_booking"],
   },
@@ -182,7 +182,7 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Are VIP tables available?",
     userQuestion: "Are VIP tables available for DHAMAAKA?",
     answer:
-      "Notice: All Tables & VIP Enclosures Sold Out! Only Final Phase Stag & Couple passes remain available. For pass bookings, connect via @underdogs_nagpur on Instagram or our booking lines: +91 90491 00002.",
+      "Notice: Everything is SOLD OUT! All tables, VIP enclosures, and passes for DHAMAAKA are completely sold out. No phase is available. Event is Housefull!",
     expression: "talking",
     followUpIds: ["diwali_layout", "diwali_rates", "diwali_booking"],
   },
@@ -227,8 +227,8 @@ export const FIXED_QUESTIONS: Record<string, FixedQuestionItem> = {
     chipLabel: "Book Centre Point passes",
     userQuestion: "How do I book passes for DHAMAAKA?",
     answer:
-      "Notice: All tables, VIP enclosures, and packages for DHAMAAKA are Sold Out! Only Final Phase Stag & Couple passes remain available. To secure your passes at Hotel Centre Point, reach out to:\n\n• +91 90491 00002\n• +91 98231 77648\n• +91 72762 05656\n• +91 96891 93505\n\nOr DM @underdogs_nagpur on Instagram.",
-    expression: "wink",
+      "Notice: DHAMAAKA is 100% SOLD OUT! All passes, tickets, tables, and packages are fully sold out. No phase is available. If you already hold passes, gates open at 8:00 PM at Hotel Centre Point, Nagpur and close at 10:00 PM sharp!",
+    expression: "talking",
     followUpIds: ["diwali_rates", "diwali_vip", "diwali_partners"],
   },
 };
@@ -643,7 +643,7 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
       return {
         intent,
         reply:
-          "Gate's open. I'm Mr. Dog — the Underdogs concierge. Tap any question below or ask me about DHAMAAKA Final Phase rates, timings, or passes.",
+          "Gate's open. I'm Mr. Dog — the Underdogs concierge. DHAMAAKA is officially 100% SOLD OUT! Tap any question below for event timings, gates, and venue details.",
         expression: "greet",
         followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
       };
@@ -653,7 +653,7 @@ export function matchFaq(text: string, world: WorldContext = "home"): IntentMatc
       return {
         intent: "unknown",
         reply:
-          "Slide into our DMs at @underdogs_nagpur or tap one of the questions below for DHAMAAKA Final Phase rates, timings, and passes!",
+          "DHAMAAKA is officially 100% SOLD OUT — no phase available! Tap one of the questions below or check @underdogs_nagpur on Instagram for event details and future drops.",
         expression: "shrug",
         followUpIds: ["diwali_rates", "diwali_cover", "diwali_when"],
       };

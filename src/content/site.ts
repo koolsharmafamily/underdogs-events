@@ -166,7 +166,7 @@ export const site = {
     meta: {
       title: 'DHAMAAKA — The Karan Johar Edition · Underdogs Nagpur',
       description:
-        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents. Final Phase Rates: Stag ₹10,000 (₹5,000 cover), Couple ₹8,000 (₹4,000 cover · per couple). Passes only · All tables & VIP enclosures sold out.',
+        'World Two: DHAMAAKA (The Karan Johar Edition) with Underdogs — Saturday 7 November 2026 at Centre Point, Nagpur. NO CTRL presents. Event completely Sold Out · All tickets, passes & tables fully sold out. No phase available.',
     },
     status: 'upcoming' as const,
     presenter: 'NO CTRL presents',
@@ -183,17 +183,17 @@ export const site = {
     story: ['Two worlds.', 'Two occasions.', 'Two very different nights.', 'You’ve seen one.', 'Now meet the other.'],
     dj: null as null,
     pricing: {
-      title: 'Final Phase Rates',
+      title: 'Final Phase Rates (Sold Out)',
       rates: [
         { tier: 'Stag', price: '₹10,000', cover: '₹5,000 cover', note: null as string | null },
         { tier: 'Couple', price: '₹8,000', cover: '₹4,000 cover', note: 'per couple' as string | null },
       ],
       notice: 'Gates close at 10:00 PM.',
-      availabilityNote: 'Only Final Phase Stag & Couple passes remain available. All tables, VIP enclosures & packages are Sold Out.',
+      availabilityNote: 'All tickets and passes are now completely Sold Out. No phase available · Event is Housefull.',
     },
     vipEnclosures: {
       status: 'sold_out' as const,
-      notice: 'All Tables & VIP Enclosures Sold Out',
+      notice: 'All Tickets, Passes & Tables Sold Out',
     },
     layout: {
       title: 'Venue Layout',
@@ -215,8 +215,8 @@ export const site = {
         { label: 'Date', value: 'Saturday, 7 November 2026' },
         { label: 'Time', value: '8:00 PM – 1:30 AM', sub: 'Gates close at 10:00 PM.' },
         { label: 'Venue', value: 'Centre Point, Nagpur' },
-        { label: 'Final Phase Rates', value: 'Stag: ₹10,000 · Couple: ₹8,000 (per couple)' },
-        { label: 'Availability', value: 'Passes Only · All Tables & VIP Enclosures Sold Out' },
+        { label: 'Final Phase Rates', value: 'Stag: ₹10,000 · Couple: ₹8,000 (Sold Out)' },
+        { label: 'Availability', value: 'Completely Sold Out · No Phase Available' },
       ],
     },
     partners: {

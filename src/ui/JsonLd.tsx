@@ -70,7 +70,7 @@ export const diwaliEventSchema = {
       price: '10000',
       priceCurrency: 'INR',
       description: '₹5,000 cover',
-      availability: 'https://schema.org/InStock',
+      availability: 'https://schema.org/SoldOut',
     },
     {
       '@type': 'Offer',
@@ -78,7 +78,7 @@ export const diwaliEventSchema = {
       price: '8000',
       priceCurrency: 'INR',
       description: '₹4,000 cover (per couple)',
-      availability: 'https://schema.org/InStock',
+      availability: 'https://schema.org/SoldOut',
     },
     {
       '@type': 'Offer',

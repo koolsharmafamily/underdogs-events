@@ -133,8 +133,8 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
             <span className="font-cinzel text-[11px] sm:text-[12px] uppercase tracking-[0.26em] text-[#FFE3A3] font-bold">
               {diwali.pricing.title}
             </span>
-            <span className="px-2.5 py-0.5 rounded text-[9.5px] font-mono uppercase tracking-wider bg-[#E5B25D]/15 border border-[#E5B25D]/40 text-[#FFE3A3]">
-              Limited Passes Available
+            <span className="px-2.5 py-0.5 rounded text-[9.5px] font-mono uppercase tracking-wider bg-[#E0217A]/20 border border-[#E0217A]/50 text-[#FFD6E8] font-bold">
+              Fully Sold Out
             </span>
           </div>
 
@@ -165,8 +165,8 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
                   <span className="font-manrope text-[12px] text-[#E5B25D] font-medium">
                     {rate.cover}
                   </span>
-                  <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-emerald-400 font-medium">
-                    Passes Open
+                  <span className="font-cinzel text-[9.5px] uppercase tracking-wider text-[#E0217A] font-bold">
+                    Sold Out
                   </span>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export function PremiereInviteCard({ active = true }: PremiereInviteCardProps) {
             </span>
           </div>
           <span className="font-manrope text-[11.5px] text-[#FFF6EE]/80">
-            Only Final Phase Stag &amp; Couple passes remain available · Tables &amp; packages are Sold Out
+            All tickets, passes (Stag &amp; Couple), and tables are fully sold out · No phase available · Housefull
           </span>
         </div>
 
