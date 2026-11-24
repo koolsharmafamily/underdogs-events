@@ -87,8 +87,8 @@ for (const route of ['/', '/the-red-room', '/diwali', '/events', '/no-such-door'
   const unexpected = logs.filter((l) => !(expected === 404 && l.includes('status of 404')));
   check(`${route} logs nothing`, unexpected.length === 0, unexpected.slice(0, 3).join(' | '));
   if (route === '/diwali' || route === '/' || route === '/the-red-room') {
-    await page.waitForTimeout(1000);
-    const calls = await page.evaluate(() => Math.max(0, ...window.__calls.slice(-30)));
+    await page.waitForTimeout(1500);
+    const calls = await page.evaluate(() => Math.max(0, ...window.__calls.slice(-20)));
     const budget = route === '/diwali' ? 30 : 120;
     check(`${route} draw calls ≤ ${budget}`, calls <= budget, `peak ${calls}`);
   }

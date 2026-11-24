@@ -1,7 +1,7 @@
 "use client";
 
 import { assetUrl } from "@/utils/assetUrl";
-import React, { Suspense, useRef, useMemo, useEffect } from "react";
+import React, { Suspense, useRef, useMemo, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
@@ -296,17 +296,17 @@ export function Badge({
     return tex;
   }, []);
 
-  const getSkinGroup = (skin: SkinId) => {
+  const getSkinGroup = useCallback((skin: SkinId) => {
     if (skin === "halloween") return halloweenGroupRef.current;
     if (skin === "jewelled") return jewelledGroupRef.current;
     return enamelGroupRef.current;
-  };
+  }, []);
 
-  const getSkinUniforms = (skin: SkinId) => {
+  const getSkinUniforms = useCallback((skin: SkinId) => {
     if (skin === "halloween") return halloweenUniforms;
     if (skin === "jewelled") return jewelledUniforms;
     return enamelUniforms;
-  };
+  }, [halloweenUniforms, jewelledUniforms, enamelUniforms]);
 
   // Sync initial visibility on direct URL visit or mount
   useEffect(() => {
@@ -373,7 +373,7 @@ export function Badge({
       inU.uEdgeIntensity.value = edge.intensity;
       inU.uEdgeWidth.value = edge.width;
     }
-  }, [targetSkin, motionEnabled]);
+  }, [targetSkin, motionEnabled, getSkinGroup, getSkinUniforms]);
 
   const behaviours = useMemo(() => new BadgeBehaviours(), []);
 
@@ -814,7 +814,7 @@ export function Badge({
       </group>
 
       {/* Directional Sparkle Glints on Pavé Diamond Face for Jewelled Skin */}
-      <SparkleGlints active={activeSkinRef.current === "jewelled"} />
+      <SparkleGlints active={targetSkin === "jewelled"} />
     </group>
   );
 }

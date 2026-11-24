@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 
 export interface FlyerDetails {
@@ -83,13 +84,13 @@ export function OfficialFlyerLightbox({
     : "border-[#E5B25D]/50 shadow-[0_0_50px_rgba(229,178,93,0.3)]";
   const accentText = isRed ? "text-[#FF2A1F]" : "text-[#E5B25D]";
 
-  return (
+  const content = (
     <div
       role="dialog"
       aria-modal="true"
       aria-label={`${flyer.title} — Official Flyer`}
       ref={modalRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 bg-black/94 backdrop-blur-xl transition-opacity duration-[280ms]"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-8 bg-black/94 backdrop-blur-xl transition-opacity duration-[280ms]"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -141,4 +142,8 @@ export function OfficialFlyerLightbox({
       </div>
     </div>
   );
+
+  return typeof document !== "undefined"
+    ? createPortal(content, document.body)
+    : null;
 }

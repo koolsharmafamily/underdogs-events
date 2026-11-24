@@ -1,4 +1,4 @@
-const RELEASE = "57993883cf83";
+const RELEASE = "610fdf42bc34";
 /* No install-time downloads: the first visit is never gated by this worker. */
 const CACHE = 'underdogs-shell-' + RELEASE;
 self.addEventListener('install', () => self.skipWaiting());

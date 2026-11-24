@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { site } from "@/content/site";
 import { getLenis } from "@/motion/clock";
@@ -266,13 +267,13 @@ function FullscreenLayoutModal({ src, alt, caption, onClose }: FullscreenLayoutM
     setIsDragging(false);
   };
 
-  return (
+  const content = (
     <div
       ref={modalRef}
       role="dialog"
       aria-modal="true"
       aria-label="Venue Layout Full-Screen Viewer"
-      className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-black/95 backdrop-blur-2xl text-white select-none overflow-hidden touch-none"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-between bg-black/95 backdrop-blur-2xl text-white select-none overflow-hidden touch-none"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -378,4 +379,8 @@ function FullscreenLayoutModal({ src, alt, caption, onClose }: FullscreenLayoutM
       </div>
     </div>
   );
+
+  return typeof document !== "undefined"
+    ? createPortal(content, document.body)
+    : null;
 }

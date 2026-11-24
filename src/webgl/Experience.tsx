@@ -80,19 +80,19 @@ function CanvasInner() {
   const cleanupContextListenersRef = useRef<(() => void) | null>(null);
   const lossCountRef = useRef(0);
   const [contextLost, setContextLost] = useState(false);
-  const [assetFailed, setAssetFailed] = useState(false);
+  const [assetFailed, setAssetFailed] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return new URLSearchParams(window.location.search).get("assetError") === "1";
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
 
   // Support asset failure events & query param for deterministic resilience testing (Part 13.8)
   useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("assetError") === "1") {
-        setAssetFailed(true);
-      }
-    } catch {
-      // Ignore URL parsing errors
-    }
-
     const onAssetError = () => {
       setAssetFailed(true);
       setWebglAdvance(() => {});

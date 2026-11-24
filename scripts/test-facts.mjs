@@ -1,10 +1,6 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 // Load site.ts directly or dynamically
 // Let's create a test runner
 async function run() {
-  const { site, ANNOUNCING_SOON } = await import('../src/content/site.ts');
   const { buildMrDogFacts } = await import('../src/content/mrDogFacts.ts');
 
   const facts = buildMrDogFacts();

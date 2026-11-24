@@ -8,7 +8,6 @@ import { useStore } from "@/state/store";
 import { useSceneProgress } from "@/motion/useSceneProgress";
 import { useEnterTransition } from "@/motion/transitions";
 import { Footer } from "@/ui/Footer";
-import { ArtistPortrait } from "@/ui/ArtistPortrait";
 
 // Premiere Night Components
 import { ClapperboardOpener } from "./premiere/ClapperboardOpener";
